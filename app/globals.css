@@ -1,0 +1,568 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+@import '../styles/admin-table.css';
+@import "tailwindcss";
+
+/* Tell Tailwind v4 to use .dark class strategy instead of prefers-color-scheme */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Smooth scroll — outside @layer to ensure it's never overridden */
+html {
+  scroll-behavior: smooth !important;
+}
+
+/* Tailwind v4 CSS-based configuration */
+@theme {
+  --font-sans: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  --font-mono: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+
+  --shadow-darker: inset 0 0 0 1px rgb(0 0 0 / 0.05);
+
+  --font-size-h1: 2rem;
+  --font-size-h2: 1.5rem;
+  --font-size-h3: 1.25rem;
+  --font-size-normal: 1rem;
+  --font-size-small: 0.875rem;
+  --font-size-smaller: 0.7rem;
+  --font-size-tiny: 0.625rem;
+}
+
+/* ---- Base styles inside @layer base for proper Tailwind v4 integration ---- */
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #f8f7f4;
+    color: #111827;
+    font-size: 0.875rem;
+  }
+
+  code {
+    font-family: var(--font-mono);
+  }
+
+  body,
+  button,
+  input,
+  textarea {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+  }
+
+  input,
+  textarea,
+  select {
+    outline: none;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: #111827;
+    font-weight: 600;
+  }
+
+  ul,
+  li {
+    list-style: none;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  button {
+    cursor: pointer;
+    outline: none;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  table tr th {
+    border: 1px solid #d1d5db;
+    text-align: center;
+    padding: 0.5rem 0.75rem;
+  }
+
+  table tr td {
+    border: 1px solid #d1d5db;
+    text-align: center;
+    padding: 0.5rem 0.75rem;
+  }
+
+  table .bx-edit,
+  table .bx-lock-open {
+    font-size: 1rem;
+    color: #22c55e;
+    cursor: pointer;
+    padding: 0.25rem;
+    border: 1px solid #22c55e;
+    border-radius: 2px;
+    background-color: rgb(34 197 94 / 0.2);
+  }
+
+  table .bx-trash,
+  table .bx-lock {
+    font-size: 1rem;
+    color: #ef4444;
+    cursor: pointer;
+    padding: 0.25rem;
+    border: 1px solid #ef4444;
+    border-radius: 2px;
+    background-color: rgb(239 68 68 / 0.2);
+  }
+
+  table .bx-image-add {
+    font-size: 1rem;
+    color: #3b82f6;
+    cursor: pointer;
+    padding: 0.25rem;
+    border: 1px solid #3b82f6;
+    border-radius: 2px;
+    background-color: rgb(59 130 246 / 0.2);
+  }
+
+  table .bx-image-add:hover {
+    background-color: rgb(59 130 246 / 0.3);
+  }
+
+  table .bx-edit:hover,
+  table .bx-lock-open:hover {
+    background-color: rgb(34 197 94 / 0.3);
+  }
+
+  table .bx-trash:hover,
+  table .bx-lock:hover {
+    background-color: rgb(239 68 68 / 0.3);
+  }
+
+  .dark body {
+    background-color: #0f0f0f;
+    color: #f3f4f6;
+  }
+
+  .dark h1,
+  .dark h2,
+  .dark h3,
+  .dark h4 {
+    color: #f3f4f6;
+    font-weight: 600;
+  }
+}
+
+/* ===== DARK MODE GLOBAL STYLES ===== */
+
+/* Smooth transition for all elements when switching themes */
+.dark * {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.15s ease;
+}
+
+/* Preserve hover transform/scale transitions on interactive elements */
+.dark [class*="hover:"],
+.dark [class*="group-hover:"],
+.dark .transition-transform,
+.dark .transition-all {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.15s ease, transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* --- Backgrounds --- */
+.dark .bg-white {
+  background-color: #1a1a1a !important;
+}
+
+.dark .bg-gray-50 {
+  background-color: #111111 !important;
+}
+
+.dark .bg-gray-100 {
+  background-color: #1a1a1a !important;
+}
+
+.dark .bg-gray-200 {
+  background-color: #222222 !important;
+}
+
+.dark .bg-yellow-50 {
+  background-color: #1a1500 !important;
+}
+
+.dark .bg-amber-50 {
+  background-color: #1a1500 !important;
+}
+
+/* Exclude images and media from dark overrides */
+.dark img,
+.dark video,
+.dark picture,
+.dark canvas,
+.dark svg:not(.timeline-svg) {
+  filter: none !important;
+  background-color: transparent !important;
+}
+
+.dark [class*="overflow-hidden"] img,
+.dark [class*="rounded"] img {
+  background-color: transparent !important;
+}
+
+/* --- Text --- */
+.dark .text-black {
+  color: #e5e5e5 !important;
+}
+
+.dark .text-gray-900 {
+  color: #e5e5e5 !important;
+}
+
+.dark .text-gray-800 {
+  color: #d4d4d4 !important;
+}
+
+.dark .text-gray-700 {
+  color: #b3b3b3 !important;
+}
+
+.dark .text-gray-600 {
+  color: #a1a1a1 !important;
+}
+
+.dark .text-gray-500 {
+  color: #8a8a8a !important;
+}
+
+.dark .text-gray-400 {
+  color: #737373 !important;
+}
+
+/* --- Borders --- */
+.dark .border-gray-100 {
+  border-color: #262626 !important;
+}
+
+.dark .border-gray-200 {
+  border-color: #333333 !important;
+}
+
+.dark .border-gray-300 {
+  border-color: #404040 !important;
+}
+
+.dark .border-yellow-400 {
+  border-color: #b8860b !important;
+}
+
+/* --- Cards & Panels --- */
+.dark .bg-white\/95 {
+  background-color: rgba(26, 26, 26, 0.97) !important;
+}
+
+.dark .bg-white\/80 {
+  background-color: rgba(26, 26, 26, 0.85) !important;
+}
+
+.dark .shadow-lg,
+.dark .shadow-xl,
+.dark .shadow-2xl {
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px !important;
+}
+
+/* --- Inputs & Search --- */
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: #1a1a1a !important;
+  color: #e5e5e5 !important;
+  border-color: #404040 !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #666666 !important;
+}
+
+/* --- NavbarPrimary --- */
+.dark .bg-yellow-400 {
+  background-color: #2d2000 !important;
+}
+
+.dark .bg-yellow-400 .text-black {
+  color: #fbbf24 !important;
+}
+
+.dark .bg-yellow-400 a {
+  color: #fbbf24 !important;
+}
+
+/* --- Footer --- */
+.dark footer,
+.dark [class*="bg-gray-9"] {
+  background-color: #0a0a0a !important;
+}
+
+/* --- Hover states --- */
+.dark .hover\:bg-gray-50:hover {
+  background-color: #222222 !important;
+}
+
+.dark .hover\:bg-yellow-50:hover {
+  background-color: #1a1500 !important;
+}
+
+.dark .hover\:bg-gray-100:hover {
+  background-color: #262626 !important;
+}
+
+/* --- Scrollbar --- */
+.dark .custom-scrollbar::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #404040;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #b8860b;
+}
+
+/* --- Dividers --- */
+.dark .divide-gray-100> :not([hidden])~ :not([hidden]) {
+  border-color: #262626 !important;
+}
+
+.dark .divide-gray-200> :not([hidden])~ :not([hidden]) {
+  border-color: #333333 !important;
+}
+
+/* --- Ring --- */
+.dark .ring-gray-200 {
+  --tw-ring-color: #333333 !important;
+}
+
+/* --- Theme toggle animation --- */
+@keyframes themeSwitch {
+  0% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(0.5) rotate(180deg);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: scale(1) rotate(360deg);
+    opacity: 1;
+  }
+}
+
+.animate-themeSwitch {
+  animation: themeSwitch 0.5s ease-in-out;
+}
+
+/* Custom scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #f59e0b;
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Hide scrollbar */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Responsive table */
+@media (max-width: 768px) {
+  .admin-table-wrapper {
+    padding: 0 8px 12px 8px !important;
+  }
+
+  .custom-table .ant-table-container {
+    overflow-x: auto !important;
+  }
+
+  .custom-table .ant-table-thead>tr>th,
+  .custom-table .ant-table-thead>tr>td {
+    padding: 8px 10px !important;
+    font-size: 10px !important;
+  }
+
+  .custom-table .ant-table-tbody>tr>td {
+    padding: 10px 10px !important;
+    font-size: 12px;
+  }
+}
+
+/* ===== Floating Cart Animations ===== */
+.flying-cart-item {
+  position: fixed;
+  z-index: 99999;
+  pointer-events: none;
+  left: var(--start-x);
+  top: var(--start-y);
+  animation: flyToCart 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  transform-origin: center center;
+}
+
+@keyframes flyToCart {
+  0% {
+    left: var(--start-x);
+    top: var(--start-y);
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+
+  30% {
+    opacity: 1;
+    transform: scale(1.15) rotate(-5deg);
+  }
+
+  50% {
+    opacity: 0.9;
+    transform: scale(0.8) rotate(5deg);
+  }
+
+  100% {
+    left: var(--end-x);
+    top: var(--end-y);
+    opacity: 0;
+    transform: scale(0.2) rotate(15deg);
+  }
+}
+
+@keyframes cartBounce {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  15% {
+    transform: scale(1.25);
+  }
+
+  30% {
+    transform: scale(0.9);
+  }
+
+  45% {
+    transform: scale(1.15);
+  }
+
+  60% {
+    transform: scale(0.95);
+  }
+
+  75% {
+    transform: scale(1.05);
+  }
+}
+
+.animate-cartBounce {
+  animation: cartBounce 0.6s ease-in-out;
+}
+
+@keyframes badgePop {
+  0% {
+    transform: scale(1);
+  }
+
+  25% {
+    transform: scale(1.5);
+  }
+
+  50% {
+    transform: scale(0.85);
+  }
+
+  75% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-badgePop {
+  animation: badgePop 0.5s ease-out;
+}
+
+/* Utility classes for Tailwind v4 compat */
+.no-spinner {
+  -moz-appearance: textfield;
+}
+
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+.clip-custom {
+  clip-path: polygon(150% 0, 0 125%, 100% 100%);
+}
