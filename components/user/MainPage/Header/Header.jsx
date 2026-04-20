@@ -7,7 +7,7 @@ import FormActionLogin from './FormActionLogin';
 import { useSelector } from 'react-redux';
 // react-tooltip css removed;
 import { toast } from 'react-toastify';
-const Logo = '/images/Capylumine.png';const avatarimg = '/images/Avatar.jpg';import AuthService from '@/services/AuthService';
+const Logo = '/images/Capylumine.png'; const avatarimg = '/images/Avatar.jpg'; import AuthService from '@/services/AuthService';
 import FormProfile from './FormProfile';
 import SearchService from '@/services/SearchService';
 import { useCategories } from '../../../../hooks/useCategories';
@@ -37,6 +37,7 @@ const Header = () =>
   const [suggestions, setSuggestions] = useState({ categories: [], products: [] });
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const debounceRef = useRef(null);
   const suggestionsRef = useRef(null);
   const popupRef = useRef(null);
@@ -47,6 +48,8 @@ const Header = () =>
   const buttonProfileRef = useRef(null);
   const searchRef = useRef(null);
   const avatarURL = useSelector((state) => state.avatar.avatar);
+
+  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() =>
   {
@@ -110,31 +113,11 @@ const Header = () =>
     }
   };
 
-  // Xử lý tìm kiếm nhanh
+  // Xử lý tìm kiếm nhanh — chỉ hiện gợi ý
   const handleQuickSearch = async () =>
   {
     if (!searchKeyword.trim()) return;
-
-    setIsSearching(true);
-    try
-    {
-      const result = await SearchService.quickSearch(searchKeyword);
-
-      // Chuyển đến trang kết quả tìm kiếm
-      navigate('/search', {
-        state: {
-          searchResults: result,
-          keyword: searchKeyword,
-          categoryId: selectedCategory
-        }
-      });
-    } catch (error)
-    {
-      console.error('Search error:', error);
-    } finally
-    {
-      setIsSearching(false);
-    }
+    fetchSuggestions(searchKeyword);
   };
 
   // Debounced search suggestions
@@ -184,17 +167,12 @@ const Header = () =>
     }, 300);
   };
 
-  // Handle suggestion click - category
+  // Handle suggestion click - category → vào trang danh mục
   const handleCategorySuggestionClick = (category) =>
   {
     setShowSuggestions(false);
     setSearchKeyword('');
-    navigate('/search', {
-      state: {
-        keyword: searchKeyword,
-        categoryId: category.id
-      }
-    });
+    navigate(`/categories/${category.id}`);
   };
 
   // Handle suggestion click - product
@@ -205,12 +183,11 @@ const Header = () =>
     navigate(`/product/${product.id}`);
   };
 
-  // Xử lý Enter key
+  // Xử lý Enter key — hiện gợi ý
   const handleKeyDown = (e) =>
   {
     if (e.key === 'Enter')
     {
-      setShowSuggestions(false);
       handleQuickSearch();
     }
   };
@@ -231,10 +208,10 @@ const Header = () =>
       }
     };
 
-    document.addEventListener('click', handleOutsideClick, true);
+    document.addEventListener('click', handleOutsideClick, false);
     return () =>
     {
-      document.removeEventListener('click', handleOutsideClick, true);
+      document.removeEventListener('click', handleOutsideClick, false);
     };
   }, []);
 
@@ -443,7 +420,7 @@ const Header = () =>
             <FormLogin toggleLogin={toggleLogin} setToggleLogin={setToggleLogin} />
 
             {
-              isAuthenticated ?
+              mounted && isAuthenticated ?
                 <>
                   <li onClick={toggleActionLoginForm} ref={buttonActionRef} className='relative w-8 h-8 leading-8 border-2 border-yellow-400 rounded-[20%] p-[1px] cursor-pointer'>
                     <img className='rounded-[20%] h-full w-full ' src={avatarURL ? avatarURL : (avatar.ProfileAvatar ? (avatar.ProfileAvatar.startsWith('http') ? avatar.ProfileAvatar : `${API_ENDPOINT}${avatar.ProfileAvatar}`) : avatarimg)} alt="" />
@@ -533,7 +510,7 @@ const Header = () =>
             <div className='p-4'>
               {/* User actions */}
               <div className='space-y-3 mb-6'>
-                {isAuthenticated ? (
+                {mounted && isAuthenticated ? (
                   <>
                     <div className='flex items-center gap-3 p-2 rounded-lg bg-gray-50'>
                       <img className='w-10 h-10 rounded-full border-2 border-yellow-400' src={avatarURL ? avatarURL : (avatar.ProfileAvatar ? (avatar.ProfileAvatar.startsWith('http') ? avatar.ProfileAvatar : `${API_ENDPOINT}${avatar.ProfileAvatar}`) : avatarimg)} alt="" />

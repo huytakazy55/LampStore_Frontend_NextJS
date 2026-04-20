@@ -2,7 +2,7 @@
 
 import React, { useState, useContext, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux';
-const Logo = '/images/Capylumine.png';const England = '/images/England-img.jpg';const VietNam = '/images/VietNam-icon.jpg';import { useDispatch } from 'react-redux';
+const Logo = '/images/Capylumine.png'; const England = '/images/England-img.jpg'; const VietNam = '/images/VietNam-icon.jpg'; import { useDispatch } from 'react-redux';
 import { setLeftBar } from '@/redux/slices/leftBarAdminSlice';
 import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '@/contexts/ThemeContext';
@@ -81,11 +81,23 @@ const AppBar = () =>
     }
 
     return (
-        <div className='w-full h-16 bg-white flex justify-between items-center px-3 md:px-8 border-b border-gray-300'>
-            <div className='w-auto md:w-[15%] h-full flex-shrink-0'>
-                <img className='max-h-full h-12 md:h-full' src={Logo} alt="" />
+        <div className='w-full h-16 bg-white flex justify-between items-center px-3 md:px-8 border-b border-gray-300 relative z-50'>
+            <div className='flex items-center flex-shrink-0'>
+                <a href="/admin" className='flex items-center gap-2 no-underline'>
+                    <div className='w-10 h-10 rounded-lg overflow-hidden shadow-md'>
+                        <img src={Logo} alt="CapyLumine" className='w-full h-full object-cover' />
+                    </div>
+                    <div className='hidden sm:block'>
+                        <div className='text-lg font-bold tracking-tight text-gray-900'>
+                            Capy<span className='text-amber-500'>Lumine</span>
+                        </div>
+                        <div className='text-[9px] text-gray-400 font-medium tracking-[0.15em] uppercase -mt-1'>
+                            Premium Lighting
+                        </div>
+                    </div>
+                </a>
             </div>
-            <div onClick={() => toggleHideLeftBar()} className='text-h2 flex justify-center items-center cursor-pointer ml-2 md:ml-0'>
+            <div onClick={() => toggleHideLeftBar()} className='text-h2 flex justify-center items-center cursor-pointer ml-5 md:ml-0'>
                 <i className='bx bx-menu'></i>
             </div>
             <div className='flex-1 hidden md:block'>

@@ -47,7 +47,6 @@ const AdminChatWindow = ({ chat, onClose, onUpdate }) =>
       const connected = await ChatService.initializeConnection();
       if (connected && chat?.id)
       {
-        console.log('🔗 Admin SignalR connected for chat:', chat.id);
         await ChatService.joinChat(chat.id);
       }
     } catch (error)
@@ -74,7 +73,6 @@ const AdminChatWindow = ({ chat, onClose, onUpdate }) =>
       // Kiểm tra cache để tránh xử lý message trùng
       if (processedMessagesRef.current.has(messageKey))
       {
-        console.log('🔄 Skipping duplicate message:', messageKey);
         return;
       }
 
@@ -385,49 +383,13 @@ const AdminChatWindow = ({ chat, onClose, onUpdate }) =>
   };
 
   return (
-    <div style={{ height: '600px', display: 'flex', flexDirection: 'column' }}>
-      {/* Chat Header */}
-      <div style={{ padding: '16px', borderBottom: '1px solid #f0f0f0' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-          <div>
-            <h3 style={{ margin: 0, fontSize: '16px' }}>{chat?.subject}</h3>
-            <p style={{ margin: '4px 0 0 0', color: '#666', fontSize: '12px' }}>
-              ID: {chat?.id?.slice(0, 8)}... | Khách hàng: {chat?.user?.userName || 'N/A'}
-            </p>
-          </div>
-          <Space>
-            <Tag color={getStatusColor(chatStatus)}>
-              {getStatusText(chatStatus)}
-            </Tag>
-            <Tag color={getPriorityColor(chat?.priority)}>
-              {getPriorityText(chat?.priority)}
-            </Tag>
-          </Space>
-        </div>
-
-        {/* Status Control */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <span style={{ fontSize: '14px' }}>Trạng thái:</span>
-          <Select
-            value={chatStatus}
-            onChange={updateChatStatus}
-            style={{ width: 150 }}
-            size="small"
-          >
-            <Option value={1}>Mở</Option>
-            <Option value={2}>Đang xử lý</Option>
-            <Option value={3}>Đã giải quyết</Option>
-            <Option value={4}>Đã đóng</Option>
-          </Select>
-        </div>
-      </div>
-
+    <div>
       {/* Messages */}
       <div style={{
-        flex: 1,
+        maxHeight: '400px',
         padding: '16px',
         overflowY: 'auto',
-        backgroundColor: '#fafafa'
+        backgroundColor: '#fafafa',
       }}>
         {loading ? (
           <div style={{ textAlign: 'center', padding: '20px' }}>Đang tải tin nhắn...</div>
@@ -529,10 +491,9 @@ const AdminChatWindow = ({ chat, onClose, onUpdate }) =>
         <div ref={messagesEndRef} />
       </div>
 
-      <Divider style={{ margin: 0 }} />
 
       {/* Message Input */}
-      <div style={{ padding: '16px' }}>
+      <div style={{ padding: '12px 16px', borderTop: '1px solid #f0f0f0', flexShrink: 0 }}>
         <div style={{ display: 'flex', gap: '8px' }}>
           <TextArea
             value={newMessage}

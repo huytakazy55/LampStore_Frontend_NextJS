@@ -103,7 +103,7 @@ const LeftBar = () =>
             className={`h-full border-r border-gray-300 transition-all duration-400 ease-linear overflow-hidden overflow-y-auto
                 ${leftBar
                     ? 'w-0 md:w-[4.5rem] absolute md:relative -left-full md:left-0'
-                    : 'w-[70%] sm:w-[50%] md:w-[13%] fixed md:relative left-0 top-16 bottom-0 z-40 md:z-auto'
+                    : 'w-[70%] sm:w-[50%] md:w-[13%] fixed md:relative left-0 top-16 md:top-0 bottom-0 z-40 md:z-auto'
                 }`}
         >
             <ul className="p-3 md:p-4 text-white">

@@ -7,6 +7,9 @@ const ImageLightbox = ({ isOpen, onClose, images, initialIndex = 0 }) =>
 {
     const [currentIndex, setCurrentIndex] = useState(initialIndex);
     const [isZoomed, setIsZoomed] = useState(false);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => { setMounted(true); }, []);
 
     useEffect(() =>
     {
@@ -50,7 +53,7 @@ const ImageLightbox = ({ isOpen, onClose, images, initialIndex = 0 }) =>
         return () => window.removeEventListener('keydown', handleKey);
     }, [isOpen, onClose, handlePrev, handleNext]);
 
-    if (!isOpen || !images || images.length === 0) return null;
+    if (!mounted || !isOpen || !images || images.length === 0) return null;
 
     return createPortal(
         <div

@@ -1,10 +1,10 @@
 "use client";
 
-import React, {useContext, useState, useEffect, useMemo} from 'react'
+import React, { useContext, useState, useEffect, useMemo } from 'react'
 import { Breadcrumb, Input, Button, Table, Pagination, Space, Typography, Card, Row, Col, Select, DatePicker, Tag } from 'antd';
 import { Link as RouterLink } from '@/lib/router-compat';
 import { useTranslation } from 'react-i18next';
-import {ThemeContext} from '@/contexts/ThemeContext';
+import { ThemeContext } from '@/contexts/ThemeContext';
 import { toast } from 'react-toastify';
 import TagManage from '@/services/TagManage';
 import CreateModal from './CreateModal';
@@ -27,9 +27,10 @@ const style = {
   outline: 'none',
 };
 
-const Tags = () => {
-  const {themeColors} = useContext(ThemeContext);
-  const {t} = useTranslation();
+const Tags = () =>
+{
+  const { themeColors } = useContext(ThemeContext);
+  const { t } = useTranslation();
   //modal create
   const [openCreate, setOpenCreate] = React.useState(false);
   const handleCreateOpen = () => setOpenCreate(true);
@@ -69,18 +70,22 @@ const Tags = () => {
   const [bulkDeleteLoading, setBulkDeleteLoading] = useState(false);
   const [bulkDeleteIds, setBulkDeleteIds] = useState([]);
 
-  useEffect( () => {
+  useEffect(() =>
+  {
     TagManage.GetTag()
-    .then((res) => {
-      setTagData(res.data.$values);
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-  },[])
+      .then((res) =>
+      {
+        setTagData(res.data.$values);
+      })
+      .catch((err) =>
+      {
+
+      })
+  }, [])
 
   //Search Service
-  const highlightedText = (text, highlight) => {
+  const highlightedText = (text, highlight) =>
+  {
     if (!highlight) return text;
     const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
     return parts.map((part, index) =>
@@ -90,64 +95,78 @@ const Tags = () => {
     );
   };
 
-  const filteredTags = useMemo(() => {
-    return tagData.filter(tag => {
+  const filteredTags = useMemo(() =>
+  {
+    return tagData.filter(tag =>
+    {
       const matchesSearch = tag.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          tag.description.toLowerCase().includes(searchTerm.toLowerCase());
+        tag.description.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesDate = !dateRange || (
         new Date(tag.createdAt) >= dateRange[0].startOf('day').toDate() &&
         new Date(tag.createdAt) <= dateRange[1].endOf('day').toDate()
       );
-      
+
       return matchesSearch && matchesDate;
     });
   }, [tagData, searchTerm, dateRange]);
 
-  const truncateWords = (text, maxWords) => {
-    if (!text) {
+  const truncateWords = (text, maxWords) =>
+  {
+    if (!text)
+    {
       return '';
     }
     const words = text.split(' ');
-    if (words.length > maxWords) {
+    if (words.length > maxWords)
+    {
       return words.slice(0, maxWords).join(' ') + ' . . .';
     }
     return text;
   };
 
-  const handleChangePage = (page) => {
+  const handleChangePage = (page) =>
+  {
     setPage(page);
   };
 
   //Pagination
-  const currentItems = useMemo(() => {
+  const currentItems = useMemo(() =>
+  {
     return filteredTags.slice((page - 1) * itemsPerPage, page * itemsPerPage);
   }, [filteredTags, page, itemsPerPage]);
 
-  const DeleteTag = (id, name) => {
+  const DeleteTag = (id, name) =>
+  {
     TagManage.DeleteTag(id, name)
-      .then((res) => {
+      .then((res) =>
+      {
         setTagData(prevData => prevData.filter(tag => tag.id !== id));
         toast.success(`Đã xóa bản ghi có id = ${id}: ${name}`);
       })
-      .catch((err) => {
+      .catch((err) =>
+      {
         toast.error("Có lỗi xảy ra");
       });
   };
 
-  const handleUpdateClick = (id) => {
+  const handleUpdateClick = (id) =>
+  {
     const tag = tagData.find((item) => item.id === id);
     setSelectedTag(tag);
     handleUpdateOpen();
     setUpdateId(id);
   }
 
-  const fetchTags = () => {
+  const fetchTags = () =>
+  {
     TagManage.GetTag()
-      .then((res) => {
+      .then((res) =>
+      {
         setTagData(res.data.$values);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((err) =>
+      {
+
       });
   };
 
@@ -209,7 +228,8 @@ const Tags = () => {
       key: 'updatedAt',
       width: '12%',
       align: 'center',
-      sorter: (a, b) => {
+      sorter: (a, b) =>
+      {
         if (!a.updatedAt) return -1;
         if (!b.updatedAt) return 1;
         return new Date(a.updatedAt) - new Date(b.updatedAt);
@@ -226,17 +246,17 @@ const Tags = () => {
       width: '20%',
       align: 'center',
       render: (_, record) => (
-        <Space size="middle" style={{justifyContent: 'center', width: '100%'}}>
-          <Button 
-            type="text" 
-            icon={<i className='bx bx-edit'></i>} 
+        <Space size="middle" style={{ justifyContent: 'center', width: '100%' }}>
+          <Button
+            type="text"
+            icon={<i className='bx bx-edit'></i>}
             onClick={() => handleUpdateClick(record.id)}
-            style={{color: themeColors.EndColorLinear}}
+            style={{ color: themeColors.EndColorLinear }}
           />
-          <Button 
-            type="text" 
-            danger 
-            icon={<i className='bx bx-trash'></i>} 
+          <Button
+            type="text"
+            danger
+            icon={<i className='bx bx-trash'></i>}
             onClick={() => DeleteTag(record.id, record.name)}
           />
         </Space>
@@ -244,7 +264,8 @@ const Tags = () => {
     }
   ];
 
-  const onSelectChange = (newSelectedRowKeys) => {
+  const onSelectChange = (newSelectedRowKeys) =>
+  {
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
@@ -255,28 +276,34 @@ const Tags = () => {
     columnTitle: '',
   };
 
-  const handleBulkDelete = async () => {
-    try {
+  const handleBulkDelete = async () =>
+  {
+    try
+    {
       setBulkDeleteLoading(true);
       const response = await TagManage.BulkDeleteTags(selectedRowKeys);
-      
-      if (response.data.success || response.status === 200 || response.status === 204) {
+
+      if (response.data.success || response.status === 200 || response.status === 204)
+      {
         toast.success(`Đã xóa ${selectedRowKeys.length} bản ghi!`);
         setSelectedRowKeys([]);
         fetchTags();
-      } else {
+      } else
+      {
         toast.error('Có lỗi xảy ra khi xóa bản ghi!');
       }
-    } catch (error) {
+    } catch (error)
+    {
       toast.error('Có lỗi xảy ra khi xóa bản ghi!');
-    } finally {
+    } finally
+    {
       setBulkDeleteLoading(false);
       setOpenBulkDelete(false);
     }
   };
 
   return (
-    <div style={{padding: '24px'}}>
+    <div style={{ padding: '24px' }}>
       <div className="admin-table-card">
         {/* Title Bar */}
         <div
@@ -289,7 +316,7 @@ const Tags = () => {
             marginBottom: 0
           }}
         >
-          <div style={{fontSize: '1.5rem', fontWeight: 600, color: themeColors.StartColorLinear}}>
+          <div style={{ fontSize: '1.5rem', fontWeight: 600, color: themeColors.StartColorLinear }}>
             {t('Tags')}
           </div>
           <Breadcrumb
@@ -318,7 +345,7 @@ const Tags = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Tìm kiếm tag..."
-              style={{width: '240px'}}
+              style={{ width: '240px' }}
             />
             <Button
               type="default"
@@ -348,17 +375,17 @@ const Tags = () => {
           </Button>
         </div>
         {/* Filter options */}
-        <Row gutter={[16, 16]} style={{margin: '16px 0', padding: '0 16px'}}>
+        <Row gutter={[16, 16]} style={{ margin: '16px 0', padding: '0 16px' }}>
           <Col span={12}>
             <DatePicker.RangePicker
-              style={{width: '100%'}}
+              style={{ width: '100%' }}
               onChange={setDateRange}
               placeholder={['Từ ngày', 'Đến ngày']}
             />
           </Col>
         </Row>
         {/* Table */}
-        <div className="admin-table-wrapper" style={{padding: '0 24px 24px 24px'}}>
+        <div className="admin-table-wrapper" style={{ padding: '0 24px 24px 24px' }}>
           <Table
             rowSelection={rowSelection}
             columns={columns}
@@ -384,16 +411,16 @@ const Tags = () => {
         </div>
       </div>
 
-      <CreateModal 
-        openCreate={openCreate} 
-        handleCreateClose={handleCreateClose} 
+      <CreateModal
+        openCreate={openCreate}
+        handleCreateClose={handleCreateClose}
         fetchTags={fetchTags}
         style={style}
       />
 
-      <UpdateModal 
-        openUpdate={openUpdate} 
-        handleUpdateClose={handleUpdateClose} 
+      <UpdateModal
+        openUpdate={openUpdate}
+        handleUpdateClose={handleUpdateClose}
         fetchTags={fetchTags}
         style={style}
         tag={selectedTag}
@@ -404,7 +431,8 @@ const Tags = () => {
         title={t('Filter')}
         open={openFilter}
         onCancel={() => setOpenFilter(false)}
-        onOk={() => {
+        onOk={() =>
+        {
           setOpenFilter(false);
           // Handle filter application
         }}
@@ -428,4 +456,4 @@ const Tags = () => {
 }
 
 export default Tags
-
+

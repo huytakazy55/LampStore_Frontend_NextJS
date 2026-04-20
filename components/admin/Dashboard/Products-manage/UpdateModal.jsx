@@ -8,8 +8,8 @@ import TagManage from '@/services/TagManage';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '@/contexts/ThemeContext';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
 
 const { Title } = Typography;
 
@@ -242,7 +242,7 @@ const UpdateModal = ({ openUpdate, handleUpdateClose, fetchProducts, style, cate
       })
       .catch((err) =>
       {
-        console.log(err);
+
       });
   }, []);
 

@@ -25,6 +25,7 @@ const AddToCartModal = ({ isOpen, onClose, product }) =>
 {
     const { addToCart } = useCart();
     const navigate = useNavigate();
+    const [mounted, setMounted] = useState(false);
     const [variant, setVariant] = useState(null);
     const [variantTypes, setVariantTypes] = useState([]);
     const [images, setImages] = useState([]);
@@ -88,7 +89,9 @@ const AddToCartModal = ({ isOpen, onClose, product }) =>
         };
     }, [isOpen]);
 
-    if (!isOpen || !product) return null;
+    useEffect(() => { setMounted(true); }, []);
+
+    if (!mounted || !isOpen || !product) return null;
 
     // Tính tổng additionalPrice từ các option đã chọn
     const totalAdditional = Object.values(selectedOptions)

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 
 /**
@@ -38,6 +38,7 @@ const ScrollTimeline = () =>
     const progressLineRef = useRef(null);
     const dotRefs = useRef({});
     const containerRef = useRef(null);
+    const [mounted, setMounted] = useState(false);
     const sectionIds = Object.keys(SECTION_ICONS);
 
     // Get smooth-scrollbar instance
@@ -195,6 +196,10 @@ const ScrollTimeline = () =>
         if (count <= 1) return TIMELINE_TOP;
         return TIMELINE_TOP + (idx / (count - 1)) * TIMELINE_RANGE;
     };
+
+    useEffect(() => { setMounted(true); }, []);
+
+    if (!mounted) return null;
 
     return createPortal(
         <div

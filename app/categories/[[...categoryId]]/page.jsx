@@ -7,7 +7,6 @@ import Header from '@/components/user/MainPage/Header/Header';
 import NavbarPrimary from '@/components/user/MainPage/NavbarPrimary/NavbarPrimary';
 import TopBar from '@/components/user/MainPage/TopBar/TopBar';
 import Footer from '@/components/user/MainPage/Footer/Footer';
-import BackToTop from '@/components/common/BackToTop';
 import CategoryManage from '@/services/CategoryManage';
 import ProductManage from '@/services/ProductManage';
 import AddToCartModal from '@/components/user/MainPage/AddToCartModal';
@@ -15,28 +14,34 @@ import defaultImg from '@/assets/images/cameras-2.jpg';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
-const formatPrice = (price) => {
+const formatPrice = (price) =>
+{
     if (!price) return '0';
     return price.toLocaleString('vi-VN');
 };
 
-const getProductImageSrc = (product) => {
+const getProductImageSrc = (product) =>
+{
     const imgs = product.images?.$values || product.images || product.Images || [];
-    if (imgs.length > 0) {
+    if (imgs.length > 0)
+    {
         const path = imgs[0].imagePath || imgs[0].ImagePath;
         if (path) return path.startsWith('http') ? path : `${API_ENDPOINT}${path}`;
     }
     return defaultImg;
 };
 
-const getCategoryImageSrc = (category) => {
-    if (category.imageUrl) {
+const getCategoryImageSrc = (category) =>
+{
+    if (category.imageUrl)
+    {
         return category.imageUrl.startsWith('http') ? category.imageUrl : `${API_ENDPOINT}${category.imageUrl}`;
     }
     return defaultImg;
 };
 
-export default function CategoryPage() {
+export default function CategoryPage()
+{
     const router = useRouter();
     const params = useParams();
     const categoryId = params?.categoryId?.[0] || null;
@@ -48,49 +53,62 @@ export default function CategoryPage() {
     const [productsLoading, setProductsLoading] = useState(false);
     const [cartModalProduct, setCartModalProduct] = useState(null);
 
-    useEffect(() => {
-        const fetchCategories = async () => {
-            try {
+    useEffect(() =>
+    {
+        const fetchCategories = async () =>
+        {
+            try
+            {
                 const response = await CategoryManage.GetCategory();
                 const data = response.data.$values || response.data || [];
                 setCategories(data);
-                if (!activeCategory && data.length > 0) {
+                if (!activeCategory && data.length > 0)
+                {
                     setActiveCategory(String(data[0].id));
                 }
-            } catch (error) {
+            } catch (error)
+            {
                 console.error('Error fetching categories:', error);
-            } finally {
+            } finally
+            {
                 setLoading(false);
             }
         };
         fetchCategories();
     }, []);
 
-    useEffect(() => {
+    useEffect(() =>
+    {
         if (!activeCategory) return;
-        const fetchProducts = async () => {
+        const fetchProducts = async () =>
+        {
             setProductsLoading(true);
-            try {
+            try
+            {
                 const response = await ProductManage.GetProduct();
                 const allProducts = response.data?.$values || response.data || [];
                 const filtered = allProducts.filter(p =>
                     String(p.categoryId) === String(activeCategory)
-                ).map(product => {
+                ).map(product =>
+                {
                     const imgData = product.images?.$values || product.images;
                     const images = Array.isArray(imgData) ? imgData : [];
                     return { ...product, images };
                 });
                 setProducts(filtered);
-            } catch (error) {
+            } catch (error)
+            {
                 console.error('Error fetching products:', error);
-            } finally {
+            } finally
+            {
                 setProductsLoading(false);
             }
         };
         fetchProducts();
     }, [activeCategory]);
 
-    useEffect(() => {
+    useEffect(() =>
+    {
         if (categoryId) setActiveCategory(categoryId);
     }, [categoryId]);
 
@@ -101,7 +119,6 @@ export default function CategoryPage() {
             <TopBar />
             <Header />
             <NavbarPrimary />
-            <BackToTop />
 
             <div className="w-full bg-gray-50 min-h-screen">
                 <div className="xl:max-w-[1440px] mx-auto px-4 xl:px-0 py-6 md:py-8">
@@ -173,7 +190,8 @@ export default function CategoryPage() {
                                     </div>
                                 ) : products.length > 0 ? (
                                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-                                        {products.map((product) => {
+                                        {products.map((product) =>
+                                        {
                                             const variant = product.variant;
                                             const price = variant?.discountPrice || variant?.price || 0;
                                             const originalPrice = variant?.price || 0;

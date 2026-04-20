@@ -1,20 +1,21 @@
 "use client";
 
-import React, {useContext, useState, useEffect} from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { Modal, Upload, Button, Space, Typography, Card, Row, Col, message, Progress } from 'antd';
 import { InboxOutlined, DeleteOutlined, EyeOutlined, UploadOutlined, CloseOutlined } from '@ant-design/icons';
 import ProductManage from '@/services/ProductManage';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
-import {ThemeContext} from '@/contexts/ThemeContext';
+import { ThemeContext } from '@/contexts/ThemeContext';
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
 const { Dragger } = Upload;
 const { Text, Title } = Typography;
 
-const UploadModal = ({openUpload, handleUploadClose, setProductData, style, updateId, fetchProducts}) => {
-    const {themeColors} = useContext(ThemeContext);
-    const {t} = useTranslation();
+const UploadModal = ({ openUpload, handleUploadClose, setProductData, style, updateId, fetchProducts }) =>
+{
+    const { themeColors } = useContext(ThemeContext);
+    const { t } = useTranslation();
     const [fileList, setFileList] = useState([]);
     const [uploading, setUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
@@ -23,15 +24,20 @@ const UploadModal = ({openUpload, handleUploadClose, setProductData, style, upda
     const [previewTitle, setPreviewTitle] = useState('');
     const [productImages, setProductImages] = useState([]);
 
-    const fetchProductImages = () => {
-        if (updateId) {
+    const fetchProductImages = () =>
+    {
+        if (updateId)
+        {
             ProductManage.GetProductImageById(updateId)
-                .then((res) => {
+                .then((res) =>
+                {
                     setProductImages(res.data?.$values || res.data || []);
                 })
-                .catch((err) => {
+                .catch((err) =>
+                {
                     // 404 = no images yet, not an error
-                    if (err.response?.status !== 404) {
+                    if (err.response?.status !== 404)
+                    {
                         toast.error("Có lỗi khi lấy thông tin hình ảnh sản phẩm.");
                     }
                     setProductImages([]);
@@ -39,12 +45,15 @@ const UploadModal = ({openUpload, handleUploadClose, setProductData, style, upda
         }
     };
 
-    useEffect(() => {
+    useEffect(() =>
+    {
         fetchProductImages();
     }, [updateId]);
 
-    const handlePreview = async (file) => {
-        if (!file.url && !file.preview) {
+    const handlePreview = async (file) =>
+    {
+        if (!file.url && !file.preview)
+        {
             file.preview = await getBase64(file.originFileObj);
         }
         setPreviewImage(file.url || file.preview);
@@ -52,8 +61,10 @@ const UploadModal = ({openUpload, handleUploadClose, setProductData, style, upda
         setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
     };
 
-    const getBase64 = (file) => {
-        return new Promise((resolve, reject) => {
+    const getBase64 = (file) =>
+    {
+        return new Promise((resolve, reject) =>
+        {
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = () => resolve(reader.result);
@@ -61,12 +72,15 @@ const UploadModal = ({openUpload, handleUploadClose, setProductData, style, upda
         });
     };
 
-    const handleChange = ({ fileList: newFileList }) => {
+    const handleChange = ({ fileList: newFileList }) =>
+    {
         setFileList(newFileList);
     };
 
-    const handleUpload = async () => {
-        if (fileList.length === 0) {
+    const handleUpload = async () =>
+    {
+        if (fileList.length === 0)
+        {
             message.warning('Vui lòng chọn ít nhất một hình ảnh để tải lên!');
             return;
         }
@@ -74,10 +88,13 @@ const UploadModal = ({openUpload, handleUploadClose, setProductData, style, upda
         setUploading(true);
         setUploadProgress(0);
 
-        try {
+        try
+        {
             const formData = new FormData();
-            fileList.forEach((file) => {
-                if (file.originFileObj) {
+            fileList.forEach((file) =>
+            {
+                if (file.originFileObj)
+                {
                     formData.append('imageFiles', file.originFileObj);
                 }
             });
@@ -89,7 +106,8 @@ const UploadModal = ({openUpload, handleUploadClose, setProductData, style, upda
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 },
-                onUploadProgress: (progressEvent) => {
+                onUploadProgress: (progressEvent) =>
+                {
                     const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
                     setUploadProgress(progress);
                 }
@@ -104,22 +122,27 @@ const UploadModal = ({openUpload, handleUploadClose, setProductData, style, upda
             fetchProductImages();
             toast.success("Tải lên hình ảnh thành công!");
             setFileList([]);
-        } catch (error) {
-            console.log('Upload error:', error);
+        } catch (error)
+        {
+
             toast.error("Có lỗi xảy ra khi tải lên hình ảnh! " + error.response.data);
-        } finally {
+        } finally
+        {
             setUploading(false);
             setUploadProgress(0);
         }
     };
 
-    const handleDeleteImage = async (imageId) => {
-        try {
+    const handleDeleteImage = async (imageId) =>
+    {
+        try
+        {
             await ProductManage.DeleteProductImage(imageId);
             fetchProducts();
             fetchProductImages();
             toast.success("Xóa hình ảnh thành công!");
-        } catch (error) {
+        } catch (error)
+        {
             toast.error("Có lỗi xảy ra khi xóa hình ảnh! " + error);
         }
     };
@@ -130,14 +153,17 @@ const UploadModal = ({openUpload, handleUploadClose, setProductData, style, upda
         fileList,
         onChange: handleChange,
         onPreview: handlePreview,
-        beforeUpload: (file) => {
+        beforeUpload: (file) =>
+        {
             const isImage = file.type.startsWith('image/');
-            if (!isImage) {
+            if (!isImage)
+            {
                 message.error('Chỉ có thể tải lên file hình ảnh!');
                 return Upload.LIST_IGNORE;
             }
             const isLt5M = file.size / 1024 / 1024 < 5;
-            if (!isLt5M) {
+            if (!isLt5M)
+            {
                 message.error('Hình ảnh phải nhỏ hơn 5MB!');
                 return Upload.LIST_IGNORE;
             }
@@ -147,7 +173,8 @@ const UploadModal = ({openUpload, handleUploadClose, setProductData, style, upda
     };
 
     // Thêm CSS cho modal
-    useEffect(() => {
+    useEffect(() =>
+    {
         const customStyles = `
             .custom-modal .ant-modal-content {
                 border-radius: 8px;
@@ -200,7 +227,8 @@ const UploadModal = ({openUpload, handleUploadClose, setProductData, style, upda
         styleSheet.innerText = customStyles;
         document.head.appendChild(styleSheet);
 
-        return () => {
+        return () =>
+        {
             document.head.removeChild(styleSheet);
         };
     }, [themeColors]);
@@ -219,9 +247,9 @@ const UploadModal = ({openUpload, handleUploadClose, setProductData, style, upda
             onCancel={handleUploadClose}
             width={1000}
             footer={[
-                <Button 
-                    key="cancel" 
-                    onClick={handleUploadClose} 
+                <Button
+                    key="cancel"
+                    onClick={handleUploadClose}
                     icon={<CloseOutlined />}
                     danger
                 >
@@ -233,7 +261,7 @@ const UploadModal = ({openUpload, handleUploadClose, setProductData, style, upda
                     onClick={handleUpload}
                     disabled={fileList.length === 0}
                     loading={uploading}
-                    style={{background: themeColors.StartColorLinear}}
+                    style={{ background: themeColors.StartColorLinear }}
                 >
                     {uploading ? 'Đang upload...' : 'Upload'}
                 </Button>

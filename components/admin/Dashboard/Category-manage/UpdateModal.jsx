@@ -7,34 +7,40 @@ import CategoryManage from '@/services/CategoryManage';
 import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import { ModalHeader, ModalFooter } from '../shared/ModalComponents';
-import ReactQuill from 'react-quill';
+import ReactQuill from 'react-quill-new';
 import Compressor from 'compressorjs';
-import 'react-quill/dist/quill.snow.css';
+import 'react-quill-new/dist/quill.snow.css';
 
-const UpdateModal = ({ openUpdate, handleUpdateClose, setCategoryData, updateId }) => {
+const UpdateModal = ({ openUpdate, handleUpdateClose, setCategoryData, updateId }) =>
+{
   const { themeColors } = useContext(ThemeContext);
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [imageUrl, setImageUrl] = useState('');
   const [uploading, setUploading] = useState(false);
 
-  useEffect(() => {
-    if (openUpdate && updateId) {
+  useEffect(() =>
+  {
+    if (openUpdate && updateId)
+    {
       CategoryManage.GetCategoryById(updateId)
-        .then((res) => {
+        .then((res) =>
+        {
           form.setFieldsValue({ id: res?.data.id, name: res?.data.name, description: res?.data.description, isDisplayed: res?.data.isDisplayed !== false });
           setImageUrl(res?.data.imageUrl || '');
         })
-        .catch(() => {});
+        .catch(() => { });
     }
   }, [openUpdate, updateId, form]);
 
-  const handleImageUpload = async (file) => {
+  const handleImageUpload = async (file) =>
+  {
     if (file.size > 2 * 1024 * 1024) { message.error('Kích thước ảnh phải nhỏ hơn 2MB.'); return false; }
     setUploading(true);
     new Compressor(file, {
       quality: 0.8, maxWidth: 800, maxHeight: 600, mimeType: 'image/jpeg',
-      success(compressedFile) {
+      success(compressedFile)
+      {
         const renamedFile = new File([compressedFile], `category_${Date.now()}.jpg`, { type: 'image/jpeg', lastModified: Date.now() });
         CategoryManage.UploadImage(renamedFile)
           .then((response) => { setImageUrl(response.data.imageUrl); message.success('Upload ảnh thành công!'); })
@@ -46,9 +52,11 @@ const UpdateModal = ({ openUpdate, handleUpdateClose, setCategoryData, updateId 
     return false;
   };
 
-  const handleSubmitUpdate = (values) => {
+  const handleSubmitUpdate = (values) =>
+  {
     CategoryManage.UpdateCategory(updateId, values.name, values.description, imageUrl, values.isDisplayed !== false)
-      .then(() => {
+      .then(() =>
+      {
         setCategoryData((prev) => prev.map((item) => (item.id === updateId ? { ...item, ...values, imageUrl, id: updateId } : item)));
         message.success('Cập nhật bản ghi thành công');
         handleUpdateClose();
@@ -57,7 +65,7 @@ const UpdateModal = ({ openUpdate, handleUpdateClose, setCategoryData, updateId 
   };
 
   return (
-    <Modal open={openUpdate} onCancel={handleUpdateClose} footer={null} destroyOnClose title={null} styles={{ body: { padding: 0 } }}>
+    <Modal open={openUpdate} onCancel={handleUpdateClose} footer={null} destroyOnHidden title={null} styles={{ body: { padding: 0 } }}>
       <ModalHeader icon="✏️" title={t('Update')} subtitle="Chỉnh sửa thông tin danh mục" />
       <div style={{ padding: '24px 24px 16px' }}>
         <Form form={form} layout="vertical" onFinish={handleSubmitUpdate}>

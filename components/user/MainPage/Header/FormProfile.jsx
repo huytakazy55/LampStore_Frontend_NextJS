@@ -1,19 +1,26 @@
 "use client";
 
 import React, { useState, useEffect } from 'react'
-import ReactDOM from 'react-dom';
+import { createPortal } from 'react-dom';
 import { useDispatch } from 'react-redux';
 import { setAvatar } from '@/redux/slices/avatarSlice';
-const avatar = '/images/Avatar.jpg';import AuthService from '@/services/AuthService'
+const avatar = '/images/Avatar.jpg'; import AuthService from '@/services/AuthService'
 import ProfileService from '@/services/ProfileService'
 import { jwtDecode } from 'jwt-decode'
 import { toast } from 'react-toastify'
 import Compressor from 'compressorjs';
 
-const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile }) => {
+const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile }) =>
+{
   const dispatch = useDispatch();
   const [token, setToken] = useState(null);
+  const [mounted, setMounted] = useState(false);
   const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
+
+  useEffect(() =>
+  {
+    setMounted(true);
+  }, []);
   const [infoSideActive, setInfoSideActive] = useState('info');
   const [profileData, setProfileData] = useState({
     FullName: '',
@@ -28,14 +35,18 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile }) => {
 
   const [previewImage, setPreviewImage] = useState('');
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     setToken(localStorage.getItem("token"));
   }, []);
 
-  useEffect(() => {
-    if (toggleProfile && token) {
+  useEffect(() =>
+  {
+    if (toggleProfile && token)
+    {
       AuthService.profile()
-        .then((res) => {
+        .then((res) =>
+        {
           const userId = jwtDecode(token).nameid;
           setProfileData({
             id: res?.id,
@@ -47,65 +58,82 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile }) => {
             ProfileAvatar: res?.profileAvatar
           });
         })
-        .catch((error) => {
+        .catch((error) =>
+        {
           console.error("Error fetching profile:", error);
         });
     }
   }, [toggleProfile, token]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e) =>
+  {
     e.preventDefault();
 
-    if (profileData.id) {
+    if (profileData.id)
+    {
       ProfileService.UpdateUserProfile(profileData.id, profileData.FullName, profileData.UserId, profileData.Email, profileData.PhoneNumber, profileData.Address)
-        .then((response) => {
+        .then((response) =>
+        {
           toast.success("Đã cập nhật thông tin hồ sơ.");
-          console.log(response.data);
+
         })
-        .catch((error) => {
+        .catch((error) =>
+        {
           toast.error("Lỗi cập nhật hồ sơ.")
-          console.log(error);
+
         });
-    } else {
+    } else
+    {
       ProfileService.CreateUserProfile(profileData.FullName, profileData.UserId, profileData.Email, profileData.PhoneNumber, profileData.Address)
-        .then((res) => {
+        .then((res) =>
+        {
           toast.success("Thêm mới hồ sơ thành công.");
         })
-        .catch((err) => {
+        .catch((err) =>
+        {
           toast.error("Có lỗi xảy ra khi thêm mới hồ sơ.");
         })
     }
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e) =>
+  {
     const { name, value } = e.target;
     setProfileData({ ...profileData, [name]: value });
   };
 
-  const handleDeleteAvatar = (e) => {
+  const handleDeleteAvatar = (e) =>
+  {
     e.preventDefault();
-    if (profileData.ProfileAvatar) {
+    if (profileData.ProfileAvatar)
+    {
       ProfileService.DeleteAvatar(profileData.id)
-        .then((res) => {
+        .then((res) =>
+        {
           toast.success("Đã xóa ảnh đại diện.");
           dispatch(setAvatar(''));
           setPreviewImage(null);
           profileData.ProfileAvatar = '';
         })
-        .catch((err) => {
+        .catch((err) =>
+        {
           toast.error("Có lỗi xảy ra.");
         })
-    } else {
+    } else
+    {
       toast.error("Không tồn tại ảnh đại diện.");
     }
   }
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e) =>
+  {
     const file = e.target.files[0];
     const maxSize = 1 * 1024 * 1024;
 
-    if (file) {
-      if (file.size > maxSize) {
+    if (file)
+    {
+      if (file.size > maxSize)
+      {
         toast.error("Kích thước ảnh phải nhỏ hơn 1MB.");
         return;
       }
@@ -114,22 +142,26 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile }) => {
         quality: 0.8,
         maxWidth: 500,
         maxHeight: 500,
-        success(result) {
+        success(result)
+        {
           const formData = new FormData();
           formData.append('ProfileAvatar', result, result.name);
 
           ProfileService.UploadAvatar(profileData.id, formData)
-            .then((response) => {
+            .then((response) =>
+            {
               const avatarURL = URL.createObjectURL(result);
               setPreviewImage(avatarURL);
               toast.success("Upload ảnh đại diện thành công.");
               dispatch(setAvatar(avatarURL));
             })
-            .catch((error) => {
+            .catch((error) =>
+            {
               toast.error("Upload ảnh không thành công.");
             });
         },
-        error(err) {
+        error(err)
+        {
           toast.error("Có lỗi xảy ra khi nén ảnh.");
         }
       });
@@ -142,7 +174,9 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile }) => {
       ? (profileData.ProfileAvatar.startsWith('http') ? profileData.ProfileAvatar : `${API_ENDPOINT}${profileData.ProfileAvatar}`)
       : avatar;
 
-  return ReactDOM.createPortal(
+  if (!mounted) return null;
+
+  return createPortal(
     <div className={`fixed inset-0 z-[9999] flex items-center justify-center transition-all duration-300 ${toggleProfile ? 'visible opacity-100' : 'invisible opacity-0 pointer-events-none'}`}>
       {/* Backdrop */}
       <div className='absolute inset-0 bg-black/40 backdrop-blur-sm' onClick={() => setToggleProfile && setToggleProfile(false)}></div>

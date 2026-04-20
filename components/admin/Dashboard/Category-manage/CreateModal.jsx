@@ -7,23 +7,26 @@ import CategoryManage from '@/services/CategoryManage';
 import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import { ModalHeader, ModalFooter } from '../shared/ModalComponents';
-import ReactQuill from 'react-quill';
+import ReactQuill from 'react-quill-new';
 import Compressor from 'compressorjs';
-import 'react-quill/dist/quill.snow.css';
+import 'react-quill-new/dist/quill.snow.css';
 
-const CreateModal = ({ openCreate, handleCreateClose, setCategoryData }) => {
+const CreateModal = ({ openCreate, handleCreateClose, setCategoryData }) =>
+{
   const { themeColors } = useContext(ThemeContext);
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [imageUrl, setImageUrl] = useState('');
   const [uploading, setUploading] = useState(false);
 
-  const handleImageUpload = async (file) => {
+  const handleImageUpload = async (file) =>
+  {
     if (file.size > 2 * 1024 * 1024) { message.error('Kích thước ảnh phải nhỏ hơn 2MB.'); return false; }
     setUploading(true);
     new Compressor(file, {
       quality: 0.8, maxWidth: 800, maxHeight: 600, mimeType: 'image/jpeg',
-      success(compressedFile) {
+      success(compressedFile)
+      {
         const renamedFile = new File([compressedFile], `category_${Date.now()}.jpg`, { type: 'image/jpeg', lastModified: Date.now() });
         CategoryManage.UploadImage(renamedFile)
           .then((response) => { setImageUrl(response.data.imageUrl); message.success('Upload ảnh thành công!'); })
@@ -35,9 +38,11 @@ const CreateModal = ({ openCreate, handleCreateClose, setCategoryData }) => {
     return false;
   };
 
-  const handleSubmitCreate = (values) => {
+  const handleSubmitCreate = (values) =>
+  {
     CategoryManage.CreateCategory(values.name, values.description, imageUrl, values.isDisplayed !== false)
-      .then((res) => {
+      .then((res) =>
+      {
         message.success('Thêm mới danh mục thành công!');
         setCategoryData(prevData => [...prevData, res.data]);
         form.resetFields();
@@ -48,7 +53,7 @@ const CreateModal = ({ openCreate, handleCreateClose, setCategoryData }) => {
   };
 
   return (
-    <Modal open={openCreate} onCancel={handleCreateClose} footer={null} destroyOnClose title={null} styles={{ body: { padding: 0 } }}>
+    <Modal open={openCreate} onCancel={handleCreateClose} footer={null} destroyOnHidden title={null} styles={{ body: { padding: 0 } }}>
       <ModalHeader icon="➕" title={t('Create')} subtitle="Thêm danh mục mới vào hệ thống" />
       <div style={{ padding: '24px 24px 16px' }}>
         <Form form={form} layout="vertical" onFinish={handleSubmitCreate}>

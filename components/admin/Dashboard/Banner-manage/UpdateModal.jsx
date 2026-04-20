@@ -8,14 +8,17 @@ import { ModalHeader, ModalFooter } from '../shared/ModalComponents';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
-const UpdateModal = ({ banner, onClose, onSuccess }) => {
+const UpdateModal = ({ banner, onClose, onSuccess }) =>
+{
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const [imageFile, setImageFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState('');
 
-    useEffect(() => {
-        if (banner) {
+    useEffect(() =>
+    {
+        if (banner)
+        {
             form.setFieldsValue({
                 title: banner.title || '',
                 description: banner.description || '',
@@ -23,23 +26,28 @@ const UpdateModal = ({ banner, onClose, onSuccess }) => {
                 order: banner.order || 0,
                 isActive: banner.isActive !== undefined ? banner.isActive : true
             });
-            if (banner.imageUrl) {
+            if (banner.imageUrl)
+            {
                 setPreviewUrl(banner.imageUrl.startsWith('http') ? banner.imageUrl : `${API_ENDPOINT}${banner.imageUrl}`);
-            } else {
+            } else
+            {
                 setPreviewUrl('');
             }
             setImageFile(null);
         }
     }, [banner, form]);
 
-    const handleImageChange = (info) => {
-        if (info.file.status === 'removed') {
+    const handleImageChange = (info) =>
+    {
+        if (info.file.status === 'removed')
+        {
             setImageFile(null);
             setPreviewUrl(banner.imageUrl ? (banner.imageUrl.startsWith('http') ? banner.imageUrl : `${API_ENDPOINT}${banner.imageUrl}`) : '');
             return;
         }
         const file = info.file?.originFileObj || (info.fileList && info.fileList[0]?.originFileObj);
-        if (file) {
+        if (file)
+        {
             const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
             if (!allowedTypes.includes(file.type)) { message.error('Chỉ chấp nhận file JPG, PNG, GIF!'); return; }
             if (file.size > 5 * 1024 * 1024) { message.error('File quá lớn! Tối đa 5MB.'); return; }
@@ -50,11 +58,14 @@ const UpdateModal = ({ banner, onClose, onSuccess }) => {
         }
     };
 
-    const handleSubmit = async (values) => {
+    const handleSubmit = async (values) =>
+    {
         setLoading(true);
-        try {
+        try
+        {
             let updatedImageUrl = banner.imageUrl;
-            if (imageFile) {
+            if (imageFile)
+            {
                 const uploadResult = await BannerService.uploadBannerImage(imageFile);
                 if (uploadResult?.imageUrl) updatedImageUrl = uploadResult.imageUrl;
                 else if (typeof uploadResult === 'string') updatedImageUrl = uploadResult;
@@ -64,9 +75,11 @@ const UpdateModal = ({ banner, onClose, onSuccess }) => {
             await BannerService.updateBanner(banner.id, { ...values, imageUrl: updatedImageUrl });
             message.success('Cập nhật banner thành công');
             onSuccess();
-        } catch (error) {
+        } catch (error)
+        {
             message.error(error.response?.data || 'Lỗi khi cập nhật banner');
-        } finally {
+        } finally
+        {
             setLoading(false);
         }
     };
@@ -74,7 +87,7 @@ const UpdateModal = ({ banner, onClose, onSuccess }) => {
     const uploadProps = { beforeUpload: () => false, onChange: handleImageChange, accept: 'image/*', showUploadList: false };
 
     return (
-        <Modal open={true} onCancel={onClose} footer={null} width={600} destroyOnClose title={null} styles={{ body: { padding: 0 } }}>
+        <Modal open={true} onCancel={onClose} footer={null} width={600} destroyOnHidden title={null} styles={{ body: { padding: 0 } }}>
             <ModalHeader icon="✏️" title="Cập nhật Banner" />
             <div style={{ padding: '24px 24px 16px' }}>
                 <Form form={form} layout="vertical" onFinish={handleSubmit}>

@@ -1,24 +1,27 @@
 /* AdminChatDashboard Animations */
 @keyframes slideInRight {
   from {
-    transform: translateX(100%);
+    transform: translateY(30px);
     opacity: 0;
   }
+
   to {
-    transform: translateX(0);
+    transform: translateY(0);
     opacity: 1;
   }
 }
 
 @keyframes pulse {
-  0% { 
-    box-shadow: 0 0 0 0 rgba(82, 196, 26, 0.7); 
+  0% {
+    box-shadow: 0 0 0 0 rgba(82, 196, 26, 0.7);
   }
-  70% { 
-    box-shadow: 0 0 0 10px rgba(82, 196, 26, 0); 
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(82, 196, 26, 0);
   }
-  100% { 
-    box-shadow: 0 0 0 0 rgba(82, 196, 26, 0); 
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(82, 196, 26, 0);
   }
 }
 
@@ -27,6 +30,7 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -48,14 +52,14 @@
 /* Real-time notification styling */
 .realtime-notification {
   background: linear-gradient(135deg, #ffffff 0%, #f8fff8 100%);
-  border: 2px solid #52c41a;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 12px;
-  box-shadow: 0 4px 20px rgba(82, 196, 26, 0.2);
+  border-left: 4px solid #52c41a;
+  border-radius: 8px;
+  padding: 10px 14px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  width: 420px;
 }
 
 .realtime-notification::before {
@@ -64,58 +68,64 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
+  height: 2px;
   background: linear-gradient(90deg, #52c41a, #73d13d);
   animation: shimmer 2s infinite;
 }
 
 @keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 .realtime-notification:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(82, 196, 26, 0.3);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
 }
 
 .notification-header {
-  font-size: 11px;
+  font-size: 10px;
   color: #52c41a;
   font-weight: bold;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .notification-user {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: #1890ff;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .notification-subject {
-  font-size: 12px;
+  font-size: 11px;
   color: #666;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .notification-content {
-  font-size: 13px;
-  color: #333;
-  line-height: 1.4;
-  margin-bottom: 10px;
-  background: #f9f9f9;
-  padding: 8px;
-  border-radius: 6px;
-  border-left: 3px solid #52c41a;
+  font-size: 12px;
+  color: #555;
+  line-height: 1.3;
+  margin-bottom: 6px;
+  background: #f6f6f6;
+  padding: 5px 8px;
+  border-radius: 4px;
+  border-left: 2px solid #52c41a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .notification-actions {
   display: flex;
-  gap: 8px;
-  margin-top: 8px;
+  gap: 6px;
 }
 
 /* Debug panel styling */
@@ -143,4 +153,4 @@
     margin-right: 8px;
     margin-left: 8px;
   }
-} 
+}

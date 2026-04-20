@@ -14,8 +14,10 @@ import ChatService from './ChatService';
  *  3. Dedup đơn giản: Set các key (chatId + 5 giây), tự expire
  *  4. Không có _fetchMissedNotifications (nguồn gốc của duplicate)
  */
-class NotificationService {
-  constructor() {
+class NotificationService
+{
+  constructor()
+  {
     this.storageKey = 'chat_notifications';
     this._isSetup = false;        // đã setup listeners chưa
     this._isConnecting = false;   // đang kết nối chưa
@@ -26,30 +28,39 @@ class NotificationService {
   }
 
   // ─── Load/save localStorage ───────────────────────────────────────────────
-  _loadFromStorage() {
+  _loadFromStorage()
+  {
     if (typeof window === 'undefined') return;
-    try {
+    try
+    {
       const saved = localStorage.getItem(this.storageKey);
-      if (saved) {
+      if (saved)
+      {
         store.dispatch(initNotifications(JSON.parse(saved)));
       }
-    } catch (e) {
+    } catch (e)
+    {
       console.warn('NotificationService: load error', e);
     }
   }
 
-  _saveToStorage() {
-    try {
+  _saveToStorage()
+  {
+    try
+    {
       const { notifications, unreadCount } = store.getState().notification;
       localStorage.setItem(this.storageKey, JSON.stringify({ notifications, unreadCount }));
-    } catch (e) {
+    } catch (e)
+    {
       console.warn('NotificationService: save error', e);
     }
   }
 
   // ─── Lấy thông tin user từ JWT ────────────────────────────────────────────
-  _getUser() {
-    try {
+  _getUser()
+  {
+    try
+    {
       const token = localStorage.getItem('token');
       if (!token) return null;
       const p = JSON.parse(atob(token.split('.')[1]));
@@ -60,18 +71,21 @@ class NotificationService {
         || p['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']
         || '';
       return { id, role, name: p.unique_name || p.name || '' };
-    } catch {
+    } catch
+    {
       return null;
     }
   }
 
-  _isAdmin(user) {
+  _isAdmin(user)
+  {
     return user?.role === 'Administrator' || user?.role === 'Admin';
   }
 
   // ─── Dedup ────────────────────────────────────────────────────────────────
   // Trả về true nếu đây là duplicate (đã thấy key này trong 5 giây gần đây)
-  _isDuplicate(chatId, content) {
+  _isDuplicate(chatId, content)
+  {
     const bucket = Math.floor(Date.now() / 5000); // window 5 giây
     const key = `${chatId}_${(content || '').substring(0, 40)}_${bucket}`;
     if (this._dedupKeys.has(key)) return true;
@@ -81,23 +95,27 @@ class NotificationService {
   }
 
   // ─── Setup (gọi 1 lần sau login) ─────────────────────────────────────────
-  async setup() {
+  async setup()
+  {
     if (this._isSetup || this._isConnecting) return;
     this._isConnecting = true;
 
-    try {
+    try
+    {
       const user = this._getUser();
       if (!user) return;
 
       // Kết nối SignalR
       const connected = await ChatService.initializeConnection();
-      if (!connected) {
+      if (!connected)
+      {
         console.warn('NotificationService: SignalR không kết nối được');
         return;
       }
 
       // Nếu là admin thì join group "admins"
-      if (this._isAdmin(user)) {
+      if (this._isAdmin(user))
+      {
         await ChatService.joinAdminsGroupIfAdmin();
       }
 
@@ -107,15 +125,18 @@ class NotificationService {
 
       this._isSetup = true;
       console.log('✅ NotificationService: setup xong');
-    } catch (e) {
+    } catch (e)
+    {
       console.error('NotificationService: setup lỗi', e);
-    } finally {
+    } finally
+    {
       this._isConnecting = false;
     }
   }
 
   // ─── Xử lý AdminChatNotification từ SignalR ───────────────────────────────
-  _handleAdminNotification(data) {
+  _handleAdminNotification(data)
+  {
     const user = this._getUser();
     if (!user || !this._isAdmin(user)) return;
 
@@ -126,7 +147,8 @@ class NotificationService {
     const senderId = data.SenderId || data.senderId || '';
 
     // Dedup: bỏ qua nếu đã xử lý notification này trong 5 giây
-    if (this._isDuplicate(chatId, content)) {
+    if (this._isDuplicate(chatId, content))
+    {
       console.log('🔇 Notification deduplicated, skipping');
       return;
     }
@@ -154,8 +176,10 @@ class NotificationService {
     window.dispatchEvent(new CustomEvent('inAppNotification', { detail: notification }));
 
     // 4. Browser notification (nếu được phép)
-    if ('Notification' in window && Notification.permission === 'granted') {
-      try {
+    if ('Notification' in window && Notification.permission === 'granted')
+    {
+      try
+      {
         const n = new Notification(notification.title, {
           body: notification.message,
           icon: '/favicon.ico',
@@ -169,8 +193,10 @@ class NotificationService {
   }
 
   // ─── Reset (khi logout) ───────────────────────────────────────────────────
-  reset() {
-    if (this._adminHandler) {
+  reset()
+  {
+    if (this._adminHandler)
+    {
       window.removeEventListener('adminChatNotification', this._adminHandler);
       this._adminHandler = null;
     }
@@ -180,12 +206,14 @@ class NotificationService {
   }
 
   // ─── Helpers ──────────────────────────────────────────────────────────────
-  _mapPriority(p) {
+  _mapPriority(p)
+  {
     const map = { 1: 'low', 2: 'normal', 3: 'high', 4: 'urgent' };
     return typeof p === 'number' ? (map[p] || 'normal') : (p || 'normal');
   }
 
-  markChatNotificationsAsRead(chatId) {
+  markChatNotificationsAsRead(chatId)
+  {
     const { notifications } = store.getState().notification;
     notifications
       .filter(n => n.type === 'chat' && (!chatId || n.chatId === chatId) && !n.isRead)
@@ -194,7 +222,8 @@ class NotificationService {
   }
 
   // ─── Yêu cầu quyền browser notification ──────────────────────────────────
-  async requestPermission() {
+  async requestPermission()
+  {
     if (!('Notification' in window)) return false;
     if (Notification.permission === 'granted') return true;
     if (Notification.permission === 'denied') return false;
@@ -203,15 +232,19 @@ class NotificationService {
 
   // ─── Compatibility aliases (để không phá code cũ còn gọi) ────────────────
   async setupSignalRNotifications() { return this.setup(); }
+  async requestNotificationPermission() { return this.requestPermission(); }
+  cleanOldNotifications() { /* no-op, kept for compatibility */ }
   resetSetupState() { this.reset(); }
-  async forceReconnect() {
+  async forceReconnect()
+  {
     this.reset();
     await ChatService.disconnect();
     return this.setup();
   }
   async forceReconnectAndSetup() { return this.forceReconnect(); }
   isSignalRConnected() { return ChatService.isConnected; }
-  debugConnection() {
+  debugConnection()
+  {
     return {
       user: this._getUser(),
       chatServiceConnected: ChatService.isConnected,
@@ -224,7 +257,8 @@ class NotificationService {
   getAudioSettings() { return AudioService.getSettings(); }
 
   // Test notification
-  addTestNotification() {
+  addTestNotification()
+  {
     this._handleAdminNotification({
       ChatId: 'test-' + Date.now(),
       Content: 'Đây là thông báo test',
@@ -241,7 +275,8 @@ const notificationService = typeof window !== 'undefined'
   ? (() => { _nsInstance = _nsInstance || new NotificationService(); return _nsInstance; })()
   : { setup: async () => { }, reset: () => { }, setupSignalRNotifications: async () => { }, requestNotificationPermission: async () => false, requestPermission: async () => false, cleanOldNotifications: () => { }, resetSetupState: () => { }, markChatNotificationsAsRead: () => { }, forceReconnect: async () => { }, isSignalRConnected: () => false, debugConnection: () => ({}), setAudioEnabled: () => { }, setAudioVolume: () => { }, getAudioSettings: () => ({}) };
 
-if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined')
+{
   window.NotificationService = notificationService;
   window.testNotification = () => notificationService.addTestNotification();
 }

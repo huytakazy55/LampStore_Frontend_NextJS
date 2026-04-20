@@ -6,55 +6,69 @@ import { PlusOutlined, UploadOutlined, PictureOutlined } from '@ant-design/icons
 import BannerService from '@/services/BannerService';
 import { ModalHeader, ModalFooter } from '../shared/ModalComponents';
 
-const CreateModal = ({ onClose, onSuccess }) => {
+const CreateModal = ({ onClose, onSuccess }) =>
+{
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const [imageFile, setImageFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState('');
 
-    const handleImageChange = (info) => {
-        if (info.file.status === 'removed') {
+    const handleImageChange = (info) =>
+    {
+        if (info.file.status === 'removed')
+        {
             setImageFile(null);
             setPreviewUrl('');
             return;
         }
         const file = info.file?.originFileObj || (info.fileList && info.fileList[0]?.originFileObj);
-        if (file) {
+        if (file)
+        {
             const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
-            if (!allowedTypes.includes(file.type)) {
+            if (!allowedTypes.includes(file.type))
+            {
                 message.error('Chỉ chấp nhận file JPG, JPEG, PNG, GIF!');
                 return;
             }
-            if (file.size > 5 * 1024 * 1024) {
+            if (file.size > 5 * 1024 * 1024)
+            {
                 message.error('File quá lớn! Kích thước tối đa là 5MB.');
                 return;
             }
             setImageFile(file);
             const reader = new FileReader();
-            reader.onloadend = () => {
+            reader.onloadend = () =>
+            {
                 setPreviewUrl(reader.result);
             };
             reader.readAsDataURL(file);
         }
     };
 
-    const handleSubmit = async (values) => {
+    const handleSubmit = async (values) =>
+    {
         setLoading(true);
-        try {
-            if (!imageFile) {
+        try
+        {
+            if (!imageFile)
+            {
                 message.error('Vui lòng chọn hình ảnh cho banner!');
                 setLoading(false);
                 return;
             }
             const uploadResult = await BannerService.uploadBannerImage(imageFile);
             let imageUrl = '';
-            if (uploadResult && uploadResult.imageUrl) {
+            if (uploadResult && uploadResult.imageUrl)
+            {
                 imageUrl = uploadResult.imageUrl;
-            } else if (uploadResult && typeof uploadResult === 'string') {
+            } else if (uploadResult && typeof uploadResult === 'string')
+            {
                 imageUrl = uploadResult;
-            } else if (uploadResult && uploadResult.url) {
+            } else if (uploadResult && uploadResult.url)
+            {
                 imageUrl = uploadResult.url;
-            } else {
+            } else
+            {
                 message.error('Lỗi: Không nhận được URL hình ảnh từ server!');
                 setLoading(false);
                 return;
@@ -66,18 +80,24 @@ const CreateModal = ({ onClose, onSuccess }) => {
             setImageFile(null);
             setPreviewUrl('');
             onSuccess();
-        } catch (error) {
-            if (error.response?.data?.errors?.ImageUrl) {
+        } catch (error)
+        {
+            if (error.response?.data?.errors?.ImageUrl)
+            {
                 message.error('Lỗi: Vui lòng chọn hình ảnh cho banner!');
-            } else if (error.response?.data?.errors) {
+            } else if (error.response?.data?.errors)
+            {
                 const errorMessages = Object.values(error.response.data.errors).flat();
                 message.error(`Lỗi: ${errorMessages.join(', ')}`);
-            } else if (error.response?.data) {
+            } else if (error.response?.data)
+            {
                 message.error(`Lỗi: ${error.response.data}`);
-            } else {
+            } else
+            {
                 message.error('Lỗi khi tạo banner');
             }
-        } finally {
+        } finally
+        {
             setLoading(false);
         }
     };
@@ -95,7 +115,7 @@ const CreateModal = ({ onClose, onSuccess }) => {
             onCancel={onClose}
             footer={null}
             width={600}
-            destroyOnClose
+            destroyOnHidden
             title={null}
             styles={{ body: { padding: 0 } }}
         >

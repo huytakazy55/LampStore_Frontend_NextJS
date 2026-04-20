@@ -10,7 +10,6 @@ import Footer from '@/components/user/MainPage/Footer/Footer';
 import NotificationService from '@/services/NotificationService';
 import LazySection from '@/components/common/LazySection';
 import ScrollTimeline from '@/components/common/ScrollTimeline';
-import FloatingCart from '@/components/user/FloatingCart/FloatingCart';
 
 // === Code Splitting: Lazy load các component nặng ===
 const CategorySale = lazy(() => import('@/components/user/MainPage/CategorySale/CategorySale'));
@@ -28,15 +27,20 @@ const SectionSpinner = ({ height = '200px' }) => (
     </div>
 );
 
-export default function HomePage() {
-    useEffect(() => {
-        const initializeNotifications = async () => {
-            try {
+export default function HomePage()
+{
+    useEffect(() =>
+    {
+        const initializeNotifications = async () =>
+        {
+            try
+            {
                 await NotificationService.setupSignalRNotifications();
                 NotificationService.requestNotificationPermission();
                 NotificationService.cleanOldNotifications();
                 console.log('📢 HomePage: Notification system initialized for user');
-            } catch (error) {
+            } catch (error)
+            {
                 console.error('❌ HomePage: Failed to initialize notifications:', error);
             }
         };

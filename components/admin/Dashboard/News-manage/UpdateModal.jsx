@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Form, Input, Switch, Upload, message } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
 import NewsService from '@/services/NewsService';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;

@@ -2,28 +2,33 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { 
-  markAsRead, 
-  markAllAsRead, 
-  setDropdownOpen, 
-  removeNotification 
+import
+{
+  markAsRead,
+  markAllAsRead,
+  setDropdownOpen,
+  removeNotification
 } from '@/redux/slices/notificationSlice';
 
-const NotificationDropdown = ({ themeColors }) => {
+const NotificationDropdown = ({ themeColors }) =>
+{
   const dispatch = useDispatch();
   const { notifications, unreadCount, isDropdownOpen } = useSelector(state => state.notification);
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
 
   // Đóng dropdown khi click bên ngoài
-  useEffect(() => {
-    const handleClickOutside = (event) => {
+  useEffect(() =>
+  {
+    const handleClickOutside = (event) =>
+    {
       if (
-        dropdownRef.current && 
+        dropdownRef.current &&
         !dropdownRef.current.contains(event.target) &&
-        buttonRef.current && 
+        buttonRef.current &&
         !buttonRef.current.contains(event.target)
-      ) {
+      )
+      {
         dispatch(setDropdownOpen(false));
       }
     };
@@ -32,26 +37,32 @@ const NotificationDropdown = ({ themeColors }) => {
     return () => document.removeEventListener('click', handleClickOutside);
   }, [dispatch]);
 
-  const toggleDropdown = () => {
+  const toggleDropdown = () =>
+  {
     dispatch(setDropdownOpen(!isDropdownOpen));
   };
 
-  const handleMarkAsRead = (notificationId) => {
+  const handleMarkAsRead = (notificationId) =>
+  {
     dispatch(markAsRead(notificationId));
   };
 
-  const handleMarkAllAsRead = (event) => {
+  const handleMarkAllAsRead = (event) =>
+  {
     event.stopPropagation(); // Ngăn event bubbling
     dispatch(markAllAsRead());
     // Không đóng dropdown, chỉ đánh dấu đã đọc
   };
 
-  const handleRemoveNotification = (notificationId) => {
+  const handleRemoveNotification = (notificationId) =>
+  {
     dispatch(removeNotification(notificationId));
   };
 
-  const getNotificationIcon = (type) => {
-    switch (type) {
+  const getNotificationIcon = (type) =>
+  {
+    switch (type)
+    {
       case 'chat':
         return '💬';
       case 'order':
@@ -63,8 +74,10 @@ const NotificationDropdown = ({ themeColors }) => {
     }
   };
 
-  const getPriorityColor = (priority) => {
-    switch (priority) {
+  const getPriorityColor = (priority) =>
+  {
+    switch (priority)
+    {
       case 'urgent':
         return '#ef4444';
       case 'high':
@@ -78,7 +91,8 @@ const NotificationDropdown = ({ themeColors }) => {
     }
   };
 
-  const formatTime = (timestamp) => {
+  const formatTime = (timestamp) =>
+  {
     const now = new Date();
     const time = new Date(timestamp);
     const diffMs = now - time;
@@ -96,7 +110,7 @@ const NotificationDropdown = ({ themeColors }) => {
   return (
     <div className="relative">
       {/* Bell Icon với Badge */}
-      <div 
+      <div
         ref={buttonRef}
         onClick={toggleDropdown}
         className="flex relative cursor-pointer transition-transform duration-200 hover:scale-110"
@@ -105,10 +119,10 @@ const NotificationDropdown = ({ themeColors }) => {
         }}
       >
         <i className="bx bx-bell text-h2 mt-1"></i>
-        
+
         {/* Badge số lượng thông báo */}
         {unreadCount > 0 && (
-          <div 
+          <div
             className="absolute -top-1 -right-1 min-w-[18px] h-[18px] rounded-full flex items-center justify-center text-white text-xs font-bold animate-pulse"
             style={{
               background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
@@ -124,10 +138,9 @@ const NotificationDropdown = ({ themeColors }) => {
       {isDropdownOpen && (
         <div
           ref={dropdownRef}
-          className="absolute top-10 right-0 w-80 max-h-96 bg-white rounded-xl shadow-2xl border z-[1000] overflow-hidden"
+          className="absolute top-10 right-0 w-80 max-h-96 bg-white rounded-xl shadow-2xl z-[1000] overflow-hidden"
           style={{
             background: 'linear-gradient(145deg, #ffffff 0%, #f8fafc 100%)',
-            border: `2px solid ${themeColors.StartColorLinear}20`,
             animation: 'slideInDown 0.3s ease-out'
           }}
         >
@@ -139,7 +152,7 @@ const NotificationDropdown = ({ themeColors }) => {
           `}</style>
 
           {/* Header */}
-          <div 
+          <div
             className="p-4 border-b"
             style={{
               background: `linear-gradient(135deg, ${themeColors.StartColorLinear} 0%, ${themeColors.EndColorLinear} 100%)`,
@@ -170,14 +183,13 @@ const NotificationDropdown = ({ themeColors }) => {
               notifications.map((notification) => (
                 <div
                   key={notification.id}
-                  className={`p-3 border-b border-gray-100 hover:bg-gray-50 transition-colors ${
-                    !notification.isRead ? 'bg-blue-50/50' : ''
-                  }`}
+                  className={`p-3 border-b border-gray-100 hover:bg-gray-50 transition-colors ${!notification.isRead ? 'bg-blue-50/50' : ''
+                    }`}
                   onClick={() => !notification.isRead && handleMarkAsRead(notification.id)}
                 >
                   <div className="flex items-start gap-3">
                     {/* Icon */}
-                    <div 
+                    <div
                       className="w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0"
                       style={{ backgroundColor: getPriorityColor(notification.priority) + '20' }}
                     >
@@ -191,7 +203,8 @@ const NotificationDropdown = ({ themeColors }) => {
                           {notification.title}
                         </h4>
                         <button
-                          onClick={(e) => {
+                          onClick={(e) =>
+                          {
                             e.stopPropagation();
                             handleRemoveNotification(notification.id);
                           }}
@@ -200,18 +213,18 @@ const NotificationDropdown = ({ themeColors }) => {
                           <i className="bx bx-x text-sm"></i>
                         </button>
                       </div>
-                      
+
                       <p className="text-xs text-gray-600 mt-1 line-clamp-2">
                         {notification.message}
                       </p>
-                      
+
                       <div className="flex justify-between items-center mt-2">
                         <span className="text-xs text-gray-400">
                           {formatTime(notification.createdAt)}
                         </span>
-                        
+
                         {!notification.isRead && (
-                          <div 
+                          <div
                             className="w-2 h-2 rounded-full"
                             style={{ backgroundColor: getPriorityColor(notification.priority) }}
                           ></div>
@@ -227,7 +240,7 @@ const NotificationDropdown = ({ themeColors }) => {
           {/* Footer */}
           {notifications.length > 0 && (
             <div className="p-3 border-t bg-gray-50 text-center">
-              <button 
+              <button
                 className="text-xs text-gray-600 hover:text-gray-800 transition-colors"
                 style={{ color: themeColors.StartColorLinear }}
               >

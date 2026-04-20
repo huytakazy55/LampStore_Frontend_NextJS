@@ -25,7 +25,7 @@ const AdminDashboard = () =>
         NotificationService.requestNotificationPermission();
         NotificationService.cleanOldNotifications();
 
-        console.log('📢 Admin Dashboard: Notification system initialized');
+
       } catch (error)
       {
         console.error('❌ Admin Dashboard: Failed to initialize notifications:', error);

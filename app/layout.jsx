@@ -1,4 +1,5 @@
 import './globals.css';
+
 import ClientProviders from '@/components/providers/ClientProviders';
 
 export const metadata = {
@@ -29,22 +30,11 @@ export const metadata = {
     },
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children })
+{
     return (
         <html lang="vi" suppressHydrationWarning>
             <head>
-                {/* Blocking script to apply dark mode before paint — prevents flash */}
-                <script
-                    dangerouslySetInnerHTML={{
-                        __html: `
-                            try {
-                                if (localStorage.getItem('darkMode') === 'true') {
-                                    document.documentElement.classList.add('dark');
-                                }
-                            } catch(e) {}
-                        `,
-                    }}
-                />
                 <link
                     href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
                     rel="stylesheet"

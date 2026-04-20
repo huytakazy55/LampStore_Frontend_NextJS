@@ -15,6 +15,7 @@ const FloatingCart = () =>
 {
     const { cartCount, cartTotal, cartItems, removeFromCart } = useCart();
     const navigate = useNavigate();
+    const [mounted, setMounted] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
     const [bounce, setBounce] = useState(false);
@@ -167,6 +168,10 @@ const FloatingCart = () =>
         setIsExpanded(false);
         navigate('/checkout');
     }, [navigate]);
+
+    useEffect(() => { setMounted(true); }, []);
+
+    if (!mounted) return null;
 
     return (
         <>
