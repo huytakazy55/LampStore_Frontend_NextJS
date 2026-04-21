@@ -1,15 +1,19 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-const NotificationBadge = () => {
+const NotificationBadge = () =>
+{
   const { unreadCount } = useSelector(state => state.notification);
+  const [mounted, setMounted] = useState(false);
 
-  if (unreadCount === 0) return null;
+  useEffect(() => { setMounted(true); }, []);
+
+  if (!mounted || unreadCount === 0) return null;
 
   return (
-    <div 
+    <div
       className="absolute -top-1 -right-1 min-w-[16px] h-[16px] rounded-full flex items-center justify-center text-white text-xs font-bold animate-pulse"
       style={{
         background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',

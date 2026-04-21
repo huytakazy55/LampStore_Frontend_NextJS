@@ -10,7 +10,7 @@ import TopBar from '../MainPage/TopBar/TopBar'
 import Footer from '../MainPage/Footer/Footer'
 import ProductManage from '@/services/ProductManage'
 import ReviewService from '@/services/ReviewService'
-const defaultImg = '/images/cameras-2.jpg';import { useCart } from '@/contexts/CartContext'
+const defaultImg = '/images/cameras-2.jpg'; import { useCart } from '@/contexts/CartContext'
 import { useWishlist } from '@/contexts/WishlistContext'
 import { useProducts } from '@/hooks/useProducts'
 import ImageLightbox from '../../common/ImageLightbox'
@@ -194,7 +194,8 @@ const ProductDetail = () =>
             image: mainImg,
             price: basePrice,
             quantity,
-            selectedOptions
+            selectedOptions,
+            weight: variant?.weight || 0
         });
 
         // Dispatch fly-to-cart animation event

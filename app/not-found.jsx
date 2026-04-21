@@ -1,6 +1,12 @@
 import Link from 'next/link';
 
-export default function NotFound() {
+export const metadata = {
+    title: 'Trang không tồn tại',
+    robots: { index: false, follow: false },
+};
+
+export default function NotFound()
+{
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4">
             <div className="text-center max-w-md">

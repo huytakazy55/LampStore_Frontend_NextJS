@@ -1,14 +1,13 @@
 "use client";
 
-
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Header from '@/components/user/MainPage/Header/Header';
 import NavbarPrimary from '@/components/user/MainPage/NavbarPrimary/NavbarPrimary';
 import TopBar from '@/components/user/MainPage/TopBar/TopBar';
 import Footer from '@/components/user/MainPage/Footer/Footer';
-import CategoryManage from '@/services/CategoryManage';
-import ProductManage from '@/services/ProductManage';
+import { useCategories } from '@/hooks/useCategories';
+import { useProducts } from '@/hooks/useProducts';
 import AddToCartModal from '@/components/user/MainPage/AddToCartModal';
 import defaultImg from '@/assets/images/cameras-2.jpg';
 
@@ -46,71 +45,41 @@ export default function CategoryPage()
     const params = useParams();
     const categoryId = params?.categoryId?.[0] || null;
 
-    const [categories, setCategories] = useState([]);
-    const [products, setProducts] = useState([]);
+    // Dùng React Query hooks thay vì useEffect + fetch trực tiếp
+    const { data: categories = [], isLoading: loading } = useCategories();
+    const { data: allProducts = [], isLoading: productsLoading } = useProducts();
+
     const [activeCategory, setActiveCategory] = useState(categoryId || null);
-    const [loading, setLoading] = useState(true);
-    const [productsLoading, setProductsLoading] = useState(false);
     const [cartModalProduct, setCartModalProduct] = useState(null);
 
+    // Set default category khi data load xong
     useEffect(() =>
     {
-        const fetchCategories = async () =>
+        if (!activeCategory && categories.length > 0)
         {
-            try
-            {
-                const response = await CategoryManage.GetCategory();
-                const data = response.data.$values || response.data || [];
-                setCategories(data);
-                if (!activeCategory && data.length > 0)
-                {
-                    setActiveCategory(String(data[0].id));
-                }
-            } catch (error)
-            {
-                console.error('Error fetching categories:', error);
-            } finally
-            {
-                setLoading(false);
-            }
-        };
-        fetchCategories();
-    }, []);
+            setActiveCategory(String(categories[0].id));
+        }
+    }, [categories, activeCategory]);
 
-    useEffect(() =>
-    {
-        if (!activeCategory) return;
-        const fetchProducts = async () =>
-        {
-            setProductsLoading(true);
-            try
-            {
-                const response = await ProductManage.GetProduct();
-                const allProducts = response.data?.$values || response.data || [];
-                const filtered = allProducts.filter(p =>
-                    String(p.categoryId) === String(activeCategory)
-                ).map(product =>
-                {
-                    const imgData = product.images?.$values || product.images;
-                    const images = Array.isArray(imgData) ? imgData : [];
-                    return { ...product, images };
-                });
-                setProducts(filtered);
-            } catch (error)
-            {
-                console.error('Error fetching products:', error);
-            } finally
-            {
-                setProductsLoading(false);
-            }
-        };
-        fetchProducts();
-    }, [activeCategory]);
-
+    // Sync URL param
     useEffect(() =>
     {
         if (categoryId) setActiveCategory(categoryId);
     }, [categoryId]);
+
+    // Filter products client-side từ cache (không cần fetch lại)
+    const products = useMemo(() =>
+    {
+        if (!activeCategory) return [];
+        return allProducts
+            .filter(p => String(p.categoryId) === String(activeCategory))
+            .map(product =>
+            {
+                const imgData = product.images?.$values || product.images;
+                const images = Array.isArray(imgData) ? imgData : [];
+                return { ...product, images };
+            });
+    }, [allProducts, activeCategory]);
 
     const activeCategoryData = categories.find(c => String(c.id) === String(activeCategory));
 

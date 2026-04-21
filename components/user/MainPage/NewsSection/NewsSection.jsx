@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@/lib/router-compat';
 import NewsService from '@/services/NewsService';
 
@@ -9,29 +10,18 @@ const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 const NewsSection = () =>
 {
     const navigate = useNavigate();
-    const [newsList, setNewsList] = useState([]);
-    const [loading, setLoading] = useState(true);
 
-    useEffect(() =>
-    {
-        const fetchNews = async () =>
+    const { data: newsList = [], isLoading: loading } = useQuery({
+        queryKey: ['news', 'list'],
+        queryFn: async () =>
         {
-            try
-            {
-                setLoading(true);
-                const response = await NewsService.getAllNews(true);
-                const data = response.data?.$values || response.data || [];
-                setNewsList(data.slice(0, 3));
-            } catch (error)
-            {
-                console.error('Lỗi khi fetch tin tức:', error);
-            } finally
-            {
-                setLoading(false);
-            }
-        };
-        fetchNews();
-    }, []);
+            const response = await NewsService.getAllNews(true);
+            const data = response.data?.$values || response.data || [];
+            return data.slice(0, 3);
+        },
+        staleTime: 5 * 60 * 1000, // 5 phút
+        cacheTime: 10 * 60 * 1000, // 10 phút
+    });
 
     return (
         <div className='w-full xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0 mb-12 mt-8'>

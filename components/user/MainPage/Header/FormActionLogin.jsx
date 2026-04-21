@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react'
-const avatar = '/images/Avatar.jpg';import AuthService from '@/services/AuthService'
+const avatar = '/images/Avatar.jpg'; import AuthService from '@/services/AuthService'
 import { useDispatch } from 'react-redux'
 import { logout as logoutAction } from '@/redux/slices/authSlice'
 import { useNavigate } from '@/lib/router-compat'
 import { useCart } from '@/contexts/CartContext'
 
-const FormActionLogin = ({ toggleActionLogin, popupActionRef, setToggleActionLogin, setToggleProfile, buttonProfileRef }) => {
+const FormActionLogin = ({ toggleActionLogin, popupActionRef, setToggleActionLogin, setToggleProfile, buttonProfileRef }) =>
+{
     const [token, setToken] = useState(null);
     const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
     const dispatch = useDispatch();
@@ -17,20 +18,25 @@ const FormActionLogin = ({ toggleActionLogin, popupActionRef, setToggleActionLog
         ProfileAvatar: ''
     });
 
-    useEffect(() => {
+    useEffect(() =>
+    {
         setToken(localStorage.getItem("token"));
     }, []);
 
-    useEffect(() => {
-        if (toggleActionLogin && token) {
+    useEffect(() =>
+    {
+        if (toggleActionLogin && token)
+        {
             AuthService.profile()
-                .then((res) => {
+                .then((res) =>
+                {
                     setProfileData({
                         Email: res?.email,
                         ProfileAvatar: res?.profileAvatar
                     });
                 })
-                .catch((error) => {
+                .catch((error) =>
+                {
                     console.error("Error fetching profile:", error);
                 });
         }
@@ -38,16 +44,19 @@ const FormActionLogin = ({ toggleActionLogin, popupActionRef, setToggleActionLog
 
     const { clearCartOnLogout } = useCart();
 
-    const handleLogout = async () => {
+    const handleLogout = async () =>
+    {
         clearCartOnLogout();
         const result = await AuthService.logout();
-        if (result) {
+        if (result)
+        {
             dispatch(logoutAction());
             setToggleActionLogin(false);
             navigate('/');
         }
     }
-    const handleProfileClick = () => {
+    const handleProfileClick = () =>
+    {
         setToggleActionLogin(false);
         setToggleProfile(true);
     }
@@ -92,12 +101,12 @@ const FormActionLogin = ({ toggleActionLogin, popupActionRef, setToggleActionLog
                         key={idx}
                         ref={item.ref || null}
                         onClick={item.onClick}
-                        className='w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-150 cursor-pointer group'
+                        className='w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-rose-600 transition-colors duration-150 cursor-pointer'
                     >
-                        <span className='w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center group-hover:bg-rose-50 dark:group-hover:bg-rose-900/20 transition-colors'>
-                            <i className={`bx ${item.icon} text-lg text-gray-500 group-hover:text-rose-600 transition-colors`}></i>
+                        <span className='w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center transition-colors'>
+                            <i className={`bx ${item.icon} text-lg text-gray-500 transition-colors`}></i>
                         </span>
-                        <span className='font-medium group-hover:text-rose-600 transition-colors'>{item.label}</span>
+                        <span className='font-medium transition-colors'>{item.label}</span>
                     </button>
                 ))}
             </div>
@@ -109,12 +118,12 @@ const FormActionLogin = ({ toggleActionLogin, popupActionRef, setToggleActionLog
             <div className='py-1.5 px-2 pb-2'>
                 <button
                     onClick={() => handleLogout()}
-                    className='w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] text-gray-500 dark:text-gray-400 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors duration-150 cursor-pointer group'
+                    className='w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] text-gray-500 dark:text-gray-400 hover:bg-red-50 dark:hover:bg-red-900/10 hover:text-red-500 transition-colors duration-150 cursor-pointer'
                 >
-                    <span className='w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center group-hover:bg-red-100 dark:group-hover:bg-red-900/20 transition-colors'>
-                        <i className='bx bx-log-out text-lg text-gray-400 group-hover:text-red-500 transition-colors'></i>
+                    <span className='w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center transition-colors'>
+                        <i className='bx bx-log-out text-lg text-gray-400 transition-colors'></i>
                     </span>
-                    <span className='font-medium group-hover:text-red-500 transition-colors'>Đăng Xuất</span>
+                    <span className='font-medium transition-colors'>Đăng Xuất</span>
                 </button>
             </div>
         </div>

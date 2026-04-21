@@ -7,22 +7,27 @@ const CartContext = createContext();
 const CART_KEY = 'lamp_store_cart';
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
-const loadCart = () => {
+const loadCart = () =>
+{
     if (typeof window === 'undefined') return [];
-    try {
+    try
+    {
         const data = localStorage.getItem(CART_KEY);
         return data ? JSON.parse(data) : [];
-    } catch {
+    } catch
+    {
         return [];
     }
 };
 
-const saveCart = (items) => {
+const saveCart = (items) =>
+{
     if (typeof window === 'undefined') return;
     localStorage.setItem(CART_KEY, JSON.stringify(items));
 };
 
-const getCartItemKey = (productId, selectedOptions) => {
+const getCartItemKey = (productId, selectedOptions) =>
+{
     const optionStr = Object.entries(selectedOptions || {})
         .sort(([a], [b]) => a.localeCompare(b))
         .map(([k, v]) => `${k}:${v.value}`)
@@ -30,7 +35,8 @@ const getCartItemKey = (productId, selectedOptions) => {
     return `${productId}__${optionStr}`;
 };
 
-const backendToFrontendItem = (backendItem) => {
+const backendToFrontendItem = (backendItem) =>
+{
     const selectedOptions = backendItem.selectedOptions
         ? JSON.parse(backendItem.selectedOptions)
         : {};
@@ -41,7 +47,8 @@ const backendToFrontendItem = (backendItem) => {
     const basePrice = backendItem.basePrice || 0;
 
     let imagePath = backendItem.productImage || '';
-    if (imagePath && !imagePath.startsWith('http')) {
+    if (imagePath && !imagePath.startsWith('http'))
+    {
         imagePath = `${API_ENDPOINT}${imagePath}`;
     }
 
@@ -54,33 +61,41 @@ const backendToFrontendItem = (backendItem) => {
         basePrice: basePrice,
         finalPrice: basePrice + totalAdditional,
         quantity: backendItem.quantity,
-        selectedOptions: selectedOptions
+        selectedOptions: selectedOptions,
+        weight: backendItem.weight || 0
     };
 };
 
-const isLoggedIn = () => {
+const isLoggedIn = () =>
+{
     if (typeof window === 'undefined') return false;
     return !!localStorage.getItem('token');
 };
 
-export function CartProvider({ children }) {
+export function CartProvider({ children })
+{
     const [cartItems, setCartItems] = useState([]);
 
     // Hydrate from localStorage after mount
-    useEffect(() => {
+    useEffect(() =>
+    {
         setCartItems(loadCart());
     }, []);
 
-    useEffect(() => {
+    useEffect(() =>
+    {
         saveCart(cartItems);
     }, [cartItems]);
 
-    const addToCart = useCallback((item) => {
-        setCartItems(prev => {
+    const addToCart = useCallback((item) =>
+    {
+        setCartItems(prev =>
+        {
             const key = getCartItemKey(item.productId, item.selectedOptions);
             const existingIndex = prev.findIndex(ci => ci.key === key);
 
-            if (existingIndex >= 0) {
+            if (existingIndex >= 0)
+            {
                 const updated = [...prev];
                 updated[existingIndex] = {
                     ...updated[existingIndex],
@@ -100,14 +115,18 @@ export function CartProvider({ children }) {
                 basePrice: item.price,
                 finalPrice: item.price + totalAdditional,
                 quantity: item.quantity,
-                selectedOptions: item.selectedOptions || {}
+                selectedOptions: item.selectedOptions || {},
+                weight: item.weight || 0
             }];
         });
 
-        if (isLoggedIn()) {
-            setTimeout(() => {
+        if (isLoggedIn())
+        {
+            setTimeout(() =>
+            {
                 const currentCart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
-                CartService.syncCart(currentCart).then(backendData => {
+                CartService.syncCart(currentCart).then(backendData =>
+                {
                     const items = (backendData?.$values || backendData || [])
                         .map(backendToFrontendItem);
                     setCartItems(items);
@@ -116,10 +135,13 @@ export function CartProvider({ children }) {
         }
     }, []);
 
-    const removeFromCart = useCallback((key) => {
-        setCartItems(prev => {
+    const removeFromCart = useCallback((key) =>
+    {
+        setCartItems(prev =>
+        {
             const item = prev.find(i => i.key === key);
-            if (item?.backendId && isLoggedIn()) {
+            if (item?.backendId && isLoggedIn())
+            {
                 CartService.removeItem(item.backendId).catch(err =>
                     console.error('Failed to remove from backend:', err)
                 );
@@ -128,11 +150,15 @@ export function CartProvider({ children }) {
         });
     }, []);
 
-    const updateQuantity = useCallback((key, quantity) => {
+    const updateQuantity = useCallback((key, quantity) =>
+    {
         if (quantity < 1) return;
-        setCartItems(prev => prev.map(item => {
-            if (item.key === key) {
-                if (item.backendId && isLoggedIn()) {
+        setCartItems(prev => prev.map(item =>
+        {
+            if (item.key === key)
+            {
+                if (item.backendId && isLoggedIn())
+                {
                     CartService.updateItemQuantity(item.backendId, quantity).catch(err =>
                         console.error('Failed to update quantity in backend:', err)
                     );
@@ -143,8 +169,10 @@ export function CartProvider({ children }) {
         }));
     }, []);
 
-    const clearCart = useCallback(() => {
-        if (isLoggedIn()) {
+    const clearCart = useCallback(() =>
+    {
+        if (isLoggedIn())
+        {
             CartService.clearMyCart().catch(err =>
                 console.error('Failed to clear backend cart:', err)
             );
@@ -152,21 +180,26 @@ export function CartProvider({ children }) {
         setCartItems([]);
     }, []);
 
-    const syncCartOnLogin = useCallback(async () => {
-        try {
+    const syncCartOnLogin = useCallback(async () =>
+    {
+        try
+        {
             const localItems = loadCart();
             const backendData = await CartService.syncCart(localItems);
             const items = (backendData?.$values || backendData || [])
                 .map(backendToFrontendItem);
             setCartItems(items);
-        } catch (error) {
+        } catch (error)
+        {
             console.error('Cart sync failed:', error);
         }
     }, []);
 
-    const clearCartOnLogout = useCallback(() => {
+    const clearCartOnLogout = useCallback(() =>
+    {
         setCartItems([]);
-        if (typeof window !== 'undefined') {
+        if (typeof window !== 'undefined')
+        {
             localStorage.removeItem(CART_KEY);
         }
     }, []);
@@ -191,7 +224,8 @@ export function CartProvider({ children }) {
     );
 }
 
-export const useCart = () => {
+export const useCart = () =>
+{
     const context = useContext(CartContext);
     if (!context) throw new Error('useCart must be used within CartProvider');
     return context;

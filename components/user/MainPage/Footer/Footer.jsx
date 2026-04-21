@@ -65,7 +65,7 @@ const Footer = () =>
                             <div className='flex items-start gap-3'>
                                 <span className='w-2 h-2 rounded-full bg-yellow-400 mt-[7px] flex-shrink-0'></span>
                                 <div className='text-sm text-gray-300'>
-                                    <p>CapyLumine.vn</p>
+                                    <p>CapyLumine.com</p>
                                 </div>
                             </div>
                         </div>
@@ -96,7 +96,7 @@ const Footer = () =>
                         {/* Logo text */}
                         <div className='text-right mb-6'>
                             <div className='text-2xl md:text-3xl font-extrabold text-white tracking-tight'>
-                                Capy<span className='text-yellow-400'>Lumine</span><span className='text-gray-500 text-lg'>.vn</span>
+                                Capy<span className='text-yellow-400'>Lumine</span><span className='text-gray-500 text-lg'>.com</span>
                             </div>
                             <p className='text-gray-600 text-xs mt-1 tracking-widest uppercase'>Premium CapyLumine</p>
                         </div>
@@ -142,7 +142,7 @@ const Footer = () =>
             <div className='w-full py-4' style={{ background: '#111' }}>
                 <div className='flex flex-col sm:flex-row justify-between items-center gap-2 xl:mx-auto xl:max-w-[1440px] px-6 xl:px-0'>
                     <div className='text-xs md:text-sm text-gray-600 text-center'>
-                        © 2024 | Bản quyền thuộc về <span className='text-yellow-400 font-semibold'>CapyLumine.vn</span>
+                        © 2024 | Bản quyền thuộc về <span className='text-yellow-400 font-semibold'>CapyLumine.com</span>
                     </div>
                     <div className='flex items-center gap-4 text-gray-700 text-xs'>
                         <a href='#' className='hover:text-gray-400 transition-colors'>Điều khoản</a>

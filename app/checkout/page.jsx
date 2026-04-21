@@ -30,6 +30,26 @@ export default function CheckoutPage()
     const router = useRouter();
     const { cartItems, cartTotal, clearCart } = useCart();
 
+    // Buy Now: read items from sessionStorage on mount
+    const [buyNowItems, setBuyNowItems] = useState(null);
+    useEffect(() =>
+    {
+        try
+        {
+            const stored = sessionStorage.getItem('buyNowItems');
+            if (stored)
+            {
+                setBuyNowItems(JSON.parse(stored));
+                sessionStorage.removeItem('buyNowItems');
+            }
+        } catch (e)
+        {
+            console.error('Error reading buyNow items:', e);
+        }
+    }, []);
+
+    const checkoutItems = buyNowItems || cartItems;
+
     const [formData, setFormData] = useState({
         fullName: '',
         phone: '',
@@ -145,9 +165,24 @@ export default function CheckoutPage()
         }
     }, []);
 
-    const checkoutItems = cartItems;
     const subtotal = checkoutItems.reduce((sum, item) => sum + (item.finalPrice * item.quantity), 0);
-    const shippingFee = subtotal >= 500000 ? 0 : 30000;
+
+    // Tính tổng cân nặng (gram)
+    const totalWeight = checkoutItems.reduce((sum, item) => sum + ((item.weight || 0) * item.quantity), 0);
+
+    // Tính phí ship theo cân nặng (gram) — miễn phí nếu đơn >= 500.000đ
+    const calculateShippingFee = (weightInGrams) =>
+    {
+        if (subtotal >= 500000) return 0;
+        if (weightInGrams <= 0) return 15000; // default nếu chưa có weight
+        if (weightInGrams <= 500) return 15000;
+        if (weightInGrams <= 1000) return 25000;
+        if (weightInGrams <= 2000) return 35000;
+        if (weightInGrams <= 5000) return 50000;
+        return 70000;
+    };
+
+    const shippingFee = calculateShippingFee(totalWeight);
     const total = subtotal + shippingFee;
 
     const handleChange = (e) =>
@@ -249,7 +284,7 @@ export default function CheckoutPage()
             const created = await OrderService.createOrder(orderData);
             setOrderId(created.id ? created.id.substring(0, 8).toUpperCase() : 'LS-' + Date.now().toString(36).toUpperCase());
             setOrderSuccess(true);
-            clearCart();
+            if (!buyNowItems) clearCart();
         } catch (error)
         {
             console.error('Order error:', error);
@@ -321,7 +356,7 @@ export default function CheckoutPage()
     }
 
     // ── Empty Cart ──
-    if (cartItems.length === 0)
+    if (checkoutItems.length === 0)
     {
         return (
             <>
@@ -621,6 +656,12 @@ export default function CheckoutPage()
                                                 {shippingFee === 0 ? 'Miễn phí' : `${formatPrice(shippingFee)}₫`}
                                             </span>
                                         </div>
+                                        {totalWeight > 0 && (
+                                            <p className='text-xs text-gray-400'>
+                                                <i className='bx bx-package mr-1'></i>
+                                                Tổng khối lượng: {totalWeight >= 1000 ? `${(totalWeight / 1000).toFixed(1)}kg` : `${totalWeight}g`}
+                                            </p>
+                                        )}
                                         {shippingFee > 0 && (
                                             <p className='text-xs text-gray-400'>
                                                 <i className='bx bx-info-circle mr-1'></i>

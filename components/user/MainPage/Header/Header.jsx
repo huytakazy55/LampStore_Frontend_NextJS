@@ -384,14 +384,16 @@ const Header = () =>
 
         {/* Action icons - desktop */}
         <div className='hidden md:block w-auto lg:w-1/5 text-black dark:text-white'>
-          <ul className='flex justify-end lg:justify-between items-center gap-3 lg:gap-0'>
+          <ul className='flex justify-end lg:justify-between items-center gap-2 lg:gap-1'>
             {/* Dark mode toggle */}
             <li className='relative cursor-pointer' onClick={toggleDarkMode}>
-              <div className='w-8 h-8 flex items-center justify-center rounded-full transition-all duration-500 hover:bg-amber-100 dark:hover:bg-gray-700'>
+              <div className='w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm transition-all duration-500 hover:bg-amber-50 dark:hover:bg-gray-700 hover:scale-110 hover:shadow-md hover:shadow-amber-200/30 dark:hover:shadow-amber-900/20 active:scale-95'>
                 <i className={`bx ${isDark ? 'bx-sun text-amber-400' : 'bx-moon text-indigo-500'} text-xl transition-all duration-500`}
                   style={{ transform: isDark ? 'rotate(360deg)' : 'rotate(0deg)' }}></i>
               </div>
             </li>
+
+            {/* Wishlist */}
             <li className='group relative cursor-pointer' onClick={() =>
             {
               if (!isAuthenticated)
@@ -401,35 +403,48 @@ const Header = () =>
               }
               navigate('/wishlist');
             }}>
-              <i className='bx bx-heart text-h2 leading-none align-middle text-red-600 cursor-pointer transition-transform duration-100 group-hover:-translate-y-[2px] group-hover:translate-x-[2px]'></i>
+              <div className='w-10 h-10 flex items-center justify-center rounded-xl bg-rose-50/80 dark:bg-rose-950/30 backdrop-blur-sm transition-all duration-300 hover:bg-rose-100 dark:hover:bg-rose-900/40 hover:scale-110 hover:shadow-md hover:shadow-rose-200/40 active:scale-95'>
+                <i className='bx bx-heart text-xl text-rose-500 dark:text-rose-400 transition-all duration-300 group-hover:text-rose-600'></i>
+              </div>
               {wishlistCount > 0 && (
-                <div className='absolute right-[-7px] bottom-[-10px] w-5 h-5 bg-rose-500 rounded-[50%] text-center text-xs leading-5 text-white font-medium'>{wishlistCount}</div>
+                <div className='absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-gradient-to-br from-rose-500 to-pink-600 rounded-full text-center text-[10px] leading-[18px] text-white font-bold shadow-lg shadow-rose-500/30 animate-pulse'>{wishlistCount}</div>
               )}
             </li>
-            <li className='flex justify-center items-center gap-1 cursor-pointer group' onClick={toggleFormcart} ref={buttonRef} >
+
+            {/* Cart */}
+            <li className='flex justify-center items-center gap-2 cursor-pointer group' onClick={toggleFormcart} ref={buttonRef}>
               <div className='relative'>
-                <i id='header-cart-icon' className='bx bx-shopping-bag text-h2 leading-none align-middle transition-transform duration-100 group-hover:-translate-y-[2px] group-hover:translate-x-[2px]'></i>
+                <div className='w-10 h-10 flex items-center justify-center rounded-xl bg-amber-50/80 dark:bg-amber-950/30 backdrop-blur-sm transition-all duration-300 hover:bg-amber-100 dark:hover:bg-amber-900/40 hover:scale-110 hover:shadow-md hover:shadow-amber-200/40 active:scale-95'>
+                  <i id='header-cart-icon' className='bx bx-shopping-bag text-xl text-amber-600 dark:text-amber-400 transition-all duration-300 group-hover:text-amber-700'></i>
+                </div>
                 <FormCart popupRef={popupRef} toggleCart={toggleCart} setToggleCart={setToggleCart} />
-                <div className='absolute right-[-7px] bottom-[-10px] w-5 h-5 bg-yellow-400 rounded-[50%] text-center text-xs leading-5 text-gray-700 font-medium'>{cartCount}</div>
+                <div className='absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-gradient-to-br from-amber-400 to-orange-500 rounded-full text-center text-[10px] leading-[18px] text-white font-bold shadow-lg shadow-amber-400/30'>{cartCount}</div>
               </div>
-              <div className='hidden lg:block text-small ml-1 p-[2px] relative font-medium'>
-                <div className='absolute w-1 h-1 -top-[2px] -left-[7px] text-small'>₫</div>
-                {cartTotal.toLocaleString('vi-VN')}
+              <div className='hidden lg:flex flex-col text-xs ml-0.5'>
+                <span className='text-[10px] text-gray-400 dark:text-gray-500 font-medium leading-tight'>Giỏ hàng</span>
+                <span className='font-bold text-gray-800 dark:text-gray-200 leading-tight'>{cartTotal.toLocaleString('vi-VN')}₫</span>
               </div>
             </li>
+
             <FormLogin toggleLogin={toggleLogin} setToggleLogin={setToggleLogin} />
 
+            {/* User / Avatar */}
             {
               mounted && isAuthenticated ?
                 <>
-                  <li onClick={toggleActionLoginForm} ref={buttonActionRef} className='relative w-8 h-8 leading-8 border-2 border-yellow-400 rounded-[20%] p-[1px] cursor-pointer'>
-                    <img className='rounded-[20%] h-full w-full ' src={avatarURL ? avatarURL : (avatar.ProfileAvatar ? (avatar.ProfileAvatar.startsWith('http') ? avatar.ProfileAvatar : `${API_ENDPOINT}${avatar.ProfileAvatar}`) : avatarimg)} alt="" />
+                  <li onClick={toggleActionLoginForm} ref={buttonActionRef} className='relative cursor-pointer group'>
+                    <div className='w-10 h-10 rounded-xl overflow-hidden ring-2 ring-amber-400/60 dark:ring-amber-500/40 transition-all duration-300 hover:ring-amber-500 hover:scale-110 hover:shadow-lg hover:shadow-amber-300/30 active:scale-95'>
+                      <img className='h-full w-full object-cover' src={avatarURL ? avatarURL : (avatar.ProfileAvatar ? (avatar.ProfileAvatar.startsWith('http') ? avatar.ProfileAvatar : `${API_ENDPOINT}${avatar.ProfileAvatar}`) : avatarimg)} alt="" />
+                    </div>
+                    <div className='absolute bottom-0 right-0 w-3 h-3 bg-gradient-to-br from-emerald-400 to-green-500 rounded-full border-2 border-white dark:border-gray-900'></div>
                     <FormActionLogin toggleProfile={toggleProfile} setToggleProfile={setToggleProfile} buttonProfileRef={buttonProfileRef} popupActionRef={popupActionRef} toggleActionLogin={toggleActionLogin} setToggleActionLogin={setToggleActionLogin} />
                   </li>
                 </> :
                 <>
-                  <li className='group' onClick={toggleLoginForm}>
-                    <i className='bx bx-user text-h2 leading-none align-middle cursor-pointer transition-transform duration-100 group-hover:-translate-y-[2px] group-hover:translate-x-[2px]'></i>
+                  <li className='group cursor-pointer' onClick={toggleLoginForm}>
+                    <div className='w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm transition-all duration-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 hover:scale-110 hover:shadow-md hover:shadow-indigo-200/30 active:scale-95'>
+                      <i className='bx bx-user text-xl text-gray-600 dark:text-gray-400 transition-all duration-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400'></i>
+                    </div>
                   </li>
                 </>
             }

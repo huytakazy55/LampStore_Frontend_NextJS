@@ -1,7 +1,8 @@
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT || 'https://capylumine.com';
 const SITE_URL = 'https://capylumine.com';
 
-export default async function sitemap() {
+export default async function sitemap()
+{
     // Static pages
     const staticPages = [
         {
@@ -24,11 +25,34 @@ export default async function sitemap() {
         },
     ];
 
+    // Dynamic category pages
+    let categoryPages = [];
+    try
+    {
+        const res = await fetch(`${API_ENDPOINT}/api/Category`, { next: { revalidate: 3600 } });
+        if (res.ok)
+        {
+            const data = await res.json();
+            const categories = data?.$values || data || [];
+            categoryPages = categories.map(cat => ({
+                url: `${SITE_URL}/categories/${cat.id}`,
+                lastModified: new Date(cat.updatedAt || cat.createdAt || new Date()),
+                changeFrequency: 'weekly',
+                priority: 0.8,
+            }));
+        }
+    } catch (error)
+    {
+        console.error('Error fetching categories for sitemap:', error);
+    }
+
     // Dynamic product pages
     let productPages = [];
-    try {
+    try
+    {
         const res = await fetch(`${API_ENDPOINT}/api/Product`, { next: { revalidate: 3600 } });
-        if (res.ok) {
+        if (res.ok)
+        {
             const data = await res.json();
             const products = data?.$values || data || [];
             productPages = products.map(product => ({
@@ -38,15 +62,18 @@ export default async function sitemap() {
                 priority: 0.9,
             }));
         }
-    } catch (error) {
+    } catch (error)
+    {
         console.error('Error fetching products for sitemap:', error);
     }
 
     // Dynamic news pages
     let newsPages = [];
-    try {
+    try
+    {
         const res = await fetch(`${API_ENDPOINT}/api/News?publishedOnly=true`, { next: { revalidate: 3600 } });
-        if (res.ok) {
+        if (res.ok)
+        {
             const data = await res.json();
             const news = data?.$values || data || [];
             newsPages = news.map(item => ({
@@ -56,9 +83,10 @@ export default async function sitemap() {
                 priority: 0.6,
             }));
         }
-    } catch (error) {
+    } catch (error)
+    {
         console.error('Error fetching news for sitemap:', error);
     }
 
-    return [...staticPages, ...productPages, ...newsPages];
+    return [...staticPages, ...categoryPages, ...productPages, ...newsPages];
 }

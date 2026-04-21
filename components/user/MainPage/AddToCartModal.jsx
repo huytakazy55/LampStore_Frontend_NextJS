@@ -138,7 +138,8 @@ const AddToCartModal = ({ isOpen, onClose, product }) =>
             image: mainImage,
             price: basePrice,
             quantity,
-            selectedOptions
+            selectedOptions,
+            weight: variant?.weight || 0
         });
 
         // Dispatch fly-to-cart animation event
@@ -304,10 +305,12 @@ const AddToCartModal = ({ isOpen, onClose, product }) =>
                                         basePrice: basePrice,
                                         finalPrice: basePrice + totalAdditionalBuy,
                                         quantity,
-                                        selectedOptions
+                                        selectedOptions,
+                                        weight: variant?.weight || 0
                                     };
                                     onClose();
-                                    navigate('/checkout', { state: { buyNowItems: [buyItem] } });
+                                    sessionStorage.setItem('buyNowItems', JSON.stringify([buyItem]));
+                                    navigate('/checkout');
                                 }}
                                 className="flex-1 bg-rose-600 text-white py-3 rounded-md font-medium hover:bg-rose-700 transition-colors shadow-sm cursor-pointer"
                             >

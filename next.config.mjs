@@ -16,6 +16,12 @@ const nextConfig = {
         pathname: '/**',
       },
       {
+        protocol: 'http',
+        hostname: '51.79.146.227',
+        port: '5001',
+        pathname: '/**',
+      },
+      {
         protocol: 'https',
         hostname: 'capylumine.com',
         pathname: '/**',
@@ -35,8 +41,26 @@ const nextConfig = {
   reactStrictMode: true,
 
   // Redirect old CRA paths if needed
-  async redirects() {
+  async redirects()
+  {
     return [];
+  },
+
+  // SEO & Security headers
+  async headers()
+  {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+          { key: 'X-DNS-Prefetch-Control', value: 'on' },
+          { key: 'Referrer-Policy', value: 'origin-when-cross-origin' },
+          { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' },
+        ],
+      },
+    ];
   },
 };
 

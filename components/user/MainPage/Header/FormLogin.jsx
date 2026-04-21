@@ -13,7 +13,8 @@ import GoogleSignIn from './GoogleSignIn';
 import ForgotPassword from '../../ForgotPassword/ForgotPassword';
 import { useCart } from '@/contexts/CartContext';
 
-const FormLogin = ({ toggleLogin, setToggleLogin }) => {
+const FormLogin = ({ toggleLogin, setToggleLogin }) =>
+{
     const dispatch = useDispatch();
     const { syncCartOnLogin } = useCart();
     const [stateSignin, setStateSignin] = useState({ username: '', password: '', rememberMe: false });
@@ -30,32 +31,38 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
     const role = useSelector((state) => state.auth.role);
     const navigate = useNavigate();
 
-    const showToast = (message, type = 'success') => {
+    const showToast = (message, type = 'success') =>
+    {
         if (type === 'success') toast.success(message);
         else if (type === 'error') toast.error(message);
     };
 
-    useEffect(() => {
+    useEffect(() =>
+    {
         if (role === 'Administrator') navigate('/admin');
     }, [role, navigate]);
 
-    useEffect(() => {
+    useEffect(() =>
+    {
         const rememberedUsername = localStorage.getItem('rememberedUsername');
         const isRemembered = localStorage.getItem('rememberMe') === 'true';
-        if (rememberedUsername && isRemembered) {
+        if (rememberedUsername && isRemembered)
+        {
             setStateSignin(prev => ({ ...prev, username: rememberedUsername, rememberMe: true }));
             setIsRememberedAccount(true);
         }
     }, []);
 
-    const ChangeFormLogin = () => {
+    const ChangeFormLogin = () =>
+    {
         setChangeForm(!changeForm);
         setFormErrors({});
         setShowPasswordLogin(false);
         setShowPasswordSignup(false);
     }
 
-    const handleModalClose = () => {
+    const handleModalClose = () =>
+    {
         setToggleLogin(false);
         setChangeForm(false);
         setFormErrors({});
@@ -67,18 +74,22 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
 
         const rememberedUsername = localStorage.getItem('rememberedUsername');
         const isRemembered = localStorage.getItem('rememberMe') === 'true';
-        if (rememberedUsername && isRemembered) {
+        if (rememberedUsername && isRemembered)
+        {
             setStateSignin(prev => ({ ...prev, username: rememberedUsername, rememberMe: true }));
             setIsRememberedAccount(true);
-        } else {
+        } else
+        {
             setStateSignin({ username: '', password: '', rememberMe: false });
             setIsRememberedAccount(false);
         }
         setStateSignup({ username: '', email: '', password: '' });
     }
 
-    const handleGoogleLoginSuccess = async (googleUserData) => {
-        try {
+    const handleGoogleLoginSuccess = async (googleUserData) =>
+    {
+        try
+        {
             const response = await AuthService.googleSignIn(googleUserData);
             const tokenResponse = response.data;
             showToast('Đăng nhập Google thành công!');
@@ -86,23 +97,27 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
             localStorage.removeItem('rememberedUsername');
             localStorage.removeItem('rememberMe');
             handleModalClose();
-            if (tokenResponse?.accessToken) {
+            if (tokenResponse?.accessToken)
+            {
                 const decoded = jwtDecode(tokenResponse.accessToken);
                 dispatch(loginAction({ token: tokenResponse.accessToken, role: decoded.role }));
                 await syncCartOnLogin();
             }
-        } catch (error) {
+        } catch (error)
+        {
             console.error('Google login error:', error);
             showToast('Đăng nhập Google thất bại!', 'error');
         }
     };
 
-    const handleGoogleLoginError = (error) => {
+    const handleGoogleLoginError = (error) =>
+    {
         console.error('Google login error:', error);
         showToast('Có lỗi xảy ra khi đăng nhập Google!', 'error');
     };
 
-    const validateFormSignin = () => {
+    const validateFormSignin = () =>
+    {
         let errors = {};
         if (!stateSignin.username) errors.username = 'Vui lòng nhập tên đăng nhập';
         if (!stateSignin.password) errors.password = 'Vui lòng nhập mật khẩu';
@@ -110,7 +125,8 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
         return Object.keys(errors).length === 0;
     };
 
-    const validateFormSignup = () => {
+    const validateFormSignup = () =>
+    {
         let errors = {};
         if (!stateSignup.username) errors.username = 'Tên đăng nhập là bắt buộc';
         if (!stateSignup.email) errors.email = 'Email là bắt buộc';
@@ -121,68 +137,83 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
         return Object.keys(errors).length === 0;
     };
 
-    const handleSignin = async (e) => {
+    const handleSignin = async (e) =>
+    {
         e.preventDefault();
         if (!validateFormSignin()) return;
         setIsLoading(true);
-        try {
+        try
+        {
             const res = await AuthService.signin(stateSignin.username, stateSignin.password, stateSignin.rememberMe);
             const tokenResponse = res.data;
             showToast('Đăng nhập thành công!');
             window.dispatchEvent(new Event('userLoginStatusChanged'));
-            if (stateSignin.rememberMe) {
+            if (stateSignin.rememberMe)
+            {
                 localStorage.setItem('rememberedUsername', stateSignin.username);
                 localStorage.setItem('rememberMe', 'true');
-            } else {
+            } else
+            {
                 localStorage.removeItem('rememberedUsername');
                 localStorage.removeItem('rememberMe');
             }
             handleModalClose();
-            if (tokenResponse?.accessToken) {
+            if (tokenResponse?.accessToken)
+            {
                 const decoded = jwtDecode(tokenResponse.accessToken);
                 dispatch(loginAction({ token: tokenResponse.accessToken, role: decoded.role }));
                 syncCartOnLogin();
             }
-        } catch (err) {
+        } catch (err)
+        {
             const errorMessage = err.response?.data || "Không thể kết nối tới máy chủ.";
             showToast(errorMessage, "error");
-        } finally {
+        } finally
+        {
             setIsLoading(false);
         }
     };
 
-    const handleSignup = async (e) => {
+    const handleSignup = async (e) =>
+    {
         e.preventDefault();
         if (!validateFormSignup()) return;
         setIsLoading(true);
-        try {
+        try
+        {
             await AuthService.signup(stateSignup.username, stateSignup.email, stateSignup.password);
             showToast('Đăng ký thành công!');
             setStateSignup({ username: '', email: '', password: '' });
             setChangeForm(false);
-        } catch (err) {
+        } catch (err)
+        {
             const errorMessage = err.response?.data?.errors?.$values?.[0] || err.response?.data || "Có lỗi xảy ra khi đăng ký!";
             showToast(errorMessage, "error");
-        } finally {
+        } finally
+        {
             setIsLoading(false);
         }
     }
 
-    const HandleOnChangeStateSignin = (e) => {
+    const HandleOnChangeStateSignin = (e) =>
+    {
         const { name, value, type, checked } = e.target;
         setStateSignin(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
-        if (name === 'rememberMe' && !checked) {
+        if (name === 'rememberMe' && !checked)
+        {
             localStorage.removeItem('rememberedUsername');
             localStorage.removeItem('rememberMe');
         }
-        if (name === 'username' && isRememberedAccount) {
+        if (name === 'username' && isRememberedAccount)
+        {
             const rememberedUsername = localStorage.getItem('rememberedUsername');
             if (value !== rememberedUsername) setIsRememberedAccount(false);
         }
         setFormErrors(prev => ({ ...prev, [name]: "" }));
     }
 
-    const HandleOnChangeStateSignup = (e) => {
+    const HandleOnChangeStateSignup = (e) =>
+    {
         const { name, value } = e.target;
         setStateSignup(prev => ({ ...prev, [name]: value }));
         setFormErrors(prev => ({ ...prev, [name]: "" }));
@@ -248,8 +279,8 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                                         <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
                                             Tên đăng nhập
                                         </label>
-                                        <div className={`relative flex items-center border-2 rounded-xl transition-all duration-200 ${formErrors.username ? 'border-red-300 bg-red-50/50' : 'border-gray-200 dark:border-gray-700 focus-within:border-amber-400 focus-within:ring-4 focus-within:ring-amber-50 dark:focus-within:ring-amber-900/20'} bg-gray-50/80 dark:bg-gray-800/50`}>
-                                            <span className="pl-4 text-gray-400"><i className='bx bx-user text-lg'></i></span>
+                                        <div className={`relative flex items-center border-2 rounded-xl transition-all duration-200 ${formErrors.username ? 'border-red-300 bg-red-50/50' : 'border-gray-200 dark:border-gray-700 focus-within:border-amber-400 focus-within:ring-4 focus-within:ring-amber-50 dark:focus-within:ring-amber-900/20'}`}>
+                                            <span className="pl-4 text-gray-400 leading-none flex items-center"><i className='bx bx-user text-lg'></i></span>
                                             <input
                                                 className="w-full px-3 py-3 bg-transparent text-sm text-gray-800 dark:text-gray-200 outline-none placeholder-gray-400"
                                                 type="text" autoFocus name="username"
@@ -269,8 +300,8 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                                         <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
                                             Mật khẩu
                                         </label>
-                                        <div className={`relative flex items-center border-2 rounded-xl transition-all duration-200 ${formErrors.password ? 'border-red-300 bg-red-50/50' : 'border-gray-200 dark:border-gray-700 focus-within:border-amber-400 focus-within:ring-4 focus-within:ring-amber-50 dark:focus-within:ring-amber-900/20'} bg-gray-50/80 dark:bg-gray-800/50`}>
-                                            <span className="pl-4 text-gray-400"><i className='bx bx-lock-alt text-lg'></i></span>
+                                        <div className={`relative flex items-center border-2 rounded-xl transition-all duration-200 ${formErrors.password ? 'border-red-300 bg-red-50/50' : 'border-gray-200 dark:border-gray-700 focus-within:border-amber-400 focus-within:ring-4 focus-within:ring-amber-50 dark:focus-within:ring-amber-900/20'}`}>
+                                            <span className="pl-4 text-gray-400 leading-none flex items-center"><i className='bx bx-lock-alt text-lg'></i></span>
                                             <input
                                                 className="w-full px-3 py-3 bg-transparent text-sm text-gray-800 dark:text-gray-200 outline-none placeholder-gray-400"
                                                 type={showPasswordLogin ? "text" : "password"}
@@ -360,8 +391,8 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                                         <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
                                             Tên đăng nhập
                                         </label>
-                                        <div className={`relative flex items-center border-2 rounded-xl transition-all duration-200 ${formErrors.username ? 'border-red-300 bg-red-50/50' : 'border-gray-200 dark:border-gray-700 focus-within:border-amber-400 focus-within:ring-4 focus-within:ring-amber-50 dark:focus-within:ring-amber-900/20'} bg-gray-50/80 dark:bg-gray-800/50`}>
-                                            <span className="pl-4 text-gray-400"><i className='bx bx-user text-lg'></i></span>
+                                        <div className={`relative flex items-center border-2 rounded-xl transition-all duration-200 ${formErrors.username ? 'border-red-300 bg-red-50/50' : 'border-gray-200 dark:border-gray-700 focus-within:border-amber-400 focus-within:ring-4 focus-within:ring-amber-50 dark:focus-within:ring-amber-900/20'}`}>
+                                            <span className="pl-4 text-gray-400 leading-none flex items-center"><i className='bx bx-user text-lg'></i></span>
                                             <input
                                                 className="w-full px-3 py-3 bg-transparent text-sm text-gray-800 dark:text-gray-200 outline-none placeholder-gray-400"
                                                 type="text" name="username" value={stateSignup.username}
@@ -377,8 +408,8 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                                         <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
                                             Email
                                         </label>
-                                        <div className={`relative flex items-center border-2 rounded-xl transition-all duration-200 ${formErrors.email ? 'border-red-300 bg-red-50/50' : 'border-gray-200 dark:border-gray-700 focus-within:border-amber-400 focus-within:ring-4 focus-within:ring-amber-50 dark:focus-within:ring-amber-900/20'} bg-gray-50/80 dark:bg-gray-800/50`}>
-                                            <span className="pl-4 text-gray-400"><i className='bx bx-envelope text-lg'></i></span>
+                                        <div className={`relative flex items-center border-2 rounded-xl transition-all duration-200 ${formErrors.email ? 'border-red-300 bg-red-50/50' : 'border-gray-200 dark:border-gray-700 focus-within:border-amber-400 focus-within:ring-4 focus-within:ring-amber-50 dark:focus-within:ring-amber-900/20'}`}>
+                                            <span className="pl-4 text-gray-400 leading-none flex items-center"><i className='bx bx-envelope text-lg'></i></span>
                                             <input
                                                 className="w-full px-3 py-3 bg-transparent text-sm text-gray-800 dark:text-gray-200 outline-none placeholder-gray-400"
                                                 type="email" name="email" value={stateSignup.email}
@@ -394,8 +425,8 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                                         <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
                                             Mật khẩu
                                         </label>
-                                        <div className={`relative flex items-center border-2 rounded-xl transition-all duration-200 ${formErrors.password ? 'border-red-300 bg-red-50/50' : 'border-gray-200 dark:border-gray-700 focus-within:border-amber-400 focus-within:ring-4 focus-within:ring-amber-50 dark:focus-within:ring-amber-900/20'} bg-gray-50/80 dark:bg-gray-800/50`}>
-                                            <span className="pl-4 text-gray-400"><i className='bx bx-lock-alt text-lg'></i></span>
+                                        <div className={`relative flex items-center border-2 rounded-xl transition-all duration-200 ${formErrors.password ? 'border-red-300 bg-red-50/50' : 'border-gray-200 dark:border-gray-700 focus-within:border-amber-400 focus-within:ring-4 focus-within:ring-amber-50 dark:focus-within:ring-amber-900/20'}`}>
+                                            <span className="pl-4 text-gray-400 leading-none flex items-center"><i className='bx bx-lock-alt text-lg'></i></span>
                                             <input
                                                 className="w-full px-3 py-3 bg-transparent text-sm text-gray-800 dark:text-gray-200 outline-none placeholder-gray-400"
                                                 type={showPasswordSignup ? "text" : "password"}

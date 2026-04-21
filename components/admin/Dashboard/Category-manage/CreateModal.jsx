@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useContext, useState } from 'react';
-import { Modal, Form, Input, Button, Upload, Image, Switch, message } from 'antd';
-import { UploadOutlined, PlusOutlined, PictureOutlined } from '@ant-design/icons';
+import { Modal, Form, Input, Button, Upload, Image, Switch, message, Row, Col } from 'antd';
+import { UploadOutlined, PlusOutlined, PictureOutlined, DeleteOutlined } from '@ant-design/icons';
 import CategoryManage from '@/services/CategoryManage';
 import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '@/contexts/ThemeContext';
@@ -53,37 +53,71 @@ const CreateModal = ({ openCreate, handleCreateClose, setCategoryData }) =>
   };
 
   return (
-    <Modal open={openCreate} onCancel={handleCreateClose} footer={null} destroyOnHidden title={null} styles={{ body: { padding: 0 } }}>
-      <ModalHeader icon="➕" title={t('Create')} subtitle="Thêm danh mục mới vào hệ thống" />
-      <div style={{ padding: '24px 24px 16px' }}>
+    <Modal open={openCreate} onCancel={handleCreateClose} footer={null} destroyOnHidden title={null} width={620} styles={{ body: { padding: 0 } }}>
+      <ModalHeader icon="➕" title={t('Create')} />
+      <div style={{ padding: '20px 24px 16px', maxHeight: '72vh', overflowY: 'auto' }}>
         <Form form={form} layout="vertical" onFinish={handleSubmitCreate}>
-          <Form.Item name="name" label="Tên danh mục" rules={[{ required: true, message: 'Vui lòng nhập tên danh mục!' }]}>
-            <Input placeholder="Nhập tên danh mục" autoFocus />
-          </Form.Item>
-          <Form.Item name="description" label="Mô tả">
-            <ReactQuill theme="snow" placeholder="Nhập mô tả danh mục" style={{ minHeight: 90, maxHeight: 120, overflow: 'auto' }} />
-          </Form.Item>
-          <Form.Item label="Ảnh danh mục">
-            <Upload beforeUpload={handleImageUpload} showUploadList={false} accept="image/*">
-              <Button icon={<UploadOutlined />} loading={uploading} style={{ width: '100%', height: 42 }}>
-                {uploading ? 'Đang nén và upload...' : 'Chọn ảnh'}
-              </Button>
-            </Upload>
-            <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 4 }}>Ảnh tự động nén. Tối đa 2MB.</div>
-            {imageUrl ? (
-              <div style={{ marginTop: 12 }}>
-                <Image width="100%" src={`${process.env.NEXT_PUBLIC_API_ENDPOINT}${imageUrl}`} style={{ objectFit: 'cover', borderRadius: 8, border: '1px solid #e5e7eb' }} />
-              </div>
-            ) : (
-              <div style={{ marginTop: 12, width: '100%', height: 120, background: '#f9fafb', border: '1.5px dashed #d1d5db', borderRadius: 8, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#9ca3af', gap: 8 }}>
-                <PictureOutlined style={{ fontSize: 28 }} />
-                <span style={{ fontSize: 13 }}>Chưa có ảnh</span>
-              </div>
-            )}
-          </Form.Item>
-          <Form.Item name="isDisplayed" label="Hiển thị" valuePropName="checked" initialValue={true}>
-            <Switch checkedChildren="Hiện" unCheckedChildren="Ẩn" defaultChecked />
-          </Form.Item>
+          <Row gutter={20}>
+            {/* Left column - Form fields */}
+            <Col xs={24} sm={15}>
+              <Form.Item name="name" label="Tên danh mục" rules={[{ required: true, message: 'Vui lòng nhập tên danh mục!' }]} style={{ marginBottom: 14 }}>
+                <Input placeholder="Nhập tên danh mục" autoFocus />
+              </Form.Item>
+              <Form.Item name="description" label="Mô tả" style={{ marginBottom: 14 }}>
+                <ReactQuill theme="snow" placeholder="Nhập mô tả danh mục" style={{ minHeight: 80, maxHeight: 110, overflow: 'auto' }} />
+              </Form.Item>
+              <Form.Item name="isDisplayed" label="Hiển thị" valuePropName="checked" initialValue={true} style={{ marginBottom: 8 }}>
+                <Switch checkedChildren="Hiện" unCheckedChildren="Ẩn" defaultChecked />
+              </Form.Item>
+            </Col>
+
+            {/* Right column - Image */}
+            <Col xs={24} sm={9}>
+              <Form.Item label="Ảnh danh mục" style={{ marginBottom: 8 }}>
+                {imageUrl ? (
+                  <div style={{ position: 'relative', width: '100%', maxWidth: 160, margin: '0 auto' }}>
+                    <Image
+                      width="100%"
+                      height={140}
+                      src={`${process.env.NEXT_PUBLIC_API_ENDPOINT}${imageUrl}`}
+                      style={{ objectFit: 'cover', borderRadius: 8, border: '1px solid #e5e7eb' }}
+                    />
+                    <Button
+                      type="text"
+                      danger
+                      size="small"
+                      icon={<DeleteOutlined />}
+                      onClick={() => setImageUrl('')}
+                      style={{
+                        position: 'absolute', top: 4, right: 4,
+                        background: 'rgba(255,255,255,0.85)', borderRadius: '50%',
+                        width: 26, height: 26, padding: 0, minWidth: 0,
+                        boxShadow: '0 1px 4px rgba(0,0,0,0.12)'
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div style={{
+                    width: '100%', maxWidth: 160, height: 140, margin: '0 auto',
+                    background: '#f9fafb', border: '1.5px dashed #d1d5db', borderRadius: 8,
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                    color: '#9ca3af', gap: 6
+                  }}>
+                    <PictureOutlined style={{ fontSize: 26 }} />
+                    <span style={{ fontSize: 12 }}>Chưa có ảnh</span>
+                  </div>
+                )}
+                <Upload beforeUpload={handleImageUpload} showUploadList={false} accept="image/*">
+                  <Button icon={<UploadOutlined />} loading={uploading} size="small"
+                    style={{ width: '100%', maxWidth: 160, display: 'block', margin: '8px auto 0', height: 32 }}>
+                    {uploading ? 'Đang upload...' : 'Chọn ảnh'}
+                  </Button>
+                </Upload>
+                <div style={{ fontSize: 11, color: '#9ca3af', textAlign: 'center', marginTop: 4 }}>Tối đa 2MB, tự nén</div>
+              </Form.Item>
+            </Col>
+          </Row>
+
           <ModalFooter>
             <Button onClick={handleCreateClose}>Đóng</Button>
             <Button type="primary" htmlType="submit" style={{ background: themeColors.EndColorLinear }} icon={<PlusOutlined />}>Lưu lại</Button>
