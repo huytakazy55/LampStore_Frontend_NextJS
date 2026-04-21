@@ -10,24 +10,19 @@ import 'react-toastify/dist/ReactToastify.css';
 import NotificationService from '@/services/NotificationService';
 import { useSelector } from 'react-redux';
 
-const AdminDashboard = () =>
-{
+const AdminDashboard = () => {
   const leftBar = useSelector((state) => state.leftbar.leftbar);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     // Khởi tạo thông báo real-time cho admin
-    const initializeNotifications = async () =>
-    {
-      try
-      {
+    const initializeNotifications = async () => {
+      try {
         await NotificationService.setupSignalRNotifications();
         NotificationService.requestNotificationPermission();
         NotificationService.cleanOldNotifications();
 
 
-      } catch (error)
-      {
+      } catch (error) {
         console.error('❌ Admin Dashboard: Failed to initialize notifications:', error);
       }
     };
@@ -36,7 +31,7 @@ const AdminDashboard = () =>
   }, []);
 
   return (
-    <div className='min-h-screen'>
+    <div className='h-screen overflow-hidden'>
       <AppBar />
       <div className='h-[calc(100vh-4rem)] flex justify-between items-stretch relative'>
         {/* Mobile overlay when sidebar is open */}

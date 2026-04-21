@@ -128,11 +128,11 @@ const Banners = () => {
             align: 'center',
             sorter: (a, b) => (a.title || '').localeCompare(b.title || ''),
             render: (text) => (
-                <div style={{ 
-                    maxWidth: '180px', 
-                    overflow: 'hidden', 
-                    textOverflow: 'ellipsis', 
-                    whiteSpace: 'nowrap' 
+                <div style={{
+                    maxWidth: '180px',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap'
                 }}>
                     {text}
                 </div>
@@ -208,7 +208,7 @@ const Banners = () => {
             width: 120,
             align: 'center',
             render: (text, record) => (
-                <Space size="middle" style={{justifyContent: 'center', width: '100%'}}>
+                <Space size="middle" style={{ justifyContent: 'center', width: '100%' }}>
                     <Button
                         icon={<EditOutlined />}
                         onClick={() => handleEdit(record)}
@@ -241,7 +241,7 @@ const Banners = () => {
     };
 
     return (
-        <div style={{padding: '24px'}}>
+        <div style={{ padding: '24px' }}>
             <div className="admin-table-card">
                 {/* Title Bar */}
                 <div
@@ -254,7 +254,7 @@ const Banners = () => {
                         marginBottom: 0
                     }}
                 >
-                    <div style={{fontSize: '1.5rem', fontWeight: 600, color: themeColors.StartColorLinear}}>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 600, color: themeColors.StartColorLinear }}>
                         Quản lý Banner
                     </div>
                     <Breadcrumb
@@ -265,7 +265,7 @@ const Banners = () => {
                         style={{ marginTop: '8px' }}
                     />
                 </div>
-                
+
                 {/* Filter Bar */}
                 <div
                     className="admin-filter-bar"
@@ -286,18 +286,18 @@ const Banners = () => {
                             style={{ width: 300 }}
                         />
                     </Space>
-                    <Button 
-                        type="primary" 
-                        icon={<PlusOutlined />} 
+                    <Button
+                        type="primary"
+                        icon={<PlusOutlined />}
                         onClick={() => setShowCreateModal(true)}
                         style={{ background: themeColors.StartColorLinear }}
                     >
                         Thêm Banner
                     </Button>
                 </div>
-                
+
                 {/* Table */}
-                <div className="admin-table-wrapper" style={{padding: '0 24px 24px 24px'}}>
+                <div className="admin-table-wrapper" style={{ padding: '24px' }}>
                     <Table
                         columns={columns}
                         dataSource={filteredBanners}

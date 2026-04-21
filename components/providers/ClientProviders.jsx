@@ -19,13 +19,11 @@ import '@/lib/axiosConfig';
 import '@/lib/i18n';
 
 // Expose toast to global scope for NotificationService
-if (typeof window !== 'undefined')
-{
+if (typeof window !== 'undefined') {
     window.toast = toast;
 }
 
-export default function ClientProviders({ children })
-{
+export default function ClientProviders({ children }) {
     const pathname = usePathname();
     const isAdminPage = pathname?.startsWith('/admin');
 
@@ -48,9 +46,11 @@ export default function ClientProviders({ children })
                     <CartProvider>
                         <WishlistProvider>
                             <AOSProvider>
-                                <LenisProvider>
-                                    {children}
-                                </LenisProvider>
+                                {isAdminPage ? children : (
+                                    <LenisProvider>
+                                        {children}
+                                    </LenisProvider>
+                                )}
                             </AOSProvider>
                             {!isAdminPage && <FloatingCart />}
                             {!isAdminPage && <ChatButton />}

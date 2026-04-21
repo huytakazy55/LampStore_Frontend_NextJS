@@ -67,7 +67,7 @@ const Users = () => {
         setSelectedRowKeys([]);
         setRoleData({});
       }
-      
+
       fetchUsers();
       setHasInitialized(true);
     }
@@ -213,7 +213,7 @@ const Users = () => {
       width: 120,
       align: 'center',
       render: (text, record) => (
-        <Space size="middle" style={{justifyContent: 'center', width: '100%'}}>
+        <Space size="middle" style={{ justifyContent: 'center', width: '100%' }}>
           {record.lockoutEnd && new Date(record.lockoutEnd) > new Date() ? (
             <Button
               icon={<UnlockOutlined />}
@@ -314,7 +314,7 @@ const Users = () => {
 
 
   return (
-    <div style={{padding: '24px'}}>
+    <div style={{ padding: '24px' }}>
       <div className="admin-table-card">
         {/* Title Bar */}
         <div
@@ -327,7 +327,7 @@ const Users = () => {
             marginBottom: 0
           }}
         >
-          <div style={{fontSize: '1.5rem', fontWeight: 600, color: themeColors.StartColorLinear}}>
+          <div style={{ fontSize: '1.5rem', fontWeight: 600, color: themeColors.StartColorLinear }}>
             {t('Users')}
           </div>
           <Breadcrumb
@@ -376,7 +376,7 @@ const Users = () => {
         </div>
 
         {/* Table */}
-        <div style={{padding: '0 24px 24px 24px'}}>
+        <div style={{ padding: '24px' }}>
           <Table
             rowSelection={rowSelection}
             columns={columns}

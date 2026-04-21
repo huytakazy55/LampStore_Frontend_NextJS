@@ -27,8 +27,7 @@ const style = {
   outline: 'none',
 };
 
-const Tags = () =>
-{
+const Tags = () => {
   const { themeColors } = useContext(ThemeContext);
   const { t } = useTranslation();
   //modal create
@@ -70,22 +69,18 @@ const Tags = () =>
   const [bulkDeleteLoading, setBulkDeleteLoading] = useState(false);
   const [bulkDeleteIds, setBulkDeleteIds] = useState([]);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     TagManage.GetTag()
-      .then((res) =>
-      {
+      .then((res) => {
         setTagData(res.data.$values);
       })
-      .catch((err) =>
-      {
+      .catch((err) => {
 
       })
   }, [])
 
   //Search Service
-  const highlightedText = (text, highlight) =>
-  {
+  const highlightedText = (text, highlight) => {
     if (!highlight) return text;
     const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
     return parts.map((part, index) =>
@@ -95,10 +90,8 @@ const Tags = () =>
     );
   };
 
-  const filteredTags = useMemo(() =>
-  {
-    return tagData.filter(tag =>
-    {
+  const filteredTags = useMemo(() => {
+    return tagData.filter(tag => {
       const matchesSearch = tag.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         tag.description.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesDate = !dateRange || (
@@ -110,62 +103,50 @@ const Tags = () =>
     });
   }, [tagData, searchTerm, dateRange]);
 
-  const truncateWords = (text, maxWords) =>
-  {
-    if (!text)
-    {
+  const truncateWords = (text, maxWords) => {
+    if (!text) {
       return '';
     }
     const words = text.split(' ');
-    if (words.length > maxWords)
-    {
+    if (words.length > maxWords) {
       return words.slice(0, maxWords).join(' ') + ' . . .';
     }
     return text;
   };
 
-  const handleChangePage = (page) =>
-  {
+  const handleChangePage = (page) => {
     setPage(page);
   };
 
   //Pagination
-  const currentItems = useMemo(() =>
-  {
+  const currentItems = useMemo(() => {
     return filteredTags.slice((page - 1) * itemsPerPage, page * itemsPerPage);
   }, [filteredTags, page, itemsPerPage]);
 
-  const DeleteTag = (id, name) =>
-  {
+  const DeleteTag = (id, name) => {
     TagManage.DeleteTag(id, name)
-      .then((res) =>
-      {
+      .then((res) => {
         setTagData(prevData => prevData.filter(tag => tag.id !== id));
         toast.success(`Đã xóa bản ghi có id = ${id}: ${name}`);
       })
-      .catch((err) =>
-      {
+      .catch((err) => {
         toast.error("Có lỗi xảy ra");
       });
   };
 
-  const handleUpdateClick = (id) =>
-  {
+  const handleUpdateClick = (id) => {
     const tag = tagData.find((item) => item.id === id);
     setSelectedTag(tag);
     handleUpdateOpen();
     setUpdateId(id);
   }
 
-  const fetchTags = () =>
-  {
+  const fetchTags = () => {
     TagManage.GetTag()
-      .then((res) =>
-      {
+      .then((res) => {
         setTagData(res.data.$values);
       })
-      .catch((err) =>
-      {
+      .catch((err) => {
 
       });
   };
@@ -228,8 +209,7 @@ const Tags = () =>
       key: 'updatedAt',
       width: '12%',
       align: 'center',
-      sorter: (a, b) =>
-      {
+      sorter: (a, b) => {
         if (!a.updatedAt) return -1;
         if (!b.updatedAt) return 1;
         return new Date(a.updatedAt) - new Date(b.updatedAt);
@@ -264,8 +244,7 @@ const Tags = () =>
     }
   ];
 
-  const onSelectChange = (newSelectedRowKeys) =>
-  {
+  const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
@@ -276,27 +255,21 @@ const Tags = () =>
     columnTitle: '',
   };
 
-  const handleBulkDelete = async () =>
-  {
-    try
-    {
+  const handleBulkDelete = async () => {
+    try {
       setBulkDeleteLoading(true);
       const response = await TagManage.BulkDeleteTags(selectedRowKeys);
 
-      if (response.data.success || response.status === 200 || response.status === 204)
-      {
+      if (response.data.success || response.status === 200 || response.status === 204) {
         toast.success(`Đã xóa ${selectedRowKeys.length} bản ghi!`);
         setSelectedRowKeys([]);
         fetchTags();
-      } else
-      {
+      } else {
         toast.error('Có lỗi xảy ra khi xóa bản ghi!');
       }
-    } catch (error)
-    {
+    } catch (error) {
       toast.error('Có lỗi xảy ra khi xóa bản ghi!');
-    } finally
-    {
+    } finally {
       setBulkDeleteLoading(false);
       setOpenBulkDelete(false);
     }
@@ -385,7 +358,7 @@ const Tags = () =>
           </Col>
         </Row>
         {/* Table */}
-        <div className="admin-table-wrapper" style={{ padding: '0 24px 24px 24px' }}>
+        <div className="admin-table-wrapper" style={{ padding: '24px' }}>
           <Table
             rowSelection={rowSelection}
             columns={columns}
@@ -431,8 +404,7 @@ const Tags = () =>
         title={t('Filter')}
         open={openFilter}
         onCancel={() => setOpenFilter(false)}
-        onOk={() =>
-        {
+        onOk={() => {
           setOpenFilter(false);
           // Handle filter application
         }}

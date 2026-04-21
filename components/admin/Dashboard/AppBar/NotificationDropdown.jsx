@@ -2,33 +2,28 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import
-{
+import {
   markAsRead,
   markAllAsRead,
   setDropdownOpen,
   removeNotification
 } from '@/redux/slices/notificationSlice';
 
-const NotificationDropdown = ({ themeColors }) =>
-{
+const NotificationDropdown = ({ themeColors }) => {
   const dispatch = useDispatch();
   const { notifications, unreadCount, isDropdownOpen } = useSelector(state => state.notification);
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
 
   // Đóng dropdown khi click bên ngoài
-  useEffect(() =>
-  {
-    const handleClickOutside = (event) =>
-    {
+  useEffect(() => {
+    const handleClickOutside = (event) => {
       if (
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target) &&
         buttonRef.current &&
         !buttonRef.current.contains(event.target)
-      )
-      {
+      ) {
         dispatch(setDropdownOpen(false));
       }
     };
@@ -37,32 +32,26 @@ const NotificationDropdown = ({ themeColors }) =>
     return () => document.removeEventListener('click', handleClickOutside);
   }, [dispatch]);
 
-  const toggleDropdown = () =>
-  {
+  const toggleDropdown = () => {
     dispatch(setDropdownOpen(!isDropdownOpen));
   };
 
-  const handleMarkAsRead = (notificationId) =>
-  {
+  const handleMarkAsRead = (notificationId) => {
     dispatch(markAsRead(notificationId));
   };
 
-  const handleMarkAllAsRead = (event) =>
-  {
+  const handleMarkAllAsRead = (event) => {
     event.stopPropagation(); // Ngăn event bubbling
     dispatch(markAllAsRead());
     // Không đóng dropdown, chỉ đánh dấu đã đọc
   };
 
-  const handleRemoveNotification = (notificationId) =>
-  {
+  const handleRemoveNotification = (notificationId) => {
     dispatch(removeNotification(notificationId));
   };
 
-  const getNotificationIcon = (type) =>
-  {
-    switch (type)
-    {
+  const getNotificationIcon = (type) => {
+    switch (type) {
       case 'chat':
         return '💬';
       case 'order':
@@ -74,10 +63,8 @@ const NotificationDropdown = ({ themeColors }) =>
     }
   };
 
-  const getPriorityColor = (priority) =>
-  {
-    switch (priority)
-    {
+  const getPriorityColor = (priority) => {
+    switch (priority) {
       case 'urgent':
         return '#ef4444';
       case 'high':
@@ -91,8 +78,7 @@ const NotificationDropdown = ({ themeColors }) =>
     }
   };
 
-  const formatTime = (timestamp) =>
-  {
+  const formatTime = (timestamp) => {
     const now = new Date();
     const time = new Date(timestamp);
     const diffMs = now - time;
@@ -113,20 +99,24 @@ const NotificationDropdown = ({ themeColors }) =>
       <div
         ref={buttonRef}
         onClick={toggleDropdown}
-        className="flex relative cursor-pointer transition-transform duration-200 hover:scale-110"
+        className="appbar-icon-btn"
         style={{
+          cursor: 'pointer',
+          position: 'relative',
           filter: isDropdownOpen ? 'drop-shadow(0 0 8px rgba(59,130,246,0.4))' : 'none'
         }}
       >
-        <i className="bx bx-bell text-h2 mt-1"></i>
+        <i className="bx bx-bell" style={{ fontSize: 18, color: 'rgba(255,255,255,0.85)' }}></i>
 
         {/* Badge số lượng thông báo */}
         {unreadCount > 0 && (
           <div
-            className="absolute -top-1 -right-1 min-w-[18px] h-[18px] rounded-full flex items-center justify-center text-white text-xs font-bold animate-pulse"
+            className="absolute -top-1 -right-1 min-w-[16px] h-[16px] rounded-full flex items-center justify-center text-white text-[10px] font-bold"
             style={{
               background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
-              boxShadow: '0 2px 8px rgba(239,68,68,0.3)'
+              boxShadow: '0 2px 8px rgba(239,68,68,0.3)',
+              lineHeight: 1,
+              padding: '0 4px',
             }}
           >
             {unreadCount > 99 ? '99+' : unreadCount}
@@ -203,8 +193,7 @@ const NotificationDropdown = ({ themeColors }) =>
                           {notification.title}
                         </h4>
                         <button
-                          onClick={(e) =>
-                          {
+                          onClick={(e) => {
                             e.stopPropagation();
                             handleRemoveNotification(notification.id);
                           }}

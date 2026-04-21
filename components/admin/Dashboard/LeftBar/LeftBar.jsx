@@ -8,9 +8,9 @@ import { ThemeContext } from '@/contexts/ThemeContext';
 import { setCurrentBar, setLeftBar } from '@/redux/slices/leftBarAdminSlice';
 import { jwtDecode } from 'jwt-decode';
 import UserManage from '@/services/UserManage';
+import './LeftBar.css';
 
-const LeftBar = () =>
-{
+const LeftBar = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const leftBar = useSelector((state) => state.leftbar.leftbar);
@@ -19,35 +19,27 @@ const LeftBar = () =>
     const [userMenus, setUserMenus] = useState([]);
     const [loadingMenus, setLoadingMenus] = useState(true);
 
-    const userRoles = useMemo(() =>
-    {
+    const userRoles = useMemo(() => {
         const token = localStorage.getItem('token');
         if (!token) return [];
-        try
-        {
+        try {
             const decoded = jwtDecode(token);
             const roleClaim = decoded.role;
             return Array.isArray(roleClaim) ? roleClaim : roleClaim ? [roleClaim] : [];
-        } catch (error)
-        {
+        } catch (error) {
             console.error('Cannot decode token roles:', error);
             return [];
         }
     }, []);
 
-    useEffect(() =>
-    {
-        const fetchUserMenus = async () =>
-        {
-            try
-            {
+    useEffect(() => {
+        const fetchUserMenus = async () => {
+            try {
                 const menus = await UserManage.GetUserMenus();
                 setUserMenus(menus.$values || menus || []);
-            } catch (error)
-            {
+            } catch (error) {
                 console.error('Cannot load user menus, fallback to role-based menu:', error);
-            } finally
-            {
+            } finally {
                 setLoadingMenus(false);
             }
         };
@@ -70,63 +62,86 @@ const LeftBar = () =>
         { name: "Setting", icon: "bxs-cog", path: "/admin/settings", roles: ["Administrator"] },
     ];
 
-    const visibleMenuItems = useMemo(() =>
-    {
-        if (!loadingMenus && userMenus && userMenus.length > 0)
-        {
+    const visibleMenuItems = useMemo(() => {
+        if (!loadingMenus && userMenus && userMenus.length > 0) {
             return menuItems.filter(item => userMenus.includes(item.name) || (item.name === "News" && userRoles.includes("Administrator")));
         }
 
-        return menuItems.filter(item =>
-        {
+        return menuItems.filter(item => {
             if (!item.roles || item.roles.length === 0) return true;
             return item.roles.some(r => userRoles.includes(r));
         });
     }, [loadingMenus, userMenus, userRoles]);
 
-    // Close sidebar on mobile when clicking a menu item
-    const handleMenuClick = (itemName) =>
-    {
+    const handleMenuClick = (itemName) => {
         dispatch(setCurrentBar(itemName));
-        // Close sidebar on mobile
-        if (window.innerWidth < 768)
-        {
+        if (window.innerWidth < 768) {
             dispatch(setLeftBar(true));
         }
     };
 
+    const isCollapsed = leftBar;
+
     return (
         <div
-            style={{
-                background: `linear-gradient(0deg, ${themeColors.StartColorLinear} 0%, ${themeColors.EndColorLinear} 100%)`,
-            }}
-            className={`h-full border-r border-gray-300 transition-all duration-400 ease-linear overflow-hidden overflow-y-auto
-                ${leftBar
-                    ? 'w-0 md:w-[4.5rem] absolute md:relative -left-full md:left-0'
-                    : 'w-[70%] sm:w-[50%] md:w-[13%] fixed md:relative left-0 top-16 md:top-0 bottom-0 z-40 md:z-auto'
+            className={`sidebar-container
+                ${isCollapsed
+                    ? 'sidebar-collapsed absolute md:relative -left-full md:left-0'
+                    : 'sidebar-expanded fixed md:relative left-0 top-16 md:top-0 bottom-0 z-40 md:z-auto'
                 }`}
+            style={{
+                background: `linear-gradient(160deg, ${themeColors.EndColorLinear} 0%, ${themeColors.StartColorLinear} 100%)`,
+            }}
         >
-            <ul className="p-3 md:p-4 text-white">
-                {visibleMenuItems.map((item) => (
-                    <Link
-                        key={item.name}
-                        onClick={() => handleMenuClick(item.name)}
-                        className="left-10 text-white font-medium w-full md:w-52 transition-all duration-400 ease-in-out block"
-                        to={item.path}
-                    >
-                        <li
-                            className={`relative p-[10px] h-10 flex justify-start items-center rounded-md mb-2 cursor-pointer hover:bg-fuchsia-700/25 ${currentBar === item.name ? 'bg-fuchsia-700/25' : ''
-                                }`}
-                        >
-                            <i
-                                className={`bx ${item.icon} text-h3 mr-4 transition-all duration-400 ease-in-out ${leftBar ? 'md:flex md:justify-center md:items-center md:mr-40' : ''
-                                    }`}
-                            ></i>
-                            <span className={`text-sm md:text-base whitespace-nowrap ${leftBar ? 'md:hidden' : ''}`}>{t(item.name)}</span>
-                        </li>
-                    </Link>
-                ))}
-            </ul>
+            {/* Dark overlay for depth & readability */}
+            <div className="sidebar-overlay" />
+
+            {/* Navigation */}
+            <nav className="sidebar-nav">
+                <div className="sidebar-section-label">
+                    {!isCollapsed && <span>MENU</span>}
+                </div>
+
+                <ul className="sidebar-menu">
+                    {visibleMenuItems.map((item, index) => {
+                        const isActive = currentBar === item.name;
+                        return (
+                            <li key={item.name} className="sidebar-menu-item" style={{ animationDelay: `${index * 0.03}s` }}>
+                                <Link
+                                    onClick={() => handleMenuClick(item.name)}
+                                    className={`sidebar-link ${isActive ? 'active' : ''} ${isCollapsed ? 'collapsed' : ''}`}
+                                    to={item.path}
+                                >
+                                    {isActive && <div className="sidebar-active-bar" />}
+
+                                    <div className={`sidebar-icon-wrapper ${isActive ? 'active' : ''}`}>
+                                        <i className={`bx ${item.icon}`} />
+                                    </div>
+
+                                    {!isCollapsed && (
+                                        <span className="sidebar-label">{t(item.name)}</span>
+                                    )}
+                                </Link>
+                            </li>
+                        );
+                    })}
+                </ul>
+            </nav>
+
+            {/* Bottom section */}
+            {!isCollapsed && (
+                <div className="sidebar-footer">
+                    <div className="sidebar-footer-card">
+                        <div className="sidebar-footer-icon">
+                            <i className='bx bxs-zap' />
+                        </div>
+                        <div className="sidebar-footer-text">
+                            <span className="sidebar-footer-title">CapyLumine</span>
+                            <span className="sidebar-footer-subtitle">Admin Panel v2.0</span>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

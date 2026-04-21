@@ -12,8 +12,7 @@ import axios from 'axios';
 
 const API_URL = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
-const Category = () =>
-{
+const Category = () => {
   const { themeColors } = useContext(ThemeContext);
   const { t } = useTranslation();
   const [categoryData, setCategoryData] = useState([]);
@@ -30,58 +29,47 @@ const Category = () =>
   const [openBulkDelete, setOpenBulkDelete] = useState(false);
   const [bulkDeleteLoading, setBulkDeleteLoading] = useState(false);
 
-  const fetchCategories = () =>
-  {
+  const fetchCategories = () => {
     setLoading(true);
     CategoryManage.GetCategory()
-      .then((res) =>
-      {
+      .then((res) => {
         setCategoryData(res.data.$values);
         setLoading(false);
       })
-      .catch(() =>
-      {
+      .catch(() => {
         message.error('Có lỗi xảy ra!');
         setLoading(false);
       });
   };
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     fetchCategories();
   }, []);
 
-  const handleDelete = (id, name) =>
-  {
+  const handleDelete = (id, name) => {
     Modal.confirm({
       title: 'Xác nhận xóa',
       content: `Bạn có chắc muốn xóa danh mục "${name}"?`,
       okText: 'Xóa',
       okType: 'danger',
       cancelText: 'Hủy',
-      onOk: () =>
-      {
+      onOk: () => {
         CategoryManage.DeleteCategory(id, name)
-          .then(() =>
-          {
+          .then(() => {
             setCategoryData(prev => prev.filter(category => category.id !== id));
             message.success(`Đã xóa bản ghi có id = ${id}: ${name}`);
           })
-          .catch(() =>
-          {
+          .catch(() => {
             message.error('Có lỗi xảy ra');
           });
       },
     });
   };
 
-  const handleToggleDisplay = async (id, currentStatus, categoryName) =>
-  {
-    try
-    {
+  const handleToggleDisplay = async (id, currentStatus, categoryName) => {
+    try {
       const category = categoryData.find(cat => cat.id === id);
-      if (!category)
-      {
+      if (!category) {
         console.error('Category not found:', id);
         return;
       }
@@ -97,29 +85,24 @@ const Category = () =>
       );
 
 
-      if (response.status === 200 || response.status === 204)
-      {
-        setCategoryData(prev =>
-        {
+      if (response.status === 200 || response.status === 204) {
+        setCategoryData(prev => {
           return prev.map(cat =>
             cat.id === id ? { ...cat, isDisplayed: !currentStatus } : cat
           );
         });
         message.success(`Đã ${!currentStatus ? 'hiển thị' : 'ẩn'} danh mục "${categoryName}"`);
-      } else
-      {
+      } else {
         console.error('Unexpected response status:', response.status);
         message.error('Có lỗi xảy ra khi cập nhật trạng thái hiển thị');
       }
-    } catch (error)
-    {
+    } catch (error) {
       message.error('Có lỗi xảy ra khi cập nhật trạng thái hiển thị');
       console.error('Toggle display error:', error);
     }
   };
 
-  const filteredCategories = useMemo(() =>
-  {
+  const filteredCategories = useMemo(() => {
     return categoryData.filter(category =>
       category.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -140,10 +123,8 @@ const Category = () =>
       key: 'imageUrl',
       width: 80,
       align: 'center',
-      render: (imageUrl) =>
-      {
-        if (imageUrl)
-        {
+      render: (imageUrl) => {
+        if (imageUrl) {
           const imageSrc = imageUrl.startsWith('http') ? imageUrl : `${process.env.NEXT_PUBLIC_API_ENDPOINT}${imageUrl}`
           return (
             <Image
@@ -212,8 +193,7 @@ const Category = () =>
       key: 'updatedAt',
       width: 120,
       align: 'center',
-      sorter: (a, b) =>
-      {
+      sorter: (a, b) => {
         if (!a.updatedAt) return -1;
         if (!b.updatedAt) return 1;
         return new Date(a.updatedAt) - new Date(b.updatedAt);
@@ -235,8 +215,7 @@ const Category = () =>
         { text: 'Ẩn', value: false },
       ],
       onFilter: (value, record) => record.isDisplayed === value,
-      render: (isDisplayed, record) =>
-      {
+      render: (isDisplayed, record) => {
         return (
           <Switch
             checked={isDisplayed !== false} // Default to true if undefined
@@ -256,8 +235,7 @@ const Category = () =>
         <Space size="middle" style={{ justifyContent: 'center', width: '100%' }}>
           <Button
             icon={<EditOutlined />}
-            onClick={() =>
-            {
+            onClick={() => {
               setUpdateId(record.id);
               setOpenUpdate(true);
             }}
@@ -278,8 +256,7 @@ const Category = () =>
     },
   ];
 
-  const onSelectChange = (newSelectedRowKeys) =>
-  {
+  const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
@@ -290,31 +267,24 @@ const Category = () =>
     columnTitle: '',
   };
 
-  const handleBulkDelete = async () =>
-  {
-    try
-    {
+  const handleBulkDelete = async () => {
+    try {
       setBulkDeleteLoading(true);
-      if (!selectedRowKeys || selectedRowKeys.length === 0)
-      {
+      if (!selectedRowKeys || selectedRowKeys.length === 0) {
         message.error('Vui lòng chọn bản ghi để xóa!');
         return;
       }
       const response = await CategoryManage.BulkDeleteCategories(selectedRowKeys);
-      if (response.data.success || response.status === 200 || response.status === 204)
-      {
+      if (response.data.success || response.status === 200 || response.status === 204) {
         message.success(`Đã xóa ${selectedRowKeys.length} bản ghi!`);
         setSelectedRowKeys([]);
         fetchCategories();
-      } else
-      {
+      } else {
         message.error('Có lỗi xảy ra khi xóa bản ghi!');
       }
-    } catch (error)
-    {
+    } catch (error) {
       message.error('Có lỗi xảy ra khi xóa bản ghi!');
-    } finally
-    {
+    } finally {
       setBulkDeleteLoading(false);
       setOpenBulkDelete(false);
     }
@@ -382,7 +352,7 @@ const Category = () =>
           </Button>
         </div>
         {/* Table */}
-        <div className="admin-table-wrapper" style={{ padding: '0 24px 24px 24px' }}>
+        <div className="admin-table-wrapper" style={{ padding: '24px' }}>
           <Table
             rowSelection={rowSelection}
             columns={columns}

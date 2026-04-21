@@ -30,8 +30,7 @@ const style = {
   outline: 'none',
 };
 
-const Products = () =>
-{
+const Products = () => {
   const { themeColors } = useContext(ThemeContext);
   const { t } = useTranslation();
   //modal create
@@ -104,41 +103,33 @@ const Products = () =>
   const handleImportOpen = () => setOpenImport(true);
   const handleImportClose = () => setOpenImport(false);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     ProductManage.GetProduct()
-      .then((res) =>
-      {
+      .then((res) => {
         setProductData(res.data.$values);
       })
-      .catch((err) =>
-      {
+      .catch((err) => {
 
       })
   }, [])
 
-  const GetCategoryById = (id) =>
-  {
+  const GetCategoryById = (id) => {
     const category = categories.find(category => category.id === id);
     return category ? category.name : ''
   }
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     CategoryManage.GetCategory()
-      .then((res) =>
-      {
+      .then((res) => {
         setCategories(res.data.$values);
       })
-      .catch((err) =>
-      {
+      .catch((err) => {
         toast.error("Có lỗi xảy ra khi tải danh mục.");
       });
   }, []);
 
   //Search Service
-  const highlightedText = (text, highlight) =>
-  {
+  const highlightedText = (text, highlight) => {
     if (!highlight) return text;
     const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
     return parts.map((part, index) =>
@@ -148,10 +139,8 @@ const Products = () =>
     );
   };
 
-  const filteredProducts = useMemo(() =>
-  {
-    return productData.filter(product =>
-    {
+  const filteredProducts = useMemo(() => {
+    return productData.filter(product => {
       const categoryName = GetCategoryById(product.categoryId || '').toLowerCase();
       const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         categoryName.includes(searchTerm.toLowerCase());
@@ -166,15 +155,12 @@ const Products = () =>
     });
   }, [productData, searchTerm, selectedCategory, dateRange, statusFilter]);
 
-  const truncateWords = (text, maxWords) =>
-  {
-    if (!text)
-    {
+  const truncateWords = (text, maxWords) => {
+    if (!text) {
       return '';
     }
     const words = text.split(' ');
-    if (words.length > maxWords)
-    {
+    if (words.length > maxWords) {
       return words.slice(0, maxWords).join(' ') + ' . . .';
     }
     return text;
@@ -183,59 +169,48 @@ const Products = () =>
   // Định dạng số theo ngôn ngữ hiện tại
   const { i18n } = useTranslation();
   const language = i18n.language;
-  const formattedNumber = (number, language) =>
-  {
+  const formattedNumber = (number, language) => {
     return new Intl.NumberFormat(language).format(number);
   };
 
-  const handleChangePage = (page) =>
-  {
+  const handleChangePage = (page) => {
     setPage(page);
   };
 
   //Pagination
-  const currentItems = useMemo(() =>
-  {
+  const currentItems = useMemo(() => {
     return filteredProducts.slice((page - 1) * itemsPerPage, page * itemsPerPage);
   }, [filteredProducts, page, itemsPerPage]);
 
-  const DeleteProduct = (id, name) =>
-  {
+  const DeleteProduct = (id, name) => {
     ProductManage.DeleteProduct(id, name)
-      .then((res) =>
-      {
+      .then((res) => {
         setProductData(prevData => prevData.filter(product => product.id !== id));
         toast.success(`Đã xóa bản ghi: ${name}`);
       })
-      .catch((err) =>
-      {
+      .catch((err) => {
         toast.error("Có lỗi xảy ra");
       });
   };
 
-  const handleUpdateClick = (id) =>
-  {
+  const handleUpdateClick = (id) => {
     const product = productData.find((item) => item.id === id);
     setSelectedProduct(product);
     handleUpdateOpen();
     setUpdateId(id);
   }
 
-  const handleUploadClick = (id) =>
-  {
+  const handleUploadClick = (id) => {
     handleUploadOpen();
     setUpdateId(id);
   }
 
-  const fetchProducts = () =>
-  {
+  const fetchProducts = () => {
     ProductManage.GetProduct()
-      .then((res) =>
-      {
+      .then((res) => {
         setProductData(res.data.$values);
       })
-      .catch((err) =>
-      {
+      .catch((err) => {
 
       });
   };
@@ -255,10 +230,8 @@ const Products = () =>
       key: 'images',
       width: '6%',
       align: 'center',
-      render: (images) =>
-      {
-        if (images && images.$values.length > 0)
-        {
+      render: (images) => {
+        if (images && images.$values.length > 0) {
           const imagePath = images.$values[0].imagePath
           const imageUrl = imagePath.startsWith('http') ? imagePath : `${API_ENDPOINT}${imagePath}`
           return (
@@ -370,8 +343,7 @@ const Products = () =>
       key: 'updatedAt',
       width: '7%',
       align: 'center',
-      sorter: (a, b) =>
-      {
+      sorter: (a, b) => {
         if (!a.updatedAt) return -1;
         if (!b.updatedAt) return 1;
         return new Date(a.updatedAt) - new Date(b.updatedAt);
@@ -392,13 +364,11 @@ const Products = () =>
         { text: 'Hoạt động', value: 1 },
         { text: 'Ẩn', value: 0 }
       ],
-      onFilter: (value, record) =>
-      {
+      onFilter: (value, record) => {
         if (value === null) return true;
         return Boolean(record.status) === Boolean(value);
       },
-      render: (status) =>
-      {
+      render: (status) => {
         const statusConfig = {
           1: { text: 'Hoạt động', color: 'success' },
           0: { text: 'Ẩn', color: 'error' },
@@ -445,8 +415,7 @@ const Products = () =>
     }
   ];
 
-  const onSelectChange = (newSelectedRowKeys) =>
-  {
+  const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
@@ -457,31 +426,24 @@ const Products = () =>
     columnTitle: '',
   };
 
-  const handleBulkDelete = async () =>
-  {
-    try
-    {
+  const handleBulkDelete = async () => {
+    try {
       setBulkDeleteLoading(true);
-      if (!selectedRowKeys || selectedRowKeys.length === 0)
-      {
+      if (!selectedRowKeys || selectedRowKeys.length === 0) {
         toast.error('Vui lòng chọn bản ghi để xóa!');
         return;
       }
       const response = await ProductManage.BulkDeleteProducts(selectedRowKeys);
-      if (response.status === 200 || response.status === 204)
-      {
+      if (response.status === 200 || response.status === 204) {
         toast.success(`Đã xóa ${selectedRowKeys.length} bản ghi!`);
         setSelectedRowKeys([]);
         fetchProducts();
-      } else
-      {
+      } else {
         toast.error('Có lỗi xảy ra khi xóa bản ghi!');
       }
-    } catch (error)
-    {
+    } catch (error) {
       toast.error('Có lỗi xảy ra khi xóa bản ghi!');
-    } finally
-    {
+    } finally {
       setBulkDeleteLoading(false);
       setOpenBulkDelete(false);
     }
@@ -606,7 +568,7 @@ const Products = () =>
           </Col>
         </Row>
         {/* Table */}
-        <div className="admin-table-wrapper" style={{ padding: '0 24px 24px 24px' }}>
+        <div className="admin-table-wrapper" style={{ padding: '24px' }}>
           <Table
             rowSelection={rowSelection}
             columns={columns}
@@ -618,8 +580,7 @@ const Products = () =>
               total: filteredProducts.length,
               showSizeChanger: true,
               showTotal: (total) => `Tổng số ${total} sản phẩm`,
-              onChange: (page, pageSize) =>
-              {
+              onChange: (page, pageSize) => {
                 setPage(page);
                 setItemsPerPage(pageSize);
               }
@@ -673,8 +634,7 @@ const Products = () =>
         title={t('Filter')}
         open={openFilter}
         onCancel={() => setOpenFilter(false)}
-        onOk={() =>
-        {
+        onOk={() => {
           setOpenFilter(false);
           // Handle filter application
         }}

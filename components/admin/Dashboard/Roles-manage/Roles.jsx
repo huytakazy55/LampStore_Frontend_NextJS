@@ -263,7 +263,7 @@ const Roles = () => {
           </Space>
         </div>
         {/* Table */}
-        <div className="admin-table-wrapper" style={{ padding: '0 24px 24px 24px' }}>
+        <div className="admin-table-wrapper" style={{ padding: '24px' }}>
           <Table
             rowKey="id"
             dataSource={filteredUsers}

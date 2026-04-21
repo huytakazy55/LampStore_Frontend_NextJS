@@ -3,10 +3,38 @@
    Không dùng grid border, chỉ dùng row divider mỏng
    ============================================================ */
 
+/* ---- Admin scroll container ---- */
+.admin-scroll-container {
+  height: calc(100vh - 4rem) !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch;
+  background: #f0f2f5;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+/* ---- Page transition ---- */
+.page-enter {
+  animation: pageEnter 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+  padding-top: 8px;
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ---- Outer card ---- */
 .admin-table-card {
   border-radius: 14px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 4px 20px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07), 0 4px 20px rgba(0, 0, 0, 0.05);
   background: #fff;
   overflow: hidden;
   border: 1px solid #e5e7eb;
@@ -31,8 +59,8 @@
 }
 
 /* ---- Header: chữ nhỏ, in hoa, màu xám ---- */
-.custom-table .ant-table-thead > tr > th,
-.custom-table .ant-table-thead > tr > td {
+.custom-table .ant-table-thead>tr>th,
+.custom-table .ant-table-thead>tr>td {
   background: #f3f4f6 !important;
   font-weight: 600 !important;
   font-size: 11.5px !important;
@@ -46,21 +74,25 @@
   white-space: nowrap;
 }
 
-.custom-table .ant-table-thead > tr > th::before {
-  display: none !important; /* Xóa divider mặc định của Ant Design */
+.custom-table .ant-table-thead>tr>th::before {
+  display: none !important;
+  /* Xóa divider mặc định của Ant Design */
 }
 
 /* Sort / Filter icons */
 .custom-table .ant-table-column-sorter {
   color: #c9d0da;
 }
+
 .custom-table .ant-table-column-sorter-up.active,
 .custom-table .ant-table-column-sorter-down.active {
   color: #6366f1;
 }
+
 .custom-table .ant-table-filter-trigger {
   color: #c9d0da;
 }
+
 .custom-table .ant-table-filter-trigger.active {
   color: #6366f1;
 }
@@ -76,8 +108,8 @@
 }
 
 /* Ẩn column divider pseudo-element của Ant Design v5 */
-.custom-table .ant-table-thead > tr > th::before,
-.custom-table .ant-table-thead > tr > td::before {
+.custom-table .ant-table-thead>tr>th::before,
+.custom-table .ant-table-thead>tr>td::before {
   display: none !important;
   width: 0 !important;
   background: none !important;
@@ -85,7 +117,7 @@
 }
 
 /* ---- Body rows ---- */
-.custom-table .ant-table-tbody > tr > td {
+.custom-table .ant-table-tbody>tr>td {
   padding: 14px 14px !important;
   border-bottom: 1px solid #f3f4f6 !important;
   border-right: none !important;
@@ -96,37 +128,39 @@
   background: #fff;
 }
 
-.custom-table .ant-table-tbody > tr > td:last-child {
+.custom-table .ant-table-tbody>tr>td:last-child {
   border-right: none !important;
 }
 
 /* Ẩn row đo lường nội bộ của Ant Design */
-.custom-table .ant-table-tbody > .ant-table-measure-row {
+.custom-table .ant-table-tbody>.ant-table-measure-row {
   visibility: hidden;
   height: 0 !important;
   line-height: 0 !important;
 }
-.custom-table .ant-table-tbody > .ant-table-measure-row > td {
+
+.custom-table .ant-table-tbody>.ant-table-measure-row>td {
   padding: 0 !important;
   border: none !important;
   height: 0 !important;
 }
 
 /* Last row: xóa border dưới */
-.custom-table .ant-table-tbody > tr:last-child > td {
+.custom-table .ant-table-tbody>tr:last-child>td {
   border-bottom: none !important;
 }
 
 /* ---- Hover: nền xám rất nhạt ---- */
-.custom-table .ant-table-tbody > tr:hover > td {
+.custom-table .ant-table-tbody>tr:hover>td {
   background: #f9fafb !important;
 }
 
 /* ---- Row selected ---- */
-.custom-table .ant-table-tbody > tr.ant-table-row-selected > td {
+.custom-table .ant-table-tbody>tr.ant-table-row-selected>td {
   background: #eff6ff !important;
 }
-.custom-table .ant-table-tbody > tr.ant-table-row-selected:hover > td {
+
+.custom-table .ant-table-tbody>tr.ant-table-row-selected:hover>td {
   background: #dbeafe !important;
 }
 
@@ -134,6 +168,7 @@
 .custom-table .ant-table-selection-column {
   border-right: none !important;
 }
+
 .custom-table .ant-checkbox-wrapper {
   transform: scale(0.9);
 }
@@ -155,13 +190,16 @@
   transition: all 0.15s ease;
   color: #9ca3af;
 }
+
 .custom-table .ant-btn-text:hover {
   background: #f3f4f6;
   color: #374151;
 }
+
 .custom-table .ant-btn-text.ant-btn-dangerous {
   color: #f87171;
 }
+
 .custom-table .ant-btn-text.ant-btn-dangerous:hover {
   background: #fef2f2;
   color: #ef4444;
@@ -173,23 +211,28 @@
   padding: 8px 0 0 0 !important;
   border-top: none !important;
 }
+
 .custom-table .ant-pagination-item {
   border-color: #e5e7eb;
   border-radius: 8px;
   font-weight: 500;
   color: #6b7280;
 }
+
 .custom-table .ant-pagination-item:hover {
   border-color: #6366f1;
   color: #6366f1;
 }
+
 .custom-table .ant-pagination-item-active {
   background: #6366f1;
   border-color: #6366f1;
 }
+
 .custom-table .ant-pagination-item-active a {
   color: #fff !important;
 }
+
 .custom-table .ant-pagination-prev button,
 .custom-table .ant-pagination-next button {
   border-color: #e5e7eb;
@@ -202,13 +245,16 @@
   height: 5px;
   width: 5px;
 }
+
 .custom-table .ant-table-body::-webkit-scrollbar-track {
   background: transparent;
 }
+
 .custom-table .ant-table-body::-webkit-scrollbar-thumb {
   background: #d1d5db;
   border-radius: 4px;
 }
+
 .custom-table .ant-table-body::-webkit-scrollbar-thumb:hover {
   background: #9ca3af;
 }
