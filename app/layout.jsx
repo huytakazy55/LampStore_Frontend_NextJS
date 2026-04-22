@@ -1,14 +1,6 @@
 import './globals.css';
-import { Poppins } from 'next/font/google';
 
 import ClientProviders from '@/components/providers/ClientProviders';
-
-const poppins = Poppins({
-    subsets: ['latin', 'vietnamese'],
-    weight: ['400', '500', '600'],
-    display: 'swap',
-    variable: '--font-poppins',
-});
 
 export const metadata = {
     title: {
@@ -48,9 +40,10 @@ export const metadata = {
     },
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children })
+{
     return (
-        <html lang="vi" className={poppins.variable} suppressHydrationWarning>
+        <html lang="vi" suppressHydrationWarning>
             <head>
                 <link rel="manifest" href="/manifest.json" />
                 <link rel="dns-prefetch" href="https://capylumine.com" />
@@ -58,7 +51,7 @@ export default function RootLayout({ children }) {
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
                 <link
-                    href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap"
+                    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Geist:wght@100..900&display=swap"
                     rel="stylesheet"
                 />
                 <link
@@ -85,7 +78,7 @@ export default function RootLayout({ children }) {
                     href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"
                 />
             </head>
-            <body className={`${poppins.className} antialiased`}>
+            <body className="font-poppins antialiased">
                 <ClientProviders>
                     {children}
                 </ClientProviders>
