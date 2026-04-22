@@ -55,21 +55,11 @@ export default function RootLayout({ children }) {
                 <link rel="manifest" href="/manifest.json" />
                 <link rel="dns-prefetch" href="https://capylumine.com" />
                 <link rel="preconnect" href="https://capylumine.com" />
-                {/* Preconnect to CDNs for faster resource loading */}
-                <link rel="preconnect" href="https://unpkg.com" crossOrigin="anonymous" />
-                <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
-                {/* Boxicons - preload font to fix font-display */}
+                <link rel="preconnect" href="https://fonts.googleapis.com" />
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
                 <link
-                    rel="preload"
-                    href="https://unpkg.com/boxicons@2.1.4/fonts/boxicons.woff2"
-                    as="font"
-                    type="font/woff2"
-                    crossOrigin="anonymous"
-                />
-                <link
-                    rel="preload"
-                    href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
-                    as="style"
+                    href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap"
+                    rel="stylesheet"
                 />
                 <link
                     href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"

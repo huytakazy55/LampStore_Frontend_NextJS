@@ -341,10 +341,10 @@ export default function CheckoutPage()
                                     Tiếp tục mua sắm
                                 </button>
                                 <button
-                                    onClick={() => router.push('/')}
+                                    onClick={() => router.push('/my-orders')}
                                     className='flex-1 py-3 bg-rose-600 text-white rounded-lg font-medium hover:bg-rose-700 transition-colors cursor-pointer'
                                 >
-                                    Về trang chủ
+                                    Xem đơn hàng
                                 </button>
                             </div>
                         </div>

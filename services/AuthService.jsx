@@ -93,6 +93,15 @@ class AuthService
         }
     }
 
+    async changePassword(currentPassword, newPassword)
+    {
+        const response = await axiosInstance.post("/api/Account/ChangePassword", {
+            currentPassword,
+            newPassword
+        });
+        return response.data;
+    }
+
     ForgotPassword(emailOrUsername)
     {
         return axiosInstance.post("/api/Account/ForgotPassword", {

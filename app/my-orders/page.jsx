@@ -8,6 +8,7 @@ import NavbarPrimary from '@/components/user/MainPage/NavbarPrimary/NavbarPrimar
 import TopBar from '@/components/user/MainPage/TopBar/TopBar';
 import Footer from '@/components/user/MainPage/Footer/Footer';
 import OrderService from '@/services/OrderService';
+import OrderReviewModal from '@/components/user/OrderReviewModal/OrderReviewModal';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
@@ -38,6 +39,7 @@ export default function OrderHistoryPage()
     const [loading, setLoading] = useState(true);
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [filterStatus, setFilterStatus] = useState('all');
+    const [reviewOrder, setReviewOrder] = useState(null);
 
     useEffect(() =>
     {
@@ -404,6 +406,15 @@ export default function OrderHistoryPage()
                                             {items.length} sản phẩm • {order.paymentMethod === 'cod' ? 'COD' : order.paymentMethod === 'bank' ? 'Chuyển khoản' : order.paymentMethod}
                                         </span>
                                         <div className='flex items-center gap-3'>
+                                            {order.status === 'Completed' && (
+                                                <button
+                                                    onClick={(e) => { e.stopPropagation(); setReviewOrder(order); }}
+                                                    className='flex items-center gap-1 px-3 py-1.5 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 text-amber-700 dark:text-amber-400 text-xs font-semibold rounded-lg hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors cursor-pointer'
+                                                >
+                                                    <i className='bx bx-star'></i>
+                                                    Đánh giá
+                                                </button>
+                                            )}
                                             <div className='text-right'>
                                                 <span className='text-[10px] text-gray-400 block leading-tight'>Tổng cộng</span>
                                                 <span className='text-base font-bold text-rose-600'>
@@ -422,6 +433,13 @@ export default function OrderHistoryPage()
 
             {/* Order Detail Modal */}
             {renderOrderDetail()}
+
+            {/* Review Modal */}
+            <OrderReviewModal
+                isOpen={!!reviewOrder}
+                onClose={() => setReviewOrder(null)}
+                order={reviewOrder}
+            />
 
             <Footer />
         </>
