@@ -5,8 +5,7 @@ import { useNavigate } from '@/lib/router-compat'
 import { useCategories } from '../../../../hooks/useCategories'
 import { useProducts } from '../../../../hooks/useProducts'
 import ProductManage from '@/services/ProductManage'
-const Product1 = '/images/cameras-2.jpg';const NavbarPrimary = () =>
-{
+const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () => {
   const navigate = useNavigate()
   const { data: categories = [], isLoading: loading } = useCategories()
   const { data: allProducts = [] } = useProducts()
@@ -17,26 +16,21 @@ const Product1 = '/images/cameras-2.jpg';const NavbarPrimary = () =>
   const hoverTimeoutRef = useRef(null)
   const animTimeoutRef = useRef(null)
 
-  const fetchProductsByCategory = async (categoryId) =>
-  {
+  const fetchProductsByCategory = async (categoryId) => {
     if (categoryProducts[categoryId]) return
 
-    try
-    {
+    try {
       const filteredProducts = allProducts.filter(product =>
         product.categoryId === categoryId
       ).slice(0, 6)
 
       const productsWithImages = await Promise.all(
-        filteredProducts.map(async (product) =>
-        {
-          try
-          {
+        filteredProducts.map(async (product) => {
+          try {
             const imageResponse = await ProductManage.GetProductImageById(product.id)
             const images = imageResponse.data.$values || imageResponse.data || []
             return { ...product, Images: images }
-          } catch (error)
-          {
+          } catch (error) {
             return { ...product, Images: [] }
           }
         })
@@ -46,47 +40,37 @@ const Product1 = '/images/cameras-2.jpg';const NavbarPrimary = () =>
         ...prev,
         [categoryId]: productsWithImages
       }))
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error fetching products:', error)
     }
   }
 
-  const handleCategoryHover = (category) =>
-  {
-    if (hoverTimeoutRef.current)
-    {
+  const handleCategoryHover = (category) => {
+    if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current)
       hoverTimeoutRef.current = null
     }
-    if (animTimeoutRef.current)
-    {
+    if (animTimeoutRef.current) {
       clearTimeout(animTimeoutRef.current)
       animTimeoutRef.current = null
     }
 
-    if (category)
-    {
+    if (category) {
       setHoveredCategory(category)
       setShowDropdown(true)
       fetchProductsByCategory(category.id)
-    } else
-    {
-      hoverTimeoutRef.current = setTimeout(() =>
-      {
+    } else {
+      hoverTimeoutRef.current = setTimeout(() => {
         setShowDropdown(false)
-        animTimeoutRef.current = setTimeout(() =>
-        {
+        animTimeoutRef.current = setTimeout(() => {
           setHoveredCategory(null)
         }, 300)
       }, 120)
     }
   }
 
-  const getImageSrc = (category) =>
-  {
-    if (category.imageUrl)
-    {
+  const getImageSrc = (category) => {
+    if (category.imageUrl) {
       return category.imageUrl.startsWith('http')
         ? category.imageUrl
         : `${API_ENDPOINT}${category.imageUrl}`
@@ -94,43 +78,35 @@ const Product1 = '/images/cameras-2.jpg';const NavbarPrimary = () =>
     return Product1
   }
 
-  const getProductImageSrc = (product) =>
-  {
+  const getProductImageSrc = (product) => {
     const imgs = product.Images || product.images || []
-    if (imgs.length > 0)
-    {
+    if (imgs.length > 0) {
       const path = imgs[0].imagePath || imgs[0].ImagePath
       if (path) return path.startsWith('http') ? path : `${API_ENDPOINT}${path}`
     }
     return Product1
   }
 
-  const formatPrice = (price) =>
-  {
+  const formatPrice = (price) => {
     if (!price) return 'Liên hệ'
     return `${price.toLocaleString('vi-VN')}₫`
   }
 
-  const stripHtml = (html) =>
-  {
+  const stripHtml = (html) => {
     if (!html) return ''
-    try
-    {
+    try {
       const div = document.createElement('div')
       div.innerHTML = html
       return div.textContent || div.innerText || ''
-    } catch (e)
-    {
+    } catch (e) {
       return ''
     }
   }
 
   // Inject keyframe CSS into head instead of inline <style> to avoid React DOM errors
-  useEffect(() =>
-  {
+  useEffect(() => {
     const styleId = 'navbar-dropdown-keyframes'
-    if (!document.getElementById(styleId))
-    {
+    if (!document.getElementById(styleId)) {
       const style = document.createElement('style')
       style.id = styleId
       style.textContent = `
@@ -152,15 +128,13 @@ const Product1 = '/images/cameras-2.jpg';const NavbarPrimary = () =>
       `
       document.head.appendChild(style)
     }
-    return () =>
-    {
+    return () => {
       const el = document.getElementById(styleId)
       if (el) el.remove()
     }
   }, [])
 
-  if (loading)
-  {
+  if (loading) {
     return (
       <div className='bg-yellow-400 w-full h-12'>
         <nav className='relative xl:mx-auto xl:max-w-[1440px] flex justify-center items-center h-full px-4 xl:px-0'>
@@ -184,8 +158,8 @@ const Product1 = '/images/cameras-2.jpg';const NavbarPrimary = () =>
               onMouseEnter={() => handleCategoryHover(category)}
               onMouseLeave={() => handleCategoryHover(null)}
             >
-              <a className='text-black dark:text-amber-400 font-medium text-xs md:text-sm whitespace-nowrap' href={`/categories/${category.id}`}
-                onClick={(e) => { e.preventDefault(); navigate(`/categories/${category.id}`) }}
+              <a className='text-black dark:text-amber-400 font-medium text-xs md:text-sm whitespace-nowrap' href={`/categories/${category.slug || category.id}`}
+                onClick={(e) => { e.preventDefault(); navigate(`/categories/${category.slug || category.id}`) }}
               >
                 {category.name}
               </a>
@@ -232,10 +206,9 @@ const Product1 = '/images/cameras-2.jpg';const NavbarPrimary = () =>
                         : `Khám phá bộ sưu tập ${hoveredCategory.name.toLowerCase()}`}
                     </p>
                     <button
-                      onClick={() =>
-                      {
+                      onClick={() => {
                         setShowDropdown(false)
-                        navigate(`/categories/${hoveredCategory.id}`)
+                        navigate(`/categories/${hoveredCategory.slug || hoveredCategory.id}`)
                       }}
                       className="inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold px-4 py-2 rounded-sm transition-all duration-200 cursor-pointer"
                     >
@@ -261,11 +234,10 @@ const Product1 = '/images/cameras-2.jpg';const NavbarPrimary = () =>
                         <div
                           key={product.id || idx}
                           className="flex items-center gap-3 p-2.5 rounded-sm bg-gray-50/80 dark:bg-gray-800/80 hover:bg-amber-50 dark:hover:bg-amber-900/30 border border-transparent hover:border-amber-200 dark:hover:border-amber-700 cursor-pointer group transition-all duration-200 hover:shadow-sm"
-                          onClick={() =>
-                          {
+                          onClick={() => {
                             setShowDropdown(false)
                             setHoveredCategory(null)
-                            navigate(`/product/${product.id}`)
+                            navigate(`/product/${product.slug || product.id}`)
                           }}
                           style={{ animationDelay: `${idx * 50}ms` }}
                         >

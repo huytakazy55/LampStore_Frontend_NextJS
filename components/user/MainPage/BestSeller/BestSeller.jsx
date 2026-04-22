@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from 'react';
+import Image from 'next/image';
 import { useProducts } from '../../../../hooks/useProducts';
 import { useNavigate } from '@/lib/router-compat';
 const defaultImg = '/images/cameras-2.jpg';
@@ -8,29 +9,24 @@ import AddToCartModal from '../AddToCartModal';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
-const formatPrice = (price) =>
-{
+const formatPrice = (price) => {
   if (!price) return '0';
   return price.toLocaleString('vi-VN');
 };
 
-const getImageSrc = (product) =>
-{
-  if (product.images && product.images.length > 0)
-  {
+const getImageSrc = (product) => {
+  if (product.images && product.images.length > 0) {
     const path = product.images[0].imagePath || product.images[0].ImagePath;
     if (path) return path.startsWith('http') ? path : `${API_ENDPOINT}${path}`;
   }
-  if (product.Images && product.Images.length > 0)
-  {
+  if (product.Images && product.Images.length > 0) {
     const path = product.Images[0].imagePath || product.Images[0].ImagePath;
     if (path) return path.startsWith('http') ? path : `${API_ENDPOINT}${path}`;
   }
   return defaultImg;
 };
 
-const SmallProductCard = ({ product, navigate, onAddToCartClick }) =>
-{
+const SmallProductCard = ({ product, navigate, onAddToCartClick }) => {
   const variant = product.variant;
   const price = variant?.discountPrice || variant?.price || 0;
   const originalPrice = variant?.price || 0;
@@ -40,7 +36,7 @@ const SmallProductCard = ({ product, navigate, onAddToCartClick }) =>
   return (
     <div
       className='relative group cursor-pointer bg-white rounded-sm overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:-translate-y-1.5 border border-gray-100'
-      onClick={() => navigate(`/product/${product.id}`)}
+      onClick={() => navigate(`/product/${product.slug || product.id}`)}
     >
       {/* Discount Badge */}
       {hasDiscount && (
@@ -50,19 +46,20 @@ const SmallProductCard = ({ product, navigate, onAddToCartClick }) =>
       )}
 
       <div className='relative h-36 sm:h-44 md:h-52 overflow-hidden'>
-        <img
+        <Image
           className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-110'
           src={getImageSrc(product)}
           alt={product.name}
-          loading="lazy"
-          onError={(e) => { e.target.src = defaultImg; }}
+          fill
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
+          quality={75}
         />
       </div>
 
       {/* Content */}
       <div className='p-3 md:p-4'>
         {/* Category */}
-        <p className='text-[10px] md:text-xs text-gray-400 font-medium uppercase tracking-wider mb-1'>
+        <p className='text-[10px] md:text-xs text-gray-500 font-medium uppercase tracking-wider mb-1'>
           {product.category?.name || 'Đèn ngủ'}
         </p>
 
@@ -78,15 +75,14 @@ const SmallProductCard = ({ product, navigate, onAddToCartClick }) =>
               {formatPrice(price)}<span className='text-[10px] font-normal ml-0.5'>₫</span>
             </div>
             {hasDiscount && (
-              <div className='text-[10px] text-gray-400 line-through -mt-0.5'>
+              <div className='text-[10px] text-gray-500 line-through -mt-0.5'>
                 {formatPrice(originalPrice)}₫
               </div>
             )}
           </div>
           <button
             className='w-8 h-8 md:w-9 md:h-9 rounded-sm bg-amber-50 text-amber-600 flex items-center justify-center transition-all duration-300 group-hover:bg-amber-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-amber-200 group-hover:scale-105 active:scale-95'
-            onClick={(e) =>
-            {
+            onClick={(e) => {
               e.stopPropagation();
               onAddToCartClick(product);
             }}
@@ -99,8 +95,7 @@ const SmallProductCard = ({ product, navigate, onAddToCartClick }) =>
   );
 };
 
-const BigProductCard = ({ product, navigate, onAddToCartClick }) =>
-{
+const BigProductCard = ({ product, navigate, onAddToCartClick }) => {
   const variant = product.variant;
   const price = variant?.discountPrice || variant?.price || 0;
   const originalPrice = variant?.price || 0;
@@ -110,7 +105,7 @@ const BigProductCard = ({ product, navigate, onAddToCartClick }) =>
   return (
     <div
       className='w-full lg:w-[33%] bg-white rounded-sm overflow-hidden p-4 md:p-6 flex flex-col cursor-pointer group transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-gray-100'
-      onClick={() => navigate(`/product/${product.id}`)}
+      onClick={() => navigate(`/product/${product.slug || product.id}`)}
     >
       {/* Discount Badge */}
       {hasDiscount && (
@@ -120,7 +115,7 @@ const BigProductCard = ({ product, navigate, onAddToCartClick }) =>
       )}
 
       {/* Category */}
-      <p className='text-[10px] md:text-xs text-gray-400 font-medium uppercase tracking-wider mb-1'>
+      <p className='text-[10px] md:text-xs text-gray-500 font-medium uppercase tracking-wider mb-1'>
         {product.category?.name || 'Đèn ngủ'}
       </p>
 
@@ -129,30 +124,31 @@ const BigProductCard = ({ product, navigate, onAddToCartClick }) =>
         {product.name}
       </h3>
 
-      <div className='w-full h-48 md:h-[60%] overflow-hidden rounded-sm my-3'>
-        <img
+      <div className='relative w-full h-48 md:h-[60%] overflow-hidden rounded-sm my-3'>
+        <Image
           className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-110'
           src={getImageSrc(product)}
           alt={product.name}
-          loading="lazy"
-          onError={(e) => { e.target.src = defaultImg; }}
+          fill
+          sizes="(max-width: 1024px) 100vw, 33vw"
+          quality={75}
         />
       </div>
 
       {/* Thumbnails */}
       <div className='flex gap-2 mb-3'>
-        {product.images && product.images.slice(0, 3).map((img, i) =>
-        {
+        {product.images && product.images.slice(0, 3).map((img, i) => {
           const path = img.imagePath || img.ImagePath;
           const src = path ? (path.startsWith('http') ? path : `${API_ENDPOINT}${path}`) : defaultImg;
           return (
-            <img
+            <Image
               key={i}
-              className='w-12 h-12 md:w-16 md:h-16 border border-gray-200 rounded-sm object-cover hover:border-amber-400 transition-colors'
+              className='border border-gray-200 rounded-sm object-cover hover:border-amber-400 transition-colors'
               src={src}
               alt=""
-              loading="lazy"
-              onError={(e) => { e.target.src = defaultImg; }}
+              width={64}
+              height={64}
+              quality={60}
             />
           );
         })}
@@ -165,15 +161,14 @@ const BigProductCard = ({ product, navigate, onAddToCartClick }) =>
             {formatPrice(price)}<span className='text-xs font-normal ml-0.5'>₫</span>
           </div>
           {hasDiscount && (
-            <div className='text-[10px] md:text-xs text-gray-400 line-through -mt-0.5'>
+            <div className='text-[10px] md:text-xs text-gray-500 line-through -mt-0.5'>
               {formatPrice(originalPrice)}₫
             </div>
           )}
         </div>
         <button
           className='w-9 h-9 md:w-10 md:h-10 rounded-sm bg-amber-50 text-amber-600 flex items-center justify-center transition-all duration-300 group-hover:bg-amber-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-amber-200 group-hover:scale-105 active:scale-95'
-          onClick={(e) =>
-          {
+          onClick={(e) => {
             e.stopPropagation();
             onAddToCartClick(product);
           }}
@@ -185,18 +180,15 @@ const BigProductCard = ({ product, navigate, onAddToCartClick }) =>
   );
 };
 
-const BestSeller = () =>
-{
+const BestSeller = () => {
   const { data: allProducts = [], isLoading: loading } = useProducts();
   const [activeCategory, setActiveCategory] = useState(null);
   const [cartModalProduct, setCartModalProduct] = useState(null);
   const navigate = useNavigate();
 
-  const products = useMemo(() =>
-  {
+  const products = useMemo(() => {
     const sorted = [...allProducts].sort((a, b) => (b.sellCount || 0) - (a.sellCount || 0));
-    return sorted.slice(0, 15).map((product) =>
-    {
+    return sorted.slice(0, 15).map((product) => {
       const variant = product.variant;
       const imgData = product.images?.$values || product.images;
       const images = Array.isArray(imgData) ? imgData : [];
@@ -204,8 +196,7 @@ const BestSeller = () =>
     });
   }, [allProducts]);
 
-  const categories = useMemo(() =>
-  {
+  const categories = useMemo(() => {
     return [...new Map(
       products
         .filter(p => p.category)
@@ -223,13 +214,11 @@ const BestSeller = () =>
 
 
   // Ẩn hoàn toàn nếu không có data
-  if (!loading && products.length === 0)
-  {
+  if (!loading && products.length === 0) {
     return null;
   }
 
-  if (loading)
-  {
+  if (loading) {
     return (
       <div className='w-full py-8 md:py-16 bg-gray-100 flex justify-center items-center'>
         <div className="text-center">
@@ -247,7 +236,7 @@ const BestSeller = () =>
           <h3 className='text-sm md:text-h3 font-medium text-black'>Bán chạy nhất</h3>
           <div className='text-xs md:text-normal flex justify-start sm:justify-end gap-4 md:gap-8 items-center font-medium overflow-x-auto pr-1'>
             <button
-              className={`transition-colors whitespace-nowrap ${!activeCategory ? 'text-yellow-600 font-bold' : 'text-gray-400 hover:text-gray-600'}`}
+              className={`transition-colors whitespace-nowrap ${!activeCategory ? 'text-yellow-600 font-bold' : 'text-gray-500 hover:text-gray-600'}`}
               onClick={() => setActiveCategory(null)}
             >
               Tất cả
@@ -255,7 +244,7 @@ const BestSeller = () =>
             {categories.map((cat) => (
               <button
                 key={cat.id}
-                className={`transition-colors whitespace-nowrap ${activeCategory === cat.id ? 'text-yellow-600 font-bold' : 'text-gray-400 hover:text-gray-600'}`}
+                className={`transition-colors whitespace-nowrap ${activeCategory === cat.id ? 'text-yellow-600 font-bold' : 'text-gray-500 hover:text-gray-600'}`}
                 onClick={() => setActiveCategory(cat.id)}
               >
                 {cat.name}

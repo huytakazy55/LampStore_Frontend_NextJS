@@ -6,11 +6,15 @@ const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 class CategoryManage {
     GetCategory() {
         return axiosInstance.get("/api/Categories");
-        
+
     }
 
     GetCategoryById(id) {
         return axiosInstance.get(`/api/Categories/${id}`);
+    }
+
+    GetCategoryBySlug(slug) {
+        return axiosInstance.get(`/api/Categories/slug/${slug}`);
     }
 
     UpdateCategory(id, name, description, imageUrl, isDisplayed = true) {
@@ -24,7 +28,7 @@ class CategoryManage {
     }
 
     CreateCategory(name, description, imageUrl, isDisplayed = true) {
-        return axiosInstance.post("/api/Categories",{
+        return axiosInstance.post("/api/Categories", {
             name: name,
             description: description,
             imageUrl: imageUrl,

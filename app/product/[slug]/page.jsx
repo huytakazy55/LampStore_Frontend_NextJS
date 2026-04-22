@@ -17,23 +17,19 @@ import ImageLightbox from '@/components/common/ImageLightbox';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
-const formatPrice = (price) =>
-{
+const formatPrice = (price) => {
     if (!price) return '0';
     return price.toLocaleString('vi-VN');
 };
 
-const getImgSrc = (path) =>
-{
+const getImgSrc = (path) => {
     if (!path) return '/images/cameras-2.jpg';
     return path.startsWith('http') ? path : `${API_ENDPOINT}${path}`;
 };
 
-const stripHtml = (html) =>
-{
+const stripHtml = (html) => {
     if (!html) return '';
-    if (typeof document !== 'undefined')
-    {
+    if (typeof document !== 'undefined') {
         const tmp = document.createElement('div');
         tmp.innerHTML = html;
         return tmp.textContent || tmp.innerText || '';
@@ -41,10 +37,9 @@ const stripHtml = (html) =>
     return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
 };
 
-export default function ProductDetailPage()
-{
+export default function ProductDetailPage() {
     const params = useParams();
-    const id = params.id;
+    const slug = params.slug;
     const router = useRouter();
     const isAuthenticated = useSelector((state) => state.auth?.isAuthenticated);
 
@@ -72,20 +67,16 @@ export default function ProductDetailPage()
     const { isInWishlist, toggleWishlist } = useWishlist();
     const { data: allProducts = [] } = useProducts();
 
-    useEffect(() =>
-    {
+    useEffect(() => {
         window.scrollTo(0, 0);
 
-        const fetchProduct = async () =>
-        {
-            try
-            {
+        const fetchProduct = async () => {
+            try {
                 setLoading(true);
-                const res = await ProductManage.GetProductById(id);
+                const res = await ProductManage.GetProductBySlug(slug);
                 const data = res.data;
 
-                if (data)
-                {
+                if (data) {
                     setProduct(data);
                     setVariant(data.variant || null);
 
@@ -101,52 +92,45 @@ export default function ProductDetailPage()
                         }))
                     })) : [];
                     setVariantTypes(vts);
+
+                    // Fetch reviews using the actual product ID
+                    fetchReviews(data.id);
+                    if (isAuthenticated) fetchReviewStatus(data.id);
                 }
-            } catch (e)
-            {
+            } catch (e) {
                 console.error('Error fetching product:', e);
-            } finally
-            {
+            } finally {
                 setLoading(false);
             }
         };
 
-        if (id)
-        {
+        if (slug) {
             fetchProduct();
-            fetchReviews();
-            if (isAuthenticated) fetchReviewStatus();
         }
-    }, [id]);
+    }, [slug, isAuthenticated]);
 
-    const fetchReviews = async () =>
-    {
-        try
-        {
-            const res = await ReviewService.getProductReviews(id);
+    const fetchReviews = async (productId) => {
+        try {
+            const res = await ReviewService.getProductReviews(productId);
             const data = res.data?.$values || res.data || [];
             setReviews(data);
         } catch (e) { console.error('Error fetching reviews:', e); }
     };
 
-    const fetchReviewStatus = async () =>
-    {
-        try
-        {
-            const res = await ReviewService.getReviewStatus(id);
+    const fetchReviewStatus = async (productId) => {
+        try {
+            const res = await ReviewService.getReviewStatus(productId);
             setReviewStatus(res.data);
         } catch (e) { console.error('Error fetching review status:', e); }
     };
 
-    const handleSubmitReview = async () =>
-    {
+    const handleSubmitReview = async () => {
         if (!isAuthenticated) { toast.info('Vui lòng đăng nhập để đánh giá!'); return; }
         if (!reviewComment.trim()) { toast.warning('Vui lòng nhập nội dung đánh giá!'); return; }
-        try
-        {
+        try {
             setSubmittingReview(true);
             const res = await ReviewService.submitReview({
-                productId: id,
+                productId: product.id,
                 rating: reviewRating,
                 comment: reviewComment.trim()
             });
@@ -156,8 +140,7 @@ export default function ProductDetailPage()
             setReviewComment('');
             setReviewRating(5);
             toast.success('Cảm ơn bạn đã đánh giá! ⭐');
-        } catch (e)
-        {
+        } catch (e) {
             const msg = e.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại.';
             toast.error(msg);
         } finally { setSubmittingReview(false); }
@@ -166,8 +149,7 @@ export default function ProductDetailPage()
     const handleDecrease = () => setQuantity((prev) => Math.max(prev - 1, 1));
     const handleIncrease = () => setQuantity((prev) => Math.min(prev + 1, variant?.stock || 999));
 
-    const handleSelectOption = (typeName, val) =>
-    {
+    const handleSelectOption = (typeName, val) => {
         setSelectedOptions(prev => ({
             ...prev,
             [typeName]: { value: val.value, additionalPrice: val.additionalPrice || 0 }
@@ -178,10 +160,8 @@ export default function ProductDetailPage()
     const allOptionsSelected = variantTypes.length === 0 ||
         variantTypes.every(vt => selectedOptions[vt.name]);
 
-    const handleAddToCart = (e) =>
-    {
-        if (!allOptionsSelected)
-        {
+    const handleAddToCart = (e) => {
+        if (!allOptionsSelected) {
             setShowError(true);
             return;
         }
@@ -226,8 +206,7 @@ export default function ProductDetailPage()
     const mainImage = images.length > 0 ? getImgSrc(images[selectedImage]?.imagePath) : '/images/cameras-2.jpg';
 
     // Related products
-    const relatedProducts = useMemo(() =>
-    {
+    const relatedProducts = useMemo(() => {
         if (!product || !allProducts.length) return [];
         return allProducts
             .filter(p => p.categoryId === product.categoryId && p.id !== product.id)
@@ -235,8 +214,7 @@ export default function ProductDetailPage()
     }, [product, allProducts]);
 
     // --- RENDER ---
-    if (loading)
-    {
+    if (loading) {
         return (
             <>
                 <TopBar />
@@ -253,8 +231,7 @@ export default function ProductDetailPage()
         );
     }
 
-    if (!product)
-    {
+    if (!product) {
         return (
             <>
                 <TopBar />
@@ -358,8 +335,7 @@ export default function ProductDetailPage()
                         {/* Variant Types — Selectable */}
                         {variantTypes.length > 0 && (
                             <div className='mb-4 md:mb-6'>
-                                {variantTypes.map((vt) =>
-                                {
+                                {variantTypes.map((vt) => {
                                     const values = Array.isArray(vt.values) ? vt.values : [];
                                     if (values.length === 0) return null;
                                     const isRequired = !selectedOptions[vt.name] && showError;
@@ -369,8 +345,7 @@ export default function ProductDetailPage()
                                                 {vt.name} {isRequired && <span className='text-xs font-normal'>(Chọn)</span>}
                                             </div>
                                             <div className='w-full sm:w-[90%] flex flex-wrap gap-2'>
-                                                {values.map((val) =>
-                                                {
+                                                {values.map((val) => {
                                                     const isSelected = selectedOptions[vt.name]?.value === val.value;
                                                     return (
                                                         <div
@@ -487,8 +462,7 @@ export default function ProductDetailPage()
                         <h2 className='text-base md:text-lg font-semibold text-gray-800 dark:text-gray-100 py-2.5 px-4 border-l-4 border-amber-500 bg-gradient-to-r from-amber-100 to-transparent dark:from-amber-900/20 dark:to-transparent rounded-r-md flex items-center gap-2'><i className='bx bx-star text-amber-500'></i> Đánh giá sản phẩm ({reviews.length})</h2>
 
                         {/* Review Summary */}
-                        {reviews.length > 0 && (() =>
-                        {
+                        {reviews.length > 0 && (() => {
                             const avg = (reviews.reduce((s, r) => s + Number(r.rating), 0) / reviews.length).toFixed(1);
                             const dist = [5, 4, 3, 2, 1].map(star => ({
                                 star,
@@ -611,8 +585,7 @@ export default function ProductDetailPage()
                     <section className='w-full py-4 md:py-6 bg-white dark:bg-gray-900 mb-4 rounded-lg shadow-sm px-4 md:px-6'>
                         <h2 className='text-base md:text-lg font-semibold text-gray-800 dark:text-gray-100 py-2.5 px-4 border-l-4 border-amber-500 bg-gradient-to-r from-amber-100 to-transparent dark:from-amber-900/20 dark:to-transparent rounded-r-md flex items-center gap-2 mb-5'><i className='bx bx-bulb text-amber-500'></i> Sản phẩm gợi ý</h2>
                         <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4'>
-                            {relatedProducts.map((rp) =>
-                            {
+                            {relatedProducts.map((rp) => {
                                 const rpVariant = rp.variant;
                                 const rpPrice = rpVariant?.discountPrice || rpVariant?.price || rp.minPrice || 0;
                                 const rpOriginal = rpVariant?.price || rp.maxPrice || 0;
@@ -624,7 +597,7 @@ export default function ProductDetailPage()
                                     <div
                                         key={rp.id}
                                         className='group cursor-pointer bg-white dark:bg-gray-800 rounded-sm overflow-hidden border border-gray-100 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-300'
-                                        onClick={() => router.push(`/product/${rp.id}`)}
+                                        onClick={() => router.push(`/product/${rp.slug || rp.id}`)}
                                     >
                                         <div className='relative h-36 sm:h-44 md:h-48 overflow-hidden bg-gray-50 dark:bg-gray-700'>
                                             <img

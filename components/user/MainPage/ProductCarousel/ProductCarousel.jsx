@@ -9,29 +9,24 @@ import { useWishlist } from '@/contexts/WishlistContext';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
-const formatPrice = (price) =>
-{
+const formatPrice = (price) => {
   if (!price) return '0';
   return price.toLocaleString('vi-VN');
 };
 
-const getImageSrc = (product) =>
-{
-  if (product.images && product.images.length > 0)
-  {
+const getImageSrc = (product) => {
+  if (product.images && product.images.length > 0) {
     const path = product.images[0].imagePath || product.images[0].ImagePath;
     if (path) return path.startsWith('http') ? path : `${API_ENDPOINT}${path}`;
   }
-  if (product.Images && product.Images.length > 0)
-  {
+  if (product.Images && product.Images.length > 0) {
     const path = product.Images[0].imagePath || product.Images[0].ImagePath;
     if (path) return path.startsWith('http') ? path : `${API_ENDPOINT}${path}`;
   }
   return defaultImg;
 };
 
-const ProductCard = ({ product, isLast, navigate, onAddToCartClick, isInWishlist, onToggleWishlist }) =>
-{
+const ProductCard = ({ product, isLast, navigate, onAddToCartClick, isInWishlist, onToggleWishlist }) => {
   const variant = product.variant;
   const price = variant?.discountPrice || variant?.price || 0;
   const originalPrice = variant?.price || 0;
@@ -41,7 +36,7 @@ const ProductCard = ({ product, isLast, navigate, onAddToCartClick, isInWishlist
   return (
     <div
       className="relative group cursor-pointer bg-white rounded-sm overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:-translate-y-1.5 border border-gray-100 m-1"
-      onClick={() => navigate(`/product/${product.id}`)}
+      onClick={() => navigate(`/product/${product.slug || product.id}`)}
     >
       {/* Discount Badge */}
       {hasDiscount && (
@@ -75,7 +70,7 @@ const ProductCard = ({ product, isLast, navigate, onAddToCartClick, isInWishlist
       {/* Content */}
       <div className="p-3.5 md:p-4">
         {/* Category */}
-        <p className="text-[10px] md:text-xs text-gray-400 font-medium uppercase tracking-wider mb-1.5">
+        <p className="text-[10px] md:text-xs text-gray-500 font-medium uppercase tracking-wider mb-1.5">
           {product.category?.name || 'Đèn ngủ'}
         </p>
 
@@ -91,15 +86,14 @@ const ProductCard = ({ product, isLast, navigate, onAddToCartClick, isInWishlist
               {formatPrice(price)}<span className="text-xs font-normal ml-0.5">₫</span>
             </div>
             {hasDiscount && (
-              <div className="text-[10px] md:text-xs text-gray-400 line-through -mt-0.5">
+              <div className="text-[10px] md:text-xs text-gray-500 line-through -mt-0.5">
                 {formatPrice(originalPrice)}₫
               </div>
             )}
           </div>
           <button
             className="w-9 h-9 md:w-10 md:h-10 rounded-sm bg-amber-50 text-amber-600 flex items-center justify-center transition-all duration-300 group-hover:bg-amber-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-amber-200 group-hover:scale-105 active:scale-95"
-            onClick={(e) =>
-            {
+            onClick={(e) => {
               e.stopPropagation();
               onAddToCartClick(product);
             }}
@@ -112,18 +106,15 @@ const ProductCard = ({ product, isLast, navigate, onAddToCartClick, isInWishlist
   );
 };
 
-const ProductCarousel = () =>
-{
+const ProductCarousel = () => {
   const [activeTab, setActiveTab] = useState('featured');
   const { data: allProducts = [], isLoading: loading } = useProducts();
   const [cartModalProduct, setCartModalProduct] = useState(null);
   const navigate = useNavigate();
   const { isInWishlist, toggleWishlist } = useWishlist();
 
-  const products = useMemo(() =>
-  {
-    return allProducts.map((product) =>
-    {
+  const products = useMemo(() => {
+    return allProducts.map((product) => {
       const variant = product.variant;
       const imgData = product.images?.$values || product.images;
       const images = Array.isArray(imgData) ? imgData : [];
@@ -132,22 +123,18 @@ const ProductCarousel = () =>
   }, [allProducts]);
 
   // Filter products theo tab
-  const getFilteredProducts = () =>
-  {
+  const getFilteredProducts = () => {
     let filtered = [...products];
-    switch (activeTab)
-    {
+    switch (activeTab) {
       case 'featured':
         filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         break;
       case 'onsale':
-        filtered = filtered.filter(p =>
-        {
+        filtered = filtered.filter(p => {
           const v = p.variant;
           return v && v.discountPrice && v.discountPrice < v.price;
         });
-        filtered.sort((a, b) =>
-        {
+        filtered.sort((a, b) => {
           const discountA = a.variant ? (a.variant.price - a.variant.discountPrice) / a.variant.price : 0;
           const discountB = b.variant ? (b.variant.price - b.variant.discountPrice) / b.variant.price : 0;
           return discountB - discountA;
@@ -173,13 +160,11 @@ const ProductCarousel = () =>
 
 
   // Ẩn section nếu không có sản phẩm
-  if (!loading && products.length === 0)
-  {
+  if (!loading && products.length === 0) {
     return null;
   }
 
-  if (loading)
-  {
+  if (loading) {
     return (
       <div className='w-full py-8 md:py-16 mb-4 xl:mx-auto xl:max-w-[1440px] flex justify-center items-center px-4 xl:px-0'>
         <div className="text-center">
@@ -199,7 +184,7 @@ const ProductCarousel = () =>
               key={tab.key}
               className={`relative flex items-center gap-1.5 md:gap-2 px-5 md:px-7 py-2 md:py-2.5 rounded-full text-xs md:text-sm font-semibold transition-all duration-300 ${activeTab === tab.key
                 ? 'bg-white dark:bg-gray-700 text-amber-600 dark:text-amber-400 shadow-md'
-                : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
                 }`}
               onClick={() => setActiveTab(tab.key)}
             >

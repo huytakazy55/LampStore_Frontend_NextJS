@@ -1,20 +1,19 @@
 "use client";
 
 import React from 'react';
+import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@/lib/router-compat';
 import NewsService from '@/services/NewsService';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
-const NewsSection = () =>
-{
+const NewsSection = () => {
     const navigate = useNavigate();
 
     const { data: newsList = [], isLoading: loading } = useQuery({
         queryKey: ['news', 'list'],
-        queryFn: async () =>
-        {
+        queryFn: async () => {
             const response = await NewsService.getAllNews(true);
             const data = response.data?.$values || response.data || [];
             return data.slice(0, 3);
@@ -48,8 +47,7 @@ const NewsSection = () =>
                 ) : newsList.length === 0 ? (
                     <div className="col-span-3 text-center text-gray-500 py-8">Chưa có bài viết nào.</div>
                 ) : (
-                    newsList.map((news) =>
-                    {
+                    newsList.map((news) => {
                         const imageSrc = news.imageUrl ? (news.imageUrl.startsWith('http') ? news.imageUrl : `${API_ENDPOINT}${news.imageUrl}`) : 'https://images.unsplash.com/photo-1505693314120-0d443867891c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
                         const dateStr = new Date(news.createdAt).toLocaleDateString('vi-VN');
 
@@ -57,14 +55,16 @@ const NewsSection = () =>
                             <div
                                 key={news.id}
                                 className="group cursor-pointer flex flex-col h-full bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100"
-                                onClick={() => navigate(`/news/${news.id}`)}
+                                onClick={() => navigate(`/news/${news.slug || news.id}`)}
                             >
                                 <div className="relative h-48 md:h-56 overflow-hidden">
-                                    <img
+                                    <Image
                                         src={imageSrc}
                                         alt={news.title}
                                         className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 ease-in-out"
-                                        loading="lazy"
+                                        fill
+                                        sizes="(max-width: 768px) 100vw, 33vw"
+                                        quality={75}
                                     />
                                     <div className="absolute top-3 left-3 bg-yellow-400 text-white text-xs font-bold px-2 py-1 rounded shadow-sm">
                                         {news.category}

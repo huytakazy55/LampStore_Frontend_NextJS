@@ -15,20 +15,17 @@ import AddToCartModal from '../MainPage/AddToCartModal';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
-const formatPrice = (price) =>
-{
+const formatPrice = (price) => {
     if (!price) return '0';
     return price.toLocaleString('vi-VN');
 };
 
-const getImgSrc = (path) =>
-{
+const getImgSrc = (path) => {
     if (!path) return defaultImg;
     return path.startsWith('http') ? path : `${API_ENDPOINT}${path}`;
 };
 
-const WishlistPage = () =>
-{
+const WishlistPage = () => {
     const navigate = useNavigate();
     const { isAuthenticated } = useSelector((state) => state.auth);
     const { toggleWishlist } = useWishlist();
@@ -36,43 +33,34 @@ const WishlistPage = () =>
     const [loading, setLoading] = useState(true);
     const [cartModalProduct, setCartModalProduct] = useState(null);
 
-    useEffect(() =>
-    {
+    useEffect(() => {
         window.scrollTo(0, 0);
-        if (isAuthenticated)
-        {
+        if (isAuthenticated) {
             fetchWishlist();
-        } else
-        {
+        } else {
             setLoading(false);
         }
     }, [isAuthenticated]);
 
-    const fetchWishlist = async () =>
-    {
-        try
-        {
+    const fetchWishlist = async () => {
+        try {
             setLoading(true);
             const response = await WishlistService.getWishlist();
             const items = response.data?.$values || response.data || [];
             setWishlistItems(items);
-        } catch (error)
-        {
+        } catch (error) {
             console.error('Error fetching wishlist:', error);
-        } finally
-        {
+        } finally {
             setLoading(false);
         }
     };
 
-    const handleRemove = async (productId) =>
-    {
+    const handleRemove = async (productId) => {
         await toggleWishlist(productId);
         setWishlistItems(prev => prev.filter(item => item.productId !== productId));
     };
 
-    const handleAddToCart = (item) =>
-    {
+    const handleAddToCart = (item) => {
         // Mở modal AddToCart với thông tin sản phẩm
         setCartModalProduct({
             id: item.productId,
@@ -83,8 +71,7 @@ const WishlistPage = () =>
         });
     };
 
-    if (!isAuthenticated)
-    {
+    if (!isAuthenticated) {
         return (
             <>
                 <Helmet><title>Danh sách yêu thích | CapyLumine</title></Helmet>
@@ -106,8 +93,7 @@ const WishlistPage = () =>
         );
     }
 
-    if (loading)
-    {
+    if (loading) {
         return (
             <>
                 <Helmet><title>Danh sách yêu thích | CapyLumine</title></Helmet>
@@ -167,8 +153,7 @@ const WishlistPage = () =>
                 ) : (
                     /* Product Grid */
                     <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
-                        {wishlistItems.map((item) =>
-                        {
+                        {wishlistItems.map((item) => {
                             const displayPrice = item.discountPrice && item.discountPrice < item.price
                                 ? item.discountPrice
                                 : item.price;
@@ -182,7 +167,7 @@ const WishlistPage = () =>
                                     {/* Image */}
                                     <div
                                         className='relative h-48 bg-gray-50 flex items-center justify-center cursor-pointer overflow-hidden'
-                                        onClick={() => navigate(`/product/${item.productId}`)}
+                                        onClick={() => navigate(`/product/${item.productSlug || item.productId}`)}
                                     >
                                         <img
                                             src={getImgSrc(item.productImage)}
@@ -197,8 +182,7 @@ const WishlistPage = () =>
                                         )}
                                         {/* Remove button */}
                                         <button
-                                            onClick={(e) =>
-                                            {
+                                            onClick={(e) => {
                                                 e.stopPropagation();
                                                 handleRemove(item.productId);
                                             }}
@@ -216,7 +200,7 @@ const WishlistPage = () =>
                                         )}
                                         <h3
                                             className='text-sm font-medium text-gray-800 line-clamp-2 mb-2 cursor-pointer hover:text-blue-600 transition-colors leading-snug h-10'
-                                            onClick={() => navigate(`/product/${item.productId}`)}
+                                            onClick={() => navigate(`/product/${item.productSlug || item.productId}`)}
                                         >
                                             {item.productName}
                                         </h3>
@@ -249,7 +233,7 @@ const WishlistPage = () =>
                                                 Thêm vào giỏ
                                             </button>
                                             <button
-                                                onClick={() => navigate(`/product/${item.productId}`)}
+                                                onClick={() => navigate(`/product/${item.productSlug || item.productId}`)}
                                                 className='flex-1 bg-rose-600 text-white py-2 rounded-sm hover:bg-rose-700 transition-colors text-sm font-medium cursor-pointer'
                                             >
                                                 Mua ngay

@@ -19,11 +19,15 @@ const uploadAxios = axios.create({
 class ProductManage {
     GetProduct() {
         return axiosInstance.get("/api/Products");
-        
+
     }
 
     GetProductById(id) {
         return axiosInstance.get(`/api/Products/${id}`);
+    }
+
+    GetProductBySlug(slug) {
+        return axiosInstance.get(`/api/Products/slug/${slug}`);
     }
 
     GetVariantById(id) {

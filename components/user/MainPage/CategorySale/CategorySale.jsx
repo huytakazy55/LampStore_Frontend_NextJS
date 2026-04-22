@@ -1,11 +1,11 @@
 "use client";
 
 import React from 'react'
+import Image from 'next/image'
 import { useCategories } from '../../../../hooks/useCategories'
-const Product1 = '/images/cameras-2.jpg';import { useNavigate } from '@/lib/router-compat'
+const Product1 = '/images/cameras-2.jpg'; import { useNavigate } from '@/lib/router-compat'
 
-const CategorySale = () =>
-{
+const CategorySale = () => {
   const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT
   const navigate = useNavigate()
 
@@ -18,8 +18,7 @@ const CategorySale = () =>
   } = useCategories()
 
   // Filter và limit categories (được cache tự động)
-  const categories = React.useMemo(() =>
-  {
+  const categories = React.useMemo(() => {
     const displayedCategories = allCategories.filter(category => category.isDisplayed !== false)
     return displayedCategories.slice(0, 4)
   }, [allCategories])
@@ -27,35 +26,27 @@ const CategorySale = () =>
 
 
 
-  const getImageSrc = (category) =>
-  {
-    if (category.imageUrl)
-    {
+  const getImageSrc = (category) => {
+    if (category.imageUrl) {
       // Kiểm tra nếu là URL từ Cloudinary (bắt đầu với https://)
-      if (category.imageUrl.startsWith('http'))
-      {
+      if (category.imageUrl.startsWith('http')) {
         return category.imageUrl // URL đầy đủ từ Cloudinary
-      } else
-      {
+      } else {
         // Legacy local images (cũ)
         return `${API_ENDPOINT}${category.imageUrl}`
       }
-    } else
-    {
+    } else {
       // Fallback về ảnh mặc định
       return Product1
     }
   }
 
-  const formatCategoryName = (name) =>
-  {
+  const formatCategoryName = (name) => {
     // Chia tên thành các từ và hiển thị trên nhiều dòng
     const words = name.split(' ')
-    if (words.length <= 2)
-    {
+    if (words.length <= 2) {
       return [name.toUpperCase()]
-    } else
-    {
+    } else {
       return [
         words.slice(0, Math.ceil(words.length / 2)).join(' ').toUpperCase(),
         words.slice(Math.ceil(words.length / 2)).join(' ').toUpperCase()
@@ -63,18 +54,15 @@ const CategorySale = () =>
     }
   }
 
-  const stripHtmlTags = (html) =>
-  {
+  const stripHtmlTags = (html) => {
     // Tạo một temporary div để strip HTML tags
     const tempDiv = document.createElement('div')
     tempDiv.innerHTML = html
     return tempDiv.textContent || tempDiv.innerText || ''
   }
 
-  const getDisplayDescription = (category) =>
-  {
-    if (!category.description)
-    {
+  const getDisplayDescription = (category) => {
+    if (!category.description) {
       return `Sản phẩm ${category.name.toLowerCase()}`
     }
 
@@ -85,8 +73,7 @@ const CategorySale = () =>
       plainText
   }
 
-  if (loading)
-  {
+  if (loading) {
     return (
       <div className='w-full h-36 flex justify-center items-center mb-6 xl:mx-auto xl:max-w-[1440px]'>
         <div className="text-center">
@@ -97,8 +84,7 @@ const CategorySale = () =>
     )
   }
 
-  if (isError || categories.length === 0)
-  {
+  if (isError || categories.length === 0) {
     // Ẩn hoàn toàn section khi lỗi hoặc không có dữ liệu
     return null;
   }
@@ -107,24 +93,23 @@ const CategorySale = () =>
     <div className='w-full mb-8'>
       <div className='xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0'>
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
-          {categories.map((category, index) =>
-          {
+          {categories.map((category, index) => {
             const nameLines = formatCategoryName(category.name)
             return (
               <div
                 key={category.id || index}
                 className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden group border border-gray-200"
-                onClick={() => navigate(`/categories/${category.id}`)}
+                onClick={() => navigate(`/categories/${category.slug || category.id}`)}
               >
                 <div className="relative h-40 overflow-hidden">
-                  <img
+                  <Image
                     className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-300'
                     src={getImageSrc(category)}
                     alt={category.name}
-                    onError={(e) =>
-                    {
-                      e.target.src = Product1
-                    }}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    quality={75}
+                    priority={index === 0}
                   />
                   <div className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
                   <div className="absolute bottom-0 left-0 right-0 p-4">
@@ -145,7 +130,7 @@ const CategorySale = () =>
                     </div>
                     <div className="flex justify-end">
                       <span
-                        className='inline-flex items-center text-yellow-600 group-hover:text-yellow-700 font-semibold text-sm transition-colors duration-200 whitespace-nowrap'
+                        className='inline-flex items-center text-amber-700 group-hover:text-amber-800 font-semibold text-sm transition-colors duration-200 whitespace-nowrap'
                       >
                         Xem ngay
                         <i className='bx bx-chevron-right ml-1 text-lg bg-yellow-400 group-hover:bg-yellow-500 rounded-full text-white transition-colors duration-200 w-6 h-6 flex items-center justify-center'></i>

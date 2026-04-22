@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from 'react';
+import Image from 'next/image';
 import { useRouter, useParams } from 'next/navigation';
 import Header from '@/components/user/MainPage/Header/Header';
 import NavbarPrimary from '@/components/user/MainPage/NavbarPrimary/NavbarPrimary';
@@ -13,75 +14,68 @@ import defaultImg from '@/assets/images/cameras-2.jpg';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
-const formatPrice = (price) =>
-{
+const formatPrice = (price) => {
     if (!price) return '0';
     return price.toLocaleString('vi-VN');
 };
 
-const getProductImageSrc = (product) =>
-{
+const getProductImageSrc = (product) => {
     const imgs = product.images?.$values || product.images || product.Images || [];
-    if (imgs.length > 0)
-    {
+    if (imgs.length > 0) {
         const path = imgs[0].imagePath || imgs[0].ImagePath;
         if (path) return path.startsWith('http') ? path : `${API_ENDPOINT}${path}`;
     }
     return defaultImg;
 };
 
-const getCategoryImageSrc = (category) =>
-{
-    if (category.imageUrl)
-    {
+const getCategoryImageSrc = (category) => {
+    if (category.imageUrl) {
         return category.imageUrl.startsWith('http') ? category.imageUrl : `${API_ENDPOINT}${category.imageUrl}`;
     }
     return defaultImg;
 };
 
-export default function CategoryPage()
-{
+export default function CategoryPage() {
     const router = useRouter();
     const params = useParams();
-    const categoryId = params?.categoryId?.[0] || null;
+    const slugParams = params?.slug || [];
+    const categoryIdentifier = slugParams.length > 0 ? slugParams[0] : null;
 
     // Dùng React Query hooks thay vì useEffect + fetch trực tiếp
     const { data: categories = [], isLoading: loading } = useCategories();
     const { data: allProducts = [], isLoading: productsLoading } = useProducts();
 
-    const [activeCategory, setActiveCategory] = useState(categoryId || null);
+    const [activeCategory, setActiveCategory] = useState(categoryIdentifier || null);
     const [cartModalProduct, setCartModalProduct] = useState(null);
 
     // Set default category khi data load xong
-    useEffect(() =>
-    {
-        if (!activeCategory && categories.length > 0)
-        {
-            setActiveCategory(String(categories[0].id));
+    useEffect(() => {
+        if (!activeCategory && categories.length > 0) {
+            setActiveCategory(categories[0].slug || String(categories[0].id));
         }
     }, [categories, activeCategory]);
 
-    // Sync URL param
-    useEffect(() =>
-    {
-        if (categoryId) setActiveCategory(categoryId);
-    }, [categoryId]);
+    useEffect(() => {
+        if (categoryIdentifier) setActiveCategory(categoryIdentifier);
+    }, [categoryIdentifier]);
 
-    // Filter products client-side từ cache (không cần fetch lại)
-    const products = useMemo(() =>
-    {
-        if (!activeCategory) return [];
+    // Resolve active category object from slug or id
+    const activeCategoryData = useMemo(() => {
+        if (!activeCategory) return null;
+        return categories.find(c => c.slug === activeCategory || String(c.id) === String(activeCategory)) || null;
+    }, [categories, activeCategory]);
+
+    // Filter products client-side using the resolved category ID
+    const products = useMemo(() => {
+        if (!activeCategoryData) return [];
         return allProducts
-            .filter(p => String(p.categoryId) === String(activeCategory))
-            .map(product =>
-            {
+            .filter(p => String(p.categoryId) === String(activeCategoryData.id))
+            .map(product => {
                 const imgData = product.images?.$values || product.images;
                 const images = Array.isArray(imgData) ? imgData : [];
                 return { ...product, images };
             });
-    }, [allProducts, activeCategory]);
-
-    const activeCategoryData = categories.find(c => String(c.id) === String(activeCategory));
+    }, [allProducts, activeCategoryData]);
 
     return (
         <>
@@ -121,14 +115,14 @@ export default function CategoryPage()
                                     <div className="divide-y divide-gray-100">
                                         {categories.map((cat) => (
                                             <div key={cat.id}
-                                                className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition-all duration-200 ${String(activeCategory) === String(cat.id)
+                                                className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition-all duration-200 ${String(activeCategory) === String(cat.id) || activeCategory === cat.slug
                                                     ? 'bg-amber-50 border-l-[3px] border-amber-500 text-amber-700 font-semibold'
                                                     : 'border-l-[3px] border-transparent hover:bg-gray-50 text-gray-700 hover:text-gray-900'
                                                     }`}
-                                                onClick={() => setActiveCategory(String(cat.id))}>
-                                                <div className="w-8 h-8 rounded-sm overflow-hidden flex-shrink-0 border border-gray-200">
-                                                    <img src={getCategoryImageSrc(cat)} alt={cat.name} className="w-full h-full object-cover"
-                                                        onError={(e) => { e.target.src = typeof defaultImg === 'string' ? defaultImg : '' }} />
+                                                onClick={() => { setActiveCategory(cat.slug || String(cat.id)); window.history.pushState(null, '', `/categories/${cat.slug || cat.id}`) }}>
+                                                <div className="relative w-8 h-8 rounded-sm overflow-hidden flex-shrink-0 border border-gray-200">
+                                                    <Image src={getCategoryImageSrc(cat)} alt={cat.name} className="w-full h-full object-cover"
+                                                        fill sizes="32px" quality={60} />
                                                 </div>
                                                 <span className="text-sm truncate">{cat.name}</span>
                                             </div>
@@ -142,8 +136,8 @@ export default function CategoryPage()
                                 {activeCategoryData && (
                                     <div className="relative bg-white rounded-sm border border-gray-200 overflow-hidden mb-6">
                                         <div className="flex flex-col sm:flex-row items-center gap-4 p-5">
-                                            <div className="w-20 h-20 rounded-sm overflow-hidden flex-shrink-0 border border-gray-200">
-                                                <img src={getCategoryImageSrc(activeCategoryData)} alt={activeCategoryData.name} className="w-full h-full object-cover" />
+                                            <div className="relative w-20 h-20 rounded-sm overflow-hidden flex-shrink-0 border border-gray-200">
+                                                <Image src={getCategoryImageSrc(activeCategoryData)} alt={activeCategoryData.name} className="w-full h-full object-cover" fill sizes="80px" quality={70} />
                                             </div>
                                             <div className="text-center sm:text-left">
                                                 <h2 className="text-xl font-bold text-gray-900">{activeCategoryData.name}</h2>
@@ -159,8 +153,7 @@ export default function CategoryPage()
                                     </div>
                                 ) : products.length > 0 ? (
                                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-                                        {products.map((product) =>
-                                        {
+                                        {products.map((product) => {
                                             const variant = product.variant;
                                             const price = variant?.discountPrice || variant?.price || 0;
                                             const originalPrice = variant?.price || 0;
@@ -170,15 +163,16 @@ export default function CategoryPage()
                                             return (
                                                 <div key={product.id}
                                                     className="relative group cursor-pointer bg-white rounded-sm overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:-translate-y-1.5 border border-gray-100"
-                                                    onClick={() => router.push(`/product/${product.id}`)}>
+                                                    onClick={() => router.push(`/product/${product.slug || product.id}`)}>
                                                     {hasDiscount && (
                                                         <div className="absolute top-3 left-3 z-10 bg-gradient-to-r from-red-500 to-rose-400 text-white text-[10px] font-bold px-2.5 py-1 rounded-sm shadow-lg">
                                                             -{discountPercent}%
                                                         </div>
                                                     )}
                                                     <div className="relative h-36 sm:h-44 md:h-52 overflow-hidden">
-                                                        <img className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                                            src={getProductImageSrc(product)} alt={product.name} loading="lazy" />
+                                                        <Image className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                                            src={getProductImageSrc(product)} alt={product.name}
+                                                            fill sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw" quality={75} />
                                                     </div>
                                                     <div className="p-3 md:p-4">
                                                         <p className="text-[10px] md:text-xs text-gray-400 font-medium uppercase tracking-wider mb-1">

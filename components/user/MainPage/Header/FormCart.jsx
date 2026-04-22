@@ -5,19 +5,16 @@ import { useCart } from '@/contexts/CartContext';
 import { useNavigate } from '@/lib/router-compat';
 const defaultImg = '/images/cameras-2.jpg';
 
-const formatPrice = (price) =>
-{
+const formatPrice = (price) => {
     if (!price) return '0';
     return price.toLocaleString('vi-VN');
 };
 
-const FormCart = ({ toggleCart, popupRef, setToggleCart }) =>
-{
+const FormCart = ({ toggleCart, popupRef, setToggleCart }) => {
     const { cartItems, removeFromCart, updateQuantity, cartTotal } = useCart();
     const navigate = useNavigate();
 
-    const handleViewProduct = (productId) =>
-    {
+    const handleViewProduct = (productId) => {
         setToggleCart(false);
         navigate(`/product/${productId}`);
     };
@@ -45,8 +42,7 @@ const FormCart = ({ toggleCart, popupRef, setToggleCart }) =>
                         <p className="text-xs mt-1">Hãy thêm sản phẩm yêu thích!</p>
                     </div>
                 ) : (
-                    cartItems.map((item) =>
-                    {
+                    cartItems.map((item) => {
                         const optionText = Object.entries(item.selectedOptions || {})
                             .map(([, opt]) => opt.value)
                             .join(', ');
@@ -55,7 +51,7 @@ const FormCart = ({ toggleCart, popupRef, setToggleCart }) =>
                             <div key={item.key} className='flex justify-between items-start w-full group'>
                                 <div
                                     className='w-20 h-20 bg-gray-50 dark:bg-gray-800 rounded-md border border-gray-100 dark:border-gray-700 flex items-center justify-center overflow-hidden flex-shrink-0 cursor-pointer'
-                                    onClick={() => handleViewProduct(item.productId)}
+                                    onClick={() => handleViewProduct(item.productSlug || item.productId)}
                                 >
                                     <img
                                         className='max-h-full max-w-full object-contain'
@@ -66,7 +62,7 @@ const FormCart = ({ toggleCart, popupRef, setToggleCart }) =>
                                 </div>
                                 <div className='flex-1 ml-4'>
                                     <span
-                                        onClick={() => handleViewProduct(item.productId)}
+                                        onClick={() => handleViewProduct(item.productSlug || item.productId)}
                                         className='leading-snug text-sm font-medium text-gray-800 dark:text-gray-100 hover:text-rose-600 line-clamp-2 mb-1 transition-colors cursor-pointer block'
                                     >
                                         {item.name}

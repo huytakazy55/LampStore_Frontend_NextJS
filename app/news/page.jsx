@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import Header from '@/components/user/MainPage/Header/Header';
 import NavbarPrimary from '@/components/user/MainPage/NavbarPrimary/NavbarPrimary';
 import TopBar from '@/components/user/MainPage/TopBar/TopBar';
@@ -107,11 +108,11 @@ export default function NewsListPage() {
                             {/* Featured */}
                             {featured && (
                                 <div className="group cursor-pointer bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 mb-10 border border-gray-100"
-                                    onClick={() => router.push(`/news/${featured.id}`)}>
+                                    onClick={() => router.push(`/news/${featured.slug || featured.id}`)}>
                                     <div className="flex flex-col lg:flex-row">
                                         <div className="relative lg:w-3/5 h-64 md:h-80 lg:h-[420px] overflow-hidden">
-                                            <img src={getImageSrc(featured.imageUrl)} alt={featured.title}
-                                                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out" />
+                                            <Image src={getImageSrc(featured.imageUrl)} alt={featured.title}
+                                                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out" fill sizes="(max-width: 1024px) 100vw, 60vw" quality={80} priority />
                                             <div className="absolute top-4 left-4">
                                                 <span className="bg-yellow-400 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">{featured.category}</span>
                                             </div>
@@ -149,10 +150,10 @@ export default function NewsListPage() {
                                     {rest.map((news) => (
                                         <article key={news.id}
                                             className="group cursor-pointer flex flex-col bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 hover:-translate-y-1"
-                                            onClick={() => router.push(`/news/${news.id}`)}>
+                                            onClick={() => router.push(`/news/${news.slug || news.id}`)}>
                                             <div className="relative h-52 overflow-hidden">
-                                                <img src={getImageSrc(news.imageUrl)} alt={news.title}
-                                                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-out" loading="lazy" />
+                                                <Image src={getImageSrc(news.imageUrl)} alt={news.title}
+                                                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-out" fill sizes="(max-width: 768px) 100vw, 33vw" quality={75} />
                                                 <div className="absolute top-3 left-3">
                                                     <span className="bg-yellow-400/90 backdrop-blur-sm text-white text-xs font-bold px-2.5 py-1 rounded-full">{news.category}</span>
                                                 </div>

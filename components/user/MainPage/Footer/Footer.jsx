@@ -1,9 +1,36 @@
 "use client";
 
-import React from 'react'
+import React, { useState } from 'react'
 
-const Footer = () =>
-{
+const MAPS_EMBED_URL = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.6778758888713!2d105.81908607604745!3d21.005545788574118!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ad5fb9812307%3A0x63c20c5aa29db56b!2zS2h1IHThuq1wIHRo4buDIEEyIHBo4buRIFbEqW5oIEjhu5MsIFRo4buLbmggUXVhbmcsIMSQ4buRbmcgxJBhLCBIw6AgTuG7mWksIFZpZXRuYW0!5e0!3m2!1svi!2s!4v1726261210365!5m2!1svi!2s";
+
+const LazyMap = () => {
+    const [loaded, setLoaded] = useState(false);
+    if (loaded) {
+        return (
+            <iframe
+                className='w-full h-full'
+                title="Bản đồ vị trí cửa hàng CapyLumine"
+                src={MAPS_EMBED_URL}
+                style={{ border: 0 }}
+                allowFullScreen=""
+                referrerPolicy="no-referrer-when-downgrade"
+            />
+        );
+    }
+    return (
+        <button
+            onClick={() => setLoaded(true)}
+            className='w-full h-full bg-gray-800 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-gray-700 transition-colors group'
+            aria-label="Nhấn để xem bản đồ Google Maps"
+        >
+            <i className='bx bx-map text-3xl text-yellow-400 group-hover:scale-110 transition-transform' />
+            <span className='text-xs text-gray-300 font-medium'>Xem bản đồ</span>
+        </button>
+    );
+};
+
+const Footer = () => {
     return (
         <footer>
             {/* Main Footer */}
@@ -21,14 +48,7 @@ const Footer = () =>
                     {/* === Cột trái: Bản đồ trong khung tròn === */}
                     <div className='w-full lg:w-[30%] flex justify-center lg:justify-start items-center'>
                         <div className='w-52 h-52 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-yellow-400 shadow-xl shadow-yellow-400/10 flex-shrink-0'>
-                            <iframe
-                                className='w-full h-full'
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.6778758888713!2d105.81908607604745!3d21.005545788574118!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ad5fb9812307%3A0x63c20c5aa29db56b!2zS2h1IHThuq1wIHRo4buDIEEyIHBo4buRIFbEqW5oIEjhu5MsIFRo4buLbmggUXVhbmcsIMSQ4buRbmcgxJBhLCBIw6AgTuG7mWksIFZpZXRuYW0!5e0!3m2!1svi!2s!4v1726261210365!5m2!1svi!2s"
-                                style={{ border: 0 }}
-                                allowFullScreen=""
-                                loading="lazy"
-                                referrerPolicy="no-referrer-when-downgrade">
-                            </iframe>
+                            <LazyMap />
                         </div>
                     </div>
 
@@ -82,7 +102,7 @@ const Footer = () =>
                                     'Hướng dẫn chọn mua',
                                     'Chính sách đổi trả',
                                 ].map((text, i) => (
-                                    <a key={i} href='#' className='text-xs text-gray-500 hover:text-gray-300 transition-colors duration-300 flex items-center gap-2'>
+                                    <a key={i} href='#' className='text-xs text-gray-400 hover:text-gray-200 transition-colors duration-300 flex items-center gap-2'>
                                         <i className='bx bx-chevron-right text-yellow-400/50'></i>
                                         {text}
                                     </a>
@@ -98,7 +118,7 @@ const Footer = () =>
                             <div className='text-2xl md:text-3xl font-extrabold text-white tracking-tight'>
                                 Capy<span className='text-yellow-400'>Lumine</span><span className='text-gray-500 text-lg'>.com</span>
                             </div>
-                            <p className='text-gray-600 text-xs mt-1 tracking-widest uppercase'>Premium CapyLumine</p>
+                            <p className='text-gray-500 text-xs mt-1 tracking-widest uppercase'>Premium CapyLumine</p>
                         </div>
 
                         {/* Social icons */}
@@ -113,7 +133,7 @@ const Footer = () =>
                                     key={social.icon}
                                     href='#'
                                     aria-label={social.label}
-                                    className='w-10 h-10 rounded-full border border-gray-700 flex items-center justify-center text-gray-500 transition-all duration-300 hover:text-yellow-400 hover:border-yellow-400 hover:-translate-y-1'
+                                    className='w-10 h-10 rounded-full border border-gray-700 flex items-center justify-center text-gray-400 transition-all duration-300 hover:text-yellow-400 hover:border-yellow-400 hover:-translate-y-1'
                                 >
                                     <i className={`bx ${social.icon} text-lg`}></i>
                                 </a>
@@ -141,10 +161,10 @@ const Footer = () =>
             {/* Copyright bar */}
             <div className='w-full py-4' style={{ background: '#111' }}>
                 <div className='flex flex-col sm:flex-row justify-between items-center gap-2 xl:mx-auto xl:max-w-[1440px] px-6 xl:px-0'>
-                    <div className='text-xs md:text-sm text-gray-600 text-center'>
+                    <div className='text-xs md:text-sm text-gray-500 text-center'>
                         © 2024 | Bản quyền thuộc về <span className='text-yellow-400 font-semibold'>CapyLumine.com</span>
                     </div>
-                    <div className='flex items-center gap-4 text-gray-700 text-xs'>
+                    <div className='flex items-center gap-4 text-gray-500 text-xs'>
                         <a href='#' className='hover:text-gray-400 transition-colors'>Điều khoản</a>
                         <span>•</span>
                         <a href='#' className='hover:text-gray-400 transition-colors'>Chính sách</a>

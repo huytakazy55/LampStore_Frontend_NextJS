@@ -5,6 +5,7 @@
 // For now, redirect to the original news detail component
 import { useParams, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import Header from '@/components/user/MainPage/Header/Header';
 import NavbarPrimary from '@/components/user/MainPage/NavbarPrimary/NavbarPrimary';
 import TopBar from '@/components/user/MainPage/TopBar/TopBar';
@@ -16,24 +17,25 @@ const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 export default function NewsDetailPage() {
     const params = useParams();
     const router = useRouter();
-    const id = params.id;
+    const slug = params.slug;
 
     const [news, setNews] = useState(null);
     const [loading, setLoading] = useState(true);
     const [relatedNews, setRelatedNews] = useState([]);
 
     useEffect(() => {
-        if (!id) return;
+        if (!slug) return;
         const fetchNewsDetail = async () => {
             try {
                 setLoading(true);
-                const response = await NewsService.getNewsById(id);
+                const response = await NewsService.getNewsBySlug(slug);
                 setNews(response.data);
 
                 // Fetch related news
                 const allRes = await NewsService.getAllNews(true);
                 const allData = allRes.data?.$values || allRes.data || [];
-                setRelatedNews(allData.filter(n => String(n.id) !== String(id)).slice(0, 3));
+                // Compare by slug or id
+                setRelatedNews(allData.filter(n => n.slug !== slug && String(n.id) !== String(slug)).slice(0, 3));
             } catch (error) {
                 console.error('Error fetching news:', error);
             } finally {
@@ -41,7 +43,7 @@ export default function NewsDetailPage() {
             }
         };
         fetchNewsDetail();
-    }, [id]);
+    }, [slug]);
 
     const getImageSrc = (imageUrl) => {
         if (!imageUrl) return '';
@@ -97,8 +99,8 @@ export default function NewsDetailPage() {
 
                     <article className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
                         {news.imageUrl && (
-                            <div className="h-64 md:h-[400px] overflow-hidden">
-                                <img src={getImageSrc(news.imageUrl)} alt={news.title} className="w-full h-full object-cover" />
+                            <div className="relative h-64 md:h-[400px] overflow-hidden">
+                                <Image src={getImageSrc(news.imageUrl)} alt={news.title} className="w-full h-full object-cover" fill sizes="100vw" quality={80} priority />
                             </div>
                         )}
                         <div className="p-6 md:p-10">
@@ -127,10 +129,10 @@ export default function NewsDetailPage() {
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 {relatedNews.map(item => (
                                     <div key={item.id} className="group cursor-pointer bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100"
-                                        onClick={() => router.push(`/news/${item.id}`)}>
-                                        <div className="h-40 overflow-hidden">
-                                            <img src={getImageSrc(item.imageUrl)} alt={item.title}
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                                        onClick={() => router.push(`/news/${item.slug || item.id}`)}>
+                                        <div className="relative h-40 overflow-hidden">
+                                            <Image src={getImageSrc(item.imageUrl)} alt={item.title}
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" fill sizes="33vw" quality={75} />
                                         </div>
                                         <div className="p-4">
                                             <h4 className="text-sm font-semibold text-gray-800 line-clamp-2 group-hover:text-yellow-600">{item.title}</h4>

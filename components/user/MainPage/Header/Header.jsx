@@ -7,7 +7,7 @@ import FormActionLogin from './FormActionLogin';
 import { useSelector } from 'react-redux';
 // react-tooltip css removed;
 import { toast } from 'react-toastify';
-const Logo = '/images/Capylumine.png'; const avatarimg = '/images/Avatar.jpg'; import AuthService from '@/services/AuthService';
+const Logo = '/images/Capylumine-sm.png'; const avatarimg = '/images/Avatar.jpg'; import AuthService from '@/services/AuthService';
 import FormProfile from './FormProfile';
 import SearchService from '@/services/SearchService';
 import { useCategories } from '../../../../hooks/useCategories';
@@ -16,8 +16,7 @@ import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useTheme } from '@/contexts/ThemeContext';
 
-const Header = () =>
-{
+const Header = () => {
   const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
   const navigate = useNavigate();
   const { cartCount, cartTotal } = useCart();
@@ -51,80 +50,64 @@ const Header = () =>
 
   useEffect(() => { setMounted(true); }, []);
 
-  useEffect(() =>
-  {
-    if (token)
-    {
+  useEffect(() => {
+    if (token) {
       AuthService.profile()
-        .then((res) =>
-        {
+        .then((res) => {
           setAvatar({
             ProfileAvatar: res?.profileAvatar
           });
         })
-        .catch((error) =>
-        {
+        .catch((error) => {
           console.error("Error fetching profile:", error);
         });
-    } else
-    {
+    } else {
       setAvatar({ ProfileAvatar: '' });
     }
   }, [token]);
 
 
 
-  const toggleLoginForm = () =>
-  {
+  const toggleLoginForm = () => {
     setToggleLogin(!toggleLogin);
   }
 
-  const toggleArrow = () =>
-  {
+  const toggleArrow = () => {
     setArrowIcon(!arrowIcon);
   };
 
-  const closeArrow = () =>
-  {
+  const closeArrow = () => {
     setArrowIcon(false);
   };
 
-  const toggleActionLoginForm = () =>
-  {
+  const toggleActionLoginForm = () => {
     setToggleActionLogin(!toggleActionLogin);
   }
 
-  const toggleFormcart = () =>
-  {
+  const toggleFormcart = () => {
     setToggleCart(!toggleCart);
   }
 
-  const toggleFormProfile = () =>
-  {
+  const toggleFormProfile = () => {
     setToggleProfile(!toggleProfile);
   }
 
-  const handleClickOutside = (event, ref, buttonRef, toggleFunction) =>
-  {
+  const handleClickOutside = (event, ref, buttonRef, toggleFunction) => {
     if (ref.current && !ref.current.contains(event.target) &&
-      buttonRef.current && !buttonRef.current.contains(event.target))
-    {
+      buttonRef.current && !buttonRef.current.contains(event.target)) {
       toggleFunction(false);
     }
   };
 
   // Xử lý tìm kiếm nhanh — chỉ hiện gợi ý
-  const handleQuickSearch = async () =>
-  {
+  const handleQuickSearch = async () => {
     if (!searchKeyword.trim()) return;
     fetchSuggestions(searchKeyword);
   };
 
   // Debounced search suggestions
-  const fetchSuggestions = useCallback(async (keyword) =>
-  {
-    if (!keyword.trim())
-    {
+  const fetchSuggestions = useCallback(async (keyword) => {
+    if (!keyword.trim()) {
       setSuggestions({ categories: [], products: [] });
       setShowSuggestions(false);
       return;
@@ -138,8 +121,7 @@ const Header = () =>
     ).slice(0, 3);
 
     // Fetch product suggestions from API
-    try
-    {
+    try {
       const result = await SearchService.quickSearch(keyword, 1, 5);
       const products = result?.$values || result?.products?.$values || result?.products || [];
       setSuggestions({
@@ -147,77 +129,65 @@ const Header = () =>
         products: Array.isArray(products) ? products.slice(0, 6) : []
       });
       setShowSuggestions(true);
-    } catch (error)
-    {
+    } catch (error) {
       setSuggestions({ categories: matchedCategories, products: [] });
       setShowSuggestions(matchedCategories.length > 0);
     }
   }, [categories]);
 
   // Handle input change with debounce
-  const handleSearchInputChange = (e) =>
-  {
+  const handleSearchInputChange = (e) => {
     const value = e.target.value;
     setSearchKeyword(value);
 
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() =>
-    {
+    debounceRef.current = setTimeout(() => {
       fetchSuggestions(value);
     }, 300);
   };
 
   // Handle suggestion click - category → vào trang danh mục
-  const handleCategorySuggestionClick = (category) =>
-  {
+  const handleCategorySuggestionClick = (category) => {
     setShowSuggestions(false);
     setSearchKeyword('');
-    navigate(`/categories/${category.id}`);
+    navigate(`/categories/${category.slug || category.id}`);
   };
 
   // Handle suggestion click - product
-  const handleProductSuggestionClick = (product) =>
-  {
+  const handleProductSuggestionClick = (product) => {
     setShowSuggestions(false);
     setSearchKeyword(product.name || '');
-    navigate(`/product/${product.id}`);
+    navigate(`/product/${product.slug || product.id}`);
   };
 
   // Xử lý Enter key — hiện gợi ý
-  const handleKeyDown = (e) =>
-  {
-    if (e.key === 'Enter')
-    {
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
       handleQuickSearch();
     }
   };
 
 
-  useEffect(() =>
-  {
-    const handleOutsideClick = (event) =>
-    {
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
       handleClickOutside(event, popupRef, buttonRef, setToggleCart);
       handleClickOutside(event, popupActionRef, buttonActionRef, setToggleActionLogin);
 
       // Close suggestions when click outside
       if (suggestionsRef.current && !suggestionsRef.current.contains(event.target) &&
-        searchRef.current && !searchRef.current.contains(event.target))
-      {
+        searchRef.current && !searchRef.current.contains(event.target)) {
         setShowSuggestions(false);
       }
     };
 
     document.addEventListener('click', handleOutsideClick, false);
-    return () =>
-    {
+    return () => {
       document.removeEventListener('click', handleOutsideClick, false);
     };
   }, []);
 
   // Close mobile menu on route change
-  useEffect(() =>
-  {
+  useEffect(() => {
     setMobileMenuOpen(false);
   }, [navigate]);
 
@@ -232,9 +202,9 @@ const Header = () =>
             </div>
             <div className='hidden sm:block'>
               <div className='text-lg md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white transition-colors duration-300'>
-                Capy<span className='text-amber-500'>Lumine</span>
+                Capy<span className='text-amber-600'>Lumine</span>
               </div>
-              <div className='text-[9px] md:text-[10px] text-gray-400 dark:text-gray-500 font-medium tracking-[0.15em] uppercase -mt-1 transition-colors duration-300'>
+              <div className='text-[9px] md:text-[10px] text-gray-500 dark:text-gray-400 font-medium tracking-[0.15em] uppercase -mt-1 transition-colors duration-300'>
                 Premium Lighting
               </div>
             </div>
@@ -242,9 +212,9 @@ const Header = () =>
         </div>
 
         {/* Mobile menu toggle */}
-        <div className='md:hidden cursor-pointer' onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+        <button className='md:hidden cursor-pointer bg-transparent border-none p-0' aria-label={mobileMenuOpen ? 'Đóng menu' : 'Mở menu'} onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
           <i className={`bx ${mobileMenuOpen ? 'bx-x' : 'bx-menu'} text-2xl`}></i>
-        </div>
+        </button>
 
         {/* Desktop menu icon (hidden on mobile) */}
         <div className='hidden md:block lg:hidden'>
@@ -277,6 +247,7 @@ const Header = () =>
           {/* Clear button */}
           {searchKeyword && (
             <button
+              aria-label="Xóa từ khóa tìm kiếm"
               className='flex items-center justify-center w-7 h-7 mr-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200'
               onClick={() => { setSearchKeyword(''); setSuggestions({ categories: [], products: [] }); setShowSuggestions(false); }}
             >
@@ -386,7 +357,7 @@ const Header = () =>
         <div className='hidden md:block w-auto lg:w-1/5 text-black dark:text-white'>
           <ul className='flex justify-end lg:justify-between items-center gap-2 lg:gap-1'>
             {/* Dark mode toggle */}
-            <li className='relative cursor-pointer' onClick={toggleDarkMode}>
+            <li className='relative cursor-pointer' aria-label={isDark ? 'Chuyển sang chế độ sáng' : 'Chuyển sang chế độ tối'} onClick={toggleDarkMode}>
               <div className='w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm transition-all duration-500 hover:bg-amber-50 dark:hover:bg-gray-700 hover:scale-110 hover:shadow-md hover:shadow-amber-200/30 dark:hover:shadow-amber-900/20 active:scale-95'>
                 <i className={`bx ${isDark ? 'bx-sun text-amber-400' : 'bx-moon text-indigo-500'} text-xl transition-all duration-500`}
                   style={{ transform: isDark ? 'rotate(360deg)' : 'rotate(0deg)' }}></i>
@@ -394,10 +365,8 @@ const Header = () =>
             </li>
 
             {/* Wishlist */}
-            <li className='group relative cursor-pointer' onClick={() =>
-            {
-              if (!isAuthenticated)
-              {
+            <li className='group relative cursor-pointer' aria-label="Danh sách yêu thích" onClick={() => {
+              if (!isAuthenticated) {
                 toast.info('Vui lòng đăng nhập để xem danh sách yêu thích!');
                 return;
               }
@@ -412,7 +381,7 @@ const Header = () =>
             </li>
 
             {/* Cart */}
-            <li className='flex justify-center items-center gap-2 cursor-pointer group' onClick={toggleFormcart} ref={buttonRef}>
+            <li className='flex justify-center items-center gap-2 cursor-pointer group' aria-label="Giỏ hàng" onClick={toggleFormcart} ref={buttonRef}>
               <div className='relative'>
                 <div className='w-10 h-10 flex items-center justify-center rounded-xl bg-amber-50/80 dark:bg-amber-950/30 backdrop-blur-sm transition-all duration-300 hover:bg-amber-100 dark:hover:bg-amber-900/40 hover:scale-110 hover:shadow-md hover:shadow-amber-200/40 active:scale-95'>
                   <i id='header-cart-icon' className='bx bx-shopping-bag text-xl text-amber-600 dark:text-amber-400 transition-all duration-300 group-hover:text-amber-700'></i>
@@ -421,12 +390,10 @@ const Header = () =>
                 <div className='absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-gradient-to-br from-amber-400 to-orange-500 rounded-full text-center text-[10px] leading-[18px] text-white font-bold shadow-lg shadow-amber-400/30'>{cartCount}</div>
               </div>
               <div className='hidden lg:flex flex-col text-xs ml-0.5'>
-                <span className='text-[10px] text-gray-400 dark:text-gray-500 font-medium leading-tight'>Giỏ hàng</span>
+                <span className='text-[10px] text-gray-500 dark:text-gray-400 font-medium leading-tight'>Giỏ hàng</span>
                 <span className='font-bold text-gray-800 dark:text-gray-200 leading-tight'>{cartTotal.toLocaleString('vi-VN')}₫</span>
               </div>
             </li>
-
-            <FormLogin toggleLogin={toggleLogin} setToggleLogin={setToggleLogin} />
 
             {/* User / Avatar */}
             {
@@ -434,14 +401,14 @@ const Header = () =>
                 <>
                   <li onClick={toggleActionLoginForm} ref={buttonActionRef} className='relative cursor-pointer group'>
                     <div className='w-10 h-10 rounded-xl overflow-hidden ring-2 ring-amber-400/60 dark:ring-amber-500/40 transition-all duration-300 hover:ring-amber-500 hover:scale-110 hover:shadow-lg hover:shadow-amber-300/30 active:scale-95'>
-                      <img className='h-full w-full object-cover' src={avatarURL ? avatarURL : (avatar.ProfileAvatar ? (avatar.ProfileAvatar.startsWith('http') ? avatar.ProfileAvatar : `${API_ENDPOINT}${avatar.ProfileAvatar}`) : avatarimg)} alt="" />
+                      <img className='h-full w-full object-cover' src={avatarURL ? avatarURL : (avatar.ProfileAvatar ? (avatar.ProfileAvatar.startsWith('http') ? avatar.ProfileAvatar : `${API_ENDPOINT}${avatar.ProfileAvatar}`) : avatarimg)} alt="Ảnh đại diện người dùng" />
                     </div>
                     <div className='absolute bottom-0 right-0 w-3 h-3 bg-gradient-to-br from-emerald-400 to-green-500 rounded-full border-2 border-white dark:border-gray-900'></div>
                     <FormActionLogin toggleProfile={toggleProfile} setToggleProfile={setToggleProfile} buttonProfileRef={buttonProfileRef} popupActionRef={popupActionRef} toggleActionLogin={toggleActionLogin} setToggleActionLogin={setToggleActionLogin} />
                   </li>
                 </> :
                 <>
-                  <li className='group cursor-pointer' onClick={toggleLoginForm}>
+                  <li className='group cursor-pointer' aria-label="Đăng nhập" onClick={toggleLoginForm}>
                     <div className='w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm transition-all duration-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 hover:scale-110 hover:shadow-md hover:shadow-indigo-200/30 active:scale-95'>
                       <i className='bx bx-user text-xl text-gray-600 dark:text-gray-400 transition-all duration-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400'></i>
                     </div>
@@ -449,11 +416,12 @@ const Header = () =>
                 </>
             }
           </ul>
+          <FormLogin toggleLogin={toggleLogin} setToggleLogin={setToggleLogin} />
         </div>
-      </div>
+      </div >
 
       {/* Mobile search bar - shown below header on mobile */}
-      <div className='md:hidden px-4 pb-3' ref={searchRef}>
+      < div className='md:hidden px-4 pb-3' ref={searchRef} >
         <div className='flex items-center bg-gray-50 dark:bg-gray-800 rounded-full h-10 relative border-2 border-amber-400 dark:border-amber-500 focus-within:ring-2 focus-within:ring-amber-400/20 focus-within:bg-white dark:focus-within:bg-gray-900 transition-all duration-300 shadow-sm'>
           <div className='flex items-center justify-center pl-3.5 pr-1'>
             {isSearching ? (
@@ -474,6 +442,7 @@ const Header = () =>
           />
           {searchKeyword && (
             <button
+              aria-label="Xóa từ khóa tìm kiếm"
               className='flex items-center justify-center w-6 h-6 mr-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200'
               onClick={() => { setSearchKeyword(''); setSuggestions({ categories: [], products: [] }); setShowSuggestions(false); }}
             >
@@ -482,94 +451,98 @@ const Header = () =>
           )}
         </div>
         {/* Mobile Search Suggestions */}
-        {showSuggestions && (suggestions.categories.length > 0 || suggestions.products.length > 0) && (
-          <div
-            ref={suggestionsRef}
-            className='w-full bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 z-[60] overflow-hidden animate-fadeIn mt-2'
-          >
-            {suggestions.categories.length > 0 && (
-              <div className='border-b border-gray-100 dark:border-gray-800'>
-                {suggestions.categories.map((cat) => (
-                  <div key={`mcat-${cat.id}`} className='flex items-center gap-3 px-4 py-2.5 cursor-pointer hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors' onClick={() => handleCategorySuggestionClick(cat)}>
-                    <div className='w-6 h-6 rounded-lg bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center flex-shrink-0'><i className='bx bx-category text-amber-600 dark:text-amber-400 text-xs'></i></div>
-                    <span className='text-sm text-gray-700 dark:text-gray-300 truncate'>Danh mục <strong className='text-amber-600 dark:text-amber-400'>"{cat.name}"</strong></span>
-                  </div>
-                ))}
-              </div>
-            )}
-            {suggestions.products.length > 0 && (
-              <div className='py-1'>
-                {suggestions.products.map((product, index) => (
-                  <div key={`mprod-${product.id || index}`} className='flex items-center gap-3 px-4 py-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors' onClick={() => handleProductSuggestionClick(product)}>
-                    <i className='bx bx-search text-gray-400 text-sm'></i>
-                    <span className='text-sm text-gray-600 dark:text-gray-400 truncate'>{product.name}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Mobile navigation drawer */}
-      {mobileMenuOpen && (
-        <div className='md:hidden fixed inset-0 z-[100]'>
-          {/* Overlay */}
-          <div className='absolute inset-0 bg-black/50' onClick={() => setMobileMenuOpen(false)}></div>
-          {/* Drawer */}
-          <div className='absolute right-0 top-0 h-full w-72 bg-white shadow-2xl animate-fadeIn overflow-y-auto'>
-            <div className='p-4 border-b border-gray-200 flex justify-between items-center'>
-              <span className='font-semibold text-lg'>Menu</span>
-              <i className='bx bx-x text-2xl cursor-pointer' onClick={() => setMobileMenuOpen(false)}></i>
-            </div>
-            <div className='p-4'>
-              {/* User actions */}
-              <div className='space-y-3 mb-6'>
-                {mounted && isAuthenticated ? (
-                  <>
-                    <div className='flex items-center gap-3 p-2 rounded-lg bg-gray-50'>
-                      <img className='w-10 h-10 rounded-full border-2 border-yellow-400' src={avatarURL ? avatarURL : (avatar.ProfileAvatar ? (avatar.ProfileAvatar.startsWith('http') ? avatar.ProfileAvatar : `${API_ENDPOINT}${avatar.ProfileAvatar}`) : avatarimg)} alt="" />
-                      <span className='font-medium text-sm'>Tài khoản</span>
+        {
+          showSuggestions && (suggestions.categories.length > 0 || suggestions.products.length > 0) && (
+            <div
+              ref={suggestionsRef}
+              className='w-full bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 z-[60] overflow-hidden animate-fadeIn mt-2'
+            >
+              {suggestions.categories.length > 0 && (
+                <div className='border-b border-gray-100 dark:border-gray-800'>
+                  {suggestions.categories.map((cat) => (
+                    <div key={`mcat-${cat.id}`} className='flex items-center gap-3 px-4 py-2.5 cursor-pointer hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors' onClick={() => handleCategorySuggestionClick(cat)}>
+                      <div className='w-6 h-6 rounded-lg bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center flex-shrink-0'><i className='bx bx-category text-amber-600 dark:text-amber-400 text-xs'></i></div>
+                      <span className='text-sm text-gray-700 dark:text-gray-300 truncate'>Danh mục <strong className='text-amber-600 dark:text-amber-400'>"{cat.name}"</strong></span>
                     </div>
-                    <div onClick={() => { toggleFormProfile(); setMobileMenuOpen(false); }} className='flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer'>
-                      <i className='bx bx-user text-xl text-gray-600'></i>
-                      <span className='text-sm'>Hồ sơ</span>
-                    </div>
-                  </>
-                ) : (
-                  <div onClick={() => { toggleLoginForm(); setMobileMenuOpen(false); }} className='flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer'>
-                    <i className='bx bx-user text-xl text-gray-600'></i>
-                    <span className='text-sm'>Đăng nhập</span>
-                  </div>
-                )}
-                <div onClick={() => { toggleFormcart(); setMobileMenuOpen(false); }} className='flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer'>
-                  <i className='bx bx-shopping-bag text-xl text-gray-600'></i>
-                  <span className='text-sm'>Giỏ hàng</span>
-                </div>
-                <div onClick={() => { if (!isAuthenticated) { toast.info('Vui lòng đăng nhập để xem danh sách yêu thích!'); } else { navigate('/wishlist'); } setMobileMenuOpen(false); }} className='flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer'>
-                  <i className='bx bx-heart text-xl text-red-500'></i>
-                  <span className='text-sm'>Yêu thích</span>
-                  {wishlistCount > 0 && (
-                    <span className='ml-auto bg-rose-100 text-rose-600 text-xs px-2 py-0.5 rounded-full font-medium'>{wishlistCount}</span>
-                  )}
-                </div>
-              </div>
-              {/* Categories */}
-              <div className='border-t border-gray-200 pt-4'>
-                <h3 className='text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3'>Danh mục</h3>
-                <div className='space-y-1'>
-                  {categories.map((category) => (
-                    <a key={category.id} href={`#category-${category.id}`} className='flex items-center gap-3 p-3 hover:bg-yellow-50 rounded-lg text-sm text-gray-700' onClick={() => setMobileMenuOpen(false)}>
-                      <i className='bx bx-lamp text-yellow-500'></i>
-                      {category.name}
-                    </a>
                   ))}
                 </div>
+              )}
+              {suggestions.products.length > 0 && (
+                <div className='py-1'>
+                  {suggestions.products.map((product, index) => (
+                    <div key={`mprod-${product.id || index}`} className='flex items-center gap-3 px-4 py-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors' onClick={() => handleProductSuggestionClick(product)}>
+                      <i className='bx bx-search text-gray-400 text-sm'></i>
+                      <span className='text-sm text-gray-600 dark:text-gray-400 truncate'>{product.name}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )
+        }
+      </div >
+
+      {/* Mobile navigation drawer */}
+      {
+        mobileMenuOpen && (
+          <div className='md:hidden fixed inset-0 z-[100]'>
+            {/* Overlay */}
+            <div className='absolute inset-0 bg-black/50' onClick={() => setMobileMenuOpen(false)}></div>
+            {/* Drawer */}
+            <div className='absolute right-0 top-0 h-full w-72 bg-white shadow-2xl animate-fadeIn overflow-y-auto'>
+              <div className='p-4 border-b border-gray-200 flex justify-between items-center'>
+                <span className='font-semibold text-lg'>Menu</span>
+                <i className='bx bx-x text-2xl cursor-pointer' onClick={() => setMobileMenuOpen(false)}></i>
+              </div>
+              <div className='p-4'>
+                {/* User actions */}
+                <div className='space-y-3 mb-6'>
+                  {mounted && isAuthenticated ? (
+                    <>
+                      <div className='flex items-center gap-3 p-2 rounded-lg bg-gray-50'>
+                        <img className='w-10 h-10 rounded-full border-2 border-yellow-400' src={avatarURL ? avatarURL : (avatar.ProfileAvatar ? (avatar.ProfileAvatar.startsWith('http') ? avatar.ProfileAvatar : `${API_ENDPOINT}${avatar.ProfileAvatar}`) : avatarimg)} alt="Ảnh đại diện" />
+                        <span className='font-medium text-sm'>Tài khoản</span>
+                      </div>
+                      <div onClick={() => { toggleFormProfile(); setMobileMenuOpen(false); }} className='flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer'>
+                        <i className='bx bx-user text-xl text-gray-600'></i>
+                        <span className='text-sm'>Hồ sơ</span>
+                      </div>
+                    </>
+                  ) : (
+                    <div onClick={() => { toggleLoginForm(); setMobileMenuOpen(false); }} className='flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer'>
+                      <i className='bx bx-user text-xl text-gray-600'></i>
+                      <span className='text-sm'>Đăng nhập</span>
+                    </div>
+                  )}
+                  <div onClick={() => { toggleFormcart(); setMobileMenuOpen(false); }} className='flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer'>
+                    <i className='bx bx-shopping-bag text-xl text-gray-600'></i>
+                    <span className='text-sm'>Giỏ hàng</span>
+                  </div>
+                  <div onClick={() => { if (!isAuthenticated) { toast.info('Vui lòng đăng nhập để xem danh sách yêu thích!'); } else { navigate('/wishlist'); } setMobileMenuOpen(false); }} className='flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer'>
+                    <i className='bx bx-heart text-xl text-red-500'></i>
+                    <span className='text-sm'>Yêu thích</span>
+                    {wishlistCount > 0 && (
+                      <span className='ml-auto bg-rose-100 text-rose-600 text-xs px-2 py-0.5 rounded-full font-medium'>{wishlistCount}</span>
+                    )}
+                  </div>
+                </div>
+                {/* Categories */}
+                <div className='border-t border-gray-200 pt-4'>
+                  <h3 className='text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3'>Danh mục</h3>
+                  <div className='space-y-1'>
+                    {categories.map((category) => (
+                      <a key={category.id} href={`#category-${category.id}`} className='flex items-center gap-3 p-3 hover:bg-yellow-50 rounded-lg text-sm text-gray-700' onClick={() => setMobileMenuOpen(false)}>
+                        <i className='bx bx-lamp text-yellow-500'></i>
+                        {category.name}
+                      </a>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )
+      }
 
       {/* Profile Modal - rendered at top level for correct fixed positioning */}
       <FormProfile popupProfileRef={popupProfileRef} toggleProfile={toggleProfile} setToggleProfile={setToggleProfile} />

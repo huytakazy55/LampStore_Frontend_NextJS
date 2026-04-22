@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from 'react'
+import Image from 'next/image'
 import Slider2 from "react-slick";
 import { useNavigate } from '@/lib/router-compat';
 import { useWishlist } from '@/contexts/WishlistContext';
@@ -27,8 +28,7 @@ const CustomNextArrow = ({ onClick }) => (
   </button>
 );
 
-const ProductCardItem = ({ product, onClick, isInWishlist, onToggleWishlist, onAddToCartClick }) =>
-{
+const ProductCardItem = ({ product, onClick, isInWishlist, onToggleWishlist, onAddToCartClick }) => {
   const images = product.images?.$values || product.images || [];
   const firstImage = images.length > 0 ? images[0] : null;
   const imageSrc = firstImage
@@ -42,8 +42,7 @@ const ProductCardItem = ({ product, onClick, isInWishlist, onToggleWishlist, onA
   const hasDiscount = discountPrice > 0 && discountPrice < price;
   const discountPercent = hasDiscount ? Math.round((1 - discountPrice / price) * 100) : 0;
 
-  const formatPrice = (p) =>
-  {
+  const formatPrice = (p) => {
     if (!p) return '0';
     return new Intl.NumberFormat('vi-VN').format(p);
   };
@@ -63,7 +62,7 @@ const ProductCardItem = ({ product, onClick, isInWishlist, onToggleWishlist, onA
             </div>
           )}
           {imageSrc ? (
-            <img src={imageSrc} alt={product.name} className='w-full h-full object-contain drop-shadow-md transition-transform duration-500 group-hover:scale-110' />
+            <Image src={imageSrc} alt={product.name} className='w-full h-full object-contain drop-shadow-md transition-transform duration-500 group-hover:scale-110' fill sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw" quality={75} />
           ) : (
             <div className='w-full h-full flex items-center justify-center'>
               <i className='bx bx-image text-3xl text-gray-300'></i>
@@ -118,15 +117,13 @@ const ProductCardItem = ({ product, onClick, isInWishlist, onToggleWishlist, onA
   );
 };
 
-const SectionProductCardCarousel = () =>
-{
+const SectionProductCardCarousel = () => {
   const { data: allProducts = [], isLoading: loading } = useProducts();
   const navigate = useNavigate();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const [cartModalProduct, setCartModalProduct] = useState(null);
 
-  const products = useMemo(() =>
-  {
+  const products = useMemo(() => {
     return [...allProducts]
       .filter(p => p.status)
       .sort((a, b) => (b.sellCount || 0) - (a.sellCount || 0))
@@ -185,7 +182,7 @@ const SectionProductCardCarousel = () =>
               <ProductCardItem
                 key={product.id}
                 product={product}
-                onClick={() => navigate(`/product/${product.id}`)}
+                onClick={() => navigate(`/product/${product.slug || product.id}`)}
                 isInWishlist={isInWishlist(product.id)}
                 onToggleWishlist={toggleWishlist}
                 onAddToCartClick={setCartModalProduct}

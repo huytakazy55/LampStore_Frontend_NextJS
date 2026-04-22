@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from '@/lib/router-compat'
-const Banner1 = '/images/banner_new_01.png';const Banner2 = '/images/banner_new_02.png';const Banner3 = '/images/banner_new_03.png';export const SiteContent = () => {
+const Banner1 = '/images/banner_new_01.png'; const Banner2 = '/images/banner_new_02.png'; const Banner3 = '/images/banner_new_03.png'; export const SiteContent = () => {
   const navigate = useNavigate();
 
   const phrases = [
@@ -74,6 +74,7 @@ const Banner1 = '/images/banner_new_01.png';const Banner2 = '/images/banner_new_
                   src={Banner3}
                   alt="Bộ sưu tập đèn ngủ"
                   className="w-full h-full object-cover"
+                  fetchPriority="high"
                 />
               </div>
               {/* Overlay image (foreground) */}
@@ -82,6 +83,7 @@ const Banner1 = '/images/banner_new_01.png';const Banner2 = '/images/banner_new_
                   src={Banner1}
                   alt="Đèn ngủ cao cấp"
                   className="w-full h-full object-cover"
+                  fetchPriority="high"
                 />
               </div>
               {/* Decorative accent */}
@@ -94,20 +96,20 @@ const Banner1 = '/images/banner_new_01.png';const Banner2 = '/images/banner_new_
           <div className="w-full lg:w-[55%]">
             {/* Tagline */}
             <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-3 h-3 bg-amber-500 rounded-sm" />
-              <span className="text-amber-600 text-xs md:text-sm font-semibold tracking-[0.15em] uppercase">
+              <div className="w-3 h-3 bg-amber-600 rounded-sm" />
+              <span className="text-amber-700 text-xs md:text-sm font-semibold tracking-[0.15em] uppercase">
                 Về Lumina Home
               </span>
             </div>
 
             {/* Heading */}
-            <h2 className="text-gray-900 text-xl sm:text-2xl md:text-3xl lg:text-[2rem] font-bold leading-tight mb-4 md:mb-5 whitespace-nowrap">
-              Đèn Ngủ Cao Cấp — <span className="text-amber-600">{displayText}</span>
+            <h1 className="text-gray-900 text-xl sm:text-2xl md:text-3xl lg:text-[2rem] font-bold leading-tight mb-4 md:mb-5 whitespace-nowrap">
+              Đèn Ngủ Cao Cấp — <span className="text-amber-700">{displayText}</span>
               <span
-                className="inline-block w-[2px] md:w-[3px] h-[1em] bg-amber-500 ml-0.5 align-baseline"
+                className="inline-block w-[2px] md:w-[3px] h-[1em] bg-amber-600 ml-0.5 align-baseline"
                 style={{ animation: 'blink 0.7s step-end infinite' }}
               />
-            </h2>
+            </h1>
 
             {/* Description */}
             <p className="text-gray-500 text-sm md:text-base leading-relaxed mb-6 md:mb-8 max-w-lg">
@@ -118,20 +120,20 @@ const Banner1 = '/images/banner_new_01.png';const Banner2 = '/images/banner_new_
             <div className="grid grid-cols-2 gap-4 mb-6 md:mb-8">
               <div className="flex items-start gap-3">
                 <div className="w-10 h-10 md:w-11 md:h-11 bg-amber-50 border border-amber-200 rounded-sm flex items-center justify-center flex-shrink-0">
-                  <i className='bx bxs-check-shield text-amber-500 text-lg md:text-xl' />
+                  <i className='bx bxs-check-shield text-amber-600 text-lg md:text-xl' />
                 </div>
                 <div>
-                  <h4 className="text-gray-800 text-xs md:text-sm font-semibold mb-0.5">Bảo Hành 12 Tháng</h4>
-                  <p className="text-gray-400 text-[10px] md:text-xs leading-snug">Cam kết chất lượng, đổi trả dễ dàng</p>
+                  <h2 className="text-gray-800 text-xs md:text-sm font-semibold mb-0.5">Bảo Hành 12 Tháng</h2>
+                  <p className="text-gray-500 text-[10px] md:text-xs leading-snug">Cam kết chất lượng, đổi trả dễ dàng</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <div className="w-10 h-10 md:w-11 md:h-11 bg-amber-50 border border-amber-200 rounded-sm flex items-center justify-center flex-shrink-0">
-                  <i className='bx bxs-truck text-amber-500 text-lg md:text-xl' />
+                  <i className='bx bxs-truck text-amber-600 text-lg md:text-xl' />
                 </div>
                 <div>
-                  <h4 className="text-gray-800 text-xs md:text-sm font-semibold mb-0.5">Giao Hàng Toàn Quốc</h4>
-                  <p className="text-gray-400 text-[10px] md:text-xs leading-snug">Miễn phí đơn từ 500.000₫</p>
+                  <h2 className="text-gray-800 text-xs md:text-sm font-semibold mb-0.5">Giao Hàng Toàn Quốc</h2>
+                  <p className="text-gray-500 text-[10px] md:text-xs leading-snug">Miễn phí đơn từ 500.000₫</p>
                 </div>
               </div>
             </div>
@@ -150,7 +152,7 @@ const Banner1 = '/images/banner_new_01.png';const Banner2 = '/images/banner_new_
               <div className="flex items-center gap-3 pl-4 md:pl-6 border-l border-gray-300">
                 <div>
                   <div className="text-gray-900 text-lg md:text-xl font-bold leading-none">5,000+</div>
-                  <div className="text-gray-400 text-[10px] md:text-xs mt-0.5">Khách hàng tin dùng</div>
+                  <div className="text-gray-500 text-[10px] md:text-xs mt-0.5">Khách hàng tin dùng</div>
                 </div>
               </div>
             </div>

@@ -40,15 +40,24 @@ const nextConfig = {
   // Disable React strict mode in dev to avoid double renders
   reactStrictMode: true,
 
+  // Proxy backend static asset paths (images uploaded via admin)
+  async rewrites() {
+    const apiEndpoint = process.env.NEXT_PUBLIC_API_ENDPOINT || 'http://localhost:5001';
+    return [
+      { source: '/NewsImages/:path*', destination: `${apiEndpoint}/NewsImages/:path*` },
+      { source: '/ImageImport/:path*', destination: `${apiEndpoint}/ImageImport/:path*` },
+      { source: '/BannerImages/:path*', destination: `${apiEndpoint}/BannerImages/:path*` },
+      { source: '/CategoryImages/:path*', destination: `${apiEndpoint}/CategoryImages/:path*` },
+    ];
+  },
+
   // Redirect old CRA paths if needed
-  async redirects()
-  {
+  async redirects() {
     return [];
   },
 
   // SEO & Security headers
-  async headers()
-  {
+  async headers() {
     return [
       {
         source: '/(.*)',
@@ -58,6 +67,24 @@ const nextConfig = {
           { key: 'X-DNS-Prefetch-Control', value: 'on' },
           { key: 'Referrer-Policy', value: 'origin-when-cross-origin' },
           { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' },
+        ],
+      },
+      {
+        source: '/_next/static/(.*)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
+        source: '/images/(.*)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=604800' },
+        ],
+      },
+      {
+        source: '/fonts/(.*)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],
       },
     ];

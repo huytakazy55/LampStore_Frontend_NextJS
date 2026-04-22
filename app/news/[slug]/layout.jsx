@@ -1,13 +1,11 @@
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 const SITE_URL = 'https://capylumine.com';
 
-export async function generateMetadata({ params })
-{
-    const { id } = await params;
+export async function generateMetadata({ params }) {
+    const { slug } = await params;
 
-    try
-    {
-        const res = await fetch(`${API_ENDPOINT}/api/News/${id}`, { next: { revalidate: 300 } });
+    try {
+        const res = await fetch(`${API_ENDPOINT}/api/News/slug/${slug}`, { next: { revalidate: 300 } });
         if (!res.ok) return { title: 'Tin tức | CapyLumine' };
         const news = await res.json();
 
@@ -22,11 +20,11 @@ export async function generateMetadata({ params })
         return {
             title: news.title,
             description,
-            alternates: { canonical: `${SITE_URL}/news/${id}` },
+            alternates: { canonical: `${SITE_URL}/news/${slug}` },
             openGraph: {
                 title: `${news.title} | CapyLumine`,
                 description,
-                url: `${SITE_URL}/news/${id}`,
+                url: `${SITE_URL}/news/${slug}`,
                 type: 'article',
                 locale: 'vi_VN',
                 siteName: 'CapyLumine',
@@ -42,18 +40,15 @@ export async function generateMetadata({ params })
                 images: [ogImage],
             },
         };
-    } catch
-    {
+    } catch {
         return { title: 'Tin tức | CapyLumine' };
     }
 }
 
 // Article JSON-LD
-async function getArticleJsonLd(id)
-{
-    try
-    {
-        const res = await fetch(`${API_ENDPOINT}/api/News/${id}`, { next: { revalidate: 300 } });
+async function getArticleJsonLd(slug) {
+    try {
+        const res = await fetch(`${API_ENDPOINT}/api/News/slug/${slug}`, { next: { revalidate: 300 } });
         if (!res.ok) return null;
         const news = await res.json();
 
@@ -81,18 +76,16 @@ async function getArticleJsonLd(id)
             },
             mainEntityOfPage: {
                 '@type': 'WebPage',
-                '@id': `${SITE_URL}/news/${id}`,
+                '@id': `${SITE_URL}/news/${slug}`,
             },
         };
-    } catch
-    {
+    } catch {
         return null;
     }
 }
 
 // BreadcrumbList
-function getBreadcrumbJsonLd(newsTitle, newsId)
-{
+function getBreadcrumbJsonLd(newsTitle, newsId) {
     return {
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
@@ -104,17 +97,14 @@ function getBreadcrumbJsonLd(newsTitle, newsId)
     };
 }
 
-export default async function NewsDetailLayout({ children, params })
-{
-    const { id } = await params;
-    const articleJsonLd = await getArticleJsonLd(id);
+export default async function NewsDetailLayout({ children, params }) {
+    const { slug } = await params;
+    const articleJsonLd = await getArticleJsonLd(slug);
 
     let newsTitle = 'Bài viết';
-    try
-    {
-        const res = await fetch(`${API_ENDPOINT}/api/News/${id}`, { next: { revalidate: 300 } });
-        if (res.ok)
-        {
+    try {
+        const res = await fetch(`${API_ENDPOINT}/api/News/slug/${slug}`, { next: { revalidate: 300 } });
+        if (res.ok) {
             const news = await res.json();
             newsTitle = news.title;
         }
@@ -130,7 +120,7 @@ export default async function NewsDetailLayout({ children, params })
             )}
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(getBreadcrumbJsonLd(newsTitle, id)) }}
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(getBreadcrumbJsonLd(newsTitle, slug)) }}
             />
             {children}
         </>

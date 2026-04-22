@@ -10,21 +10,17 @@ import { useWishlist } from '@/contexts/WishlistContext';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
-const formatPrice = (price) =>
-{
+const formatPrice = (price) => {
   if (!price) return '0';
   return price.toLocaleString('vi-VN');
 };
 
-const getImageSrc = (product) =>
-{
-  if (product.images && product.images.length > 0)
-  {
+const getImageSrc = (product) => {
+  if (product.images && product.images.length > 0) {
     const path = product.images[0].imagePath || product.images[0].ImagePath;
     if (path) return path.startsWith('http') ? path : `${API_ENDPOINT}${path}`;
   }
-  if (product.Images && product.Images.length > 0)
-  {
+  if (product.Images && product.Images.length > 0) {
     const path = product.Images[0].imagePath || product.Images[0].ImagePath;
     if (path) return path.startsWith('http') ? path : `${API_ENDPOINT}${path}`;
   }
@@ -49,18 +45,15 @@ const CustomNextArrow = ({ onClick }) => (
   </button>
 );
 
-const TrendingProduct = () =>
-{
+const TrendingProduct = () => {
   const { data: allProducts = [], isLoading: loading } = useProducts();
   const [cartModalProduct, setCartModalProduct] = useState(null);
   const navigate = useNavigate();
   const { isInWishlist, toggleWishlist } = useWishlist();
 
-  const products = useMemo(() =>
-  {
+  const products = useMemo(() => {
     const sorted = [...allProducts].sort((a, b) => (b.viewCount || 0) - (a.viewCount || 0));
-    return sorted.slice(0, 12).map((product) =>
-    {
+    return sorted.slice(0, 12).map((product) => {
       const variant = product.variant;
       const imgData = product.images?.$values || product.images;
       const images = Array.isArray(imgData) ? imgData : [];
@@ -108,13 +101,11 @@ const TrendingProduct = () =>
 
 
   // Ẩn hoàn toàn nếu không có data (API fail hoặc không có sản phẩm)
-  if (!loading && products.length === 0)
-  {
+  if (!loading && products.length === 0) {
     return null;
   }
 
-  if (loading)
-  {
+  if (loading) {
     return (
       <div className='w-full py-8 md:py-16 xl:mx-auto xl:max-w-[1440px] flex justify-center items-center px-4 xl:px-0'>
         <div className="text-center">
@@ -132,8 +123,7 @@ const TrendingProduct = () =>
       </div>
       <div>
         <Slider3 key={`slider-${products.length}`} {...settings}>
-          {products.map((product) =>
-          {
+          {products.map((product) => {
             const variant = product.variant;
             const price = variant?.discountPrice || variant?.price || 0;
 
@@ -141,7 +131,7 @@ const TrendingProduct = () =>
               <div
                 key={product.id}
                 className='!w-[99%] h-[10rem] md:h-[12.2rem] p-3 md:p-4 cursor-pointer relative m-[2px] hover:after:content-none hover:ring-1 hover:ring-gray-300 group'
-                onClick={() => navigate(`/product/${product.id}`)}
+                onClick={() => navigate(`/product/${product.slug || product.id}`)}
               >
                 <div className='!flex justify-between items-center h-[7rem] md:h-[8.5rem]'>
                   <div className='w-[35%] md:w-[40%] flex justify-center items-center'>
@@ -168,8 +158,7 @@ const TrendingProduct = () =>
                       </div>
                       <div
                         className='w-7 h-7 md:w-9 md:h-9 rounded-sm bg-gray-300 -mt-[1px] cursor-pointer group-hover:bg-yellow-400 transition-colors flex justify-center items-center'
-                        onClick={(e) =>
-                        {
+                        onClick={(e) => {
                           e.stopPropagation();
                           setCartModalProduct(product);
                         }}
