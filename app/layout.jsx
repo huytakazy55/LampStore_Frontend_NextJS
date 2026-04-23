@@ -1,6 +1,8 @@
+import React from 'react';
 import './globals.css';
 
 import ClientProviders from '@/components/providers/ClientProviders';
+import AnalyticsTracker from '@/components/common/AnalyticsTracker';
 
 export const metadata = {
     title: {
@@ -40,8 +42,7 @@ export const metadata = {
     },
 };
 
-export default function RootLayout({ children })
-{
+export default function RootLayout({ children }) {
     return (
         <html lang="vi" suppressHydrationWarning>
             <head>
@@ -79,6 +80,9 @@ export default function RootLayout({ children })
                 />
             </head>
             <body className="font-poppins antialiased">
+                <React.Suspense fallback={null}>
+                    <AnalyticsTracker />
+                </React.Suspense>
                 <ClientProviders>
                     {children}
                 </ClientProviders>

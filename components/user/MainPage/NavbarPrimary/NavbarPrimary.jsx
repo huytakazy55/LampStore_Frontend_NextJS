@@ -5,6 +5,7 @@ import { useNavigate } from '@/lib/router-compat'
 import { useCategories } from '../../../../hooks/useCategories'
 import { useProducts } from '../../../../hooks/useProducts'
 import ProductManage from '@/services/ProductManage'
+import { resolveImagePath } from '@/lib/imageUtils'
 const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () => {
   const navigate = useNavigate()
   const { data: categories = [], isLoading: loading } = useCategories()
@@ -12,7 +13,6 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () => {
   const [hoveredCategory, setHoveredCategory] = useState(null)
   const [showDropdown, setShowDropdown] = useState(false)
   const [categoryProducts, setCategoryProducts] = useState({})
-  const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT
   const hoverTimeoutRef = useRef(null)
   const animTimeoutRef = useRef(null)
 
@@ -71,9 +71,7 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () => {
 
   const getImageSrc = (category) => {
     if (category.imageUrl) {
-      return category.imageUrl.startsWith('http')
-        ? category.imageUrl
-        : `${API_ENDPOINT}${category.imageUrl}`
+      return resolveImagePath(category.imageUrl, Product1)
     }
     return Product1
   }
@@ -82,7 +80,7 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () => {
     const imgs = product.Images || product.images || []
     if (imgs.length > 0) {
       const path = imgs[0].imagePath || imgs[0].ImagePath
-      if (path) return path.startsWith('http') ? path : `${API_ENDPOINT}${path}`
+      if (path) return resolveImagePath(path, Product1)
     }
     return Product1
   }

@@ -17,6 +17,12 @@ const nextConfig = {
       },
       {
         protocol: 'http',
+        hostname: 'localhost',
+        port: '5001',
+        pathname: '/**',
+      },
+      {
+        protocol: 'http',
         hostname: '51.79.146.227',
         port: '5001',
         pathname: '/**',
@@ -42,7 +48,7 @@ const nextConfig = {
 
   // Proxy backend static asset paths (images uploaded via admin)
   async rewrites() {
-    const apiEndpoint = process.env.NEXT_PUBLIC_API_ENDPOINT || 'http://localhost:5001';
+    const apiEndpoint = process.env.INTERNAL_API_ENDPOINT || process.env.NEXT_PUBLIC_API_ENDPOINT || 'http://localhost:5001';
     return [
       { source: '/NewsImages/:path*', destination: `${apiEndpoint}/NewsImages/:path*` },
       { source: '/ImageImport/:path*', destination: `${apiEndpoint}/ImageImport/:path*` },

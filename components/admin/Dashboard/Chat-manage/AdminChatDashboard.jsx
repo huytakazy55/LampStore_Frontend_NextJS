@@ -248,43 +248,87 @@ const AdminChatDashboard = () => {
         </div>
 
         {/* Stats Cards */}
-        <div className="chat-stats-grid">
-          <div className="chat-stat-card">
-            <div className="chat-stat-icon" style={{ background: `linear-gradient(135deg, ${themeColors.StartColorLinear}, ${themeColors.EndColorLinear})` }}>
-              <MessageOutlined />
-            </div>
-            <div>
-              <div className="chat-stat-value">{totalChats}</div>
-              <div className="chat-stat-label">Tổng cuộc trò chuyện</div>
-            </div>
-          </div>
-          <div className="chat-stat-card">
-            <div className="chat-stat-icon" style={{ background: 'linear-gradient(135deg, #22c55e, #16a34a)' }}>
-              <UserOutlined />
-            </div>
-            <div>
-              <div className="chat-stat-value">{activeChats}</div>
-              <div className="chat-stat-label">Đang hoạt động</div>
-            </div>
-          </div>
-          <div className="chat-stat-card">
-            <div className="chat-stat-icon" style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)' }}>
-              <ClockCircleOutlined />
-            </div>
-            <div>
-              <div className="chat-stat-value">{pendingChats}</div>
-              <div className="chat-stat-label">Chờ phản hồi</div>
-            </div>
-          </div>
-          <div className="chat-stat-card">
-            <div className="chat-stat-icon" style={{ background: 'linear-gradient(135deg, #3b82f6, #2563eb)' }}>
-              <CheckCircleOutlined />
-            </div>
-            <div>
-              <div className="chat-stat-value">{resolvedChats}</div>
-              <div className="chat-stat-label">Đã giải quyết</div>
-            </div>
-          </div>
+        <div className="flex flex-wrap gap-6 p-6 mb-2">
+          {[
+            {
+              icon: (
+                <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 text-2xl">
+                  <i className="bx bx-message-rounded-dots"></i>
+                </div>
+              ),
+              value: totalChats,
+              label: "Tổng cuộc trò chuyện",
+              percent: "Tất cả",
+              percentType: "blue"
+            },
+            {
+              icon: (
+                <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-500 text-2xl">
+                  <i className="bx bx-user-circle"></i>
+                </div>
+              ),
+              value: activeChats,
+              label: "Đang hoạt động",
+              percent: "Active",
+              percentType: "green"
+            },
+            {
+              icon: (
+                <div className="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-500 text-2xl">
+                  <i className="bx bx-time-five"></i>
+                </div>
+              ),
+              value: pendingChats,
+              label: "Chờ phản hồi",
+              percent: "Wait",
+              percentType: "yellow"
+            },
+            {
+              icon: (
+                <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center text-red-500 text-2xl">
+                  <i className="bx bx-check-circle"></i>
+                </div>
+              ),
+              value: resolvedChats,
+              label: "Đã giải quyết",
+              percent: "Done",
+              percentType: "red"
+            }
+          ].map((item, idx) => {
+            const percentColor = {
+              green: "bg-green-100 text-green-500",
+              blue: "bg-blue-100 text-blue-500",
+              yellow: "bg-yellow-100 text-yellow-500",
+              red: "bg-red-100 text-red-500",
+            };
+            return (
+              <div
+                key={idx}
+                className={`
+                          bg-white rounded-xl shadow-lg 
+                          p-5 flex items-center min-w-[200px] flex-1
+                          border-l-8 border-[1px] cursor-pointer
+                          ${item.percentType === "green" ? "border-green-400" : ""}
+                          ${item.percentType === "blue" ? "border-blue-400" : ""}
+                          ${item.percentType === "yellow" ? "border-yellow-400" : ""}
+                          ${item.percentType === "red" ? "border-red-400" : ""}
+                          hover:scale-[1.03] hover:shadow-2xl transition-all duration-200
+                        `}
+                style={{ background: "linear-gradient(135deg, #f8fafc 60%, #f1f5f9 100%)" }}
+              >
+                {item.icon}
+                <div className="ml-4">
+                  <div className="text-xl font-bold text-gray-800">{item.value}</div>
+                  <div className="text-gray-500 text-sm">{item.label}</div>
+                </div>
+                <div className="ml-auto flex flex-col items-end">
+                  <div className={`text-xs px-2 py-1 rounded-full flex items-center gap-1 font-semibold ${percentColor[item.percentType]}`}>
+                    {item.percent}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
         {/* Filter Bar */}

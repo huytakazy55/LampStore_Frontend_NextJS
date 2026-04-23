@@ -3,10 +3,10 @@
 import React from 'react'
 import Image from 'next/image'
 import { useCategories } from '../../../../hooks/useCategories'
+import { resolveImagePath } from '@/lib/imageUtils'
 const Product1 = '/images/cameras-2.jpg'; import { useNavigate } from '@/lib/router-compat'
 
 const CategorySale = () => {
-  const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT
   const navigate = useNavigate()
 
   // Sử dụng React Query hook thay vì useState/useEffect
@@ -28,15 +28,8 @@ const CategorySale = () => {
 
   const getImageSrc = (category) => {
     if (category.imageUrl) {
-      // Kiểm tra nếu là URL từ Cloudinary (bắt đầu với https://)
-      if (category.imageUrl.startsWith('http')) {
-        return category.imageUrl // URL đầy đủ từ Cloudinary
-      } else {
-        // Legacy local images (cũ)
-        return `${API_ENDPOINT}${category.imageUrl}`
-      }
+      return resolveImagePath(category.imageUrl, Product1)
     } else {
-      // Fallback về ảnh mặc định
       return Product1
     }
   }

@@ -49,6 +49,7 @@ const LeftBar = () => {
 
     const menuItems = [
         { name: "HomePage", icon: "bxs-home", path: "/admin", roles: null },
+        { name: "Analytics", icon: "bxs-chart", path: "/admin/analytics", roles: ["Administrator"] },
         { name: "Users", icon: "bxs-user", path: "/admin/users", roles: ["Administrator"] },
         { name: "Roles", icon: "bxs-shield-alt-2", path: "/admin/roles", roles: ["Administrator"] },
         { name: "Category", icon: "bxs-category", path: "/admin/category", roles: ["Administrator", "Manager", "Warehouse staff"] },
@@ -64,7 +65,10 @@ const LeftBar = () => {
 
     const visibleMenuItems = useMemo(() => {
         if (!loadingMenus && userMenus && userMenus.length > 0) {
-            return menuItems.filter(item => userMenus.includes(item.name) || (item.name === "News" && userRoles.includes("Administrator")));
+            return menuItems.filter(item =>
+                userMenus.includes(item.name) ||
+                (item.name === "News" && userRoles.includes("Administrator"))
+            );
         }
 
         return menuItems.filter(item => {

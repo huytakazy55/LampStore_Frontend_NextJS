@@ -5,8 +5,7 @@ import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@/lib/router-compat';
 import NewsService from '@/services/NewsService';
-
-const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
+import { resolveImagePath } from '@/lib/imageUtils';
 
 const NewsSection = () => {
     const navigate = useNavigate();
@@ -48,7 +47,7 @@ const NewsSection = () => {
                     <div className="col-span-3 text-center text-gray-500 py-8">Chưa có bài viết nào.</div>
                 ) : (
                     newsList.map((news) => {
-                        const imageSrc = news.imageUrl ? (news.imageUrl.startsWith('http') ? news.imageUrl : `${API_ENDPOINT}${news.imageUrl}`) : 'https://images.unsplash.com/photo-1505693314120-0d443867891c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+                        const imageSrc = resolveImagePath(news.imageUrl, 'https://images.unsplash.com/photo-1505693314120-0d443867891c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
                         const dateStr = new Date(news.createdAt).toLocaleDateString('vi-VN');
 
                         return (

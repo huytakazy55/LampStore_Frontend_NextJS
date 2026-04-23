@@ -6,23 +6,19 @@ const defaultImg = '/images/cameras-2.jpg';
 import ProductManage from '@/services/ProductManage';
 import { useCart } from '@/contexts/CartContext';
 import { useNavigate } from '@/lib/router-compat';
+import { resolveImagePath } from '@/lib/imageUtils';
 
-const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
-
-const formatPrice = (price) =>
-{
+const formatPrice = (price) => {
     if (!price) return '0';
     return price.toLocaleString('vi-VN');
 };
 
-const getImgSrc = (path) =>
-{
+const getImgSrc = (path) => {
     if (!path) return defaultImg;
-    return path.startsWith('http') ? path : `${API_ENDPOINT}${path}`;
+    return resolveImagePath(path, defaultImg);
 };
 
-const AddToCartModal = ({ isOpen, onClose, product }) =>
-{
+const AddToCartModal = ({ isOpen, onClose, product }) => {
     const { addToCart } = useCart();
     const navigate = useNavigate();
     const [mounted, setMounted] = useState(false);
@@ -35,16 +31,12 @@ const AddToCartModal = ({ isOpen, onClose, product }) =>
     const [addedSuccess, setAddedSuccess] = useState(false);
 
     // Fetch full product data when product changes
-    useEffect(() =>
-    {
-        if (product?.id)
-        {
+    useEffect(() => {
+        if (product?.id) {
             ProductManage.GetProductById(product.id)
-                .then(res =>
-                {
+                .then(res => {
                     const data = res.data;
-                    if (data)
-                    {
+                    if (data) {
                         setVariant(data.variant || null);
 
                         const imgData = data.images?.$values || data.images;
@@ -61,8 +53,7 @@ const AddToCartModal = ({ isOpen, onClose, product }) =>
                         setVariantTypes(vts);
                     }
                 })
-                .catch(() =>
-                {
+                .catch(() => {
                     setVariant(product.variant || null);
                     const imgData = product.images?.$values || product.images;
                     setImages(Array.isArray(imgData) ? imgData : []);
@@ -74,17 +65,13 @@ const AddToCartModal = ({ isOpen, onClose, product }) =>
         setAddedSuccess(false);
     }, [product]);
 
-    useEffect(() =>
-    {
-        if (isOpen)
-        {
+    useEffect(() => {
+        if (isOpen) {
             document.body.style.overflow = 'hidden';
-        } else
-        {
+        } else {
             document.body.style.overflow = 'unset';
         }
-        return () =>
-        {
+        return () => {
             document.body.style.overflow = 'unset';
         };
     }, [isOpen]);
@@ -111,8 +98,7 @@ const AddToCartModal = ({ isOpen, onClose, product }) =>
     const handleDecrease = () => setQuantity((prev) => Math.max(prev - 1, 1));
     const handleIncrease = () => setQuantity((prev) => Math.min(prev + 1, stock || 999));
 
-    const handleSelectOption = (typeName, val) =>
-    {
+    const handleSelectOption = (typeName, val) => {
         setSelectedOptions(prev => ({
             ...prev,
             [typeName]: { value: val.value, additionalPrice: val.additionalPrice || 0 }
@@ -124,10 +110,8 @@ const AddToCartModal = ({ isOpen, onClose, product }) =>
     const allOptionsSelected = variantTypes.length === 0 ||
         variantTypes.every(vt => selectedOptions[vt.name]);
 
-    const handleAddToCart = (e) =>
-    {
-        if (!allOptionsSelected)
-        {
+    const handleAddToCart = (e) => {
+        if (!allOptionsSelected) {
             setShowError(true);
             return;
         }
@@ -153,8 +137,7 @@ const AddToCartModal = ({ isOpen, onClose, product }) =>
         }));
 
         setAddedSuccess(true);
-        setTimeout(() =>
-        {
+        setTimeout(() => {
             setAddedSuccess(false);
         }, 2000);
     };
@@ -212,8 +195,7 @@ const AddToCartModal = ({ isOpen, onClose, product }) =>
                         {/* Variant Types — Selectable */}
                         {variantTypes.length > 0 && (
                             <div className="mb-4">
-                                {variantTypes.map((vt) =>
-                                {
+                                {variantTypes.map((vt) => {
                                     const values = Array.isArray(vt.values) ? vt.values : [];
                                     if (values.length === 0) return null;
                                     const isRequired = !selectedOptions[vt.name] && showError;
@@ -223,8 +205,7 @@ const AddToCartModal = ({ isOpen, onClose, product }) =>
                                                 {vt.name}: {isRequired && <span className="text-xs font-normal">(Vui lòng chọn)</span>}
                                             </h3>
                                             <div className="flex flex-wrap gap-2">
-                                                {values.map((val) =>
-                                                {
+                                                {values.map((val) => {
                                                     const isSelected = selectedOptions[vt.name]?.value === val.value;
                                                     return (
                                                         <button
@@ -287,10 +268,8 @@ const AddToCartModal = ({ isOpen, onClose, product }) =>
                                 Thêm vào giỏ
                             </button>
                             <button
-                                onClick={() =>
-                                {
-                                    if (!allOptionsSelected)
-                                    {
+                                onClick={() => {
+                                    if (!allOptionsSelected) {
                                         setShowError(true);
                                         return;
                                     }

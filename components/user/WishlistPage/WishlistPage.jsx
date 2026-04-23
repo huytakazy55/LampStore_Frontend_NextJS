@@ -12,8 +12,7 @@ import { useWishlist } from '@/contexts/WishlistContext';
 import { useCart } from '@/contexts/CartContext';
 const defaultImg = '/images/cameras-2.jpg';
 import AddToCartModal from '../MainPage/AddToCartModal';
-
-const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
+import { resolveImagePath } from '@/lib/imageUtils';
 
 const formatPrice = (price) => {
     if (!price) return '0';
@@ -22,7 +21,7 @@ const formatPrice = (price) => {
 
 const getImgSrc = (path) => {
     if (!path) return defaultImg;
-    return path.startsWith('http') ? path : `${API_ENDPOINT}${path}`;
+    return resolveImagePath(path, defaultImg);
 };
 
 const WishlistPage = () => {

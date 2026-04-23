@@ -6,8 +6,7 @@ import { useProducts } from '../../../../hooks/useProducts';
 import { useNavigate } from '@/lib/router-compat';
 const defaultImg = '/images/cameras-2.jpg';
 import AddToCartModal from '../AddToCartModal';
-
-const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
+import { resolveImagePath } from '@/lib/imageUtils';
 
 const formatPrice = (price) => {
   if (!price) return '0';
@@ -17,11 +16,11 @@ const formatPrice = (price) => {
 const getImageSrc = (product) => {
   if (product.images && product.images.length > 0) {
     const path = product.images[0].imagePath || product.images[0].ImagePath;
-    if (path) return path.startsWith('http') ? path : `${API_ENDPOINT}${path}`;
+    if (path) return resolveImagePath(path, defaultImg);
   }
   if (product.Images && product.Images.length > 0) {
     const path = product.Images[0].imagePath || product.Images[0].ImagePath;
-    if (path) return path.startsWith('http') ? path : `${API_ENDPOINT}${path}`;
+    if (path) return resolveImagePath(path, defaultImg);
   }
   return defaultImg;
 };
@@ -139,7 +138,7 @@ const BigProductCard = ({ product, navigate, onAddToCartClick }) => {
       <div className='flex gap-2 mb-3'>
         {product.images && product.images.slice(0, 3).map((img, i) => {
           const path = img.imagePath || img.ImagePath;
-          const src = path ? (path.startsWith('http') ? path : `${API_ENDPOINT}${path}`) : defaultImg;
+          const src = path ? resolveImagePath(path, defaultImg) : defaultImg;
           return (
             <Image
               key={i}

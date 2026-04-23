@@ -13,6 +13,7 @@ import Settings from '../Settings-manage/Settings';
 import Roles from '../Roles-manage/Roles';
 import NewsManage from '../News-manage/NewsManage';
 import OrdersManage from '../Orders-manage/OrdersManage';
+import AnalyticsPage from '../Analytics-manage/AnalyticsPage';
 
 const RightBody = () => {
   const location = useLocation();
@@ -20,6 +21,9 @@ const RightBody = () => {
   const renderContent = () => {
     if (location.pathname === '/admin') {
       return <RightBodyContent />;
+    }
+    else if (location.pathname === '/admin/analytics') {
+      return <AnalyticsPage />;
     }
     else if (location.pathname === '/admin/category') {
       return <Category />;

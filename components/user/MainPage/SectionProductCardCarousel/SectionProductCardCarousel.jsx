@@ -7,8 +7,7 @@ import { useNavigate } from '@/lib/router-compat';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useProducts } from '../../../../hooks/useProducts';
 import AddToCartModal from '../AddToCartModal';
-
-const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
+import { resolveImagePath } from '@/lib/imageUtils';
 
 const CustomPrevArrow = ({ onClick }) => (
   <button
@@ -32,7 +31,7 @@ const ProductCardItem = ({ product, onClick, isInWishlist, onToggleWishlist, onA
   const images = product.images?.$values || product.images || [];
   const firstImage = images.length > 0 ? images[0] : null;
   const imageSrc = firstImage
-    ? `${API_ENDPOINT}${firstImage.imagePath?.startsWith('/') ? '' : '/'}${firstImage.imagePath}`
+    ? resolveImagePath(firstImage.imagePath)
     : null;
 
   const variant = product.variant;

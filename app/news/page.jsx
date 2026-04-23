@@ -9,8 +9,7 @@ import NavbarPrimary from '@/components/user/MainPage/NavbarPrimary/NavbarPrimar
 import TopBar from '@/components/user/MainPage/TopBar/TopBar';
 import Footer from '@/components/user/MainPage/Footer/Footer';
 import NewsService from '@/services/NewsService';
-
-const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
+import { resolveImagePath } from '@/lib/imageUtils';
 
 export default function NewsListPage() {
     const router = useRouter();
@@ -39,7 +38,7 @@ export default function NewsListPage() {
 
     const getImageSrc = (imageUrl) => {
         if (!imageUrl) return 'https://images.unsplash.com/photo-1505693314120-0d443867891c?w=800&q=80';
-        return imageUrl.startsWith('http') ? imageUrl : `${API_ENDPOINT}${imageUrl}`;
+        return resolveImagePath(imageUrl);
     };
 
     const featured = filteredNews[0];
