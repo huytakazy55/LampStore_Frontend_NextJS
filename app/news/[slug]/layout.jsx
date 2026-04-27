@@ -1,10 +1,12 @@
-const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
+const API_ENDPOINT = process.env.INTERNAL_API_ENDPOINT || process.env.NEXT_PUBLIC_API_ENDPOINT;
 const SITE_URL = 'https://capylumine.com';
 
-export async function generateMetadata({ params }) {
+export async function generateMetadata({ params })
+{
     const { slug } = await params;
 
-    try {
+    try
+    {
         const res = await fetch(`${API_ENDPOINT}/api/News/slug/${slug}`, { next: { revalidate: 300 } });
         if (!res.ok) return { title: 'Tin tức | CapyLumine' };
         const news = await res.json();
@@ -14,7 +16,7 @@ export async function generateMetadata({ params }) {
             || `Đọc bài viết ${news.title} tại CapyLumine.`;
 
         const ogImage = news.imageUrl
-            ? (news.imageUrl.startsWith('http') ? news.imageUrl : `${API_ENDPOINT}${news.imageUrl}`)
+            ? (news.imageUrl.startsWith('http') ? news.imageUrl : `${SITE_URL}${news.imageUrl.startsWith('/') ? '' : '/'}${news.imageUrl}`)
             : `${SITE_URL}/og-image.png`;
 
         return {
@@ -40,20 +42,23 @@ export async function generateMetadata({ params }) {
                 images: [ogImage],
             },
         };
-    } catch {
+    } catch
+    {
         return { title: 'Tin tức | CapyLumine' };
     }
 }
 
 // Article JSON-LD
-async function getArticleJsonLd(slug) {
-    try {
+async function getArticleJsonLd(slug)
+{
+    try
+    {
         const res = await fetch(`${API_ENDPOINT}/api/News/slug/${slug}`, { next: { revalidate: 300 } });
         if (!res.ok) return null;
         const news = await res.json();
 
         const ogImage = news.imageUrl
-            ? (news.imageUrl.startsWith('http') ? news.imageUrl : `${API_ENDPOINT}${news.imageUrl}`)
+            ? (news.imageUrl.startsWith('http') ? news.imageUrl : `${SITE_URL}${news.imageUrl.startsWith('/') ? '' : '/'}${news.imageUrl}`)
             : `${SITE_URL}/og-image.png`;
 
         return {
@@ -79,13 +84,15 @@ async function getArticleJsonLd(slug) {
                 '@id': `${SITE_URL}/news/${slug}`,
             },
         };
-    } catch {
+    } catch
+    {
         return null;
     }
 }
 
 // BreadcrumbList
-function getBreadcrumbJsonLd(newsTitle, newsId) {
+function getBreadcrumbJsonLd(newsTitle, newsId)
+{
     return {
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
@@ -97,14 +104,17 @@ function getBreadcrumbJsonLd(newsTitle, newsId) {
     };
 }
 
-export default async function NewsDetailLayout({ children, params }) {
+export default async function NewsDetailLayout({ children, params })
+{
     const { slug } = await params;
     const articleJsonLd = await getArticleJsonLd(slug);
 
     let newsTitle = 'Bài viết';
-    try {
+    try
+    {
         const res = await fetch(`${API_ENDPOINT}/api/News/slug/${slug}`, { next: { revalidate: 300 } });
-        if (res.ok) {
+        if (res.ok)
+        {
             const news = await res.json();
             newsTitle = news.title;
         }

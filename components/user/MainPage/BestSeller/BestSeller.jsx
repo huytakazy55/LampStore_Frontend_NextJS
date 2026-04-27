@@ -51,7 +51,7 @@ const SmallProductCard = ({ product, navigate, onAddToCartClick }) => {
           alt={product.name}
           fill
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
-          quality={75}
+          quality={50}
         />
       </div>
 
@@ -130,7 +130,7 @@ const BigProductCard = ({ product, navigate, onAddToCartClick }) => {
           alt={product.name}
           fill
           sizes="(max-width: 1024px) 100vw, 33vw"
-          quality={75}
+          quality={50}
         />
       </div>
 
@@ -147,7 +147,7 @@ const BigProductCard = ({ product, navigate, onAddToCartClick }) => {
               alt=""
               width={64}
               height={64}
-              quality={60}
+              quality={50}
             />
           );
         })}

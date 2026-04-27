@@ -47,7 +47,8 @@ const nextConfig = {
   reactStrictMode: true,
 
   // Proxy backend static asset paths (images uploaded via admin)
-  async rewrites() {
+  async rewrites()
+  {
     const apiEndpoint = process.env.INTERNAL_API_ENDPOINT || process.env.NEXT_PUBLIC_API_ENDPOINT || 'http://localhost:5001';
     return [
       { source: '/NewsImages/:path*', destination: `${apiEndpoint}/NewsImages/:path*` },
@@ -58,12 +59,14 @@ const nextConfig = {
   },
 
   // Redirect old CRA paths if needed
-  async redirects() {
+  async redirects()
+  {
     return [];
   },
 
   // SEO & Security headers
-  async headers() {
+  async headers()
+  {
     return [
       {
         source: '/(.*)',
@@ -84,7 +87,31 @@ const nextConfig = {
       {
         source: '/images/(.*)',
         headers: [
-          { key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=604800' },
+          { key: 'Cache-Control', value: 'public, max-age=2592000, stale-while-revalidate=604800' },
+        ],
+      },
+      {
+        source: '/ImageImport/(.*)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=2592000, stale-while-revalidate=604800' },
+        ],
+      },
+      {
+        source: '/NewsImages/(.*)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=2592000, stale-while-revalidate=604800' },
+        ],
+      },
+      {
+        source: '/BannerImages/(.*)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=2592000, stale-while-revalidate=604800' },
+        ],
+      },
+      {
+        source: '/CategoryImages/(.*)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=2592000, stale-while-revalidate=604800' },
         ],
       },
       {

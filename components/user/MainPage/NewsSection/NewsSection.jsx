@@ -63,7 +63,7 @@ const NewsSection = () => {
                                         className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 ease-in-out"
                                         fill
                                         sizes="(max-width: 768px) 100vw, 33vw"
-                                        quality={75}
+                                        quality={50}
                                     />
                                     <div className="absolute top-3 left-3 bg-yellow-400 text-white text-xs font-bold px-2 py-1 rounded shadow-sm">
                                         {news.category}
@@ -95,3 +95,4 @@ const NewsSection = () => {
 };
 
 export default NewsSection;
+

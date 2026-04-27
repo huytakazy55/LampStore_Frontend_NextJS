@@ -62,6 +62,55 @@ const storeJsonLd = {
     },
 };
 
+const siteNavigationJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: [
+        {
+            '@type': 'SiteNavigationElement',
+            position: 1,
+            name: 'Đèn ngủ thú',
+            description: 'Bộ sưu tập đèn ngủ hình thú dễ thương, đáng yêu. Đèn ngủ capybara, mèo, thỏ và nhiều mẫu khác.',
+            url: `${SITE_URL}/categories/den-ngu-thu`,
+        },
+        {
+            '@type': 'SiteNavigationElement',
+            position: 2,
+            name: 'Đèn ngủ khung gỗ',
+            description: 'Đèn ngủ khung gỗ thủ công cao cấp, phong cách tối giản Nhật Bản. Chất liệu gỗ tự nhiên bền đẹp.',
+            url: `${SITE_URL}/categories/den-ngu-khung-go`,
+        },
+        {
+            '@type': 'SiteNavigationElement',
+            position: 3,
+            name: 'Đèn ngủ cảm biến',
+            description: 'Đèn ngủ cảm biến thông minh, tự động bật tắt. Tiện lợi cho phòng ngủ, hành lang và cầu thang.',
+            url: `${SITE_URL}/categories/den-ngu-cam-bien`,
+        },
+        {
+            '@type': 'SiteNavigationElement',
+            position: 4,
+            name: 'Đèn ngủ thủy tinh',
+            description: 'Đèn ngủ thủy tinh nghệ thuật, tinh tế. Ánh sáng lung linh tạo không gian lãng mạn cho phòng ngủ.',
+            url: `${SITE_URL}/categories/den-ngu-thuy-tinh`,
+        },
+        {
+            '@type': 'SiteNavigationElement',
+            position: 5,
+            name: 'Đèn ngủ LED',
+            description: 'Đèn ngủ LED hiện đại, tiết kiệm điện. Đèn LED dải Neon uốn dẻo, đèn LED 3D nghệ thuật.',
+            url: `${SITE_URL}/categories/den-ngu-led`,
+        },
+        {
+            '@type': 'SiteNavigationElement',
+            position: 6,
+            name: 'Tin tức',
+            description: 'Blog và tin tức mới nhất về xu hướng đèn trang trí, mẹo decor phòng ngủ từ CapyLumine.',
+            url: `${SITE_URL}/news`,
+        },
+    ],
+};
+
 export const metadata = {
     title: 'CapyLumine - Đèn Ngủ & Đèn Trang Trí Cao Cấp | Giao Hàng Toàn Quốc',
     description: 'CapyLumine - Cửa hàng đèn trang trí cao cấp hàng đầu Việt Nam. Chuyên đèn ngủ dễ thương, đèn bàn học, đèn LED nghệ thuật, đèn anime. Giao hàng toàn quốc, đổi trả miễn phí 15 ngày.',
@@ -110,6 +159,10 @@ export default function MainLayout({ children })
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(storeJsonLd) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(siteNavigationJsonLd) }}
             />
             {children}
         </>

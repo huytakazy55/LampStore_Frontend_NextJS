@@ -111,7 +111,7 @@ export default function NewsListPage() {
                                     <div className="flex flex-col lg:flex-row">
                                         <div className="relative lg:w-3/5 h-64 md:h-80 lg:h-[420px] overflow-hidden">
                                             <Image src={getImageSrc(featured.imageUrl)} alt={featured.title}
-                                                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out" fill sizes="(max-width: 1024px) 100vw, 60vw" quality={80} priority />
+                                                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out" fill sizes="(max-width: 1024px) 100vw, 60vw" quality={65} priority />
                                             <div className="absolute top-4 left-4">
                                                 <span className="bg-yellow-400 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">{featured.category}</span>
                                             </div>
@@ -152,7 +152,7 @@ export default function NewsListPage() {
                                             onClick={() => router.push(`/news/${news.slug || news.id}`)}>
                                             <div className="relative h-52 overflow-hidden">
                                                 <Image src={getImageSrc(news.imageUrl)} alt={news.title}
-                                                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-out" fill sizes="(max-width: 768px) 100vw, 33vw" quality={75} />
+                                                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-out" fill sizes="(max-width: 768px) 100vw, 33vw" quality={50} />
                                                 <div className="absolute top-3 left-3">
                                                     <span className="bg-yellow-400/90 backdrop-blur-sm text-white text-xs font-bold px-2.5 py-1 rounded-full">{news.category}</span>
                                                 </div>
@@ -185,3 +185,4 @@ export default function NewsListPage() {
         </>
     );
 }
+

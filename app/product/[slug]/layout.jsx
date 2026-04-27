@@ -1,15 +1,21 @@
-const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
+const API_ENDPOINT = process.env.INTERNAL_API_ENDPOINT || process.env.NEXT_PUBLIC_API_ENDPOINT;
 const SITE_URL = 'https://capylumine.com';
+
+async function fetchProductBySlug(slug)
+{
+    const res = await fetch(`${API_ENDPOINT}/api/Products/slug/${slug}`, { next: { revalidate: 60 } });
+    if (!res.ok) return null;
+    return res.json();
+}
 
 export async function generateMetadata({ params })
 {
-    const { id } = await params;
+    const { slug } = await params;
 
     try
     {
-        const res = await fetch(`${API_ENDPOINT}/api/Product/${id}`, { next: { revalidate: 60 } });
-        if (!res.ok) return { title: 'Sản phẩm | CapyLumine' };
-        const product = await res.json();
+        const product = await fetchProductBySlug(slug);
+        if (!product) return { title: 'Sản phẩm | CapyLumine' };
 
         const variant = product.variant;
         const price = variant?.discountPrice || variant?.price || 0;
@@ -19,19 +25,19 @@ export async function generateMetadata({ params })
 
         const images = product.images?.$values || product.images || [];
         const ogImage = images.length > 0
-            ? (images[0].imagePath?.startsWith('http') ? images[0].imagePath : `${API_ENDPOINT}${images[0].imagePath}`)
-            : '/og-image.png';
+            ? (images[0].imagePath?.startsWith('http') ? images[0].imagePath : `${SITE_URL}${images[0].imagePath?.startsWith('/') ? '' : '/'}${images[0].imagePath}`)
+            : `${SITE_URL}/og-image.png`;
 
         return {
             title: product.name,
             description,
             alternates: {
-                canonical: `${SITE_URL}/product/${id}`,
+                canonical: `${SITE_URL}/product/${slug}`,
             },
             openGraph: {
                 title: `${product.name} | CapyLumine`,
                 description,
-                url: `${SITE_URL}/product/${id}`,
+                url: `${SITE_URL}/product/${slug}`,
                 images: [{ url: ogImage, width: 800, height: 800, alt: product.name }],
                 type: 'website',
                 locale: 'vi_VN',
@@ -51,27 +57,26 @@ export async function generateMetadata({ params })
 }
 
 // JSON-LD Structured Data for Product (rendered server-side)
-async function getProductJsonLd(id)
+async function getProductJsonLd(slug)
 {
     try
     {
-        const res = await fetch(`${API_ENDPOINT}/api/Product/${id}`, { next: { revalidate: 60 } });
-        if (!res.ok) return null;
-        const product = await res.json();
+        const product = await fetchProductBySlug(slug);
+        if (!product) return null;
 
         const variant = product.variant;
         const price = variant?.discountPrice || variant?.price || product.minPrice || 0;
         const originalPrice = variant?.price || product.maxPrice || 0;
         const images = product.images?.$values || product.images || [];
         const imageUrls = images.map(img =>
-            img.imagePath?.startsWith('http') ? img.imagePath : `${API_ENDPOINT}${img.imagePath}`
+            img.imagePath?.startsWith('http') ? img.imagePath : `${SITE_URL}${img.imagePath?.startsWith('/') ? '' : '/'}${img.imagePath}`
         );
 
-        // Fetch reviews
+        // Fetch reviews using product.id
         let reviews = [];
         try
         {
-            const reviewRes = await fetch(`${API_ENDPOINT}/api/ProductReview/product/${id}`, { next: { revalidate: 300 } });
+            const reviewRes = await fetch(`${API_ENDPOINT}/api/ProductReviews/${product.id}`, { next: { revalidate: 300 } });
             if (reviewRes.ok)
             {
                 const reviewData = await reviewRes.json();
@@ -89,7 +94,7 @@ async function getProductJsonLd(id)
             name: product.name,
             description: product.description?.replace(/<[^>]*>/g, '').slice(0, 500) || '',
             image: imageUrls,
-            url: `${SITE_URL}/product/${id}`,
+            url: `${SITE_URL}/product/${slug}`,
             brand: {
                 '@type': 'Brand',
                 name: 'CapyLumine',
@@ -97,7 +102,7 @@ async function getProductJsonLd(id)
             sku: variant?.sku || product.id,
             offers: {
                 '@type': 'Offer',
-                url: `${SITE_URL}/product/${id}`,
+                url: `${SITE_URL}/product/${slug}`,
                 priceCurrency: 'VND',
                 price: price,
                 ...(originalPrice > price && {
@@ -166,7 +171,7 @@ async function getProductJsonLd(id)
 }
 
 // BreadcrumbList JSON-LD
-function getBreadcrumbJsonLd(productName, productId)
+function getBreadcrumbJsonLd(productName, slug)
 {
     return {
         '@context': 'https://schema.org',
@@ -174,26 +179,22 @@ function getBreadcrumbJsonLd(productName, productId)
         itemListElement: [
             { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: SITE_URL },
             { '@type': 'ListItem', position: 2, name: 'Sản phẩm', item: `${SITE_URL}/categories` },
-            { '@type': 'ListItem', position: 3, name: productName, item: `${SITE_URL}/product/${productId}` },
+            { '@type': 'ListItem', position: 3, name: productName, item: `${SITE_URL}/product/${slug}` },
         ],
     };
 }
 
 export default async function ProductLayout({ children, params })
 {
-    const { id } = await params;
-    const productJsonLd = await getProductJsonLd(id);
+    const { slug } = await params;
+    const productJsonLd = await getProductJsonLd(slug);
 
     // Get product name for breadcrumb
     let productName = 'Sản phẩm';
     try
     {
-        const res = await fetch(`${API_ENDPOINT}/api/Product/${id}`, { next: { revalidate: 60 } });
-        if (res.ok)
-        {
-            const product = await res.json();
-            productName = product.name;
-        }
+        const product = await fetchProductBySlug(slug);
+        if (product) productName = product.name;
     } catch { }
 
     return (
@@ -206,7 +207,7 @@ export default async function ProductLayout({ children, params })
             )}
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(getBreadcrumbJsonLd(productName, id)) }}
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(getBreadcrumbJsonLd(productName, slug)) }}
             />
             {children}
         </>

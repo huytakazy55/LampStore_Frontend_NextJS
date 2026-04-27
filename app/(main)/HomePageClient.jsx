@@ -12,7 +12,7 @@ import LazySection from '@/components/common/LazySection';
 import ScrollTimeline from '@/components/common/ScrollTimeline';
 
 // === Code Splitting: Lazy load các component nặng ===
-const CategorySale = lazy(() => import('@/components/user/MainPage/CategorySale/CategorySale'));
+import CategorySale from '@/components/user/MainPage/CategorySale/CategorySale';
 const ProductCarousel = lazy(() => import('@/components/user/MainPage/ProductCarousel/ProductCarousel'));
 const SectionProductCardCarousel = lazy(() => import('@/components/user/MainPage/SectionProductCardCarousel/SectionProductCardCarousel'));
 const NewsSection = lazy(() => import('@/components/user/MainPage/NewsSection/NewsSection'));
@@ -20,7 +20,6 @@ const BestSeller = lazy(() => import('@/components/user/MainPage/BestSeller/Best
 const BannerImage = lazy(() => import('@/components/user/MainPage/BannerImage/BannerImage'));
 const BrandCarousel = lazy(() => import('@/components/user/MainPage/BrandCarousel/BrandCarousel'));
 const Newsletter = lazy(() => import('@/components/user/MainPage/Newsletter/Newsletter'));
-const FlashSale = lazy(() => import('@/components/user/MainPage/FlashSale/FlashSale'));
 
 const SectionSpinner = ({ height = '200px' }) => (
     <div className="w-full flex justify-center items-center" style={{ height }}>
@@ -67,17 +66,8 @@ export default function HomePage()
                 {/* === BELOW THE FOLD: Lazy load khi scroll đến === */}
 
                 <div data-section="categories" data-label="Danh mục" data-aos="fade-up">
-                    <LazySection height="280px">
-                        <Suspense fallback={<SectionSpinner height="280px" />}>
-                            <CategorySale />
-                        </Suspense>
-                    </LazySection>
+                    <CategorySale />
                 </div>
-
-                {/* === FLASH SALE (hiển thị khi có chương trình đang diễn ra) === */}
-                <Suspense fallback={null}>
-                    <FlashSale />
-                </Suspense>
 
                 <div data-section="products" data-label="Sản phẩm" data-aos="fade-up" data-aos-delay="100">
                     <LazySection height="500px">

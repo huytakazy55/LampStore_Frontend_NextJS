@@ -1,7 +1,9 @@
-const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT || 'https://capylumine.com';
+export const dynamic = 'force-dynamic';
+const API_ENDPOINT = process.env.INTERNAL_API_ENDPOINT || process.env.NEXT_PUBLIC_API_ENDPOINT || 'https://capylumine.com';
 const SITE_URL = 'https://capylumine.com';
 
-export default async function sitemap() {
+export default async function sitemap()
+{
     // Static pages
     const staticPages = [
         {
@@ -26,9 +28,11 @@ export default async function sitemap() {
 
     // Dynamic category pages
     let categoryPages = [];
-    try {
-        const res = await fetch(`${API_ENDPOINT}/api/Category`, { next: { revalidate: 3600 } });
-        if (res.ok) {
+    try
+    {
+        const res = await fetch(`${API_ENDPOINT}/api/Categories`, { cache: 'no-store' });
+        if (res.ok)
+        {
             const data = await res.json();
             const categories = data?.$values || data || [];
             categoryPages = categories.map(cat => ({
@@ -38,33 +42,39 @@ export default async function sitemap() {
                 priority: 0.8,
             }));
         }
-    } catch (error) {
+    } catch (error)
+    {
         console.error('Error fetching categories for sitemap:', error);
     }
 
     // Dynamic product pages
     let productPages = [];
-    try {
-        const res = await fetch(`${API_ENDPOINT}/api/Product`, { next: { revalidate: 3600 } });
-        if (res.ok) {
+    try
+    {
+        const res = await fetch(`${API_ENDPOINT}/api/Products`, { cache: 'no-store' });
+        if (res.ok)
+        {
             const data = await res.json();
             const products = data?.$values || data || [];
             productPages = products.map(product => ({
-                url: `${SITE_URL}/product/${product.id}`,
+                url: `${SITE_URL}/product/${product.slug || product.id}`,
                 lastModified: new Date(product.updatedAt || product.createdAt || new Date()),
                 changeFrequency: 'weekly',
                 priority: 0.9,
             }));
         }
-    } catch (error) {
+    } catch (error)
+    {
         console.error('Error fetching products for sitemap:', error);
     }
 
     // Dynamic news pages
     let newsPages = [];
-    try {
-        const res = await fetch(`${API_ENDPOINT}/api/News?publishedOnly=true`, { next: { revalidate: 3600 } });
-        if (res.ok) {
+    try
+    {
+        const res = await fetch(`${API_ENDPOINT}/api/News?publishedOnly=true`, { cache: 'no-store' });
+        if (res.ok)
+        {
             const data = await res.json();
             const news = data?.$values || data || [];
             newsPages = news.map(item => ({
@@ -74,7 +84,8 @@ export default async function sitemap() {
                 priority: 0.6,
             }));
         }
-    } catch (error) {
+    } catch (error)
+    {
         console.error('Error fetching news for sitemap:', error);
     }
 

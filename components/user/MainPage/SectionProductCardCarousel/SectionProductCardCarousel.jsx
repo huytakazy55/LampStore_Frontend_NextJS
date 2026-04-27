@@ -27,7 +27,8 @@ const CustomNextArrow = ({ onClick }) => (
   </button>
 );
 
-const ProductCardItem = ({ product, onClick, isInWishlist, onToggleWishlist, onAddToCartClick }) => {
+const ProductCardItem = ({ product, onClick, isInWishlist, onToggleWishlist, onAddToCartClick }) =>
+{
   const images = product.images?.$values || product.images || [];
   const firstImage = images.length > 0 ? images[0] : null;
   const imageSrc = firstImage
@@ -41,7 +42,8 @@ const ProductCardItem = ({ product, onClick, isInWishlist, onToggleWishlist, onA
   const hasDiscount = discountPrice > 0 && discountPrice < price;
   const discountPercent = hasDiscount ? Math.round((1 - discountPrice / price) * 100) : 0;
 
-  const formatPrice = (p) => {
+  const formatPrice = (p) =>
+  {
     if (!p) return '0';
     return new Intl.NumberFormat('vi-VN').format(p);
   };
@@ -61,7 +63,7 @@ const ProductCardItem = ({ product, onClick, isInWishlist, onToggleWishlist, onA
             </div>
           )}
           {imageSrc ? (
-            <Image src={imageSrc} alt={product.name} className='w-full h-full object-contain drop-shadow-md transition-transform duration-500 group-hover:scale-110' fill sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw" quality={75} />
+            <Image src={imageSrc} alt={product.name} className='w-full h-full object-contain drop-shadow-md transition-transform duration-500 group-hover:scale-110' fill sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw" quality={50} />
           ) : (
             <div className='w-full h-full flex items-center justify-center'>
               <i className='bx bx-image text-3xl text-gray-300'></i>
@@ -116,13 +118,15 @@ const ProductCardItem = ({ product, onClick, isInWishlist, onToggleWishlist, onA
   );
 };
 
-const SectionProductCardCarousel = () => {
+const SectionProductCardCarousel = () =>
+{
   const { data: allProducts = [], isLoading: loading } = useProducts();
   const navigate = useNavigate();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const [cartModalProduct, setCartModalProduct] = useState(null);
 
-  const products = useMemo(() => {
+  const products = useMemo(() =>
+  {
     return [...allProducts]
       .filter(p => p.status)
       .sort((a, b) => (b.sellCount || 0) - (a.sellCount || 0))
@@ -163,7 +167,7 @@ const SectionProductCardCarousel = () => {
   if (!loading && products.length === 0) return null;
 
   return (
-    <div className='w-full overflow-visible xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0 mb-8'>
+    <div className='w-full overflow-hidden xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0 mb-8'>
       <div className='border-b border-gray-300 pb-1 relative mb-6 md:mb-8 after:w-[30%] md:after:w-[16%] after:h-[1px] after:bg-yellow-400 after:absolute after:bottom-0 after:left-0'>
         <h3 className='font-medium text-sm md:text-h3 text-black flex items-center gap-2'>
           <i className='bx bx-trending-up text-yellow-500'></i>

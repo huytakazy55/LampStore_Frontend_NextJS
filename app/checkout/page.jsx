@@ -9,6 +9,7 @@ import TopBar from '@/components/user/MainPage/TopBar/TopBar';
 import Footer from '@/components/user/MainPage/Footer/Footer';
 import { useCart } from '@/contexts/CartContext';
 import OrderService from '@/services/OrderService';
+import GuestProfileService from '@/services/GuestProfileService';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 const PROVINCE_API = 'https://provinces.open-api.vn/api';
@@ -69,6 +70,7 @@ export default function CheckoutPage()
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [orderSuccess, setOrderSuccess] = useState(false);
     const [orderId, setOrderId] = useState(null);
+    const [savedTotal, setSavedTotal] = useState(0);
 
     // Province data states
     const [provinces, setProvinces] = useState([]);
@@ -258,8 +260,8 @@ export default function CheckoutPage()
         setIsSubmitting(true);
         try
         {
+            const isLoggedIn = !!localStorage.getItem('token');
             const orderData = {
-                userId: typeof window !== 'undefined' ? localStorage.getItem('userId') || null : null,
                 fullName: formData.fullName,
                 phone: formData.phone,
                 email: formData.email,
@@ -281,8 +283,20 @@ export default function CheckoutPage()
                 })),
             };
 
-            const created = await OrderService.createOrder(orderData);
+            let created;
+            if (isLoggedIn)
+            {
+                orderData.userId = localStorage.getItem('userId') || null;
+                created = await OrderService.createOrder(orderData);
+            } else
+            {
+                // Guest checkout: attach guestToken
+                orderData.guestToken = GuestProfileService.getGuestToken();
+                created = await OrderService.createGuestOrder(orderData);
+            }
+
             setOrderId(created.id ? created.id.substring(0, 8).toUpperCase() : 'LS-' + Date.now().toString(36).toUpperCase());
+            setSavedTotal(total);
             setOrderSuccess(true);
             if (!buyNowItems) clearCart();
         } catch (error)
@@ -310,8 +324,11 @@ export default function CheckoutPage()
                 <div className='min-h-screen bg-gray-50 pt-8 pb-16'>
                     <div className='max-w-2xl mx-auto px-4'>
                         <div className='bg-white rounded-lg shadow-sm p-8 text-center'>
-                            <div className='w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6'>
-                                <i className='bx bx-check text-4xl text-green-600'></i>
+                            <div className='flex items-center justify-center mx-auto mb-6 mt-4'>
+                                <svg className="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                                    <circle className="checkmark-circle" cx="26" cy="26" r="25" fill="none" />
+                                    <path className="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                                </svg>
                             </div>
                             <h2 className='text-2xl font-bold text-gray-800 mb-2'>Đặt hàng thành công!</h2>
                             <p className='text-gray-500 mb-6'>Cảm ơn bạn đã mua hàng tại CapyLumine</p>
@@ -323,7 +340,7 @@ export default function CheckoutPage()
                                 </div>
                                 <div className='flex justify-between items-center mb-2'>
                                     <span className='text-sm text-gray-500'>Tổng thanh toán:</span>
-                                    <span className='font-bold text-lg'>{formatPrice(total)}₫</span>
+                                    <span className='font-bold text-lg'>{formatPrice(savedTotal)}₫</span>
                                 </div>
                                 <div className='flex justify-between items-center'>
                                     <span className='text-sm text-gray-500'>Phương thức thanh toán:</span>
@@ -340,12 +357,14 @@ export default function CheckoutPage()
                                 >
                                     Tiếp tục mua sắm
                                 </button>
-                                <button
-                                    onClick={() => router.push('/my-orders')}
-                                    className='flex-1 py-3 bg-rose-600 text-white rounded-lg font-medium hover:bg-rose-700 transition-colors cursor-pointer'
-                                >
-                                    Xem đơn hàng
-                                </button>
+                                {typeof window !== 'undefined' && localStorage.getItem('token') && (
+                                    <button
+                                        onClick={() => router.push('/my-orders')}
+                                        className='flex-1 py-3 bg-rose-600 text-white rounded-lg font-medium hover:bg-rose-700 transition-colors cursor-pointer'
+                                    >
+                                        Xem đơn hàng
+                                    </button>
+                                )}
                             </div>
                         </div>
                     </div>

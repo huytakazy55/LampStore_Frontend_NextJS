@@ -24,7 +24,7 @@ const CreateModal = ({ openCreate, handleCreateClose, setCategoryData }) =>
     if (file.size > 2 * 1024 * 1024) { message.error('Kích thước ảnh phải nhỏ hơn 2MB.'); return false; }
     setUploading(true);
     new Compressor(file, {
-      quality: 0.8, maxWidth: 800, maxHeight: 600, mimeType: 'image/jpeg',
+      quality: 0.6, maxWidth: 800, maxHeight: 600, mimeType: 'image/jpeg',
       success(compressedFile)
       {
         const renamedFile = new File([compressedFile], `category_${Date.now()}.jpg`, { type: 'image/jpeg', lastModified: Date.now() });

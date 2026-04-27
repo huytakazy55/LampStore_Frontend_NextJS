@@ -2,6 +2,7 @@
 
 import axiosInstance from "./axiosConfig";
 import { toast } from 'react-toastify';
+import GuestProfileService from './GuestProfileService';
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
 class AuthService
@@ -20,6 +21,9 @@ class AuthService
             localStorage.setItem('token', response.data.accessToken);
             localStorage.setItem('refreshToken', response.data.refreshToken);
             localStorage.setItem('tokenExpiry', Date.now() + (response.data.expiresIn * 1000));
+
+            // Claim guest orders if any
+            await this._claimGuestOrdersIfNeeded();
         }
 
         return response;
@@ -49,6 +53,9 @@ class AuthService
             localStorage.setItem('token', response.data.accessToken);
             localStorage.setItem('refreshToken', response.data.refreshToken);
             localStorage.setItem('tokenExpiry', Date.now() + (response.data.expiresIn * 1000));
+
+            // Claim guest orders if any
+            await this._claimGuestOrdersIfNeeded();
         }
 
         return response;
@@ -107,6 +114,27 @@ class AuthService
         return axiosInstance.post("/api/Account/ForgotPassword", {
             emailOrUsername: emailOrUsername
         });
+    }
+
+    /**
+     * Internal: claim guest orders after login/signup.
+     * If a guestToken exists in localStorage, send it to the backend
+     * to associate those orders with the now-authenticated user.
+     */
+    async _claimGuestOrdersIfNeeded()
+    {
+        try
+        {
+            const guestToken = GuestProfileService.getExistingGuestToken();
+            if (!guestToken) return;
+
+            await axiosInstance.post('/api/Account/ClaimGuestOrders', { guestToken });
+            GuestProfileService.clearGuestToken();
+        } catch (error)
+        {
+            console.error('Failed to claim guest orders:', error);
+            // Non-critical — don't block login flow
+        }
     }
 }
 

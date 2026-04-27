@@ -40,39 +40,41 @@ export const metadata = {
             'max-snippet': -1,
         },
     },
+    icons: {
+        icon: [
+            { url: '/favicon.ico', sizes: '32x32' },
+        ],
+        apple: [
+            { url: '/Capylumine.png', sizes: '512x512', type: 'image/png' },
+        ],
+    },
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children })
+{
     return (
         <html lang="vi" suppressHydrationWarning>
             <head>
                 <link rel="manifest" href="/manifest.json" />
                 <link rel="dns-prefetch" href="https://capylumine.com" />
-                <link rel="preconnect" href="https://capylumine.com" />
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+                <link rel="preconnect" href="https://unpkg.com" crossOrigin="anonymous" />
+                {/* Preload LCP banner image */}
+                <link rel="preload" href="/images/banner_new_03.png" as="image" fetchPriority="high" />
                 <link
                     href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Geist:wght@100..900&display=swap"
                     rel="stylesheet"
                 />
+                {/* Boxicons */}
                 <link
                     href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
                     rel="stylesheet"
                 />
                 {/* Slick Carousel */}
                 <link
-                    rel="preload"
-                    href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"
-                    as="style"
-                />
-                <link
                     rel="stylesheet"
                     href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"
-                />
-                <link
-                    rel="preload"
-                    href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"
-                    as="style"
                 />
                 <link
                     rel="stylesheet"

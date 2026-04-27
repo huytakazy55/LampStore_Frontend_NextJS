@@ -16,7 +16,8 @@ import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useTheme } from '@/contexts/ThemeContext';
 
-const Header = () => {
+const Header = () =>
+{
   const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
   const navigate = useNavigate();
   const { cartCount, cartTotal } = useCart();
@@ -28,6 +29,7 @@ const Header = () => {
   const [toggleCart, setToggleCart] = useState(false)
   const [toggleProfile, setToggleProfile] = useState(false);
   const [avatar, setAvatar] = useState({ ProfileAvatar: '' })
+  const [profileApiData, setProfileApiData] = useState(null);
   const [arrowIcon, setArrowIcon] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -50,64 +52,82 @@ const Header = () => {
 
   useEffect(() => { setMounted(true); }, []);
 
-  useEffect(() => {
-    if (token) {
+  useEffect(() =>
+  {
+    if (token)
+    {
       AuthService.profile()
-        .then((res) => {
+        .then((res) =>
+        {
           setAvatar({
             ProfileAvatar: res?.profileAvatar
           });
+          setProfileApiData(res);
         })
-        .catch((error) => {
+        .catch((error) =>
+        {
           console.error("Error fetching profile:", error);
         });
-    } else {
+    } else
+    {
       setAvatar({ ProfileAvatar: '' });
+      setProfileApiData(null);
     }
   }, [token]);
 
 
 
-  const toggleLoginForm = () => {
+  const toggleLoginForm = () =>
+  {
     setToggleLogin(!toggleLogin);
   }
 
-  const toggleArrow = () => {
+  const toggleArrow = () =>
+  {
     setArrowIcon(!arrowIcon);
   };
 
-  const closeArrow = () => {
+  const closeArrow = () =>
+  {
     setArrowIcon(false);
   };
 
-  const toggleActionLoginForm = () => {
+  const toggleActionLoginForm = () =>
+  {
     setToggleActionLogin(!toggleActionLogin);
   }
 
-  const toggleFormcart = () => {
+  const toggleFormcart = () =>
+  {
     setToggleCart(!toggleCart);
   }
 
-  const toggleFormProfile = () => {
+  const toggleFormProfile = () =>
+  {
     setToggleProfile(!toggleProfile);
   }
 
-  const handleClickOutside = (event, ref, buttonRef, toggleFunction) => {
+  const handleClickOutside = (event, ref, buttonRef, toggleFunction) =>
+  {
     if (ref.current && !ref.current.contains(event.target) &&
-      buttonRef.current && !buttonRef.current.contains(event.target)) {
+      buttonRef.current && !buttonRef.current.contains(event.target))
+    {
       toggleFunction(false);
     }
   };
 
   // Xử lý tìm kiếm nhanh — chỉ hiện gợi ý
-  const handleQuickSearch = async () => {
+  const handleQuickSearch = async () =>
+  {
     if (!searchKeyword.trim()) return;
     fetchSuggestions(searchKeyword);
   };
 
   // Debounced search suggestions
-  const fetchSuggestions = useCallback(async (keyword) => {
-    if (!keyword.trim()) {
+  const fetchSuggestions = useCallback(async (keyword) =>
+  {
+    if (!keyword.trim())
+    {
       setSuggestions({ categories: [], products: [] });
       setShowSuggestions(false);
       return;
@@ -121,7 +141,8 @@ const Header = () => {
     ).slice(0, 3);
 
     // Fetch product suggestions from API
-    try {
+    try
+    {
       const result = await SearchService.quickSearch(keyword, 1, 5);
       const products = result?.$values || result?.products?.$values || result?.products || [];
       setSuggestions({
@@ -129,71 +150,83 @@ const Header = () => {
         products: Array.isArray(products) ? products.slice(0, 6) : []
       });
       setShowSuggestions(true);
-    } catch (error) {
+    } catch (error)
+    {
       setSuggestions({ categories: matchedCategories, products: [] });
       setShowSuggestions(matchedCategories.length > 0);
     }
   }, [categories]);
 
   // Handle input change with debounce
-  const handleSearchInputChange = (e) => {
+  const handleSearchInputChange = (e) =>
+  {
     const value = e.target.value;
     setSearchKeyword(value);
 
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => {
+    debounceRef.current = setTimeout(() =>
+    {
       fetchSuggestions(value);
     }, 300);
   };
 
   // Handle suggestion click - category → vào trang danh mục
-  const handleCategorySuggestionClick = (category) => {
+  const handleCategorySuggestionClick = (category) =>
+  {
     setShowSuggestions(false);
     setSearchKeyword('');
     navigate(`/categories/${category.slug || category.id}`);
   };
 
   // Handle suggestion click - product
-  const handleProductSuggestionClick = (product) => {
+  const handleProductSuggestionClick = (product) =>
+  {
     setShowSuggestions(false);
     setSearchKeyword(product.name || '');
     navigate(`/product/${product.slug || product.id}`);
   };
 
   // Xử lý Enter key — hiện gợi ý
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
+  const handleKeyDown = (e) =>
+  {
+    if (e.key === 'Enter')
+    {
       handleQuickSearch();
     }
   };
 
 
-  useEffect(() => {
-    const handleOutsideClick = (event) => {
+  useEffect(() =>
+  {
+    const handleOutsideClick = (event) =>
+    {
       handleClickOutside(event, popupRef, buttonRef, setToggleCart);
       handleClickOutside(event, popupActionRef, buttonActionRef, setToggleActionLogin);
 
       // Close suggestions when click outside
       if (suggestionsRef.current && !suggestionsRef.current.contains(event.target) &&
-        searchRef.current && !searchRef.current.contains(event.target)) {
+        searchRef.current && !searchRef.current.contains(event.target))
+      {
         setShowSuggestions(false);
       }
     };
 
     document.addEventListener('click', handleOutsideClick, false);
-    return () => {
+    return () =>
+    {
       document.removeEventListener('click', handleOutsideClick, false);
     };
   }, []);
 
   // Close mobile menu on route change
-  useEffect(() => {
+  useEffect(() =>
+  {
     setMobileMenuOpen(false);
   }, [navigate]);
 
   return (
     <>
-      <div className='w-full xl:mx-auto xl:max-w-[1440px] flex justify-between items-center h-16 md:h-28 px-4 xl:px-0'>
+      <div className='w-full xl:mx-auto xl:max-w-[1440px] flex justify-between items-center h-16 md:h-28 px-4 xl:px-0 overflow-visible relative z-50 isolate'>
         {/* Logo */}
         <div className='flex-shrink-0'>
           <a href="/" className='flex items-center gap-2 no-underline group'>
@@ -212,8 +245,13 @@ const Header = () => {
         </div>
 
         {/* Mobile menu toggle */}
-        <button className='md:hidden cursor-pointer bg-transparent border-none p-0' aria-label={mobileMenuOpen ? 'Đóng menu' : 'Mở menu'} onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-          <i className={`bx ${mobileMenuOpen ? 'bx-x' : 'bx-menu'} text-2xl`}></i>
+        <button
+          className='md:hidden cursor-pointer bg-transparent border-none p-2 z-[60] relative'
+          style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
+          aria-label={mobileMenuOpen ? 'Đóng menu' : 'Mở menu'}
+          onClick={(e) => { e.stopPropagation(); setMobileMenuOpen(!mobileMenuOpen); }}
+        >
+          <i className={`bx ${mobileMenuOpen ? 'bx-x' : 'bx-menu'} text-2xl text-gray-800 dark:text-white pointer-events-none`}></i>
         </button>
 
         {/* Desktop menu icon (hidden on mobile) */}
@@ -365,8 +403,10 @@ const Header = () => {
             </li>
 
             {/* Wishlist */}
-            <li className='group relative cursor-pointer' aria-label="Danh sách yêu thích" onClick={() => {
-              if (!isAuthenticated) {
+            <li className='group relative cursor-pointer' aria-label="Danh sách yêu thích" onClick={() =>
+            {
+              if (!isAuthenticated)
+              {
                 toast.info('Vui lòng đăng nhập để xem danh sách yêu thích!');
                 return;
               }
@@ -418,10 +458,10 @@ const Header = () => {
           </ul>
           <FormLogin toggleLogin={toggleLogin} setToggleLogin={setToggleLogin} />
         </div>
-      </div >
+      </div>
 
       {/* Mobile search bar - shown below header on mobile */}
-      < div className='md:hidden px-4 pb-3' ref={searchRef} >
+      <div className='md:hidden px-4 pb-3' ref={searchRef}>
         <div className='flex items-center bg-gray-50 dark:bg-gray-800 rounded-full h-10 relative border-2 border-amber-400 dark:border-amber-500 focus-within:ring-2 focus-within:ring-amber-400/20 focus-within:bg-white dark:focus-within:bg-gray-900 transition-all duration-300 shadow-sm'>
           <div className='flex items-center justify-center pl-3.5 pr-1'>
             {isSearching ? (
@@ -480,7 +520,7 @@ const Header = () => {
             </div>
           )
         }
-      </div >
+      </div>
 
       {/* Mobile navigation drawer */}
       {
@@ -545,7 +585,7 @@ const Header = () => {
       }
 
       {/* Profile Modal - rendered at top level for correct fixed positioning */}
-      <FormProfile popupProfileRef={popupProfileRef} toggleProfile={toggleProfile} setToggleProfile={setToggleProfile} />
+      <FormProfile popupProfileRef={popupProfileRef} toggleProfile={toggleProfile} setToggleProfile={setToggleProfile} profileApiData={profileApiData} />
     </>
   )
 }

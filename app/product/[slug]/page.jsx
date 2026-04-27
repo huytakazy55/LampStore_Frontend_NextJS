@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -9,6 +9,7 @@ import NavbarPrimary from '@/components/user/MainPage/NavbarPrimary/NavbarPrimar
 import TopBar from '@/components/user/MainPage/TopBar/TopBar';
 import Footer from '@/components/user/MainPage/Footer/Footer';
 import ProductManage from '@/services/ProductManage';
+import FlashSaleService from '@/services/FlashSaleService';
 import ReviewService from '@/services/ReviewService';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
@@ -17,19 +18,23 @@ import ImageLightbox from '@/components/common/ImageLightbox';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
-const formatPrice = (price) => {
+const formatPrice = (price) =>
+{
     if (!price) return '0';
     return price.toLocaleString('vi-VN');
 };
 
-const getImgSrc = (path) => {
+const getImgSrc = (path) =>
+{
     if (!path) return '/images/cameras-2.jpg';
     return path.startsWith('http') ? path : `${API_ENDPOINT}${path}`;
 };
 
-const stripHtml = (html) => {
+const stripHtml = (html) =>
+{
     if (!html) return '';
-    if (typeof document !== 'undefined') {
+    if (typeof document !== 'undefined')
+    {
         const tmp = document.createElement('div');
         tmp.innerHTML = html;
         return tmp.textContent || tmp.innerText || '';
@@ -37,7 +42,8 @@ const stripHtml = (html) => {
     return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
 };
 
-export default function ProductDetailPage() {
+export default function ProductDetailPage()
+{
     const params = useParams();
     const slug = params.slug;
     const router = useRouter();
@@ -63,20 +69,29 @@ export default function ProductDetailPage() {
     const [reviewHover, setReviewHover] = useState(0);
     const [submittingReview, setSubmittingReview] = useState(false);
 
+    // Flash Sale states
+    const [flashSaleItem, setFlashSaleItem] = useState(null);
+    const [fsCountdown, setFsCountdown] = useState({ label: '', h: 0, m: 0, s: 0 });
+    const fsTimerRef = useRef(null);
+
     const { addToCart } = useCart();
     const { isInWishlist, toggleWishlist } = useWishlist();
     const { data: allProducts = [] } = useProducts();
 
-    useEffect(() => {
+    useEffect(() =>
+    {
         window.scrollTo(0, 0);
 
-        const fetchProduct = async () => {
-            try {
+        const fetchProduct = async () =>
+        {
+            try
+            {
                 setLoading(true);
                 const res = await ProductManage.GetProductBySlug(slug);
                 const data = res.data;
 
-                if (data) {
+                if (data)
+                {
                     setProduct(data);
                     setVariant(data.variant || null);
 
@@ -97,37 +112,95 @@ export default function ProductDetailPage() {
                     fetchReviews(data.id);
                     if (isAuthenticated) fetchReviewStatus(data.id);
                 }
-            } catch (e) {
+            } catch (e)
+            {
                 console.error('Error fetching product:', e);
-            } finally {
+            } finally
+            {
                 setLoading(false);
             }
         };
 
-        if (slug) {
+        if (slug)
+        {
             fetchProduct();
         }
     }, [slug, isAuthenticated]);
 
-    const fetchReviews = async (productId) => {
-        try {
+    // Fetch flash sale and check if this product is in it
+    useEffect(() =>
+    {
+        if (!product?.id) return;
+        const checkFlashSale = async () =>
+        {
+            try
+            {
+                const data = await FlashSaleService.getActiveFlashSale();
+                if (data && data.id)
+                {
+                    const items = data.items?.$values || data.items || [];
+                    const match = items.find(i => i.productId === product.id);
+                    if (match)
+                    {
+                        setFlashSaleItem({ ...match, startTime: data.startTime, endTime: data.endTime });
+                    }
+                }
+            } catch { /* silent */ }
+        };
+        checkFlashSale();
+    }, [product?.id]);
+
+    // Flash sale countdown
+    useEffect(() =>
+    {
+        if (!flashSaleItem) return;
+        const tick = () =>
+        {
+            const now = Date.now();
+            const start = new Date(flashSaleItem.startTime).getTime();
+            const end = new Date(flashSaleItem.endTime).getTime();
+            let target = end, label = 'Kết thúc sau';
+            if (now < start) { target = start; label = 'Bắt đầu sau'; }
+            const diff = target - now;
+            if (diff <= 0 && now >= end) { setFlashSaleItem(null); return; }
+            if (diff <= 0) return;
+            setFsCountdown({
+                label,
+                h: Math.floor(diff / 3600000),
+                m: Math.floor((diff % 3600000) / 60000),
+                s: Math.floor((diff % 60000) / 1000)
+            });
+        };
+        tick();
+        fsTimerRef.current = setInterval(tick, 1000);
+        return () => clearInterval(fsTimerRef.current);
+    }, [flashSaleItem]);
+
+    const fetchReviews = async (productId) =>
+    {
+        try
+        {
             const res = await ReviewService.getProductReviews(productId);
             const data = res.data?.$values || res.data || [];
             setReviews(data);
         } catch (e) { console.error('Error fetching reviews:', e); }
     };
 
-    const fetchReviewStatus = async (productId) => {
-        try {
+    const fetchReviewStatus = async (productId) =>
+    {
+        try
+        {
             const res = await ReviewService.getReviewStatus(productId);
             setReviewStatus(res.data);
         } catch (e) { console.error('Error fetching review status:', e); }
     };
 
-    const handleSubmitReview = async () => {
+    const handleSubmitReview = async () =>
+    {
         if (!isAuthenticated) { toast.info('Vui lòng đăng nhập để đánh giá!'); return; }
         if (!reviewComment.trim()) { toast.warning('Vui lòng nhập nội dung đánh giá!'); return; }
-        try {
+        try
+        {
             setSubmittingReview(true);
             const res = await ReviewService.submitReview({
                 productId: product.id,
@@ -140,7 +213,8 @@ export default function ProductDetailPage() {
             setReviewComment('');
             setReviewRating(5);
             toast.success('Cảm ơn bạn đã đánh giá! ⭐');
-        } catch (e) {
+        } catch (e)
+        {
             const msg = e.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại.';
             toast.error(msg);
         } finally { setSubmittingReview(false); }
@@ -149,7 +223,8 @@ export default function ProductDetailPage() {
     const handleDecrease = () => setQuantity((prev) => Math.max(prev - 1, 1));
     const handleIncrease = () => setQuantity((prev) => Math.min(prev + 1, variant?.stock || 999));
 
-    const handleSelectOption = (typeName, val) => {
+    const handleSelectOption = (typeName, val) =>
+    {
         setSelectedOptions(prev => ({
             ...prev,
             [typeName]: { value: val.value, additionalPrice: val.additionalPrice || 0 }
@@ -160,8 +235,10 @@ export default function ProductDetailPage() {
     const allOptionsSelected = variantTypes.length === 0 ||
         variantTypes.every(vt => selectedOptions[vt.name]);
 
-    const handleAddToCart = (e) => {
-        if (!allOptionsSelected) {
+    const handleAddToCart = (e) =>
+    {
+        if (!allOptionsSelected)
+        {
             setShowError(true);
             return;
         }
@@ -193,6 +270,32 @@ export default function ProductDetailPage() {
         setTimeout(() => setAddedSuccess(false), 2000);
     };
 
+    const handleBuyNow = () =>
+    {
+        if (!allOptionsSelected)
+        {
+            setShowError(true);
+            return;
+        }
+
+        const mainImg = images.length > 0
+            ? getImgSrc(images[0]?.imagePath)
+            : '/images/cameras-2.jpg';
+
+        const buyItem = {
+            productId: product.id,
+            name: product.name,
+            image: mainImg,
+            price: basePrice,
+            quantity,
+            selectedOptions,
+            key: `buynow_${product.id}_${Date.now()}`,
+        };
+
+        sessionStorage.setItem('buyNowItems', JSON.stringify([buyItem]));
+        router.push('/checkout');
+    };
+
     // Computed values
     const totalAdditional = Object.values(selectedOptions)
         .reduce((sum, opt) => sum + (opt.additionalPrice || 0), 0);
@@ -206,7 +309,8 @@ export default function ProductDetailPage() {
     const mainImage = images.length > 0 ? getImgSrc(images[selectedImage]?.imagePath) : '/images/cameras-2.jpg';
 
     // Related products
-    const relatedProducts = useMemo(() => {
+    const relatedProducts = useMemo(() =>
+    {
         if (!product || !allProducts.length) return [];
         return allProducts
             .filter(p => p.categoryId === product.categoryId && p.id !== product.id)
@@ -214,7 +318,8 @@ export default function ProductDetailPage() {
     }, [product, allProducts]);
 
     // --- RENDER ---
-    if (loading) {
+    if (loading)
+    {
         return (
             <>
                 <TopBar />
@@ -231,7 +336,8 @@ export default function ProductDetailPage() {
         );
     }
 
-    if (!product) {
+    if (!product)
+    {
         return (
             <>
                 <TopBar />
@@ -321,8 +427,36 @@ export default function ProductDetailPage() {
                             <div>{product.sellCount || 0} Đã bán</div>
                         </div>
 
+                        {/* Flash Sale Banner */}
+                        {flashSaleItem && (
+                            <div className='my-3 md:my-4 rounded-lg overflow-hidden'>
+                                <div className='flex items-center justify-between bg-gradient-to-r from-[#ff3b30] to-[#ff6b35] px-4 py-2'>
+                                    <div className='flex items-center gap-2'>
+                                        <span className='text-white text-base'>⚡</span>
+                                        <span className='text-white font-bold text-sm tracking-wide'>FLASH SALE</span>
+                                    </div>
+                                    <div className='flex items-center gap-1.5 text-white text-xs'>
+                                        <span>{fsCountdown.label}</span>
+                                        <span className='bg-white/20 rounded px-1.5 py-0.5 font-mono font-bold'>{String(fsCountdown.h).padStart(2, '0')}</span>
+                                        <span className='font-bold'>:</span>
+                                        <span className='bg-white/20 rounded px-1.5 py-0.5 font-mono font-bold'>{String(fsCountdown.m).padStart(2, '0')}</span>
+                                        <span className='font-bold'>:</span>
+                                        <span className='bg-white/20 rounded px-1.5 py-0.5 font-mono font-bold'>{String(fsCountdown.s).padStart(2, '0')}</span>
+                                    </div>
+                                </div>
+                                <div className='flex flex-wrap items-center gap-2 md:gap-3 py-3 md:py-4 px-4 md:px-6 bg-red-50 dark:bg-red-900/20'>
+                                    <div className='text-xl md:text-2xl font-bold text-rose-600'>₫{formatPrice(flashSaleItem.flashSalePrice)}</div>
+                                    <div className='text-xs md:text-sm text-gray-400 dark:text-gray-500 line-through'>₫{formatPrice(flashSaleItem.productOriginalPrice || price)}</div>
+                                    <div className='bg-rose-600 text-white text-xs px-2 py-0.5 rounded font-medium'>-{flashSaleItem.discountPercent}%</div>
+                                    {flashSaleItem.stock > 0 && (
+                                        <div className='ml-auto text-xs text-gray-500'>Còn {flashSaleItem.stock - flashSaleItem.soldCount} sản phẩm</div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
                         {/* Price */}
-                        <div className='flex flex-wrap items-center bg-gradient-to-r from-rose-50 to-slate-50 dark:from-rose-900/20 dark:to-gray-800 gap-2 md:gap-3 py-3 md:py-4 px-4 md:px-6 my-3 md:my-4 rounded-lg'>
+                        <div className={`flex flex-wrap items-center bg-gradient-to-r from-rose-50 to-slate-50 dark:from-rose-900/20 dark:to-gray-800 gap-2 md:gap-3 py-3 md:py-4 px-4 md:px-6 my-3 md:my-4 rounded-lg ${flashSaleItem ? 'hidden' : ''}`}>
                             <div className='text-xl md:text-2xl font-bold text-rose-600'>₫{formatPrice(price)}</div>
                             {hasDiscount && (
                                 <>
@@ -335,7 +469,8 @@ export default function ProductDetailPage() {
                         {/* Variant Types — Selectable */}
                         {variantTypes.length > 0 && (
                             <div className='mb-4 md:mb-6'>
-                                {variantTypes.map((vt) => {
+                                {variantTypes.map((vt) =>
+                                {
                                     const values = Array.isArray(vt.values) ? vt.values : [];
                                     if (values.length === 0) return null;
                                     const isRequired = !selectedOptions[vt.name] && showError;
@@ -345,7 +480,8 @@ export default function ProductDetailPage() {
                                                 {vt.name} {isRequired && <span className='text-xs font-normal'>(Chọn)</span>}
                                             </div>
                                             <div className='w-full sm:w-[90%] flex flex-wrap gap-2'>
-                                                {values.map((val) => {
+                                                {values.map((val) =>
+                                                {
                                                     const isSelected = selectedOptions[vt.name]?.value === val.value;
                                                     return (
                                                         <div
@@ -398,7 +534,7 @@ export default function ProductDetailPage() {
                             <button onClick={handleAddToCart} className='flex items-center justify-center gap-2 border border-rose-600 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 py-2.5 px-4 md:px-6 rounded hover:bg-rose-100 dark:hover:bg-rose-900/50 transition text-sm md:text-base w-full sm:w-auto cursor-pointer'>
                                 <i className='bx bxs-cart-add text-lg md:text-xl'></i> Thêm vào giỏ hàng
                             </button>
-                            <button onClick={handleAddToCart} className='bg-rose-600 text-white py-2.5 px-6 md:px-8 rounded hover:bg-rose-700 transition font-medium text-sm md:text-base w-full sm:w-auto cursor-pointer'>
+                            <button onClick={handleBuyNow} className='bg-rose-600 text-white py-2.5 px-6 md:px-8 rounded hover:bg-rose-700 transition font-medium text-sm md:text-base w-full sm:w-auto cursor-pointer'>
                                 Mua ngay
                             </button>
                         </div>
@@ -462,7 +598,8 @@ export default function ProductDetailPage() {
                         <h2 className='text-base md:text-lg font-semibold text-gray-800 dark:text-gray-100 py-2.5 px-4 border-l-4 border-amber-500 bg-gradient-to-r from-amber-100 to-transparent dark:from-amber-900/20 dark:to-transparent rounded-r-md flex items-center gap-2'><i className='bx bx-star text-amber-500'></i> Đánh giá sản phẩm ({reviews.length})</h2>
 
                         {/* Review Summary */}
-                        {reviews.length > 0 && (() => {
+                        {reviews.length > 0 && (() =>
+                        {
                             const avg = (reviews.reduce((s, r) => s + Number(r.rating), 0) / reviews.length).toFixed(1);
                             const dist = [5, 4, 3, 2, 1].map(star => ({
                                 star,
@@ -585,7 +722,8 @@ export default function ProductDetailPage() {
                     <section className='w-full py-4 md:py-6 bg-white dark:bg-gray-900 mb-4 rounded-lg shadow-sm px-4 md:px-6'>
                         <h2 className='text-base md:text-lg font-semibold text-gray-800 dark:text-gray-100 py-2.5 px-4 border-l-4 border-amber-500 bg-gradient-to-r from-amber-100 to-transparent dark:from-amber-900/20 dark:to-transparent rounded-r-md flex items-center gap-2 mb-5'><i className='bx bx-bulb text-amber-500'></i> Sản phẩm gợi ý</h2>
                         <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4'>
-                            {relatedProducts.map((rp) => {
+                            {relatedProducts.map((rp) =>
+                            {
                                 const rpVariant = rp.variant;
                                 const rpPrice = rpVariant?.discountPrice || rpVariant?.price || rp.minPrice || 0;
                                 const rpOriginal = rpVariant?.price || rp.maxPrice || 0;

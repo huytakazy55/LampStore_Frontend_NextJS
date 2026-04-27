@@ -7,10 +7,12 @@ import { ThemeContext } from '@/contexts/ThemeContext';
 import NewsService from '@/services/NewsService';
 import CreateModal from './CreateModal';
 import UpdateModal from './UpdateModal';
+import ColumnVisibilityDropdown from '../shared/ColumnVisibilityDropdown';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
-const NewsManage = () => {
+const NewsManage = () =>
+{
     const { themeColors } = useContext(ThemeContext);
     const [news, setNews] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -20,62 +22,76 @@ const NewsManage = () => {
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [showUpdateModal, setShowUpdateModal] = useState(false);
     const [selectedNews, setSelectedNews] = useState(null);
+    const [hiddenColumns, setHiddenColumns] = useState([]);
 
-    useEffect(() => {
+    useEffect(() =>
+    {
         fetchNews();
     }, []);
 
-    const fetchNews = async () => {
-        try {
+    const fetchNews = async () =>
+    {
+        try
+        {
             setLoading(true);
             const response = await NewsService.getAllNews(false); // Fetch both active and inactive
             const data = response.data?.$values || response.data || [];
             setNews(data);
-        } catch (error) {
+        } catch (error)
+        {
             message.error('Lỗi khi tải danh sách tin tức');
-        } finally {
+        } finally
+        {
             setLoading(false);
         }
     };
 
-    const handleDelete = (id, title) => {
+    const handleDelete = (id, title) =>
+    {
         Modal.confirm({
             title: 'Xác nhận xóa',
             content: `Bạn có chắc muốn xóa tin tức "${title}"?`,
             okText: 'Xóa',
             okType: 'danger',
             cancelText: 'Hủy',
-            onOk: async () => {
-                try {
+            onOk: async () =>
+            {
+                try
+                {
                     await NewsService.deleteNews(id);
                     message.success(`Đã xóa tin tức: ${title}`);
                     fetchNews();
-                } catch (error) {
+                } catch (error)
+                {
                     message.error('Lỗi khi xóa tin tức');
                 }
             },
         });
     };
 
-    const handleEdit = (newsItem) => {
+    const handleEdit = (newsItem) =>
+    {
         setSelectedNews(newsItem);
         setShowUpdateModal(true);
     };
 
-    const handleCreateSuccess = () => {
+    const handleCreateSuccess = () =>
+    {
         setShowCreateModal(false);
         fetchNews();
         message.success('Thêm tin tức thành công');
     };
 
-    const handleUpdateSuccess = () => {
+    const handleUpdateSuccess = () =>
+    {
         setShowUpdateModal(false);
         setSelectedNews(null);
         fetchNews();
         message.success('Cập nhật tin tức thành công');
     };
 
-    const filteredNews = useMemo(() => {
+    const filteredNews = useMemo(() =>
+    {
         return news.filter(item =>
             item.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             item.category?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -97,7 +113,8 @@ const NewsManage = () => {
             key: 'imageUrl',
             width: 120,
             align: 'center',
-            render: (imageUrl) => {
+            render: (imageUrl) =>
+            {
                 if (!imageUrl) return '--';
                 const imageSrc = imageUrl.startsWith('http') ? imageUrl : `${API_ENDPOINT}${imageUrl}`;
                 return (
@@ -206,20 +223,27 @@ const NewsManage = () => {
                             style={{ width: 300 }}
                         />
                     </Space>
-                    <Button type="primary" icon={<PlusOutlined />} onClick={() => setShowCreateModal(true)} style={{ background: themeColors.StartColorLinear }}>
-                        Thêm bài viết
-                    </Button>
+                    <Space>
+                        <ColumnVisibilityDropdown
+                            columns={columns}
+                            hiddenKeys={hiddenColumns}
+                            onChange={setHiddenColumns}
+                        />
+                        <Button type="primary" icon={<PlusOutlined />} onClick={() => setShowCreateModal(true)} style={{ background: themeColors.StartColorLinear }}>
+                            Thêm bài viết
+                        </Button>
+                    </Space>
                 </div>
 
                 <div className="admin-table-wrapper" style={{ padding: '24px' }}>
                     <Table
-                        columns={columns}
+                        columns={columns.filter(col => !hiddenColumns.includes(col.key))}
                         dataSource={filteredNews}
                         rowKey="id"
                         pagination={false}
                         loading={loading}
                         size="middle"
-                        scroll={{ x: 1200 }}
+                        tableLayout="fixed"
                         className="custom-table"
                     />
                     <div className="flex justify-end mt-4">

@@ -15,6 +15,7 @@ import UploadModal from './UploadModal';
 import { DeleteOutlined, FileExcelOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
 import axios from 'axios';
+import ColumnVisibilityDropdown from '../shared/ColumnVisibilityDropdown';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
@@ -30,7 +31,8 @@ const style = {
   outline: 'none',
 };
 
-const Products = () => {
+const Products = () =>
+{
   const { themeColors } = useContext(ThemeContext);
   const { t } = useTranslation();
   //modal create
@@ -102,34 +104,43 @@ const Products = () => {
   const [openImport, setOpenImport] = useState(false);
   const handleImportOpen = () => setOpenImport(true);
   const handleImportClose = () => setOpenImport(false);
+  const [hiddenColumns, setHiddenColumns] = useState([]);
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     ProductManage.GetProduct()
-      .then((res) => {
+      .then((res) =>
+      {
         setProductData(res.data.$values);
       })
-      .catch((err) => {
+      .catch((err) =>
+      {
 
       })
   }, [])
 
-  const GetCategoryById = (id) => {
+  const GetCategoryById = (id) =>
+  {
     const category = categories.find(category => category.id === id);
     return category ? category.name : ''
   }
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     CategoryManage.GetCategory()
-      .then((res) => {
+      .then((res) =>
+      {
         setCategories(res.data.$values);
       })
-      .catch((err) => {
+      .catch((err) =>
+      {
         toast.error("Có lỗi xảy ra khi tải danh mục.");
       });
   }, []);
 
   //Search Service
-  const highlightedText = (text, highlight) => {
+  const highlightedText = (text, highlight) =>
+  {
     if (!highlight) return text;
     const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
     return parts.map((part, index) =>
@@ -139,8 +150,10 @@ const Products = () => {
     );
   };
 
-  const filteredProducts = useMemo(() => {
-    return productData.filter(product => {
+  const filteredProducts = useMemo(() =>
+  {
+    return productData.filter(product =>
+    {
       const categoryName = GetCategoryById(product.categoryId || '').toLowerCase();
       const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         categoryName.includes(searchTerm.toLowerCase());
@@ -155,62 +168,83 @@ const Products = () => {
     });
   }, [productData, searchTerm, selectedCategory, dateRange, statusFilter]);
 
-  const truncateWords = (text, maxWords) => {
-    if (!text) {
+  const stripHtml = (html) =>
+  {
+    if (!html) return '';
+    return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+  };
+
+  const truncateWords = (text, maxWords) =>
+  {
+    if (!text)
+    {
       return '';
     }
-    const words = text.split(' ');
-    if (words.length > maxWords) {
-      return words.slice(0, maxWords).join(' ') + ' . . .';
+    const plainText = stripHtml(text);
+    const words = plainText.split(' ');
+    if (words.length > maxWords)
+    {
+      return words.slice(0, maxWords).join(' ') + ' ...';
     }
-    return text;
+    return plainText;
   };
 
   // Định dạng số theo ngôn ngữ hiện tại
   const { i18n } = useTranslation();
   const language = i18n.language;
-  const formattedNumber = (number, language) => {
+  const formattedNumber = (number, language) =>
+  {
     return new Intl.NumberFormat(language).format(number);
   };
 
-  const handleChangePage = (page) => {
+  const handleChangePage = (page) =>
+  {
     setPage(page);
   };
 
   //Pagination
-  const currentItems = useMemo(() => {
+  const currentItems = useMemo(() =>
+  {
     return filteredProducts.slice((page - 1) * itemsPerPage, page * itemsPerPage);
   }, [filteredProducts, page, itemsPerPage]);
 
-  const DeleteProduct = (id, name) => {
+  const DeleteProduct = (id, name) =>
+  {
     ProductManage.DeleteProduct(id, name)
-      .then((res) => {
+      .then((res) =>
+      {
         setProductData(prevData => prevData.filter(product => product.id !== id));
         toast.success(`Đã xóa bản ghi: ${name}`);
       })
-      .catch((err) => {
+      .catch((err) =>
+      {
         toast.error("Có lỗi xảy ra");
       });
   };
 
-  const handleUpdateClick = (id) => {
+  const handleUpdateClick = (id) =>
+  {
     const product = productData.find((item) => item.id === id);
     setSelectedProduct(product);
     handleUpdateOpen();
     setUpdateId(id);
   }
 
-  const handleUploadClick = (id) => {
+  const handleUploadClick = (id) =>
+  {
     handleUploadOpen();
     setUpdateId(id);
   }
 
-  const fetchProducts = () => {
+  const fetchProducts = () =>
+  {
     ProductManage.GetProduct()
-      .then((res) => {
+      .then((res) =>
+      {
         setProductData(res.data.$values);
       })
-      .catch((err) => {
+      .catch((err) =>
+      {
 
       });
   };
@@ -220,7 +254,7 @@ const Products = () => {
       title: 'STT',
       dataIndex: 'index',
       key: 'index',
-      width: '4%',
+      width: '3%',
       align: 'center',
       render: (_, __, index) => index + 1
     },
@@ -228,10 +262,12 @@ const Products = () => {
       title: 'Hình ảnh',
       dataIndex: 'images',
       key: 'images',
-      width: '6%',
+      width: '5%',
       align: 'center',
-      render: (images) => {
-        if (images && images.$values.length > 0) {
+      render: (images) =>
+      {
+        if (images && images.$values.length > 0)
+        {
           const imagePath = images.$values[0].imagePath
           const imageUrl = imagePath.startsWith('http') ? imagePath : `${API_ENDPOINT}${imagePath}`
           return (
@@ -255,7 +291,7 @@ const Products = () => {
       title: 'Tên sản phẩm',
       dataIndex: 'name',
       key: 'name',
-      width: '15%',
+      width: '12%',
       align: 'center',
       sorter: (a, b) => a.name.localeCompare(b.name),
       render: (text) => highlightedText(text, searchTerm)
@@ -264,36 +300,31 @@ const Products = () => {
       title: 'Mô tả',
       dataIndex: 'description',
       key: 'description',
-      width: '20%',
-      align: 'center',
-      render: (text) => truncateWords(text, 10)
+      width: '13%',
+      align: 'left',
+      ellipsis: true,
+      render: (text) => (
+        <span style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          {truncateWords(text, 10)}
+        </span>
+      )
     },
     {
       title: 'Giá bán',
       dataIndex: 'price',
       key: 'price',
-      width: '7%',
+      width: '11%',
       align: 'center',
       sorter: (a, b) => a.minPrice - b.minPrice,
       render: (_, record) => (
-        <div style={{
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis'
-        }}>
-          <Typography.Text strong style={{ color: themeColors.EndColorLinear, whiteSpace: 'nowrap' }}>
+        <div style={{ textAlign: 'center', lineHeight: 1.4 }}>
+          <div style={{ fontWeight: 600, color: themeColors.EndColorLinear, fontSize: 13 }}>
             {formattedNumber(record.minPrice, language)}
-            {record.minPrice !== record.maxPrice && (
-              <> - {formattedNumber(record.maxPrice, language)}</>
-            )}
-          </Typography.Text>
+          </div>
           {record.minPrice !== record.maxPrice && (
-            <Tag color="blue" style={{ marginTop: 2, whiteSpace: 'normal' }}>Nhiều mức giá</Tag>
+            <div style={{ fontSize: 12, color: '#888' }}>
+              ~ {formattedNumber(record.maxPrice, language)}
+            </div>
           )}
         </div>
       )
@@ -302,7 +333,7 @@ const Products = () => {
       title: 'Số lượng',
       dataIndex: 'stock',
       key: 'stock',
-      width: '7%',
+      width: '5%',
       align: 'center',
       sorter: (a, b) => a.stock - b.stock,
       render: (stock) => (
@@ -315,7 +346,7 @@ const Products = () => {
       title: 'Danh mục',
       dataIndex: 'categoryId',
       key: 'categoryId',
-      width: '10%',
+      width: '8%',
       align: 'center',
       sorter: (a, b) => GetCategoryById(a.categoryId).localeCompare(GetCategoryById(b.categoryId)),
       render: (categoryId) => (
@@ -343,7 +374,8 @@ const Products = () => {
       key: 'updatedAt',
       width: '7%',
       align: 'center',
-      sorter: (a, b) => {
+      sorter: (a, b) =>
+      {
         if (!a.updatedAt) return -1;
         if (!b.updatedAt) return 1;
         return new Date(a.updatedAt) - new Date(b.updatedAt);
@@ -358,17 +390,19 @@ const Products = () => {
       title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
-      width: '8%',
+      width: '7%',
       align: 'center',
       filters: [
         { text: 'Hoạt động', value: 1 },
         { text: 'Ẩn', value: 0 }
       ],
-      onFilter: (value, record) => {
+      onFilter: (value, record) =>
+      {
         if (value === null) return true;
         return Boolean(record.status) === Boolean(value);
       },
-      render: (status) => {
+      render: (status) =>
+      {
         const statusConfig = {
           1: { text: 'Hoạt động', color: 'success' },
           0: { text: 'Ẩn', color: 'error' },
@@ -388,7 +422,7 @@ const Products = () => {
     {
       title: 'Thao tác',
       key: 'action',
-      width: '8%',
+      width: '7%',
       align: 'center',
       render: (_, record) => (
         <Space size="middle" style={{ justifyContent: 'center', width: '100%' }}>
@@ -415,35 +449,43 @@ const Products = () => {
     }
   ];
 
-  const onSelectChange = (newSelectedRowKeys) => {
+  const onSelectChange = (newSelectedRowKeys) =>
+  {
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
-    columnWidth: 20,
+    columnWidth: '3%',
     columnTitle: '',
   };
 
-  const handleBulkDelete = async () => {
-    try {
+  const handleBulkDelete = async () =>
+  {
+    try
+    {
       setBulkDeleteLoading(true);
-      if (!selectedRowKeys || selectedRowKeys.length === 0) {
+      if (!selectedRowKeys || selectedRowKeys.length === 0)
+      {
         toast.error('Vui lòng chọn bản ghi để xóa!');
         return;
       }
       const response = await ProductManage.BulkDeleteProducts(selectedRowKeys);
-      if (response.status === 200 || response.status === 204) {
+      if (response.status === 200 || response.status === 204)
+      {
         toast.success(`Đã xóa ${selectedRowKeys.length} bản ghi!`);
         setSelectedRowKeys([]);
         fetchProducts();
-      } else {
+      } else
+      {
         toast.error('Có lỗi xảy ra khi xóa bản ghi!');
       }
-    } catch (error) {
+    } catch (error)
+    {
       toast.error('Có lỗi xảy ra khi xóa bản ghi!');
-    } finally {
+    } finally
+    {
       setBulkDeleteLoading(false);
       setOpenBulkDelete(false);
     }
@@ -514,6 +556,11 @@ const Products = () => {
             )}
           </Space>
           <div className="flex gap-2">
+            <ColumnVisibilityDropdown
+              columns={columns}
+              hiddenKeys={hiddenColumns}
+              onChange={setHiddenColumns}
+            />
             <Button
               type="primary"
               onClick={handleCreateOpen}
@@ -571,7 +618,7 @@ const Products = () => {
         <div className="admin-table-wrapper" style={{ padding: '24px' }}>
           <Table
             rowSelection={rowSelection}
-            columns={columns}
+            columns={columns.filter(col => !hiddenColumns.includes(col.key))}
             dataSource={currentItems}
             rowKey="id"
             pagination={{
@@ -580,7 +627,8 @@ const Products = () => {
               total: filteredProducts.length,
               showSizeChanger: true,
               showTotal: (total) => `Tổng số ${total} sản phẩm`,
-              onChange: (page, pageSize) => {
+              onChange: (page, pageSize) =>
+              {
                 setPage(page);
                 setItemsPerPage(pageSize);
               }
@@ -591,7 +639,7 @@ const Products = () => {
               overflow: 'hidden'
             }}
             size="middle"
-            scroll={{ x: 1300 }}
+            tableLayout="fixed"
             className="custom-table"
           />
         </div>
@@ -634,7 +682,8 @@ const Products = () => {
         title={t('Filter')}
         open={openFilter}
         onCancel={() => setOpenFilter(false)}
-        onOk={() => {
+        onOk={() =>
+        {
           setOpenFilter(false);
           // Handle filter application
         }}

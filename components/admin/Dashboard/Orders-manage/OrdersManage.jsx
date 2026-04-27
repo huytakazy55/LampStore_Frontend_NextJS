@@ -6,6 +6,7 @@ import { EyeOutlined, DeleteOutlined } from '@ant-design/icons';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import OrderService from '@/services/OrderService';
 import OrderDetailModal from './OrderDetailModal';
+import ColumnVisibilityDropdown from '../shared/ColumnVisibilityDropdown';
 
 const statusConfig = {
     Pending: { color: 'orange', label: 'Chờ xử lý' },
@@ -15,12 +16,14 @@ const statusConfig = {
     Cancelled: { color: 'red', label: 'Đã hủy' },
 };
 
-const formatPrice = (price) => {
+const formatPrice = (price) =>
+{
     if (!price) return '0';
     return Number(price).toLocaleString('vi-VN');
 };
 
-const OrdersManage = () => {
+const OrdersManage = () =>
+{
     const { themeColors } = useContext(ThemeContext);
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -29,56 +32,71 @@ const OrdersManage = () => {
     const [page, setPage] = useState(1);
     const itemsPerPage = 10;
     const [selectedOrder, setSelectedOrder] = useState(null);
+    const [hiddenColumns, setHiddenColumns] = useState([]);
 
-    useEffect(() => {
+    useEffect(() =>
+    {
         fetchOrders();
     }, []);
 
-    const fetchOrders = async () => {
-        try {
+    const fetchOrders = async () =>
+    {
+        try
+        {
             setLoading(true);
             const response = await OrderService.getAllOrders();
             const data = response?.$values || response || [];
             setOrders(Array.isArray(data) ? data : []);
-        } catch (error) {
+        } catch (error)
+        {
             console.error('Error fetching orders:', error);
             message.error('Lỗi khi tải danh sách đơn hàng');
-        } finally {
+        } finally
+        {
             setLoading(false);
         }
     };
 
-    const handleDelete = (id) => {
+    const handleDelete = (id) =>
+    {
         Modal.confirm({
             title: 'Xác nhận xóa',
             content: 'Bạn có chắc muốn xóa đơn hàng này? Hành động này không thể hoàn tác.',
             okText: 'Xóa',
             okType: 'danger',
             cancelText: 'Hủy',
-            onOk: async () => {
-                try {
+            onOk: async () =>
+            {
+                try
+                {
                     await OrderService.deleteOrder(id);
                     message.success('Đã xóa đơn hàng');
                     fetchOrders();
-                } catch (error) {
+                } catch (error)
+                {
                     message.error('Lỗi khi xóa đơn hàng');
                 }
             },
         });
     };
 
-    const handleStatusChange = async (orderId, newStatus) => {
-        try {
+    const handleStatusChange = async (orderId, newStatus) =>
+    {
+        try
+        {
             await OrderService.updateOrderStatus(orderId, newStatus);
             message.success(`Cập nhật trạng thái: ${statusConfig[newStatus]?.label}`);
             fetchOrders();
-        } catch (error) {
+        } catch (error)
+        {
             message.error('Lỗi khi cập nhật trạng thái');
         }
     };
 
-    const filteredOrders = useMemo(() => {
-        return orders.filter(order => {
+    const filteredOrders = useMemo(() =>
+    {
+        return orders.filter(order =>
+        {
             const matchSearch =
                 order.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 order.phone?.includes(searchTerm) ||
@@ -88,7 +106,8 @@ const OrdersManage = () => {
         });
     }, [orders, searchTerm, statusFilter]);
 
-    const paginatedOrders = useMemo(() => {
+    const paginatedOrders = useMemo(() =>
+    {
         const start = (page - 1) * itemsPerPage;
         return filteredOrders.slice(start, start + itemsPerPage);
     }, [filteredOrders, page]);
@@ -139,7 +158,8 @@ const OrdersManage = () => {
             key: 'items',
             width: 80,
             align: 'center',
-            render: (_, record) => {
+            render: (_, record) =>
+            {
                 const items = record.orderItems?.$values || record.orderItems || [];
                 const totalQty = items.reduce((s, i) => s + i.quantity, 0);
                 return <span>{totalQty} SP</span>;
@@ -176,7 +196,8 @@ const OrdersManage = () => {
             key: 'status',
             width: 170,
             align: 'center',
-            render: (status, record) => {
+            render: (status, record) =>
+            {
                 const colorMap = {
                     Pending: { bg: '#fef3c7', border: '#fcd34d', text: '#b45309', icon: 'bx-time-five' },
                     Confirmed: { bg: '#dbeafe', border: '#93c5fd', text: '#1d4ed8', icon: 'bx-check-circle' },
@@ -192,7 +213,8 @@ const OrdersManage = () => {
                         onChange={(val) => handleStatusChange(record.id, val)}
                         popupMatchSelectWidth={false}
                         variant="borderless"
-                        labelRender={({ value: v }) => {
+                        labelRender={({ value: v }) =>
+                        {
                             const cm = colorMap[v] || colorMap.Pending;
                             const lb = statusConfig[v]?.label || v;
                             return (
@@ -206,7 +228,8 @@ const OrdersManage = () => {
                                 </span>
                             );
                         }}
-                        options={Object.entries(statusConfig).map(([key, val]) => {
+                        options={Object.entries(statusConfig).map(([key, val]) =>
+                        {
                             const cm = colorMap[key] || colorMap.Pending;
                             return {
                                 value: key,
@@ -329,7 +352,8 @@ const OrdersManage = () => {
                             percent: "Tổng",
                             percentType: "red"
                         }
-                    ].map((item, idx) => {
+                    ].map((item, idx) =>
+                    {
                         const percentColor = {
                             green: "bg-green-100 text-green-500",
                             blue: "bg-blue-100 text-blue-500",
@@ -393,21 +417,28 @@ const OrdersManage = () => {
                             ]}
                         />
                     </Space>
-                    <Button onClick={fetchOrders} loading={loading}>
-                        <i className='bx bx-refresh' style={{ marginRight: 4 }}></i> Làm mới
-                    </Button>
+                    <Space>
+                        <ColumnVisibilityDropdown
+                            columns={columns}
+                            hiddenKeys={hiddenColumns}
+                            onChange={setHiddenColumns}
+                        />
+                        <Button onClick={fetchOrders} loading={loading}>
+                            <i className='bx bx-refresh' style={{ marginRight: 4 }}></i> Làm mới
+                        </Button>
+                    </Space>
                 </div>
 
                 {/* Table */}
                 <div className="admin-table-wrapper" style={{ padding: '24px' }}>
                     <Table
-                        columns={columns}
+                        columns={columns.filter(col => !hiddenColumns.includes(col.key))}
                         dataSource={paginatedOrders}
                         rowKey="id"
                         pagination={false}
                         loading={loading}
                         size="middle"
-                        scroll={{ x: 1400 }}
+                        tableLayout="fixed"
                         className="custom-table"
                     />
                     <div className="flex justify-end mt-4">

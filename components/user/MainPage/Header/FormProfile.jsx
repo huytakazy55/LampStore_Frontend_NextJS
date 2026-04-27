@@ -10,10 +10,9 @@ import { jwtDecode } from 'jwt-decode'
 import { toast } from 'react-toastify'
 import Compressor from 'compressorjs';
 
-const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile }) =>
+const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profileApiData }) =>
 {
   const dispatch = useDispatch();
-  const [token, setToken] = useState(null);
   const [mounted, setMounted] = useState(false);
   const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
@@ -35,35 +34,24 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile }) =>
 
   const [previewImage, setPreviewImage] = useState('');
 
+  // Map profile data from Header's API response when modal opens
   useEffect(() =>
   {
-    setToken(localStorage.getItem("token"));
-  }, []);
-
-  useEffect(() =>
-  {
-    if (toggleProfile && token)
+    if (toggleProfile && profileApiData)
     {
-      AuthService.profile()
-        .then((res) =>
-        {
-          const userId = jwtDecode(token).nameid;
-          setProfileData({
-            id: res?.id,
-            FullName: res?.fullName,
-            UserId: userId,
-            Email: res?.email,
-            PhoneNumber: res?.phoneNumber,
-            Address: res?.address,
-            ProfileAvatar: res?.profileAvatar
-          });
-        })
-        .catch((error) =>
-        {
-          console.error("Error fetching profile:", error);
-        });
+      const token = localStorage.getItem('token');
+      const userId = token ? jwtDecode(token).nameid : '';
+      setProfileData({
+        id: profileApiData?.id,
+        FullName: profileApiData?.fullName || '',
+        UserId: userId,
+        Email: profileApiData?.email || '',
+        PhoneNumber: profileApiData?.phoneNumber || '',
+        Address: profileApiData?.address || '',
+        ProfileAvatar: profileApiData?.profileAvatar || ''
+      });
     }
-  }, [toggleProfile, token]);
+  }, [toggleProfile, profileApiData]);
 
   const handleSubmit = (e) =>
   {
@@ -139,7 +127,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile }) =>
       }
 
       new Compressor(file, {
-        quality: 0.8,
+        quality: 0.6,
         maxWidth: 500,
         maxHeight: 500,
         success(result)
@@ -266,7 +254,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile }) =>
                       </label>
                       <input
                         className='w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-800 dark:text-gray-200 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all placeholder-gray-300'
-                        type="text" id='FullName' name='FullName' value={profileData.FullName} onChange={handleInputChange}
+                        type="text" id='FullName' name='FullName' value={profileData.FullName || ''} onChange={handleInputChange}
                         placeholder='Nhập tên của bạn' />
                     </div>
                     <div>
@@ -275,7 +263,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile }) =>
                       </label>
                       <input
                         className='w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-800 dark:text-gray-200 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all placeholder-gray-300'
-                        type="email" id='Email' name='Email' value={profileData.Email} onChange={handleInputChange}
+                        type="email" id='Email' name='Email' value={profileData.Email || ''} onChange={handleInputChange}
                         placeholder='email@example.com' />
                     </div>
                   </div>
@@ -286,7 +274,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile }) =>
                       </label>
                       <input
                         className='w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-800 dark:text-gray-200 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all placeholder-gray-300'
-                        type="text" id='PhoneNumber' name='PhoneNumber' value={profileData.PhoneNumber} onChange={handleInputChange}
+                        type="text" id='PhoneNumber' name='PhoneNumber' value={profileData.PhoneNumber || ''} onChange={handleInputChange}
                         placeholder='0xxx xxx xxx' />
                     </div>
                     <div>
@@ -295,7 +283,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile }) =>
                       </label>
                       <input
                         className='w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-800 dark:text-gray-200 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all placeholder-gray-300'
-                        type="text" id='Address' name='Address' value={profileData.Address} onChange={handleInputChange}
+                        type="text" id='Address' name='Address' value={profileData.Address || ''} onChange={handleInputChange}
                         placeholder='Số nhà, đường, quận/huyện...' />
                     </div>
                   </div>

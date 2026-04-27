@@ -1,6 +1,9 @@
 "use client";
 
 import axiosInstance from '@/lib/axiosConfig';
+import axios from 'axios';
+
+const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT || (typeof window !== 'undefined' ? window.location.origin : '');
 
 const OrderService = {
     // Get all orders (admin)
@@ -17,10 +20,24 @@ const OrderService = {
         return response.data;
     },
 
-    // Create a new order (checkout)
+    // Create a new order (checkout — logged in user)
     createOrder: async (orderData) =>
     {
         const response = await axiosInstance.post('/api/Orders', orderData);
+        return response.data;
+    },
+
+    // Create a guest order (checkout — no auth required)
+    createGuestOrder: async (orderData) =>
+    {
+        const response = await axiosInstance.post('/api/Orders/guest', orderData);
+        return response.data;
+    },
+
+    // Get guest orders by guest token
+    getGuestOrders: async (guestToken) =>
+    {
+        const response = await axiosInstance.get(`/api/Orders/guest/${guestToken}`);
         return response.data;
     },
 

@@ -1,12 +1,12 @@
-const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
+const API_ENDPOINT = process.env.INTERNAL_API_ENDPOINT || process.env.NEXT_PUBLIC_API_ENDPOINT;
 const SITE_URL = 'https://capylumine.com';
 
 export async function generateMetadata({ params })
 {
     const resolved = await params;
-    const categoryId = resolved?.categoryId?.[0];
+    const slug = resolved?.slug?.[0];
 
-    if (!categoryId)
+    if (!slug)
     {
         return {
             title: 'Danh mục sản phẩm - Đèn trang trí',
@@ -25,7 +25,7 @@ export async function generateMetadata({ params })
 
     try
     {
-        const res = await fetch(`${API_ENDPOINT}/api/Category/${categoryId}`, { next: { revalidate: 300 } });
+        const res = await fetch(`${API_ENDPOINT}/api/Categories/slug/${slug}`, { next: { revalidate: 300 } });
         if (!res.ok) return { title: 'Danh mục sản phẩm | CapyLumine' };
         const category = await res.json();
 
@@ -36,17 +36,17 @@ export async function generateMetadata({ params })
         return {
             title,
             description,
-            alternates: { canonical: `${SITE_URL}/categories/${categoryId}` },
+            alternates: { canonical: `${SITE_URL}/categories/${slug}` },
             openGraph: {
                 title: `${category.name} | CapyLumine`,
                 description,
-                url: `${SITE_URL}/categories/${categoryId}`,
+                url: `${SITE_URL}/categories/${slug}`,
                 type: 'website',
                 locale: 'vi_VN',
                 siteName: 'CapyLumine',
                 ...(category.imageUrl && {
                     images: [{
-                        url: category.imageUrl.startsWith('http') ? category.imageUrl : `${API_ENDPOINT}${category.imageUrl}`,
+                        url: category.imageUrl.startsWith('http') ? category.imageUrl : `${SITE_URL}${category.imageUrl.startsWith('/') ? '' : '/'}${category.imageUrl}`,
                         alt: category.name,
                     }],
                 }),

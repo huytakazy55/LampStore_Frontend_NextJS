@@ -10,7 +10,8 @@ import { jwtDecode } from 'jwt-decode';
 import UserManage from '@/services/UserManage';
 import './LeftBar.css';
 
-const LeftBar = () => {
+const LeftBar = () =>
+{
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const leftBar = useSelector((state) => state.leftbar.leftbar);
@@ -19,27 +20,35 @@ const LeftBar = () => {
     const [userMenus, setUserMenus] = useState([]);
     const [loadingMenus, setLoadingMenus] = useState(true);
 
-    const userRoles = useMemo(() => {
+    const userRoles = useMemo(() =>
+    {
         const token = localStorage.getItem('token');
         if (!token) return [];
-        try {
+        try
+        {
             const decoded = jwtDecode(token);
             const roleClaim = decoded.role;
             return Array.isArray(roleClaim) ? roleClaim : roleClaim ? [roleClaim] : [];
-        } catch (error) {
+        } catch (error)
+        {
             console.error('Cannot decode token roles:', error);
             return [];
         }
     }, []);
 
-    useEffect(() => {
-        const fetchUserMenus = async () => {
-            try {
+    useEffect(() =>
+    {
+        const fetchUserMenus = async () =>
+        {
+            try
+            {
                 const menus = await UserManage.GetUserMenus();
                 setUserMenus(menus.$values || menus || []);
-            } catch (error) {
+            } catch (error)
+            {
                 console.error('Cannot load user menus, fallback to role-based menu:', error);
-            } finally {
+            } finally
+            {
                 setLoadingMenus(false);
             }
         };
@@ -55,6 +64,7 @@ const LeftBar = () => {
         { name: "Category", icon: "bxs-category", path: "/admin/category", roles: ["Administrator", "Manager", "Warehouse staff"] },
         { name: "Tags", icon: "bxs-tag", path: "/admin/tags", roles: ["Administrator", "Manager"] },
         { name: "Banners", icon: "bxs-image", path: "/admin/banners", roles: ["Administrator", "Manager"] },
+        { name: "Flash Sale", icon: "bxs-bolt", path: "/admin/flashsales", roles: ["Administrator", "Manager"] },
         { name: "News", icon: "bxs-news", path: "/admin/news", roles: ["Administrator", "Manager"] },
         { name: "Products", icon: "bxs-package", path: "/admin/products", roles: ["Administrator", "Manager", "Warehouse staff"] },
         { name: "Orders", icon: "bxs-store-alt", path: "/admin/orders", roles: ["Administrator", "Manager", "Accountant"] },
@@ -63,23 +73,29 @@ const LeftBar = () => {
         { name: "Setting", icon: "bxs-cog", path: "/admin/settings", roles: ["Administrator"] },
     ];
 
-    const visibleMenuItems = useMemo(() => {
-        if (!loadingMenus && userMenus && userMenus.length > 0) {
+    const visibleMenuItems = useMemo(() =>
+    {
+        if (!loadingMenus && userMenus && userMenus.length > 0)
+        {
             return menuItems.filter(item =>
                 userMenus.includes(item.name) ||
-                (item.name === "News" && userRoles.includes("Administrator"))
+                (item.name === "News" && userRoles.includes("Administrator")) ||
+                (item.name === "Flash Sale" && userRoles.some(r => ["Administrator", "Manager"].includes(r)))
             );
         }
 
-        return menuItems.filter(item => {
+        return menuItems.filter(item =>
+        {
             if (!item.roles || item.roles.length === 0) return true;
             return item.roles.some(r => userRoles.includes(r));
         });
     }, [loadingMenus, userMenus, userRoles]);
 
-    const handleMenuClick = (itemName) => {
+    const handleMenuClick = (itemName) =>
+    {
         dispatch(setCurrentBar(itemName));
-        if (window.innerWidth < 768) {
+        if (window.innerWidth < 768)
+        {
             dispatch(setLeftBar(true));
         }
     };
@@ -107,7 +123,8 @@ const LeftBar = () => {
                 </div>
 
                 <ul className="sidebar-menu">
-                    {visibleMenuItems.map((item, index) => {
+                    {visibleMenuItems.map((item, index) =>
+                    {
                         const isActive = currentBar === item.name;
                         return (
                             <li key={item.name} className="sidebar-menu-item" style={{ animationDelay: `${index * 0.03}s` }}>

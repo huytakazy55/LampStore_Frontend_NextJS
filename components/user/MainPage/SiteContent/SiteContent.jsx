@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from '@/lib/router-compat'
-const Banner1 = '/images/banner_new_01.png'; const Banner2 = '/images/banner_new_02.png'; const Banner3 = '/images/banner_new_03.png'; export const SiteContent = () => {
+const Banner1 = '/images/banner_new_01.png'; const Banner2 = '/images/banner_new_02.png'; const Banner3 = '/images/banner_new_03.png'; export const SiteContent = () =>
+{
   const navigate = useNavigate();
 
   const phrases = [
@@ -15,28 +16,33 @@ const Banner1 = '/images/banner_new_01.png'; const Banner2 = '/images/banner_new
   const [phraseIdx, setPhraseIdx] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     const current = phrases[phraseIdx];
     let timeout;
 
-    if (!isDeleting) {
-      // Typing
-      if (displayText.length < current.length) {
-        timeout = setTimeout(() => {
+    if (!isDeleting)
+    {
+      if (displayText.length < current.length)
+      {
+        timeout = setTimeout(() =>
+        {
           setDisplayText(current.slice(0, displayText.length + 1));
         }, 80);
-      } else {
-        // Pause before deleting
+      } else
+      {
         timeout = setTimeout(() => setIsDeleting(true), 2000);
       }
-    } else {
-      // Deleting
-      if (displayText.length > 0) {
-        timeout = setTimeout(() => {
+    } else
+    {
+      if (displayText.length > 0)
+      {
+        timeout = setTimeout(() =>
+        {
           setDisplayText(displayText.slice(0, -1));
         }, 40);
-      } else {
-        // Move to next phrase
+      } else
+      {
         setIsDeleting(false);
         setPhraseIdx((phraseIdx + 1) % phrases.length);
       }
@@ -46,15 +52,18 @@ const Banner1 = '/images/banner_new_01.png'; const Banner2 = '/images/banner_new
   }, [displayText, isDeleting, phraseIdx]);
 
   // Inject blink keyframe into head
-  useEffect(() => {
+  useEffect(() =>
+  {
     const styleId = 'blink-cursor-keyframe'
-    if (!document.getElementById(styleId)) {
+    if (!document.getElementById(styleId))
+    {
       const style = document.createElement('style')
       style.id = styleId
       style.textContent = `@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }`
       document.head.appendChild(style)
     }
-    return () => {
+    return () =>
+    {
       const el = document.getElementById(styleId)
       if (el) el.remove()
     }
@@ -62,12 +71,47 @@ const Banner1 = '/images/banner_new_01.png'; const Banner2 = '/images/banner_new
 
   return (
     <div className="w-full bg-gray-50 mb-4 md:mb-6">
-      <div className="xl:max-w-[1440px] mx-auto px-6 xl:px-0 py-4 md:py-6 lg:py-8">
-        <div className="flex flex-col lg:flex-row items-center gap-6 md:gap-8 lg:gap-12">
+      <div className="xl:max-w-[1440px] mx-auto px-4 xl:px-0 py-4 md:py-6 lg:py-8">
+
+        {/* ===== MOBILE: Minimal compact hero ===== */}
+        <div className="md:hidden">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-2.5 h-2.5 bg-amber-600 rounded-sm" />
+            <span className="text-amber-700 text-[10px] font-semibold tracking-[0.15em] uppercase">
+              CapyLumine
+            </span>
+          </div>
+          <h1 className="text-gray-900 dark:text-white text-lg font-bold leading-snug mb-2">
+            Đèn Ngủ Cao Cấp — <span className="text-amber-700">{displayText}</span>
+            <span
+              className="inline-block w-[2px] h-[0.9em] bg-amber-600 ml-0.5 align-baseline"
+              style={{ animation: 'blink 0.7s step-end infinite' }}
+            />
+          </h1>
+          <p className="text-gray-500 text-xs leading-relaxed mb-3 line-clamp-2">
+            Khám phá bộ sưu tập đèn ngủ thông minh, thiết kế cho phong cách sống hiện đại.
+          </p>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate('/#products')}
+              className="bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold px-5 py-2 rounded-sm transition-all duration-300 cursor-pointer flex items-center gap-1.5"
+            >
+              Khám Phá
+              <i className='bx bx-right-arrow-alt text-base' />
+            </button>
+            <div className="flex items-center gap-2 pl-3 border-l border-gray-300">
+              <div className="text-gray-900 dark:text-white text-sm font-bold">5,000+</div>
+              <div className="text-gray-500 text-[10px]">Khách hàng</div>
+            </div>
+          </div>
+        </div>
+
+        {/* ===== DESKTOP: Full hero with images ===== */}
+        <div className="hidden md:flex flex-col lg:flex-row items-center gap-6 md:gap-8 lg:gap-12">
 
           {/* Left — Overlapping Images */}
           <div className="relative w-full lg:w-[45%] flex-shrink-0">
-            <div className="relative h-[13rem] sm:h-[15rem] md:h-[19rem] lg:h-[21rem]">
+            <div className="relative h-[15rem] md:h-[19rem] lg:h-[21rem]">
               {/* Main image (background) */}
               <div className="absolute top-0 left-0 w-[70%] h-[85%] overflow-hidden rounded-sm shadow-xl">
                 <img
@@ -103,7 +147,7 @@ const Banner1 = '/images/banner_new_01.png'; const Banner2 = '/images/banner_new
             </div>
 
             {/* Heading */}
-            <h1 className="text-gray-900 text-xl sm:text-2xl md:text-3xl lg:text-[2rem] font-bold leading-tight mb-4 md:mb-5 whitespace-nowrap">
+            <h1 className="text-gray-900 text-2xl md:text-3xl lg:text-[2rem] font-bold leading-tight mb-4 md:mb-5">
               Đèn Ngủ Cao Cấp — <span className="text-amber-700">{displayText}</span>
               <span
                 className="inline-block w-[2px] md:w-[3px] h-[1em] bg-amber-600 ml-0.5 align-baseline"
