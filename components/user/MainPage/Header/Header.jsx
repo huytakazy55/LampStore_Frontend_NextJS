@@ -231,7 +231,7 @@ const Header = () =>
         <div className='flex-shrink-0'>
           <a href="/" className='flex items-center gap-2 no-underline group'>
             <div className='w-10 h-10 md:w-14 md:h-14 rounded-lg overflow-hidden shadow-md group-hover:shadow-amber-300/50 transition-all duration-300 group-hover:scale-105'>
-              <img src={Logo} alt="CapyLumine" className='w-full h-full object-cover' />
+              <img src={Logo} alt="CapyLumine" className='w-full h-full object-cover' width={56} height={56} />
             </div>
             <div className='hidden sm:block'>
               <div className='text-lg md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white transition-colors duration-300'>

@@ -57,31 +57,17 @@ export default function RootLayout({ children })
             <head>
                 <link rel="manifest" href="/manifest.json" />
                 <link rel="dns-prefetch" href="https://capylumine.com" />
-                <link rel="preconnect" href="https://fonts.googleapis.com" />
-                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-                <link rel="preconnect" href="https://unpkg.com" crossOrigin="anonymous" />
+                {/* Preload local Geist font */}
+                <link rel="preload" href="/fonts/geist/GeistVF.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
                 {/* Preload LCP banner image */}
-                <link rel="preload" href="/images/banner_new_03.png" as="image" fetchPriority="high" />
-                <link
-                    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Geist:wght@100..900&display=swap"
-                    rel="stylesheet"
-                />
-                {/* Boxicons */}
-                <link
-                    href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
-                    rel="stylesheet"
-                />
-                {/* Slick Carousel */}
-                <link
-                    rel="stylesheet"
-                    href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"
-                />
-                <link
-                    rel="stylesheet"
-                    href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"
-                />
+                <link rel="preload" href="/images/banner_new_03.webp" as="image" type="image/webp" fetchPriority="high" />
+                {/* Boxicons — local with font-display:swap */}
+                <link rel="stylesheet" href="/css/boxicons.min.css" />
+                {/* Slick Carousel — local */}
+                <link rel="stylesheet" href="/css/slick.css" />
+                <link rel="stylesheet" href="/css/slick-theme.css" />
             </head>
-            <body className="font-poppins antialiased">
+            <body className="font-sans antialiased">
                 <React.Suspense fallback={null}>
                     <AnalyticsTracker />
                 </React.Suspense>

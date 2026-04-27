@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from '@/lib/router-compat'
-const Banner1 = '/images/banner_new_01.png'; const Banner2 = '/images/banner_new_02.png'; const Banner3 = '/images/banner_new_03.png'; export const SiteContent = () =>
+const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_new_02.webp'; const Banner3 = '/images/banner_new_03.webp'; export const SiteContent = () =>
 {
   const navigate = useNavigate();
 
@@ -118,7 +118,11 @@ const Banner1 = '/images/banner_new_01.png'; const Banner2 = '/images/banner_new
                   src={Banner3}
                   alt="Bộ sưu tập đèn ngủ"
                   className="w-full h-full object-cover"
+                  width={560}
+                  height={285}
                   fetchPriority="high"
+                  loading="eager"
+                  decoding="async"
                 />
               </div>
               {/* Overlay image (foreground) */}
@@ -127,7 +131,10 @@ const Banner1 = '/images/banner_new_01.png'; const Banner2 = '/images/banner_new
                   src={Banner1}
                   alt="Đèn ngủ cao cấp"
                   className="w-full h-full object-cover"
-                  fetchPriority="high"
+                  width={440}
+                  height={220}
+                  loading="eager"
+                  decoding="async"
                 />
               </div>
               {/* Decorative accent */}
