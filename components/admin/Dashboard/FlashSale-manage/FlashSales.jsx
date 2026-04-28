@@ -1,193 +1,277 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
+import { Table, Input, Button, Breadcrumb, Pagination, Modal, Space, Tag } from 'antd';
+import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { ThemeContext } from '@/contexts/ThemeContext';
 import FlashSaleService from '@/services/FlashSaleService';
 import { toast } from 'react-toastify';
 import CreateFlashSaleModal from './CreateFlashSaleModal';
 
-const FlashSales = () =>
-{
+const FlashSales = () => {
+    const { themeColors } = useContext(ThemeContext);
     const [flashSales, setFlashSales] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [editingFlashSale, setEditingFlashSale] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [page, setPage] = useState(1);
+    const itemsPerPage = 10;
 
-    const fetchFlashSales = useCallback(async () =>
-    {
-        try
-        {
+    const fetchFlashSales = useCallback(async () => {
+        try {
             setLoading(true);
             const data = await FlashSaleService.getAllFlashSales();
             setFlashSales(Array.isArray(data) ? data : []);
-        } catch (error)
-        {
+        } catch (error) {
             toast.error('Lỗi khi tải danh sách Flash Sale');
-        } finally
-        {
+        } finally {
             setLoading(false);
         }
     }, []);
 
     useEffect(() => { fetchFlashSales(); }, [fetchFlashSales]);
 
-    const handleDelete = async (id) =>
-    {
-        if (!window.confirm('Bạn có chắc muốn xóa Flash Sale này?')) return;
-        try
-        {
-            await FlashSaleService.deleteFlashSale(id);
-            toast.success('Xóa Flash Sale thành công');
-            fetchFlashSales();
-        } catch
-        {
-            toast.error('Lỗi khi xóa Flash Sale');
-        }
+    const handleDelete = (id, title) => {
+        Modal.confirm({
+            title: 'Xác nhận xóa',
+            content: `Bạn có chắc muốn xóa Flash Sale "${title}"?`,
+            okText: 'Xóa',
+            okType: 'danger',
+            cancelText: 'Hủy',
+            onOk: async () => {
+                try {
+                    await FlashSaleService.deleteFlashSale(id);
+                    toast.success('Xóa Flash Sale thành công');
+                    fetchFlashSales();
+                } catch {
+                    toast.error('Lỗi khi xóa Flash Sale');
+                }
+            }
+        });
     };
 
-    const handleToggleActive = async (flashSale) =>
-    {
-        try
-        {
+    const handleToggleActive = async (flashSale) => {
+        try {
             await FlashSaleService.updateFlashSale(flashSale.id, {
                 ...flashSale,
                 isActive: !flashSale.isActive
             });
             toast.success(flashSale.isActive ? 'Đã tắt Flash Sale' : 'Đã bật Flash Sale');
             fetchFlashSales();
-        } catch
-        {
+        } catch {
             toast.error('Lỗi khi cập nhật trạng thái');
         }
     };
 
-    const getStatus = (fs) =>
-    {
+    const getStatus = (fs) => {
         const now = new Date();
         const start = new Date(fs.startTime);
         const end = new Date(fs.endTime);
-        if (!fs.isActive) return { text: 'Tắt', color: 'bg-gray-100 text-gray-600' };
-        if (now < start) return { text: 'Sắp diễn ra', color: 'bg-blue-100 text-blue-700' };
-        if (now >= start && now < end) return { text: 'Đang diễn ra', color: 'bg-green-100 text-green-700' };
-        return { text: 'Đã kết thúc', color: 'bg-red-100 text-red-600' };
+        if (!fs.isActive) return { text: 'Tắt', color: 'default' };
+        if (now < start) return { text: 'Sắp diễn ra', color: 'blue' };
+        if (now >= start && now < end) return { text: 'Đang diễn ra', color: 'green' };
+        return { text: 'Đã kết thúc', color: 'red' };
     };
 
-    const formatDate = (dateStr) =>
-    {
+    const formatDate = (dateStr) => {
         return new Date(dateStr).toLocaleString('vi-VN', {
             day: '2-digit', month: '2-digit', year: 'numeric',
             hour: '2-digit', minute: '2-digit'
         });
     };
 
-    return (
-        <div className="p-4 md:p-6 max-w-7xl mx-auto">
-            {/* Header */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
-                        <i className='bx bxs-bolt text-amber-500'></i>
-                        Flash Sale
-                    </h1>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                        Quản lý chương trình Flash Sale
-                    </p>
-                </div>
-                <button
-                    onClick={() => { setEditingFlashSale(null); setShowCreateModal(true); }}
-                    className="flex items-center gap-2 bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white px-4 py-2.5 rounded-lg font-medium text-sm transition-all shadow-lg shadow-red-500/25 hover:shadow-red-500/40"
-                >
-                    <i className='bx bx-plus text-lg'></i>
-                    Tạo Flash Sale
-                </button>
-            </div>
+    const filteredFlashSales = flashSales.filter(fs =>
+        fs.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        fs.description?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
-            {/* Table */}
-            {loading ? (
-                <div className="flex justify-center items-center h-40">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-500"></div>
+    const columns = [
+        {
+            title: 'STT',
+            key: 'stt',
+            width: 60,
+            align: 'center',
+            render: (_, __, index) => (page - 1) * itemsPerPage + index + 1,
+        },
+        {
+            title: 'Tên chương trình',
+            dataIndex: 'title',
+            key: 'title',
+            width: 220,
+            sorter: (a, b) => (a.title || '').localeCompare(b.title || ''),
+            render: (text, record) => (
+                <div>
+                    <div style={{ fontWeight: 500 }}>{text}</div>
+                    {record.description && (
+                        <div style={{ fontSize: 12, color: '#999', marginTop: 2 }}>
+                            {record.description.length > 50 ? record.description.slice(0, 50) + '...' : record.description}
+                        </div>
+                    )}
                 </div>
-            ) : flashSales.length === 0 ? (
-                <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                    <i className='bx bxs-bolt text-5xl text-gray-300 dark:text-gray-600 mb-3 block'></i>
-                    <p className="text-gray-500 dark:text-gray-400">Chưa có chương trình Flash Sale nào</p>
+            ),
+        },
+        {
+            title: 'Bắt đầu',
+            dataIndex: 'startTime',
+            key: 'startTime',
+            width: 160,
+            align: 'center',
+            sorter: (a, b) => new Date(a.startTime) - new Date(b.startTime),
+            render: (date) => formatDate(date),
+        },
+        {
+            title: 'Kết thúc',
+            dataIndex: 'endTime',
+            key: 'endTime',
+            width: 160,
+            align: 'center',
+            sorter: (a, b) => new Date(a.endTime) - new Date(b.endTime),
+            render: (date) => formatDate(date),
+        },
+        {
+            title: 'Sản phẩm',
+            key: 'itemCount',
+            width: 100,
+            align: 'center',
+            render: (_, record) => {
+                const items = record.items?.$values || record.items || [];
+                return (
+                    <Tag color="orange">{items.length} SP</Tag>
+                );
+            },
+        },
+        {
+            title: 'Trạng thái',
+            key: 'status',
+            width: 130,
+            align: 'center',
+            render: (_, record) => {
+                const status = getStatus(record);
+                return <Tag color={status.color}>{status.text}</Tag>;
+            },
+            filters: [
+                { text: 'Tắt', value: 'Tắt' },
+                { text: 'Sắp diễn ra', value: 'Sắp diễn ra' },
+                { text: 'Đang diễn ra', value: 'Đang diễn ra' },
+                { text: 'Đã kết thúc', value: 'Đã kết thúc' },
+            ],
+            onFilter: (value, record) => getStatus(record).text === value,
+        },
+        {
+            title: 'Thao tác',
+            key: 'action',
+            width: 180,
+            align: 'center',
+            render: (_, record) => (
+                <Space size="middle" style={{ justifyContent: 'center', width: '100%' }}>
+                    <Button
+                        size="small"
+                        type={record.isActive ? 'primary' : 'default'}
+                        onClick={() => handleToggleActive(record)}
+                        style={record.isActive ? { background: '#22c55e', borderColor: '#22c55e' } : {}}
+                    >
+                        {record.isActive ? 'Bật' : 'Tắt'}
+                    </Button>
+                    <Button
+                        icon={<EditOutlined />}
+                        onClick={() => { setEditingFlashSale(record); setShowCreateModal(true); }}
+                        size="small"
+                    >
+                        Sửa
+                    </Button>
+                    <Button
+                        icon={<DeleteOutlined />}
+                        onClick={() => handleDelete(record.id, record.title)}
+                        danger
+                        size="small"
+                    >
+                        Xóa
+                    </Button>
+                </Space>
+            ),
+        },
+    ];
+
+    return (
+        <div style={{ padding: '24px' }}>
+            <div className="admin-table-card">
+                {/* Title Bar */}
+                <div
+                    className="admin-title-bar"
+                    style={{
+                        background: '#f6f8fc',
+                        borderTopLeftRadius: 8,
+                        borderTopRightRadius: 8,
+                        padding: '24px 24px 16px 24px',
+                        marginBottom: 0
+                    }}
+                >
+                    <div style={{ fontSize: '1.5rem', fontWeight: 600, color: themeColors.StartColorLinear }}>
+                        ⚡ Quản lý Flash Sale
+                    </div>
+                    <Breadcrumb
+                        items={[
+                            { title: 'Trang chủ' },
+                            { title: 'Quản lý Flash Sale' }
+                        ]}
+                        style={{ marginTop: '8px' }}
+                    />
                 </div>
-            ) : (
-                <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-sm">
-                            <thead className="bg-gray-50 dark:bg-gray-900/50">
-                                <tr>
-                                    <th className="text-left px-4 py-3 font-semibold text-gray-600 dark:text-gray-300">Tên chương trình</th>
-                                    <th className="text-left px-4 py-3 font-semibold text-gray-600 dark:text-gray-300">Thời gian</th>
-                                    <th className="text-center px-4 py-3 font-semibold text-gray-600 dark:text-gray-300">Sản phẩm</th>
-                                    <th className="text-center px-4 py-3 font-semibold text-gray-600 dark:text-gray-300">Trạng thái</th>
-                                    <th className="text-center px-4 py-3 font-semibold text-gray-600 dark:text-gray-300">Thao tác</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-                                {flashSales.map((fs) =>
-                                {
-                                    const status = getStatus(fs);
-                                    const items = fs.items?.$values || fs.items || [];
-                                    return (
-                                        <tr key={fs.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                            <td className="px-4 py-3">
-                                                <div className="font-medium text-gray-800 dark:text-white">{fs.title}</div>
-                                                {fs.description && (
-                                                    <div className="text-xs text-gray-400 mt-0.5 line-clamp-1">{fs.description}</div>
-                                                )}
-                                            </td>
-                                            <td className="px-4 py-3 text-xs text-gray-500 dark:text-gray-400">
-                                                <div>{formatDate(fs.startTime)}</div>
-                                                <div className="text-gray-400">→ {formatDate(fs.endTime)}</div>
-                                            </td>
-                                            <td className="px-4 py-3 text-center">
-                                                <span className="inline-flex items-center gap-1 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-2 py-0.5 rounded-full text-xs font-medium">
-                                                    <i className='bx bx-package'></i>
-                                                    {items.length}
-                                                </span>
-                                            </td>
-                                            <td className="px-4 py-3 text-center">
-                                                <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${status.color}`}>
-                                                    {status.text}
-                                                </span>
-                                            </td>
-                                            <td className="px-4 py-3">
-                                                <div className="flex justify-center gap-1">
-                                                    <button
-                                                        onClick={() => handleToggleActive(fs)}
-                                                        className={`p-1.5 rounded-lg transition-colors ${fs.isActive
-                                                                ? 'text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20'
-                                                                : 'text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
-                                                            }`}
-                                                        title={fs.isActive ? 'Tắt' : 'Bật'}
-                                                    >
-                                                        <i className={`bx ${fs.isActive ? 'bx-toggle-right text-xl' : 'bx-toggle-left text-xl'}`}></i>
-                                                    </button>
-                                                    <button
-                                                        onClick={() => { setEditingFlashSale(fs); setShowCreateModal(true); }}
-                                                        className="p-1.5 rounded-lg text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
-                                                        title="Chỉnh sửa"
-                                                    >
-                                                        <i className='bx bx-edit text-lg'></i>
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleDelete(fs.id)}
-                                                        className="p-1.5 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-                                                        title="Xóa"
-                                                    >
-                                                        <i className='bx bx-trash text-lg'></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
+
+                {/* Filter Bar */}
+                <div
+                    className="admin-filter-bar"
+                    style={{
+                        padding: '16px 24px',
+                        background: '#fff',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        gap: '16px'
+                    }}
+                >
+                    <Space>
+                        <Input.Search
+                            placeholder="Tìm kiếm Flash Sale..."
+                            value={searchTerm}
+                            onChange={e => setSearchTerm(e.target.value)}
+                            style={{ width: 300 }}
+                        />
+                    </Space>
+                    <Button
+                        type="primary"
+                        icon={<PlusOutlined />}
+                        onClick={() => { setEditingFlashSale(null); setShowCreateModal(true); }}
+                        style={{ background: themeColors.StartColorLinear }}
+                    >
+                        Tạo Flash Sale
+                    </Button>
+                </div>
+
+                {/* Table */}
+                <div className="admin-table-wrapper" style={{ padding: '24px' }}>
+                    <Table
+                        columns={columns}
+                        dataSource={filteredFlashSales}
+                        rowKey="id"
+                        pagination={false}
+                        loading={loading}
+                        size="middle"
+                        scroll={{ x: 1000 }}
+                        className="custom-table"
+                    />
+                    <div className="flex justify-end mt-4">
+                        <Pagination
+                            current={page}
+                            pageSize={itemsPerPage}
+                            total={filteredFlashSales.length}
+                            onChange={setPage}
+                            showSizeChanger={false}
+                        />
                     </div>
                 </div>
-            )}
+            </div>
 
             {/* Create/Edit Modal */}
             {showCreateModal && (

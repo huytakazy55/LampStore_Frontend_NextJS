@@ -2,7 +2,7 @@
 
 import React, { useContext, useState, useEffect } from 'react'
 import { Modal, Form, Input, Select, InputNumber, Checkbox, Button, Space, Typography } from 'antd';
-import { EditOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
+import { EditOutlined, SaveOutlined, CloseOutlined, CameraOutlined } from '@ant-design/icons';
 import ProductManage from '@/services/ProductManage';
 import TagManage from '@/services/TagManage';
 import { toast } from 'react-toastify';
@@ -13,52 +13,67 @@ import 'react-quill-new/dist/quill.snow.css';
 
 const { Title } = Typography;
 
-const UpdateModal = ({ openUpdate, handleUpdateClose, fetchProducts, style, categories, product }) =>
-{
+const UpdateModal = ({ openUpdate, handleUpdateClose, fetchProducts, style, categories, product }) => {
   const { themeColors } = useContext(ThemeContext);
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [tags, setTags] = useState([]);
 
   //Thêm phân loại
-  const [productTypes, setProductTypes] = useState([{ typeName: '', options: [{ value: '', additionalPrice: 0 }] }]);
+  const [productTypes, setProductTypes] = useState([{ typeName: '', options: [{ value: '', additionalPrice: 0, imageUrl: '' }] }]);
 
-  const handleAddProductType = () =>
-  {
-    setProductTypes([...productTypes, { typeName: '', options: [{ value: '', additionalPrice: 0 }] }]);
+  const handleAddProductType = () => {
+    setProductTypes([...productTypes, { typeName: '', options: [{ value: '', additionalPrice: 0, imageUrl: '' }] }]);
   };
 
-  const handleTypeChange = (index, value) =>
-  {
+  const handleTypeChange = (index, value) => {
     const updatedTypes = [...productTypes];
     updatedTypes[index].typeName = value;
     setProductTypes(updatedTypes);
   };
 
-  const handleOptionChangeByType = (typeIndex, optionIndex, field, val) =>
-  {
+  const handleOptionChangeByType = (typeIndex, optionIndex, field, val) => {
     const updatedTypes = [...productTypes];
     updatedTypes[typeIndex].options[optionIndex] = {
       ...updatedTypes[typeIndex].options[optionIndex],
       [field]: field === 'additionalPrice' ? (parseFloat(val) || 0) : val
     };
 
-    if (field === 'value' && val && optionIndex === updatedTypes[typeIndex].options.length - 1)
-    {
-      updatedTypes[typeIndex].options.push({ value: '', additionalPrice: 0 });
+    if (field === 'value' && val && optionIndex === updatedTypes[typeIndex].options.length - 1) {
+      updatedTypes[typeIndex].options.push({ value: '', additionalPrice: 0, imageUrl: '' });
     }
     setProductTypes(updatedTypes);
   };
 
-  const handleRemoveOptionByType = (typeIndex, optionIndex) =>
-  {
+  const handleOptionImageUpload = async (typeIndex, optionIndex, file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
+      const res = await fetch(`${API_ENDPOINT}/api/Products/UploadVariantImage`, {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      const imgPath = data?.imageUrl;
+      if (imgPath) {
+        const updatedTypes = [...productTypes];
+        updatedTypes[typeIndex].options[optionIndex].imageUrl = imgPath;
+        setProductTypes(updatedTypes);
+        toast.success('Tải ảnh tùy chọn thành công!');
+      }
+    } catch {
+      toast.error('Lỗi khi tải ảnh tùy chọn');
+    }
+  };
+
+  const handleRemoveOptionByType = (typeIndex, optionIndex) => {
     const updatedTypes = [...productTypes];
     updatedTypes[typeIndex].options = updatedTypes[typeIndex].options.filter((_, i) => i !== optionIndex);
     setProductTypes(updatedTypes);
   };
 
-  const handleRemoveProductType = (index) =>
-  {
+  const handleRemoveProductType = (index) => {
     const updatedTypes = productTypes.filter((_, i) => i !== index);
     setProductTypes(updatedTypes);
   };
@@ -86,23 +101,20 @@ const UpdateModal = ({ openUpdate, handleUpdateClose, fetchProducts, style, cate
     sku: ''
   });
 
-  const handleSubmitUpdate = async (values) =>
-  {
-    if (!values.name || !values.price || !values.stock)
-    {
+  const handleSubmitUpdate = async (values) => {
+    if (!values.name || !values.price || !values.stock) {
       toast.error("Vui lòng điền đầy đủ các thông tin bắt buộc!");
       return;
     }
 
-    try
-    {
+    try {
       const variantTypes = productTypes
         .filter(type => type.typeName.trim() !== "" && type.options.some(opt => opt.value.trim() !== ""))
         .map(type => ({
           name: type.typeName,
           values: type.options
             .filter(opt => opt.value.trim() !== "")
-            .map(opt => ({ value: opt.value, additionalPrice: opt.additionalPrice || 0 }))
+            .map(opt => ({ value: opt.value, additionalPrice: opt.additionalPrice || 0, imageUrl: opt.imageUrl || null }))
         }));
 
       const updatedProduct = {
@@ -129,31 +141,24 @@ const UpdateModal = ({ openUpdate, handleUpdateClose, fetchProducts, style, cate
       };
 
       await ProductManage.UpdateProduct(updatedProduct)
-        .then(async (res) =>
-        {
+        .then(async (res) => {
           fetchProducts();
           toast.success("Cập nhật bản ghi thành công");
           handleUpdateClose();
         })
-        .catch((err) =>
-        {
+        .catch((err) => {
           toast.error("Có lỗi xảy ra.");
         });
-    } catch (error)
-    {
+    } catch (error) {
       console.error("Lỗi khi cập nhật sản phẩm:", error);
       toast.error("Có lỗi xảy ra khi cập nhật sản phẩm!");
     }
   };
 
-  useEffect(() =>
-  {
-    if (product)
-    {
-      const fetchData = async () =>
-      {
-        try
-        {
+  useEffect(() => {
+    if (product) {
+      const fetchData = async () => {
+        try {
           const productRes = await ProductManage.GetProductById(product.id);
 
           const productData = productRes?.data;
@@ -198,26 +203,22 @@ const UpdateModal = ({ openUpdate, handleUpdateClose, fetchProducts, style, cate
           const variantTypesRaw = productData?.variantTypes?.$values || productData?.variantTypes || [];
           const variantTypesArr = Array.isArray(variantTypesRaw) ? variantTypesRaw : [];
 
-          if (variantTypesArr.length > 0)
-          {
-            const mappedTypes = variantTypesArr.map(type =>
-            {
+          if (variantTypesArr.length > 0) {
+            const mappedTypes = variantTypesArr.map(type => {
               const valuesRaw = type.values?.$values || type.values || [];
               const valuesArr = Array.isArray(valuesRaw) ? valuesRaw : [];
               return {
                 typeName: type.name,
                 options: valuesArr.length > 0
-                  ? [...valuesArr.map(v => ({ value: v.value || (typeof v === 'string' ? v : ''), additionalPrice: v.additionalPrice || 0 })), { value: '', additionalPrice: 0 }]
-                  : [{ value: '', additionalPrice: 0 }]
+                  ? [...valuesArr.map(v => ({ value: v.value || (typeof v === 'string' ? v : ''), additionalPrice: v.additionalPrice || 0, imageUrl: v.imageUrl || '' })), { value: '', additionalPrice: 0, imageUrl: '' }]
+                  : [{ value: '', additionalPrice: 0, imageUrl: '' }]
               };
             });
             setProductTypes(mappedTypes);
-          } else
-          {
-            setProductTypes([{ typeName: '', options: [{ value: '', additionalPrice: 0 }] }]);
+          } else {
+            setProductTypes([{ typeName: '', options: [{ value: '', additionalPrice: 0, imageUrl: '' }] }]);
           }
-        } catch (error)
-        {
+        } catch (error) {
           toast.error("Có lỗi khi lấy dữ liệu.");
           console.error(error);
         }
@@ -227,28 +228,23 @@ const UpdateModal = ({ openUpdate, handleUpdateClose, fetchProducts, style, cate
     }
   }, [product, form]);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     const currentDate = new Date().toISOString();
     form.setFieldValue('dateAdded', currentDate);
   }, [form]);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     TagManage.GetTag()
-      .then((res) =>
-      {
+      .then((res) => {
         setTags(res.data.$values);
       })
-      .catch((err) =>
-      {
+      .catch((err) => {
 
       });
   }, []);
 
   // Thêm CSS cho modal
-  useEffect(() =>
-  {
+  useEffect(() => {
     const customStyles = `
             .custom-modal .ant-modal-content {
                 border-radius: 8px;
@@ -299,8 +295,7 @@ const UpdateModal = ({ openUpdate, handleUpdateClose, fetchProducts, style, cate
     styleSheet.innerText = customStyles;
     document.head.appendChild(styleSheet);
 
-    return () =>
-    {
+    return () => {
       document.head.removeChild(styleSheet);
     };
   }, [themeColors]);
@@ -493,7 +488,39 @@ const UpdateModal = ({ openUpdate, handleUpdateClose, fetchProducts, style, cate
                   <div className="font-medium mb-2">Tùy chọn</div>
                   <div className="flex flex-wrap gap-2">
                     {type.options.map((option, optionIndex) => (
-                      <div key={optionIndex} className="flex gap-2 w-full">
+                      <div key={optionIndex} className="flex gap-2 w-full items-center">
+                        {option.imageUrl ? (
+                          <div className="relative w-8 h-8 flex-shrink-0">
+                            <img
+                              src={`${process.env.NEXT_PUBLIC_API_ENDPOINT}${option.imageUrl}`}
+                              alt=""
+                              className="w-8 h-8 rounded object-cover border border-gray-200"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const updatedTypes = [...productTypes];
+                                updatedTypes[typeIndex].options[optionIndex].imageUrl = '';
+                                setProductTypes(updatedTypes);
+                              }}
+                              className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white rounded-full text-[10px] flex items-center justify-center cursor-pointer hover:bg-red-600"
+                            >
+                              ×
+                            </button>
+                          </div>
+                        ) : (
+                          <label className="w-8 h-8 flex-shrink-0 border border-dashed border-gray-300 rounded flex items-center justify-center cursor-pointer hover:border-blue-400 transition">
+                            <CameraOutlined style={{ fontSize: 14, color: '#999' }} />
+                            <input
+                              type="file"
+                              accept="image/*"
+                              style={{ display: 'none' }}
+                              onChange={(e) => {
+                                if (e.target.files?.[0]) handleOptionImageUpload(typeIndex, optionIndex, e.target.files[0]);
+                              }}
+                            />
+                          </label>
+                        )}
                         <Input
                           value={option.value}
                           placeholder={`Tùy chọn ${optionIndex + 1}`}

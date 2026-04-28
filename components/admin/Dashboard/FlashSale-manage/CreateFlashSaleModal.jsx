@@ -5,9 +5,9 @@ import { createPortal } from 'react-dom';
 import FlashSaleService from '@/services/FlashSaleService';
 import axiosInstance from '@/lib/axiosConfig';
 import { toast } from 'react-toastify';
+import { resolveImagePath } from '@/lib/imageUtils';
 
-const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) =>
-{
+const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) => {
     const isEditing = !!flashSale;
     const [form, setForm] = useState({
         title: '',
@@ -23,21 +23,17 @@ const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) =>
     const [saving, setSaving] = useState(false);
 
     // Load products for picker
-    const fetchProducts = useCallback(async () =>
-    {
-        try
-        {
+    const fetchProducts = useCallback(async () => {
+        try {
             const res = await axiosInstance.get('/api/Products');
             const data = res.data.$values || res.data || [];
             setProducts(data);
         } catch { }
     }, []);
 
-    useEffect(() =>
-    {
+    useEffect(() => {
         fetchProducts();
-        if (isEditing && flashSale)
-        {
+        if (isEditing && flashSale) {
             setForm({
                 title: flashSale.title || '',
                 description: flashSale.description || '',
@@ -60,17 +56,14 @@ const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) =>
         }
     }, [flashSale, isEditing, fetchProducts]);
 
-    const toDateTimeLocal = (dateStr) =>
-    {
+    const toDateTimeLocal = (dateStr) => {
         if (!dateStr) return '';
         const d = new Date(dateStr);
         return d.toISOString().slice(0, 16);
     };
 
-    const handleAddProduct = (product) =>
-    {
-        if (items.some(i => i.productId === product.id))
-        {
+    const handleAddProduct = (product) => {
+        if (items.some(i => i.productId === product.id)) {
             toast.warn('Sản phẩm đã có trong Flash Sale');
             return;
         }
@@ -79,7 +72,7 @@ const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) =>
         setItems(prev => [...prev, {
             productId: product.id,
             productName: product.name,
-            productImageUrl: product.images?.$values?.[0]?.imagePath || product.images?.[0]?.imagePath,
+            productImageUrl: resolveImagePath(product.images?.$values?.[0]?.imagePath || product.images?.[0]?.imagePath),
             productOriginalPrice: originalPrice,
             discountPercent: discount,
             flashSalePrice: Math.round(originalPrice * (100 - discount) / 100),
@@ -90,15 +83,12 @@ const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) =>
         setSearchTerm('');
     };
 
-    const handleItemChange = (index, field, value) =>
-    {
-        setItems(prev =>
-        {
+    const handleItemChange = (index, field, value) => {
+        setItems(prev => {
             const updated = [...prev];
             updated[index] = { ...updated[index], [field]: value };
             // Auto-calculate flash sale price when discount changes
-            if (field === 'discountPercent')
-            {
+            if (field === 'discountPercent') {
                 const orig = updated[index].productOriginalPrice || 0;
                 updated[index].flashSalePrice = Math.round(orig * (100 - Number(value)) / 100);
             }
@@ -106,29 +96,23 @@ const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) =>
         });
     };
 
-    const handleRemoveItem = (index) =>
-    {
+    const handleRemoveItem = (index) => {
         setItems(prev => prev.filter((_, i) => i !== index));
     };
 
-    const handleSubmit = async (e) =>
-    {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!form.title || !form.startTime || !form.endTime)
-        {
+        if (!form.title || !form.startTime || !form.endTime) {
             toast.error('Vui lòng điền đầy đủ thông tin');
             return;
         }
-        if (new Date(form.endTime) <= new Date(form.startTime))
-        {
+        if (new Date(form.endTime) <= new Date(form.startTime)) {
             toast.error('Thời gian kết thúc phải sau thời gian bắt đầu');
             return;
         }
         setSaving(true);
-        try
-        {
-            if (isEditing)
-            {
+        try {
+            if (isEditing) {
                 // Update flash sale info
                 await FlashSaleService.updateFlashSale(flashSale.id, {
                     id: flashSale.id,
@@ -143,18 +127,14 @@ const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) =>
                 const newItemIds = items.filter(i => i.id).map(i => i.id);
 
                 // Delete removed items
-                for (const oldId of existingIds)
-                {
-                    if (!newItemIds.includes(oldId))
-                    {
+                for (const oldId of existingIds) {
+                    if (!newItemIds.includes(oldId)) {
                         await FlashSaleService.removeItem(flashSale.id, oldId);
                     }
                 }
                 // Add new items (no id = new)
-                for (const item of items)
-                {
-                    if (!item.id)
-                    {
+                for (const item of items) {
+                    if (!item.id) {
                         await FlashSaleService.addItem(flashSale.id, {
                             productId: item.productId,
                             discountPercent: Number(item.discountPercent),
@@ -166,8 +146,7 @@ const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) =>
                 }
 
                 toast.success('Cập nhật Flash Sale thành công!');
-            } else
-            {
+            } else {
                 // Create flash sale
                 const created = await FlashSaleService.createFlashSale({
                     title: form.title,
@@ -179,8 +158,7 @@ const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) =>
                 const fsId = created.id;
 
                 // Add items
-                for (const item of items)
-                {
+                for (const item of items) {
                     await FlashSaleService.addItem(fsId, {
                         productId: item.productId,
                         discountPercent: Number(item.discountPercent),
@@ -192,11 +170,9 @@ const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) =>
                 toast.success('Tạo Flash Sale thành công!');
             }
             onSuccess();
-        } catch (error)
-        {
+        } catch (error) {
             toast.error('Lỗi: ' + (error?.response?.data?.message || error.message));
-        } finally
-        {
+        } finally {
             setSaving(false);
         }
     };
@@ -205,8 +181,7 @@ const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) =>
         p.name?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const formatPrice = (price) =>
-    {
+    const formatPrice = (price) => {
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price || 0);
     };
 
@@ -318,7 +293,7 @@ const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) =>
                                             >
                                                 {(p.images?.$values?.[0]?.imagePath || p.images?.[0]?.imagePath) && (
                                                     <img
-                                                        src={`/${p.images?.$values?.[0]?.imagePath || p.images?.[0]?.imagePath}`}
+                                                        src={resolveImagePath(p.images?.$values?.[0]?.imagePath || p.images?.[0]?.imagePath)}
                                                         alt=""
                                                         className="w-8 h-8 rounded object-cover"
                                                     />
@@ -337,7 +312,7 @@ const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) =>
                                     <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
                                         {item.productImageUrl && (
                                             <img
-                                                src={`${item.productImageUrl}`}
+                                                src={resolveImagePath(item.productImageUrl)}
                                                 alt=""
                                                 className="w-12 h-12 rounded-lg object-cover flex-shrink-0"
                                             />

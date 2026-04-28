@@ -275,3 +275,196 @@
   border-bottom: 1.5px solid #f0f2f5;
   background: #fff;
 }
+
+/* ============================================================
+   DARK MODE — Admin Panel
+   ============================================================ */
+.dark .admin-scroll-container {
+  background: #111827 !important;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* ---- Card ---- */
+.dark .admin-table-card {
+  background: #1f2937;
+  border-color: #374151;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2), 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* ---- Table header ---- */
+.dark .custom-table .ant-table-thead>tr>th,
+.dark .custom-table .ant-table-thead>tr>td {
+  background: #1e293b !important;
+  color: #9ca3af !important;
+  border-bottom-color: #374151 !important;
+}
+
+/* ---- Table container ---- */
+.dark .custom-table .ant-table-container {
+  border-color: #374151 !important;
+}
+
+/* ---- Table body ---- */
+.dark .custom-table .ant-table-tbody>tr>td {
+  background: #1f2937 !important;
+  color: #e5e7eb !important;
+  border-bottom-color: #374151 !important;
+}
+
+.dark .custom-table .ant-table-tbody>tr:hover>td {
+  background: #263044 !important;
+}
+
+/* ---- Row selected ---- */
+.dark .custom-table .ant-table-tbody>tr.ant-table-row-selected>td {
+  background: #1e3a5f !important;
+}
+
+.dark .custom-table .ant-table-tbody>tr.ant-table-row-selected:hover>td {
+  background: #1e4477 !important;
+}
+
+/* ---- Action buttons ---- */
+.dark .custom-table .ant-btn-text {
+  color: #9ca3af;
+}
+
+.dark .custom-table .ant-btn-text:hover {
+  background: #374151;
+  color: #e5e7eb;
+}
+
+.dark .custom-table .ant-btn-text.ant-btn-dangerous {
+  color: #f87171;
+}
+
+.dark .custom-table .ant-btn-text.ant-btn-dangerous:hover {
+  background: #450a0a;
+  color: #ef4444;
+}
+
+/* ---- Pagination ---- */
+.dark .custom-table .ant-pagination-item {
+  border-color: #4b5563;
+  background: #1f2937;
+  color: #9ca3af;
+}
+
+.dark .custom-table .ant-pagination-item a {
+  color: #9ca3af !important;
+}
+
+.dark .custom-table .ant-pagination-item:hover {
+  border-color: #818cf8;
+}
+
+.dark .custom-table .ant-pagination-item:hover a {
+  color: #818cf8 !important;
+}
+
+.dark .custom-table .ant-pagination-item-active {
+  background: #6366f1 !important;
+  border-color: #6366f1 !important;
+}
+
+.dark .custom-table .ant-pagination-item-active a {
+  color: #fff !important;
+}
+
+.dark .custom-table .ant-pagination-prev button,
+.dark .custom-table .ant-pagination-next button {
+  border-color: #4b5563;
+  color: #9ca3af;
+  background: #1f2937;
+}
+
+/* ---- Scrollbar ---- */
+.dark .custom-table .ant-table-body::-webkit-scrollbar-thumb {
+  background: #4b5563;
+}
+
+.dark .custom-table .ant-table-body::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+/* ---- Title bar / Filter bar ---- */
+.dark .admin-title-bar {
+  background: #1f2937 !important;
+}
+
+.dark .admin-filter-bar {
+  background: #1f2937;
+  border-bottom-color: #374151;
+}
+
+/* ---- Ant Design Card ---- */
+.dark .ant-card {
+  background: #1f2937 !important;
+  border-color: #374151 !important;
+  color: #e5e7eb;
+}
+
+.dark .ant-card-head {
+  color: #e5e7eb !important;
+  border-bottom-color: #374151 !important;
+}
+
+.dark .ant-card-body {
+  color: #e5e7eb;
+}
+
+/* ---- Ant Design Input / Select ---- */
+.dark .ant-input,
+.dark .ant-input-affix-wrapper,
+.dark .ant-select-selector {
+  background: #374151 !important;
+  border-color: #4b5563 !important;
+  color: #e5e7eb !important;
+}
+
+.dark .ant-select-arrow,
+.dark .ant-input-prefix {
+  color: #9ca3af !important;
+}
+
+/* ---- Ant Design Modal ---- */
+.dark .ant-modal-content {
+  background: #1f2937 !important;
+  color: #e5e7eb;
+}
+
+.dark .ant-modal-header {
+  background: #1f2937 !important;
+  border-bottom-color: #374151 !important;
+}
+
+.dark .ant-modal-title {
+  color: #e5e7eb !important;
+}
+
+.dark .ant-modal-close {
+  color: #9ca3af;
+}
+
+/* ---- Ant Design Radio ---- */
+.dark .ant-radio-button-wrapper {
+  background: #374151;
+  border-color: #4b5563;
+  color: #9ca3af;
+}
+
+.dark .ant-radio-button-wrapper-checked {
+  background: #6366f1 !important;
+  border-color: #6366f1 !important;
+  color: #fff !important;
+}
+
+/* ---- Ant Design Typography ---- */
+.dark .ant-typography {
+  color: #e5e7eb !important;
+}
+
+/* ---- Empty state ---- */
+.dark .custom-table .ant-empty-description {
+  color: #6b7280;
+}

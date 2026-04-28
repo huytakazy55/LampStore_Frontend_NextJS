@@ -31,7 +31,7 @@ const AdminDashboard = () => {
   }, []);
 
   return (
-    <div className='h-screen overflow-hidden'>
+    <div className='h-screen overflow-hidden dark:bg-gray-900'>
       <AppBar />
       <div className='h-[calc(100vh-4rem)] flex justify-between items-stretch relative'>
         {/* Mobile overlay when sidebar is open */}

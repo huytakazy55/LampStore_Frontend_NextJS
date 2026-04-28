@@ -290,3 +290,50 @@
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+/* ========================================
+   Dark Mode
+   ======================================== */
+.dark .flash-sale-container {
+    background: linear-gradient(135deg, #991b1b 0%, #c2410c 50%, #991b1b 100%);
+    box-shadow: 0 4px 24px rgba(153, 27, 27, 0.35);
+}
+
+.dark .flash-sale-grid {
+    background: #1f2937;
+}
+
+.dark .flash-sale-card {
+    background: #1f2937;
+    border-color: #374151;
+    color: #e5e7eb;
+}
+
+.dark .flash-sale-card:hover {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+    background: #263044;
+}
+
+.dark .flash-sale-img-wrap {
+    background: #111827;
+}
+
+.dark .flash-sale-product-name {
+    color: #e5e7eb;
+}
+
+.dark .flash-price {
+    color: #fca5a5;
+}
+
+.dark .original-price {
+    color: #6b7280;
+}
+
+.dark .flash-sale-progress {
+    background: #374151;
+}
+
+.dark .flash-sale-badge {
+    background: linear-gradient(135deg, #dc2626, #ea580c);
+}
