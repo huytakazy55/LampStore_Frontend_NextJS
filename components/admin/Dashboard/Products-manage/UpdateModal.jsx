@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useContext, useState, useEffect } from 'react'
-import { Modal, Form, Input, Select, InputNumber, Checkbox, Button, Space, Typography } from 'antd';
-import { EditOutlined, SaveOutlined, CloseOutlined, CameraOutlined } from '@ant-design/icons';
+import { Modal, Form, Input, Select, InputNumber, Checkbox, Button, Space, Typography, Divider } from 'antd';
+import { EditOutlined, SaveOutlined, CloseOutlined, CameraOutlined, LinkOutlined } from '@ant-design/icons';
 import ProductManage from '@/services/ProductManage';
 import TagManage from '@/services/TagManage';
 import { toast } from 'react-toastify';
@@ -18,6 +18,7 @@ const UpdateModal = ({ openUpdate, handleUpdateClose, fetchProducts, style, cate
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [tags, setTags] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
 
   //Thêm phân loại
   const [productTypes, setProductTypes] = useState([{ typeName: '', options: [{ value: '', additionalPrice: 0, imageUrl: '' }] }]);
@@ -129,6 +130,7 @@ const UpdateModal = ({ openUpdate, handleUpdateClose, fetchProducts, style, cate
         sellCount: values.sellCount,
         dateAdded: values.dateAdded,
         status: values.status,
+        addOnProductIds: values.addOnProductIds || [],
         productVariant: {
           price: values.price,
           discountPrice: values.discountPrice,
@@ -178,6 +180,7 @@ const UpdateModal = ({ openUpdate, handleUpdateClose, fetchProducts, style, cate
             sellCount: productData?.sellCount,
             dateAdded: productData?.dateAdded,
             status: productData?.status,
+            addOnProductIds: (productData?.addOnProducts || []).map(a => a.id),
             price: variant?.price,
             discountPrice: variant?.discountPrice,
             stock: variant?.stock,
@@ -240,6 +243,14 @@ const UpdateModal = ({ openUpdate, handleUpdateClose, fetchProducts, style, cate
       })
       .catch((err) => {
 
+      });
+
+    ProductManage.GetProduct()
+      .then((res) => {
+        setAllProducts(res.data.$values || []);
+      })
+      .catch((err) => {
+        console.log(err);
       });
   }, []);
 
@@ -563,6 +574,33 @@ const UpdateModal = ({ openUpdate, handleUpdateClose, fetchProducts, style, cate
 
         <Form.Item name="description" label="Mô tả">
           <ReactQuill theme="snow" placeholder="Nhập mô tả sản phẩm" />
+        </Form.Item>
+
+        <Divider orientation="left" style={{ color: themeColors.StartColorLinear }}>
+          <LinkOutlined /> Sản phẩm phụ (Add-on)
+        </Divider>
+
+        <Form.Item
+          name="addOnProductIds"
+          label="Sản phẩm phụ đi kèm"
+          tooltip="Chọn các sản phẩm sẽ được gợi ý mua kèm trên trang chi tiết"
+        >
+          <Select
+            mode="multiple"
+            placeholder="Chọn sản phẩm phụ (không bắt buộc)"
+            allowClear
+            showSearch
+            optionFilterProp="label"
+            filterOption={(input, option) =>
+              (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+            }
+            options={allProducts
+              .filter(p => p.id !== updateData?.id)
+              .map(p => ({
+                label: `${p.name} - ${p.minPrice?.toLocaleString('vi-VN')}₫`,
+                value: p.id
+              }))}
+          />
         </Form.Item>
 
         <Form.Item name="status" valuePropName="checked">

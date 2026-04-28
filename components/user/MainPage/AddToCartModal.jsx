@@ -29,6 +29,7 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
     const [selectedOptions, setSelectedOptions] = useState({});
     const [showError, setShowError] = useState(false);
     const [addedSuccess, setAddedSuccess] = useState(false);
+    const [displayImage, setDisplayImage] = useState(null);
 
     // Fetch full product data when product changes
     useEffect(() => {
@@ -63,6 +64,7 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
         setSelectedOptions({});
         setShowError(false);
         setAddedSuccess(false);
+        setDisplayImage(null);
     }, [product]);
 
     useEffect(() => {
@@ -103,6 +105,10 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
             ...prev,
             [typeName]: { value: val.value, additionalPrice: val.additionalPrice || 0 }
         }));
+        // Update main image when option has an image
+        if (val.imageUrl) {
+            setDisplayImage(getImgSrc(val.imageUrl));
+        }
         setShowError(false);
     };
 
@@ -164,9 +170,9 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
                     {/* Left: Image */}
                     <div className="w-full md:w-2/5 bg-gray-50 dark:bg-gray-800 p-6 flex justify-center items-center border-r border-gray-100 dark:border-gray-700">
                         <img
-                            src={mainImage}
+                            src={displayImage || mainImage}
                             alt={product.name}
-                            className="max-h-80 w-auto object-contain drop-shadow-md rounded"
+                            className="max-h-80 w-auto object-contain drop-shadow-md rounded transition-all duration-300"
                             onError={(e) => { e.target.src = defaultImg; }}
                         />
                     </div>
@@ -199,29 +205,41 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
                                     const values = Array.isArray(vt.values) ? vt.values : [];
                                     if (values.length === 0) return null;
                                     const isRequired = !selectedOptions[vt.name] && showError;
+                                    const hasImages = values.some(v => v.imageUrl);
                                     return (
                                         <div key={vt.id} className="mb-3">
                                             <h3 className={`text-sm font-medium mb-2 ${isRequired ? 'text-red-500' : 'text-gray-700 dark:text-gray-300'}`}>
                                                 {vt.name}: {isRequired && <span className="text-xs font-normal">(Vui lòng chọn)</span>}
                                             </h3>
-                                            <div className="flex flex-wrap gap-2">
+                                            <div className={`flex flex-wrap gap-2 ${hasImages ? 'gap-3' : ''}`}>
                                                 {values.map((val) => {
                                                     const isSelected = selectedOptions[vt.name]?.value === val.value;
+                                                    const optionImage = val.imageUrl ? getImgSrc(val.imageUrl) : null;
                                                     return (
                                                         <button
                                                             key={val.id}
                                                             onClick={() => handleSelectOption(vt.name, val)}
-                                                            className={`py-1.5 px-4 cursor-pointer text-sm border rounded transition-all ${isSelected
+                                                            className={`flex items-center gap-2 py-1.5 px-3 cursor-pointer text-sm border rounded transition-all ${isSelected
                                                                 ? 'border-rose-600 text-rose-600 bg-rose-50 dark:bg-rose-900/30 font-medium ring-1 ring-rose-600/20'
                                                                 : isRequired
                                                                     ? 'border-red-300 hover:border-rose-300 text-gray-600 dark:text-gray-400'
                                                                     : 'border-gray-300 dark:border-gray-600 hover:border-rose-300 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400'
                                                                 }`}
                                                         >
-                                                            {val.value}
-                                                            {val.additionalPrice > 0 && (
-                                                                <span className="ml-1 text-xs text-rose-500">+₫{formatPrice(val.additionalPrice)}</span>
+                                                            {optionImage && (
+                                                                <img
+                                                                    src={optionImage}
+                                                                    alt={val.value}
+                                                                    className={`w-8 h-8 rounded object-cover border ${isSelected ? 'border-rose-400' : 'border-gray-200 dark:border-gray-600'}`}
+                                                                    onError={(e) => { e.target.style.display = 'none'; }}
+                                                                />
                                                             )}
+                                                            <span>
+                                                                {val.value}
+                                                                {val.additionalPrice > 0 && (
+                                                                    <span className="ml-1 text-xs text-rose-500">+₫{formatPrice(val.additionalPrice)}</span>
+                                                                )}
+                                                            </span>
                                                         </button>
                                                     );
                                                 })}

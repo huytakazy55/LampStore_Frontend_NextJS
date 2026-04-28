@@ -22,10 +22,10 @@ const BrandCarousel = lazy(() => import('@/components/user/MainPage/BrandCarouse
 const Newsletter = lazy(() => import('@/components/user/MainPage/Newsletter/Newsletter'));
 const FlashSale = lazy(() => import('@/components/user/MainPage/FlashSale/FlashSale'));
 
+import PageLoader from '@/components/common/PageLoader';
+
 const SectionSpinner = ({ height = '200px' }) => (
-    <div className="w-full flex justify-center items-center" style={{ height }}>
-        <div className="w-8 h-8 border-2 border-gray-200 border-t-yellow-400 rounded-full animate-spin"></div>
-    </div>
+    <PageLoader height={height} />
 );
 
 export default function HomePage() {
@@ -91,11 +91,7 @@ export default function HomePage() {
                 </div>
 
                 <div data-section="allproducts" data-label="Tất cả SP" data-aos="fade-up" data-aos-delay="100">
-                    <Suspense fallback={
-                        <div className="w-full h-40 flex items-center justify-center text-gray-500">
-                            Đang tải tất cả sản phẩm...
-                        </div>
-                    }>
+                    <Suspense fallback={<SectionSpinner height="160px" />}>
                         <div className="py-2" />
                         <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 md:p-6 mb-6">
                             <AllProducts />

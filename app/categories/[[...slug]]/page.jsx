@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import Image from 'next/image';
 import { useRouter, useParams } from 'next/navigation';
 import Header from '@/components/user/MainPage/Header/Header';
@@ -11,6 +11,7 @@ import { useCategories } from '@/hooks/useCategories';
 import { useProducts } from '@/hooks/useProducts';
 import AddToCartModal from '@/components/user/MainPage/AddToCartModal';
 import defaultImg from '@/assets/images/cameras-2.jpg';
+import PageLoader from '@/components/common/PageLoader';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
@@ -47,6 +48,18 @@ export default function CategoryPage() {
 
     const [activeCategory, setActiveCategory] = useState(categoryIdentifier || null);
     const [cartModalProduct, setCartModalProduct] = useState(null);
+    const [transitioning, setTransitioning] = useState(false);
+
+    // Smooth category switch with fade
+    const handleCategorySwitch = useCallback((slug) => {
+        if (slug === activeCategory) return;
+        setTransitioning(true);
+        setTimeout(() => {
+            setActiveCategory(slug);
+            window.history.pushState(null, '', `/categories/${slug}`);
+            setTimeout(() => setTransitioning(false), 50);
+        }, 200);
+    }, [activeCategory]);
 
     // Set default category khi data load xong
     useEffect(() => {
@@ -93,22 +106,20 @@ export default function CategoryPage() {
                     </div>
 
                     <div className="mb-8">
-                        <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Danh Mục Sản Phẩm</h1>
+                        <h1 className="text-2xl md:text-3xl font-bold text-gray-700">Danh Mục <span className="text-amber-600">Sản Phẩm</span></h1>
                         <p className="text-gray-500 text-sm mt-1">Khám phá các bộ sưu tập đèn ngủ cao cấp của chúng tôi</p>
                     </div>
 
                     {loading ? (
-                        <div className="flex justify-center items-center h-64">
-                            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-500"></div>
-                        </div>
+                        <PageLoader height="16rem" />
                     ) : (
                         <div className="flex flex-col lg:flex-row gap-6">
                             {/* Sidebar */}
                             <div className="w-full lg:w-[260px] flex-shrink-0">
                                 <div className="bg-white rounded-sm border border-gray-200 overflow-hidden sticky top-4">
-                                    <div className="p-4 bg-gray-900 text-white">
+                                    <div className="p-4 bg-gradient-to-r from-amber-500 to-amber-400 text-white rounded-t-sm">
                                         <h3 className="text-sm font-semibold flex items-center gap-2">
-                                            <i className='bx bx-category text-amber-400'></i>
+                                            <i className='bx bx-category'></i>
                                             Danh mục ({categories.length})
                                         </h3>
                                     </div>
@@ -119,7 +130,7 @@ export default function CategoryPage() {
                                                     ? 'bg-amber-50 border-l-[3px] border-amber-500 text-amber-700 font-semibold'
                                                     : 'border-l-[3px] border-transparent hover:bg-gray-50 text-gray-700 hover:text-gray-900'
                                                     }`}
-                                                onClick={() => { setActiveCategory(cat.slug || String(cat.id)); window.history.pushState(null, '', `/categories/${cat.slug || cat.id}`) }}>
+                                                onClick={() => handleCategorySwitch(cat.slug || String(cat.id))}>
                                                 <div className="relative w-8 h-8 rounded-sm overflow-hidden flex-shrink-0 border border-gray-200">
                                                     <Image src={getCategoryImageSrc(cat)} alt={cat.name} className="w-full h-full object-cover"
                                                         fill sizes="32px" quality={60} />
@@ -132,7 +143,7 @@ export default function CategoryPage() {
                             </div>
 
                             {/* Products */}
-                            <div className="flex-1">
+                            <div className={`flex-1 transition-all duration-300 ease-in-out ${transitioning ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}`}>
                                 {activeCategoryData && (
                                     <div className="relative bg-white rounded-sm border border-gray-200 overflow-hidden mb-6">
                                         <div className="flex flex-col sm:flex-row items-center gap-4 p-5">
@@ -140,7 +151,7 @@ export default function CategoryPage() {
                                                 <Image src={getCategoryImageSrc(activeCategoryData)} alt={activeCategoryData.name} className="w-full h-full object-cover" fill sizes="80px" quality={70} />
                                             </div>
                                             <div className="text-center sm:text-left">
-                                                <h2 className="text-xl font-bold text-gray-900">{activeCategoryData.name}</h2>
+                                                <h2 className="text-xl font-bold text-gray-700">{activeCategoryData.name}</h2>
                                                 <p className="text-sm text-gray-500 mt-1">{products.length} sản phẩm</p>
                                             </div>
                                         </div>
@@ -148,9 +159,7 @@ export default function CategoryPage() {
                                 )}
 
                                 {productsLoading ? (
-                                    <div className="flex justify-center items-center h-48">
-                                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-500"></div>
-                                    </div>
+                                    <PageLoader height="12rem" />
                                 ) : products.length > 0 ? (
                                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
                                         {products.map((product) => {

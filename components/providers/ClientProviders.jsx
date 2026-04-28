@@ -17,6 +17,7 @@ import FloatingCart from '@/components/user/FloatingCart/FloatingCart';
 import ChatButton from '@/components/user/Chat/ChatButton';
 import '@/lib/axiosConfig';
 import '@/lib/i18n';
+import ScrollToTop from '@/components/common/ScrollToTop';
 
 // Expose toast to global scope for NotificationService
 if (typeof window !== 'undefined') {
@@ -54,6 +55,7 @@ export default function ClientProviders({ children }) {
                             </AOSProvider>
                             {!isAdminPage && <FloatingCart />}
                             {!isAdminPage && <ChatButton />}
+                            <ScrollToTop />
                             <ToastContainer
                                 position='bottom-right'
                                 autoClose={3000}

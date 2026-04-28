@@ -12,6 +12,7 @@ import TopBar from '@/components/user/MainPage/TopBar/TopBar';
 import Footer from '@/components/user/MainPage/Footer/Footer';
 import NewsService from '@/services/NewsService';
 import { resolveImagePath } from '@/lib/imageUtils';
+import PageLoader from '@/components/common/PageLoader';
 
 export default function NewsDetailPage() {
     const params = useParams();
@@ -55,9 +56,7 @@ export default function NewsDetailPage() {
                 <TopBar />
                 <Header />
                 <NavbarPrimary />
-                <div className="min-h-screen flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500"></div>
-                </div>
+                <PageLoader height="60vh" />
                 <Footer />
             </>
         );

@@ -15,6 +15,7 @@ import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useProducts } from '@/hooks/useProducts';
 import ImageLightbox from '@/components/common/ImageLightbox';
+import PageLoader from '@/components/common/PageLoader';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
@@ -55,6 +56,13 @@ export default function ProductDetailPage() {
     const [showError, setShowError] = useState(false);
     const [addedSuccess, setAddedSuccess] = useState(false);
     const [lightboxOpen, setLightboxOpen] = useState(false);
+    // Multi addon cart: { [addonId]: [{ selectedOptions: {typeName: {value, additionalPrice}}, qty: 1 }, ...] }
+    const [addonCart, setAddonCart] = useState({});
+    const [addonShowError, setAddonShowError] = useState({});
+    // Temp option selection per addon before adding to cart
+    const [addonTempOptions, setAddonTempOptions] = useState({});
+    // Image preview popup
+    const [previewImg, setPreviewImg] = useState(null);
 
     // Review states
     const [reviews, setReviews] = useState([]);
@@ -249,6 +257,25 @@ export default function ProductDetailPage() {
             selectedOptions
         });
 
+        // Add all addon cart items
+        const allAddons = getAddOnList();
+        allAddons.forEach(addon => {
+            const items = addonCart[addon.id] || [];
+            const addonImgs = addon.images?.$values || addon.images || [];
+            const addonImg = addonImgs.length > 0 ? getImgSrc(addonImgs[0]?.imagePath) : '/images/cameras-2.jpg';
+            const addonBasePrice = addon.variant?.discountPrice || addon.variant?.price || addon.minPrice || 0;
+            items.forEach(item => {
+                addToCart({
+                    productId: addon.id,
+                    name: addon.name,
+                    image: addonImg,
+                    price: addonBasePrice,
+                    quantity: item.qty,
+                    selectedOptions: item.selectedOptions
+                });
+            });
+        });
+
         // Dispatch fly-to-cart animation event
         const rect = e.currentTarget.getBoundingClientRect();
         window.dispatchEvent(new CustomEvent('flyToCart', {
@@ -273,7 +300,7 @@ export default function ProductDetailPage() {
             ? getImgSrc(images[0]?.imagePath)
             : '/images/cameras-2.jpg';
 
-        const buyItem = {
+        const buyItems = [{
             productId: product.id,
             name: product.name,
             image: mainImg,
@@ -281,10 +308,89 @@ export default function ProductDetailPage() {
             quantity,
             selectedOptions,
             key: `buynow_${product.id}_${Date.now()}`,
-        };
+        }];
 
-        sessionStorage.setItem('buyNowItems', JSON.stringify([buyItem]));
+        // Add all addon cart items
+        const allAddons = getAddOnList();
+        allAddons.forEach(addon => {
+            const items = addonCart[addon.id] || [];
+            const addonImgs = addon.images?.$values || addon.images || [];
+            const addonImg = addonImgs.length > 0 ? getImgSrc(addonImgs[0]?.imagePath) : '/images/cameras-2.jpg';
+            const addonBasePrice = addon.variant?.discountPrice || addon.variant?.price || addon.minPrice || 0;
+            items.forEach((item, idx) => {
+                buyItems.push({
+                    productId: addon.id,
+                    name: addon.name,
+                    image: addonImg,
+                    price: addonBasePrice,
+                    quantity: item.qty,
+                    selectedOptions: item.selectedOptions,
+                    key: `buynow_addon_${addon.id}_${idx}_${Date.now()}`,
+                });
+            });
+        });
+
+        sessionStorage.setItem('buyNowItems', JSON.stringify(buyItems));
         router.push('/checkout');
+    };
+
+    // Helper to parse addon variant types
+    const parseAddonVariantTypes = (addon) => {
+        const vtData = addon?.variantTypes?.$values || addon?.variantTypes || [];
+        return Array.isArray(vtData) ? vtData.map(vt => ({
+            ...vt,
+            values: (vt.values?.$values || vt.values || []).map(v => ({
+                ...v,
+                additionalPrice: v.additionalPrice || 0
+            }))
+        })) : [];
+    };
+
+    // Get combined list of add-on products (new many-to-many + legacy single)
+    const getAddOnList = () => {
+        const addons = (product?.addOnProducts?.$values || product?.addOnProducts || [])
+            .filter(a => a && a.status);
+        // Legacy fallback
+        if (addons.length === 0 && product?.addOnProduct && product.addOnProduct.status) {
+            return [product.addOnProduct];
+        }
+        return addons;
+    };
+
+    // Add an option combo to addon cart
+    const handleAddAddonToCart = (addonId) => {
+        const tempOpts = addonTempOptions[addonId] || {};
+        const addon = getAddOnList().find(a => a.id === addonId);
+        const vts = parseAddonVariantTypes(addon);
+        const allSelected = vts.length === 0 || vts.every(vt => tempOpts[vt.name]);
+        if (!allSelected) {
+            setAddonShowError(prev => ({ ...prev, [addonId]: true }));
+            return;
+        }
+        setAddonCart(prev => ({
+            ...prev,
+            [addonId]: [...(prev[addonId] || []), { selectedOptions: { ...tempOpts }, qty: 1 }]
+        }));
+        setAddonTempOptions(prev => ({ ...prev, [addonId]: {} }));
+        setAddonShowError(prev => ({ ...prev, [addonId]: false }));
+    };
+
+    // Remove an item from addon cart
+    const handleRemoveAddonItem = (addonId, idx) => {
+        setAddonCart(prev => {
+            const items = [...(prev[addonId] || [])];
+            items.splice(idx, 1);
+            return { ...prev, [addonId]: items };
+        });
+    };
+
+    // Update qty of addon cart item
+    const handleAddonQty = (addonId, idx, delta) => {
+        setAddonCart(prev => {
+            const items = [...(prev[addonId] || [])];
+            items[idx] = { ...items[idx], qty: Math.max(1, items[idx].qty + delta) };
+            return { ...prev, [addonId]: items };
+        });
     };
 
     // Computed values
@@ -314,12 +420,7 @@ export default function ProductDetailPage() {
                 <TopBar />
                 <Header />
                 <NavbarPrimary />
-                <div className='w-full h-[60vh] flex justify-center items-center'>
-                    <div className="text-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-rose-600 mx-auto"></div>
-                        <p className="mt-4 text-gray-500">Đang tải sản phẩm...</p>
-                    </div>
-                </div>
+                <PageLoader height="60vh" />
                 <Footer />
             </>
         );
@@ -517,6 +618,130 @@ export default function ProductDetailPage() {
                                 <div className='text-xs md:text-sm text-gray-400 dark:text-gray-500'>{stock} sản phẩm có sẵn</div>
                             </div>
                         </div>
+
+                        {/* Add-on Products (multi) */}
+                        {(() => {
+                            const addonList = getAddOnList();
+                            if (addonList.length === 0) return null;
+                            return (
+                                <div className='mb-4 md:mb-6'>
+                                    <div className='flex items-center gap-2 mb-3'>
+                                        <i className='bx bx-gift text-amber-500 text-lg'></i>
+                                        <span className='text-sm font-medium text-gray-700 dark:text-gray-300'>Mua kèm giá ưu đãi</span>
+                                    </div>
+                                    <div className='space-y-3'>
+                                        {addonList.map(addon => {
+                                            const addonImgs = addon.images?.$values || addon.images || [];
+                                            const addonImg = addonImgs.length > 0 ? getImgSrc(addonImgs[0]?.imagePath) : '/images/cameras-2.jpg';
+                                            const addonBasePrice = addon.variant?.discountPrice || addon.variant?.price || addon.minPrice || 0;
+                                            const addonOriginal = addon.variant?.price || addon.maxPrice || 0;
+                                            const addonHasDiscount = addon.variant?.discountPrice && addon.variant.discountPrice < addon.variant.price;
+                                            const vts = parseAddonVariantTypes(addon);
+                                            const cartItems = addonCart[addon.id] || [];
+                                            const tempOpts = addonTempOptions[addon.id] || {};
+                                            const hasError = addonShowError[addon.id];
+                                            return (
+                                                <div key={addon.id} className='rounded-lg border-2 border-gray-200 dark:border-gray-700 overflow-hidden transition-all hover:border-amber-300'>
+                                                    {/* Header */}
+                                                    <div className='flex items-center gap-3 p-3 bg-gray-50/50 dark:bg-gray-800/30'>
+                                                        <img src={addonImg} alt={addon.name} className='w-12 h-12 rounded object-cover border border-gray-200 dark:border-gray-600 flex-shrink-0 cursor-pointer' onClick={() => setPreviewImg({ src: addonImg, name: addon.name, price: addonBasePrice })} onError={(e) => { e.target.src = '/images/cameras-2.jpg'; }} />
+                                                        <div className='flex-1 min-w-0'>
+                                                            <a href={`/product/${addon.slug}`} className='text-sm font-medium text-gray-800 dark:text-gray-200 hover:text-amber-600 transition-colors line-clamp-1'>{addon.name}</a>
+                                                            <div className='flex items-center gap-2 mt-0.5'>
+                                                                <span className='text-sm font-bold text-rose-600'>₫{formatPrice(addonBasePrice)}</span>
+                                                                {addonHasDiscount && <span className='text-xs text-gray-400 line-through'>₫{formatPrice(addonOriginal)}</span>}
+                                                            </div>
+                                                        </div>
+                                                        {cartItems.length > 0 && (
+                                                            <span className='text-xs bg-amber-500 text-white rounded-full w-5 h-5 flex items-center justify-center font-bold flex-shrink-0'>{cartItems.length}</span>
+                                                        )}
+                                                    </div>
+
+                                                    {/* Variant selector + Add button */}
+                                                    {vts.length > 0 ? (
+                                                        <div className='px-3 py-2 border-t border-gray-100 dark:border-gray-700/50'>
+                                                            {vts.map(vt => {
+                                                                const values = Array.isArray(vt.values) ? vt.values : [];
+                                                                if (values.length === 0) return null;
+                                                                const isRequired = !tempOpts[vt.name] && hasError;
+                                                                return (
+                                                                    <div key={vt.id} className='mb-2'>
+                                                                        <div className={`text-xs font-medium mb-1 ${isRequired ? 'text-red-500' : 'text-gray-500 dark:text-gray-400'}`}>
+                                                                            {vt.name}: {isRequired && <span className='font-normal'>(Vui lòng chọn)</span>}
+                                                                        </div>
+                                                                        <div className='flex flex-wrap gap-1.5'>
+                                                                            {values.map(val => {
+                                                                                const isSelected = tempOpts[vt.name]?.value === val.value;
+                                                                                const optImg = val.imageUrl ? getImgSrc(val.imageUrl) : null;
+                                                                                return (
+                                                                                    <button key={val.id}
+                                                                                        onClick={() => {
+                                                                                            setAddonTempOptions(prev => ({ ...prev, [addon.id]: { ...(prev[addon.id] || {}), [vt.name]: { value: val.value, additionalPrice: val.additionalPrice || 0 } } }));
+                                                                                            setAddonShowError(prev => ({ ...prev, [addon.id]: false }));
+                                                                                        }}
+                                                                                        className={`relative flex items-center gap-1.5 py-1 px-2.5 text-xs border rounded transition-all cursor-pointer ${isSelected ? 'border-amber-500 text-amber-700 bg-amber-50 dark:bg-amber-900/30 font-medium ring-1 ring-amber-400/30' : isRequired ? 'border-red-300 text-gray-500' : 'border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:border-amber-300'}`}
+                                                                                    >
+                                                                                        {optImg && (
+                                                                                            <img src={optImg} alt={val.value} className={`w-7 h-7 rounded object-cover border cursor-pointer ${isSelected ? 'border-amber-400' : 'border-gray-200'}`}
+                                                                                                onClick={(e) => { e.stopPropagation(); setPreviewImg({ src: optImg, name: `${addon.name} - ${val.value}`, price: addonBasePrice + (val.additionalPrice || 0) }); }}
+                                                                                                onError={(e) => { e.target.style.display = 'none'; }}
+                                                                                            />
+                                                                                        )}
+                                                                                        <span>{val.value}</span>
+                                                                                        {val.additionalPrice > 0 && <span className='text-amber-500'>+₫{formatPrice(val.additionalPrice)}</span>}
+                                                                                    </button>
+                                                                                );
+                                                                            })}
+                                                                        </div>
+                                                                    </div>
+                                                                );
+                                                            })}
+                                                            <button onClick={() => handleAddAddonToCart(addon.id)} className='mt-1 w-full py-1.5 text-xs font-medium border-2 border-dashed border-amber-400 text-amber-600 rounded-md hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors cursor-pointer flex items-center justify-center gap-1'>
+                                                                <i className='bx bx-plus'></i> Thêm vào đơn
+                                                            </button>
+                                                        </div>
+                                                    ) : (
+                                                        <div className='px-3 py-2 border-t border-gray-100 dark:border-gray-700/50'>
+                                                            <button onClick={() => {
+                                                                setAddonCart(prev => ({ ...prev, [addon.id]: [...(prev[addon.id] || []), { selectedOptions: {}, qty: 1 }] }));
+                                                            }} className='w-full py-1.5 text-xs font-medium border-2 border-dashed border-amber-400 text-amber-600 rounded-md hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors cursor-pointer flex items-center justify-center gap-1'>
+                                                                <i className='bx bx-plus'></i> Thêm vào đơn
+                                                            </button>
+                                                        </div>
+                                                    )}
+
+                                                    {/* Cart items list */}
+                                                    {cartItems.length > 0 && (
+                                                        <div className='px-3 pb-2 border-t border-amber-200/50 dark:border-amber-800/30 bg-amber-50/30 dark:bg-amber-900/10'>
+                                                            <div className='text-xs font-medium text-amber-700 dark:text-amber-400 py-1.5'>Đã chọn:</div>
+                                                            {cartItems.map((item, idx) => {
+                                                                const optLabels = Object.entries(item.selectedOptions).map(([k, v]) => `${k}: ${v.value}`).join(', ');
+                                                                const itemAdditional = Object.values(item.selectedOptions).reduce((s, o) => s + (o.additionalPrice || 0), 0);
+                                                                const itemPrice = addonBasePrice + itemAdditional;
+                                                                return (
+                                                                    <div key={idx} className='flex items-center gap-2 py-1 border-b last:border-0 border-amber-100 dark:border-amber-800/20'>
+                                                                        <div className='flex-1 min-w-0 text-xs text-gray-600 dark:text-gray-400 truncate'>
+                                                                            {optLabels || 'Mặc định'}
+                                                                        </div>
+                                                                        <span className='text-xs font-medium text-rose-600 whitespace-nowrap'>₫{formatPrice(itemPrice)}</span>
+                                                                        <div className='flex items-center border border-gray-200 dark:border-gray-600 rounded overflow-hidden'>
+                                                                            <button onClick={() => handleAddonQty(addon.id, idx, -1)} className='w-6 h-6 flex items-center justify-center text-xs text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer'>-</button>
+                                                                            <span className='w-6 h-6 flex items-center justify-center text-xs bg-white dark:bg-gray-800 border-x border-gray-200 dark:border-gray-600'>{item.qty}</span>
+                                                                            <button onClick={() => handleAddonQty(addon.id, idx, 1)} className='w-6 h-6 flex items-center justify-center text-xs text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer'>+</button>
+                                                                        </div>
+                                                                        <button onClick={() => handleRemoveAddonItem(addon.id, idx)} className='text-red-400 hover:text-red-600 cursor-pointer'><i className='bx bx-trash text-sm'></i></button>
+                                                                    </div>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            );
+                        })()}
 
                         {/* Success Message */}
                         {addedSuccess && (
@@ -769,6 +994,25 @@ export default function ProductDetailPage() {
                     initialIndex={selectedImage}
                 />
             </main>
+
+            {/* Image Preview Popup */}
+            {previewImg && (
+                <div className='fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm' onClick={() => setPreviewImg(null)}>
+                    <div className='relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-3 max-w-sm w-[90vw] mx-4 animate-in zoom-in-95' onClick={e => e.stopPropagation()}>
+                        <button onClick={() => setPreviewImg(null)} className='absolute -top-2 -right-2 w-7 h-7 bg-gray-800 dark:bg-gray-600 text-white rounded-full flex items-center justify-center text-sm hover:bg-red-500 transition-colors cursor-pointer z-10'>
+                            <i className='bx bx-x'></i>
+                        </button>
+                        <img src={previewImg.src} alt={previewImg.name} className='w-full rounded-lg object-contain max-h-[50vh]' onError={(e) => { e.target.src = '/images/cameras-2.jpg'; }} />
+                        <div className='mt-2 text-center'>
+                            <div className='text-sm font-medium text-gray-800 dark:text-gray-200'>{previewImg.name}</div>
+                            {previewImg.price > 0 && (
+                                <div className='text-base font-bold text-rose-600 mt-0.5'>₫{formatPrice(previewImg.price)}</div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <Footer />
         </>
     );

@@ -9,6 +9,7 @@ import TopBar from '@/components/user/MainPage/TopBar/TopBar';
 import Footer from '@/components/user/MainPage/Footer/Footer';
 import OrderService from '@/services/OrderService';
 import OrderReviewModal from '@/components/user/OrderReviewModal/OrderReviewModal';
+import PageLoader from '@/components/common/PageLoader';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
@@ -308,10 +309,7 @@ export default function OrderHistoryPage()
 
                 {/* Loading */}
                 {loading && (
-                    <div className='flex flex-col items-center justify-center py-20'>
-                        <div className="animate-spin rounded-full h-10 w-10 border-2 border-rose-200 border-t-rose-600 mb-4"></div>
-                        <p className='text-gray-400 text-sm'>Đang tải đơn hàng...</p>
-                    </div>
+                    <PageLoader height="40vh" />
                 )}
 
                 {/* Empty State */}
