@@ -16,7 +16,7 @@ import CategorySale from '@/components/user/MainPage/CategorySale/CategorySale';
 const ProductCarousel = lazy(() => import('@/components/user/MainPage/ProductCarousel/ProductCarousel'));
 const SectionProductCardCarousel = lazy(() => import('@/components/user/MainPage/SectionProductCardCarousel/SectionProductCardCarousel'));
 const NewsSection = lazy(() => import('@/components/user/MainPage/NewsSection/NewsSection'));
-const BestSeller = lazy(() => import('@/components/user/MainPage/BestSeller/BestSeller'));
+const AllProducts = lazy(() => import('@/components/user/MainPage/AllProducts/AllProducts'));
 const BannerImage = lazy(() => import('@/components/user/MainPage/BannerImage/BannerImage'));
 const BrandCarousel = lazy(() => import('@/components/user/MainPage/BrandCarousel/BrandCarousel'));
 const Newsletter = lazy(() => import('@/components/user/MainPage/Newsletter/Newsletter'));
@@ -27,20 +27,15 @@ const SectionSpinner = ({ height = '200px' }) => (
     </div>
 );
 
-export default function HomePage()
-{
-    useEffect(() =>
-    {
-        const initializeNotifications = async () =>
-        {
-            try
-            {
+export default function HomePage() {
+    useEffect(() => {
+        const initializeNotifications = async () => {
+            try {
                 await NotificationService.setupSignalRNotifications();
                 NotificationService.requestNotificationPermission();
                 NotificationService.cleanOldNotifications();
                 console.log('📢 HomePage: Notification system initialized for user');
-            } catch (error)
-            {
+            } catch (error) {
                 console.error('❌ HomePage: Failed to initialize notifications:', error);
             }
         };
@@ -85,12 +80,17 @@ export default function HomePage()
                     </LazySection>
                 </div>
 
-                <div data-section="bestseller" data-label="Bán chạy" data-aos="fade-up" data-aos-delay="100">
-                    <LazySection height="600px">
-                        <Suspense fallback={<SectionSpinner height="600px" />}>
-                            <BestSeller />
-                        </Suspense>
-                    </LazySection>
+                <div data-section="allproducts" data-label="Tất cả SP" data-aos="fade-up" data-aos-delay="100">
+                    <Suspense fallback={
+                        <div className="w-full h-40 flex items-center justify-center text-gray-500">
+                            Đang tải tất cả sản phẩm...
+                        </div>
+                    }>
+                        <div className="py-2" />
+                        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 md:p-6 mb-6">
+                            <AllProducts />
+                        </div>
+                    </Suspense>
                 </div>
 
                 <LazySection height="160px">
