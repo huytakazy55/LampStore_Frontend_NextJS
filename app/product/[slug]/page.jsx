@@ -627,7 +627,7 @@ export default function ProductDetailPage() {
                                 <div className='mb-4 md:mb-6'>
                                     <div className='flex items-center gap-2 mb-3'>
                                         <i className='bx bx-gift text-amber-500 text-lg'></i>
-                                        <span className='text-sm font-medium text-gray-700 dark:text-gray-300'>Mua kèm giá ưu đãi</span>
+                                        <span className='text-sm font-medium text-gray-700 dark:text-gray-300'>Mua kèm phụ kiện</span>
                                     </div>
                                     <div className='space-y-3'>
                                         {addonList.map(addon => {

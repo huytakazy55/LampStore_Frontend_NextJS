@@ -1,7 +1,8 @@
 "use client";
 
 
-import { lazy, Suspense, useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import Header from '@/components/user/MainPage/Header/Header';
 import NavbarPrimary from '@/components/user/MainPage/NavbarPrimary/NavbarPrimary';
 import { SiteContent } from '@/components/user/MainPage/SiteContent/SiteContent';
@@ -12,14 +13,14 @@ import LazySection from '@/components/common/LazySection';
 import ScrollTimeline from '@/components/common/ScrollTimeline';
 
 // === Code Splitting: Lazy load các component nặng ===
-const CategorySale = lazy(() => import('@/components/user/MainPage/CategorySale/CategorySale'));
-const ProductCarousel = lazy(() => import('@/components/user/MainPage/ProductCarousel/ProductCarousel'));
-const SectionProductCardCarousel = lazy(() => import('@/components/user/MainPage/SectionProductCardCarousel/SectionProductCardCarousel'));
-const NewsSection = lazy(() => import('@/components/user/MainPage/NewsSection/NewsSection'));
-const AllProducts = lazy(() => import('@/components/user/MainPage/AllProducts/AllProducts'));
-const BannerImage = lazy(() => import('@/components/user/MainPage/BannerImage/BannerImage'));
-const Newsletter = lazy(() => import('@/components/user/MainPage/Newsletter/Newsletter'));
-const FlashSale = lazy(() => import('@/components/user/MainPage/FlashSale/FlashSale'));
+const CategorySale = dynamic(() => import('@/components/user/MainPage/CategorySale/CategorySale'), { ssr: false });
+const ProductCarousel = dynamic(() => import('@/components/user/MainPage/ProductCarousel/ProductCarousel'), { ssr: false });
+const SectionProductCardCarousel = dynamic(() => import('@/components/user/MainPage/SectionProductCardCarousel/SectionProductCardCarousel'), { ssr: false });
+const NewsSection = dynamic(() => import('@/components/user/MainPage/NewsSection/NewsSection'), { ssr: false });
+const AllProducts = dynamic(() => import('@/components/user/MainPage/AllProducts/AllProducts'), { ssr: false });
+const BannerImage = dynamic(() => import('@/components/user/MainPage/BannerImage/BannerImage'), { ssr: false });
+const Newsletter = dynamic(() => import('@/components/user/MainPage/Newsletter/Newsletter'), { ssr: false });
+const FlashSale = dynamic(() => import('@/components/user/MainPage/FlashSale/FlashSale'), { ssr: false });
 
 import PageLoader from '@/components/common/PageLoader';
 

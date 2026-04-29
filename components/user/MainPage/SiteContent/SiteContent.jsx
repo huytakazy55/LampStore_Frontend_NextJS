@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { useNavigate } from '@/lib/router-compat'
+import Image from 'next/image'
 const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_new_02.webp'; const Banner3 = '/images/banner_new_03.webp'; export const SiteContent = () =>
 {
   const navigate = useNavigate();
@@ -12,44 +13,49 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
     'Thiết Kế Tinh Tế',
     'Phong Cách Hiện Đại',
   ];
-  const [displayText, setDisplayText] = useState('');
-  const [phraseIdx, setPhraseIdx] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
+  
+  const mobileTextRef = useRef(null);
+  const desktopTextRef = useRef(null);
 
-  useEffect(() =>
-  {
-    const current = phrases[phraseIdx];
+  useEffect(() => {
     let timeout;
+    let phraseIdx = 0;
+    let charIdx = 0;
+    let isDeleting = false;
 
-    if (!isDeleting)
-    {
-      if (displayText.length < current.length)
-      {
-        timeout = setTimeout(() =>
-        {
-          setDisplayText(current.slice(0, displayText.length + 1));
-        }, 80);
-      } else
-      {
-        timeout = setTimeout(() => setIsDeleting(true), 2000);
+    const type = () => {
+      const currentPhrase = phrases[phraseIdx];
+      
+      if (!isDeleting) {
+        if (charIdx < currentPhrase.length) {
+          charIdx++;
+          const text = currentPhrase.slice(0, charIdx);
+          if (mobileTextRef.current) mobileTextRef.current.textContent = text;
+          if (desktopTextRef.current) desktopTextRef.current.textContent = text;
+          timeout = setTimeout(type, 80);
+        } else {
+          isDeleting = true;
+          timeout = setTimeout(type, 2000);
+        }
+      } else {
+        if (charIdx > 0) {
+          charIdx--;
+          const text = currentPhrase.slice(0, charIdx);
+          if (mobileTextRef.current) mobileTextRef.current.textContent = text;
+          if (desktopTextRef.current) desktopTextRef.current.textContent = text;
+          timeout = setTimeout(type, 40);
+        } else {
+          isDeleting = false;
+          phraseIdx = (phraseIdx + 1) % phrases.length;
+          timeout = setTimeout(type, 400); 
+        }
       }
-    } else
-    {
-      if (displayText.length > 0)
-      {
-        timeout = setTimeout(() =>
-        {
-          setDisplayText(displayText.slice(0, -1));
-        }, 40);
-      } else
-      {
-        setIsDeleting(false);
-        setPhraseIdx((phraseIdx + 1) % phrases.length);
-      }
-    }
+    };
+
+    timeout = setTimeout(type, 400); 
+    
     return () => clearTimeout(timeout);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [displayText, isDeleting, phraseIdx]);
+  }, []);
 
   // Inject blink keyframe into head
   useEffect(() =>
@@ -82,7 +88,7 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
             </span>
           </div>
           <h1 className="text-gray-900 dark:text-white text-lg font-bold leading-snug mb-2">
-            Đèn Ngủ Cao Cấp — <span className="text-amber-700">{displayText}</span>
+            Đèn Ngủ Cao Cấp — <span className="text-amber-700" ref={mobileTextRef}></span>
             <span
               className="inline-block w-[2px] h-[0.9em] bg-amber-600 ml-0.5 align-baseline"
               style={{ animation: 'blink 0.7s step-end infinite' }}
@@ -114,27 +120,24 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
             <div className="relative h-[15rem] md:h-[19rem] lg:h-[21rem]">
               {/* Main image (background) */}
               <div className="absolute top-0 left-0 w-[70%] h-[85%] overflow-hidden rounded-sm shadow-xl">
-                <img
+                <Image
                   src={Banner3}
                   alt="Bộ sưu tập đèn ngủ"
                   className="w-full h-full object-cover"
-                  width={560}
-                  height={285}
-                  fetchPriority="high"
-                  loading="eager"
-                  decoding="async"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  priority={true}
                 />
               </div>
               {/* Overlay image (foreground) */}
               <div className="absolute bottom-0 right-0 w-[55%] h-[65%] overflow-hidden rounded-sm shadow-2xl border-4 border-white">
-                <img
+                <Image
                   src={Banner1}
                   alt="Đèn ngủ cao cấp"
                   className="w-full h-full object-cover"
-                  width={440}
-                  height={220}
-                  loading="eager"
-                  decoding="async"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 40vw"
+                  priority={true}
                 />
               </div>
               {/* Decorative accent */}
@@ -155,7 +158,7 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
 
             {/* Heading */}
             <h1 className="text-gray-900 text-2xl md:text-3xl lg:text-[2rem] font-bold leading-tight mb-4 md:mb-5">
-              Đèn Ngủ Cao Cấp — <span className="text-amber-700">{displayText}</span>
+              Đèn Ngủ Cao Cấp — <span className="text-amber-700" ref={desktopTextRef}></span>
               <span
                 className="inline-block w-[2px] md:w-[3px] h-[1em] bg-amber-600 ml-0.5 align-baseline"
                 style={{ animation: 'blink 0.7s step-end infinite' }}
