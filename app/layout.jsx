@@ -59,8 +59,6 @@ export default function RootLayout({ children })
                 <link rel="dns-prefetch" href="https://capylumine.com" />
                 {/* Preload local Geist font */}
                 <link rel="preload" href="/fonts/geist/GeistVF.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-                {/* Preload LCP banner image */}
-                <link rel="preload" href="/images/banner_new_03.webp" as="image" type="image/webp" fetchPriority="high" />
                 {/* Boxicons — local with font-display:swap */}
                 <link rel="stylesheet" href="/css/boxicons.min.css" />
                 {/* Slick Carousel — local */}

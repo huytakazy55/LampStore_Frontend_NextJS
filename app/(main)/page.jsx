@@ -53,7 +53,7 @@ export default function HomePage() {
 
             <main>
 
-                <div data-section="hero" data-label="Trang chủ" data-aos="fade-up">
+                <div data-section="hero" data-label="Trang chủ">
                     <SiteContent />
                 </div>
 
