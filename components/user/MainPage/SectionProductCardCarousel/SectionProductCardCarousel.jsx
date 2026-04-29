@@ -174,7 +174,7 @@ const SectionProductCardCarousel = () =>
           Sản phẩm bán chạy
         </h3>
       </div>
-      <div>
+      <div style={{ minHeight: loading ? '300px' : 'auto', contain: 'layout style' }}>
         {loading ? (
           <div className='flex items-center justify-center h-[300px]'>
             <i className='bx bx-loader-alt bx-spin text-3xl text-yellow-400'></i>

@@ -32,9 +32,9 @@ const LazyMap = () => {
 
 const Footer = () => {
     return (
-        <footer>
+        <footer style={{ contain: 'layout style', contentVisibility: 'auto', containIntrinsicSize: 'auto 500px' }}>
             {/* Main Footer */}
-            <div className='relative overflow-hidden bg-black'>
+            <div className='relative overflow-hidden bg-black' style={{ minHeight: '380px' }}>
                 {/* === Top yellow S-curve flowing from left === */}
                 <svg className='absolute top-0 left-0 w-full h-full pointer-events-none' viewBox="0 0 1440 500" preserveAspectRatio="none" fill="none">
                     {/* Outer yellow curve - wraps behind the circle */}

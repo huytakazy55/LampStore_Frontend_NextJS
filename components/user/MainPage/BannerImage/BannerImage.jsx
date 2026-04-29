@@ -17,10 +17,16 @@ const BannerImage = () => {
     cacheTime: 20 * 60 * 1000, // 20 phút
   });
 
+  // Use consistent container with fixed min-height to prevent CLS
+  const containerMinHeight = 'min-h-[7rem] md:min-h-[10rem]';
+
   if (loading) {
     return (
-      <div className='w-full h-28 md:h-40 mt-8 md:mt-16 xl:mx-auto xl:max-w-[1440px] flex justify-center items-center px-4 xl:px-0'>
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-400"></div>
+      <div className={`w-full mt-8 md:mt-16 xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0 ${containerMinHeight}`}>
+        <div className={`flex flex-col sm:flex-row justify-between items-center w-full gap-3 md:gap-4 ${containerMinHeight}`}>
+          <div className='w-full sm:w-[49%] h-28 md:h-40 bg-gray-100 rounded-lg animate-pulse' />
+          <div className='w-full sm:w-[49%] h-28 md:h-40 bg-gray-100 rounded-lg animate-pulse' />
+        </div>
       </div>
     );
   }
@@ -30,8 +36,8 @@ const BannerImage = () => {
   }
 
   return (
-    <div className='w-full mt-8 md:mt-16 xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0'>
-      <div className='flex flex-col sm:flex-row justify-between items-center w-full gap-3 md:gap-4'>
+    <div className={`w-full mt-8 md:mt-16 xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0 ${containerMinHeight}`}>
+      <div className={`flex flex-col sm:flex-row justify-between items-center w-full gap-3 md:gap-4 ${containerMinHeight}`}>
         {banners.slice(0, 2).map((banner, index) => (
           <div key={banner.id} className='w-full sm:w-[49%] h-28 md:h-40 relative overflow-hidden rounded-lg'>
             <img
@@ -39,6 +45,8 @@ const BannerImage = () => {
               src={resolveImagePath(banner.imageUrl)}
               alt={banner.title || 'Banner'}
               loading="lazy"
+              width={700}
+              height={160}
             />
             {banner.linkUrl && (
               <a

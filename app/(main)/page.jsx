@@ -61,7 +61,7 @@ export default function HomePage() {
 
                 {/* === BELOW THE FOLD: Lazy load khi scroll đến === */}
 
-                <div data-section="categories" data-label="Danh mục" data-aos="fade-up">
+                <div data-section="categories" data-label="Danh mục" data-aos="fade-up" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 280px' }}>
                     <LazySection minHeightClass="min-h-[120px] sm:min-h-[280px]">
                         <Suspense fallback={<SectionSpinner minHeightClass="min-h-[120px] sm:min-h-[280px]" />}>
                             <CategorySale />
@@ -74,7 +74,7 @@ export default function HomePage() {
                     <FlashSale />
                 </Suspense>
 
-                <div data-section="products" data-label="Sản phẩm" data-aos="fade-up" data-aos-delay="100">
+                <div data-section="products" data-label="Sản phẩm" data-aos="fade-up" data-aos-delay="100" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 500px' }}>
                     <LazySection minHeightClass="min-h-[280px] sm:min-h-[500px]">
                         <Suspense fallback={<SectionSpinner minHeightClass="min-h-[280px] sm:min-h-[500px]" />}>
                             <ProductCarousel />
@@ -82,7 +82,7 @@ export default function HomePage() {
                     </LazySection>
                 </div>
 
-                <div data-section="trending" data-label="Xu hướng" data-aos="fade-up">
+                <div data-section="trending" data-label="Xu hướng" data-aos="fade-up" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 400px' }}>
                     <LazySection minHeightClass="min-h-[200px] sm:min-h-[400px]">
                         <Suspense fallback={<SectionSpinner minHeightClass="min-h-[200px] sm:min-h-[400px]" />}>
                             <SectionProductCardCarousel />
@@ -105,7 +105,7 @@ export default function HomePage() {
                     </Suspense>
                 </LazySection>
 
-                <div data-section="news" data-label="Tin tức" data-aos="fade-up">
+                <div data-section="news" data-label="Tin tức" data-aos="fade-up" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 450px' }}>
                     <LazySection minHeightClass="min-h-[300px] sm:min-h-[450px]">
                         <Suspense fallback={<SectionSpinner minHeightClass="min-h-[300px] sm:min-h-[450px]" />}>
                             <NewsSection />

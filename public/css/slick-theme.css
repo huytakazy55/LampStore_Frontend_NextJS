@@ -4,16 +4,7 @@
 {
 }
 
-/* Icons */
-@font-face
-{
-    font-family: 'slick';
-    font-weight: normal;font-display:swap;
-    font-style: normal;
-
-    src: url('/fonts/slick/slick.eot');
-    src: url('/fonts/slick/slick.eot?#iefix') format('embedded-opentype'), url('/fonts/slick/slick.woff') format('woff'), url('/fonts/slick/slick.ttf') format('truetype'), url('/fonts/slick/slick.svg#slick') format('svg');
-}
+/* Icons — Using system fonts instead of slick web font to prevent CLS */
 /* Arrows */
 .slick-prev,
 .slick-next
@@ -65,7 +56,7 @@
 .slick-prev:before,
 .slick-next:before
 {
-    font-family: 'slick';
+    font-family: system-ui, -apple-system, sans-serif;
     font-size: 20px;
     line-height: 1;
 
@@ -176,8 +167,8 @@
 }
 .slick-dots li button:before
 {
-    font-family: 'slick';
-    font-size: 6px;
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 10px;
     line-height: 20px;
 
     position: absolute;

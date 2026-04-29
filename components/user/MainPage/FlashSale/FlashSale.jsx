@@ -79,7 +79,8 @@ const FlashSale = () =>
         return () => clearInterval(timerRef.current);
     }, [flashSale]);
 
-    if (loading || !flashSale) return null;
+    // Return empty placeholder instead of null to prevent CLS when flash sale loads
+    if (loading || !flashSale) return <div style={{ contain: 'layout style', minHeight: 0 }} />;
 
     const items = flashSale.items?.$values || flashSale.items || [];
     if (items.length === 0) return null;
