@@ -219,7 +219,7 @@ export default function OrderHistoryPage()
                         <div className='bg-gray-50 dark:bg-gray-800/50 rounded-lg px-4 py-3 space-y-2 text-sm'>
                             <div className='flex justify-between text-gray-500 dark:text-gray-400'>
                                 <span>Tạm tính:</span>
-                                <span>{formatPrice(order.totalAmount)}đ</span>
+                                <span>{formatPrice(order.totalAmount - (order.shippingFee || 0))}đ</span>
                             </div>
                             <div className='flex justify-between text-gray-500 dark:text-gray-400'>
                                 <span>Phí vận chuyển:</span>
@@ -236,7 +236,7 @@ export default function OrderHistoryPage()
                             <div className='flex justify-between items-center pt-2 border-t border-gray-200 dark:border-gray-700'>
                                 <span className='font-bold text-gray-800 dark:text-gray-100'>Tổng cộng:</span>
                                 <span className='text-lg font-bold text-rose-600'>
-                                    {formatPrice(order.totalAmount + (order.shippingFee || 0))}đ
+                                    {formatPrice(order.totalAmount)}đ
                                 </span>
                             </div>
                         </div>
@@ -416,7 +416,7 @@ export default function OrderHistoryPage()
                                             <div className='text-right'>
                                                 <span className='text-[10px] text-gray-400 block leading-tight'>Tổng cộng</span>
                                                 <span className='text-base font-bold text-rose-600'>
-                                                    {formatPrice(order.totalAmount + (order.shippingFee || 0))}đ
+                                                    {formatPrice(order.totalAmount)}đ
                                                 </span>
                                             </div>
                                             <i className='bx bx-chevron-right text-gray-300 group-hover:text-rose-400 transition-colors text-lg'></i>
