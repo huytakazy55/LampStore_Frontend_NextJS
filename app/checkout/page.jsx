@@ -56,6 +56,11 @@ export default function CheckoutPage()
 
         if (isSuccess === 'true') {
             setOrderId(paramOrderCode || 'N/A');
+            const pendingTotal = sessionStorage.getItem('pendingOrderTotal');
+            if (pendingTotal) {
+                setSavedTotal(Number(pendingTotal));
+                sessionStorage.removeItem('pendingOrderTotal');
+            }
             setOrderSuccess(true);
             clearCart();
             toast.success('Thanh toán thành công!');
@@ -312,6 +317,7 @@ export default function CheckoutPage()
 
             if (created.checkoutUrl)
             {
+                sessionStorage.setItem('pendingOrderTotal', total.toString());
                 window.location.href = created.checkoutUrl;
                 return;
             }

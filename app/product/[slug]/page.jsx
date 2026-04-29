@@ -305,6 +305,7 @@ export default function ProductDetailPage() {
             name: product.name,
             image: mainImg,
             price: basePrice,
+            finalPrice: price,
             quantity,
             selectedOptions,
             key: `buynow_${product.id}_${Date.now()}`,
@@ -318,11 +319,14 @@ export default function ProductDetailPage() {
             const addonImg = addonImgs.length > 0 ? getImgSrc(addonImgs[0]?.imagePath) : '/images/cameras-2.jpg';
             const addonBasePrice = addon.variant?.discountPrice || addon.variant?.price || addon.minPrice || 0;
             items.forEach((item, idx) => {
+                const itemAdditional = Object.values(item.selectedOptions).reduce((s, o) => s + (o.additionalPrice || 0), 0);
+                const itemPrice = addonBasePrice + itemAdditional;
                 buyItems.push({
                     productId: addon.id,
                     name: addon.name,
                     image: addonImg,
                     price: addonBasePrice,
+                    finalPrice: itemPrice,
                     quantity: item.qty,
                     selectedOptions: item.selectedOptions,
                     key: `buynow_addon_${addon.id}_${idx}_${Date.now()}`,
@@ -397,7 +401,7 @@ export default function ProductDetailPage() {
     const totalAdditional = Object.values(selectedOptions)
         .reduce((sum, opt) => sum + (opt.additionalPrice || 0), 0);
     const currentVariant = variant;
-    const basePrice = currentVariant?.discountPrice || currentVariant?.price || product?.minPrice || 0;
+    const basePrice = flashSaleItem ? flashSaleItem.flashSalePrice : (currentVariant?.discountPrice || currentVariant?.price || product?.minPrice || 0);
     const price = basePrice + totalAdditional;
     const originalPrice = (currentVariant?.price || product?.maxPrice || 0) + totalAdditional;
     const hasDiscount = currentVariant?.discountPrice && currentVariant.discountPrice < currentVariant.price;
