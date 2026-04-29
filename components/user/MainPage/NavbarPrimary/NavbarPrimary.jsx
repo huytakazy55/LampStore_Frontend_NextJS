@@ -160,7 +160,7 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () =>
   if (loading)
   {
     return (
-      <div className='bg-yellow-400 w-full h-12'>
+      <div className='hidden md:block bg-yellow-400 w-full h-12'>
         <nav className='relative xl:mx-auto xl:max-w-[1440px] flex justify-center items-center h-full px-4 xl:px-0'>
           <div className="text-black font-medium text-sm">Đang tải danh mục...</div>
         </nav>

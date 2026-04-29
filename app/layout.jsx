@@ -1,6 +1,9 @@
 import React from 'react';
 import localFont from 'next/font/local';
 import './globals.css';
+import '../public/css/boxicons.min.css';
+import '../public/css/slick.css';
+import '../public/css/slick-theme.css';
 
 const geistFont = localFont({
     src: '../public/fonts/geist/GeistVF.woff2',
@@ -64,13 +67,6 @@ export default function RootLayout({ children })
             <head>
                 <link rel="manifest" href="/manifest.json" />
                 <link rel="dns-prefetch" href="https://capylumine.com" />
-                {/* Preload local Geist font */}
-                <link rel="preload" href="/fonts/geist/GeistVF.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-                {/* Boxicons — local with font-display:swap */}
-                <link rel="stylesheet" href="/css/boxicons.min.css" />
-                {/* Slick Carousel — local */}
-                <link rel="stylesheet" href="/css/slick.css" />
-                <link rel="stylesheet" href="/css/slick-theme.css" />
             </head>
             <body className={`${geistFont.variable} font-sans antialiased`}>
                 <React.Suspense fallback={null}>
