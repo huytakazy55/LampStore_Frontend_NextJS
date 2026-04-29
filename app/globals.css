@@ -1,15 +1,6 @@
 @import '../styles/admin-table.css';
 @import "tailwindcss";
 
-/* ---- Local Geist font ---- */
-@font-face {
-  font-family: 'Geist';
-  src: url('/fonts/geist/GeistVF.woff2') format('woff2');
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
 /* Tell Tailwind v4 to use .dark class strategy instead of prefers-color-scheme */
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -21,7 +12,7 @@ html {
 /* Tailwind v4 CSS-based configuration */
 @theme {
   --font-poppins: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif;
-  --font-sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  --font-sans: var(--font-geist), -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   --font-mono: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 
   --shadow-darker: inset 0 0 0 1px rgb(0 0 0 / 0.05);

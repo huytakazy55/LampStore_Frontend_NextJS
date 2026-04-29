@@ -52,7 +52,7 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
       }
     };
 
-    timeout = setTimeout(type, 400); 
+    timeout = setTimeout(type, 3000); 
     
     return () => clearTimeout(timeout);
   }, []);
@@ -87,7 +87,7 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
               CapyLumine
             </span>
           </div>
-          <h1 className="text-gray-900 dark:text-white text-lg font-bold leading-snug mb-2">
+          <h1 className="text-gray-900 dark:text-white text-lg font-bold leading-snug mb-2 min-h-[3.5rem]">
             Đèn Ngủ Cao Cấp — <span className="text-amber-700" ref={mobileTextRef}></span>
             <span
               className="inline-block w-[2px] h-[0.9em] bg-amber-600 ml-0.5 align-baseline"
@@ -157,7 +157,7 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
             </div>
 
             {/* Heading */}
-            <h1 className="text-gray-900 text-2xl md:text-3xl lg:text-[2rem] font-bold leading-tight mb-4 md:mb-5">
+            <h1 className="text-gray-900 text-2xl md:text-3xl lg:text-[2rem] font-bold leading-tight mb-4 md:mb-5 min-h-[4.5rem] md:min-h-[5.5rem] lg:min-h-[6rem]">
               Đèn Ngủ Cao Cấp — <span className="text-amber-700" ref={desktopTextRef}></span>
               <span
                 className="inline-block w-[2px] md:w-[3px] h-[1em] bg-amber-600 ml-0.5 align-baseline"

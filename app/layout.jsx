@@ -1,5 +1,12 @@
 import React from 'react';
+import localFont from 'next/font/local';
 import './globals.css';
+
+const geistFont = localFont({
+    src: '../../public/fonts/geist/GeistVF.woff2',
+    display: 'swap',
+    variable: '--font-geist',
+});
 
 import ClientProviders from '@/components/providers/ClientProviders';
 import AnalyticsTracker from '@/components/common/AnalyticsTracker';
@@ -65,7 +72,7 @@ export default function RootLayout({ children })
                 <link rel="stylesheet" href="/css/slick.css" />
                 <link rel="stylesheet" href="/css/slick-theme.css" />
             </head>
-            <body className="font-sans antialiased">
+            <body className={`${geistFont.variable} font-sans antialiased`}>
                 <React.Suspense fallback={null}>
                     <AnalyticsTracker />
                 </React.Suspense>
