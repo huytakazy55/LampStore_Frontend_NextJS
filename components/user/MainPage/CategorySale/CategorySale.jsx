@@ -90,7 +90,7 @@ const CategorySale = () =>
   }
 
   return (
-    <div className='hidden sm:block w-full mb-8'>
+    <div className='w-full mb-8'>
       <div className='xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0'>
         {/* Mobile: compact horizontal scroll strip */}
         <div className='sm:hidden'>

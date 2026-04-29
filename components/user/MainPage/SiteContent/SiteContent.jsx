@@ -87,7 +87,7 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
               CapyLumine
             </span>
           </div>
-          <h1 className="text-gray-900 dark:text-white text-lg font-bold leading-snug mb-2 min-h-[3.5rem]">
+          <h1 className="text-gray-900 dark:text-white text-lg font-bold leading-snug mb-2 min-h-[5rem]">
             Đèn Ngủ Cao Cấp — <span className="text-amber-700" ref={mobileTextRef}></span>
             <span
               className="inline-block w-[2px] h-[0.9em] bg-amber-600 ml-0.5 align-baseline"
