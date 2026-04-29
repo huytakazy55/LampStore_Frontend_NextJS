@@ -15,13 +15,14 @@ import { useScrollContainer } from '@/lib/scroll-compat';
  * 
  * @param {Object} props
  * @param {React.ReactNode} props.children - Component cần lazy load
- * @param {string} props.height - Minimum height cho placeholder (tránh layout shift)
+ * @param {string} props.minHeightClass - Responsive Tailwind class cho chiều cao (ví dụ: 'min-h-[120px] sm:min-h-[280px]')
  * @param {string} props.className - Custom className
- * @param {string} props.rootMargin - Khoảng cách preload (mặc định '300px')
+ * @param {string} props.rootMargin - Khoảng cách preload (mặc định '300px 0px')
  */
 const LazySection = memo(({ 
   children, 
-  height = '200px', 
+  height, // Keep for backward compatibility
+  minHeightClass = '',
   className = '',
   rootMargin = '300px 0px',
 }) => {
@@ -32,15 +33,19 @@ const LazySection = memo(({
     root: scrollContainer,
   });
 
+  // Calculate dynamic classes and styles
+  const containerStyle = height && !hasBeenVisible ? { minHeight: height } : {};
+  const skeletonStyle = height ? { height } : {};
+  
+  const containerClass = `${className} ${!hasBeenVisible ? minHeightClass : ''}`.trim();
+  const skeletonClass = `w-full flex justify-center items-center ${minHeightClass}`.trim();
+
   return (
-    <div ref={ref} className={className} style={{ minHeight: hasBeenVisible ? 'auto' : height }}>
+    <div ref={ref} className={containerClass} style={containerStyle}>
       {hasBeenVisible ? (
         children
       ) : (
-        <div 
-          className="w-full flex justify-center items-center" 
-          style={{ height }}
-        >
+        <div className={skeletonClass} style={skeletonStyle}>
           <div className="flex flex-col items-center gap-2">
             <div className="w-8 h-8 border-2 border-gray-200 border-t-yellow-400 rounded-full animate-spin"></div>
           </div>

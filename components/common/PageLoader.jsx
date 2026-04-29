@@ -5,9 +5,9 @@
  * Capybara-themed orbiting dots animation with glow effect.
  * No text, purely visual.
  */
-const PageLoader = ({ height = '60vh' }) => {
+const PageLoader = ({ height, minHeightClass = '' }) => {
     return (
-        <div className={`w-full flex justify-center items-center`} style={{ minHeight: height }}>
+        <div className={`w-full flex justify-center items-center ${minHeightClass}`} style={height ? { minHeight: height } : {}}>
             <div className="relative w-20 h-20">
                 {/* Outer rotating ring */}
                 <div className="absolute inset-0 rounded-full border-2 border-transparent"

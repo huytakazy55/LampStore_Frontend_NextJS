@@ -24,8 +24,8 @@ const FlashSale = dynamic(() => import('@/components/user/MainPage/FlashSale/Fla
 
 import PageLoader from '@/components/common/PageLoader';
 
-const SectionSpinner = ({ height = '200px' }) => (
-    <PageLoader height={height} />
+const SectionSpinner = ({ height, minHeightClass = '' }) => (
+    <PageLoader height={height} minHeightClass={minHeightClass} />
 );
 
 export default function HomePage() {
@@ -62,8 +62,8 @@ export default function HomePage() {
                 {/* === BELOW THE FOLD: Lazy load khi scroll đến === */}
 
                 <div data-section="categories" data-label="Danh mục" data-aos="fade-up">
-                    <LazySection height="280px">
-                        <Suspense fallback={<SectionSpinner height="280px" />}>
+                    <LazySection minHeightClass="min-h-[120px] sm:min-h-[280px]">
+                        <Suspense fallback={<SectionSpinner minHeightClass="min-h-[120px] sm:min-h-[280px]" />}>
                             <CategorySale />
                         </Suspense>
                     </LazySection>
@@ -75,16 +75,16 @@ export default function HomePage() {
                 </Suspense>
 
                 <div data-section="products" data-label="Sản phẩm" data-aos="fade-up" data-aos-delay="100">
-                    <LazySection height="500px">
-                        <Suspense fallback={<SectionSpinner height="500px" />}>
+                    <LazySection minHeightClass="min-h-[280px] sm:min-h-[500px]">
+                        <Suspense fallback={<SectionSpinner minHeightClass="min-h-[280px] sm:min-h-[500px]" />}>
                             <ProductCarousel />
                         </Suspense>
                     </LazySection>
                 </div>
 
                 <div data-section="trending" data-label="Xu hướng" data-aos="fade-up">
-                    <LazySection height="400px">
-                        <Suspense fallback={<SectionSpinner height="400px" />}>
+                    <LazySection minHeightClass="min-h-[200px] sm:min-h-[400px]">
+                        <Suspense fallback={<SectionSpinner minHeightClass="min-h-[200px] sm:min-h-[400px]" />}>
                             <SectionProductCardCarousel />
                         </Suspense>
                     </LazySection>
@@ -99,22 +99,22 @@ export default function HomePage() {
                     </Suspense>
                 </div>
 
-                <LazySection height="160px">
-                    <Suspense fallback={<SectionSpinner height="160px" />}>
+                <LazySection minHeightClass="min-h-[100px] sm:min-h-[160px]">
+                    <Suspense fallback={<SectionSpinner minHeightClass="min-h-[100px] sm:min-h-[160px]" />}>
                         <BannerImage />
                     </Suspense>
                 </LazySection>
 
                 <div data-section="news" data-label="Tin tức" data-aos="fade-up">
-                    <LazySection height="450px">
-                        <Suspense fallback={<SectionSpinner height="450px" />}>
+                    <LazySection minHeightClass="min-h-[300px] sm:min-h-[450px]">
+                        <Suspense fallback={<SectionSpinner minHeightClass="min-h-[300px] sm:min-h-[450px]" />}>
                             <NewsSection />
                         </Suspense>
                     </LazySection>
                 </div>
 
-                <LazySection height="80px">
-                    <Suspense fallback={<SectionSpinner height="80px" />}>
+                <LazySection minHeightClass="min-h-[80px] sm:min-h-[80px]">
+                    <Suspense fallback={<SectionSpinner minHeightClass="min-h-[80px] sm:min-h-[80px]" />}>
                         <Newsletter />
                     </Suspense>
                 </LazySection>
