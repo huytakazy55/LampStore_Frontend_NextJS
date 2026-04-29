@@ -115,7 +115,7 @@ export default function NewsDetailPage() {
                                     <i className='bx bx-show'></i> {news.viewCount || 0} lượt xem
                                 </span>
                             </div>
-                            <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed"
+                            <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed overflow-hidden break-words [&_img]:max-w-full [&_img]:h-auto [&_table]:w-full [&_table]:table-fixed [&_pre]:overflow-x-auto [&_iframe]:max-w-full"
                                 dangerouslySetInnerHTML={{ __html: news.content }} />
                         </div>
                     </article>

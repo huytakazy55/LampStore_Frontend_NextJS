@@ -652,3 +652,43 @@ html {
     box-shadow: inset 0px 0px 0px 40px #22c55e;
   }
 }
+
+/* ===== News/CMS Content Overflow Fix ===== */
+.prose {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.prose img {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+.prose table {
+  width: 100% !important;
+  table-layout: fixed;
+  overflow-wrap: break-word;
+}
+
+.prose pre,
+.prose code {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.prose iframe,
+.prose video,
+.prose embed,
+.prose object {
+  max-width: 100% !important;
+}
+
+.prose p,
+.prose li,
+.prose td,
+.prose th,
+.prose div {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}

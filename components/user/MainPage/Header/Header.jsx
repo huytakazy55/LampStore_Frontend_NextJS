@@ -32,7 +32,6 @@ const Header = () =>
   const [profileApiData, setProfileApiData] = useState(null);
   const [arrowIcon, setArrowIcon] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const { data: categories = [] } = useCategories();
   const [suggestions, setSuggestions] = useState({ categories: [], products: [] });
@@ -82,16 +81,6 @@ const Header = () =>
     setToggleLogin(!toggleLogin);
   }
 
-  const toggleArrow = () =>
-  {
-    setArrowIcon(!arrowIcon);
-  };
-
-  const closeArrow = () =>
-  {
-    setArrowIcon(false);
-  };
-
   const toggleActionLoginForm = () =>
   {
     setToggleActionLogin(!toggleActionLogin);
@@ -116,11 +105,12 @@ const Header = () =>
     }
   };
 
-  // Xử lý tìm kiếm nhanh — chỉ hiện gợi ý
-  const handleQuickSearch = async () =>
+  // Chuyển trang tìm kiếm
+  const handleSearch = () =>
   {
     if (!searchKeyword.trim()) return;
-    fetchSuggestions(searchKeyword);
+    setShowSuggestions(false);
+    navigate(`/tim-kiem?q=${encodeURIComponent(searchKeyword.trim())}`);
   };
 
   // Debounced search suggestions
@@ -178,7 +168,7 @@ const Header = () =>
     navigate(`/categories/${category.slug || category.id}`);
   };
 
-  // Handle suggestion click - product
+  // Handle suggestion click - product → vào trang sản phẩm
   const handleProductSuggestionClick = (product) =>
   {
     setShowSuggestions(false);
@@ -186,12 +176,12 @@ const Header = () =>
     navigate(`/product/${product.slug || product.id}`);
   };
 
-  // Xử lý Enter key — hiện gợi ý
+  // Enter key → chuyển trang tìm kiếm
   const handleKeyDown = (e) =>
   {
     if (e.key === 'Enter')
     {
-      handleQuickSearch();
+      handleSearch();
     }
   };
 
@@ -293,6 +283,15 @@ const Header = () =>
             </button>
           )}
 
+          {/* Nút tìm kiếm */}
+          <button
+            aria-label="Tìm kiếm"
+            className='flex items-center justify-center w-9 h-9 mr-[2px] bg-amber-500 hover:bg-amber-600 text-white rounded-full transition-all duration-200 active:scale-90 cursor-pointer shrink-0'
+            onClick={handleSearch}
+          >
+            <i className='bx bx-search text-lg'></i>
+          </button>
+
           {/* Search Suggestions Dropdown */}
           {showSuggestions && (suggestions.categories.length > 0 || suggestions.products.length > 0) && (
             <div
@@ -336,59 +335,19 @@ const Header = () =>
                   ))}
                 </div>
               )}
+
+              {/* Xem tất cả kết quả */}
+              {searchKeyword.trim() && (
+                <div
+                  className='border-t border-gray-100 dark:border-gray-800 px-4 py-3 cursor-pointer hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors group flex items-center justify-center gap-2'
+                  onClick={handleSearch}
+                >
+                  <i className='bx bx-right-arrow-alt text-amber-500 group-hover:translate-x-1 transition-transform'></i>
+                  <span className='text-sm font-medium text-amber-600 dark:text-amber-400'>Xem tất cả kết quả cho "{searchKeyword}"</span>
+                </div>
+              )}
             </div>
           )}
-
-          {/* Dropdown danh mục */}
-          <div className='hidden lg:flex items-center h-full relative w-[30%] border-l border-amber-300 dark:border-amber-600'>
-            <div
-              className='flex items-center justify-between w-full h-full px-4 cursor-pointer select-none hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 rounded-r-full'
-              onClick={() => setArrowIcon(!arrowIcon)}
-              onBlur={() => setTimeout(() => setArrowIcon(false), 150)}
-              tabIndex={0}
-            >
-              <span className='text-sm font-medium text-gray-500 dark:text-gray-400 truncate'>
-                {selectedCategory
-                  ? categories.find(c => String(c.id) === String(selectedCategory))?.name || 'Tất cả danh mục'
-                  : 'Tất cả danh mục'}
-              </span>
-              <i className={`bx bx-chevron-down text-gray-400 text-sm transition-transform duration-300 flex-shrink-0 ${arrowIcon ? 'rotate-180' : ''}`}></i>
-            </div>
-
-            {/* Custom Dropdown Menu */}
-            <div
-              className={`absolute top-[calc(100%+8px)] right-0 w-full min-w-[200px] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 z-50 overflow-hidden transition-all duration-300 origin-top ${arrowIcon
-                ? 'opacity-100 scale-y-100 translate-y-0'
-                : 'opacity-0 scale-y-0 -translate-y-2 pointer-events-none'
-                }`}
-            >
-              <div className='py-1.5 max-h-[280px] overflow-y-auto custom-scrollbar'>
-                <div
-                  className={`flex items-center gap-2.5 px-4 py-2.5 cursor-pointer transition-all duration-200 text-sm ${selectedCategory === ''
-                    ? 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 font-semibold border-l-[3px] border-amber-400'
-                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white hover:pl-5 border-l-[3px] border-transparent'
-                    }`}
-                  onClick={() => { setSelectedCategory(''); setArrowIcon(false); }}
-                >
-                  <i className={`bx bx-category text-base ${selectedCategory === '' ? 'text-amber-500' : 'text-gray-400'}`}></i>
-                  Tất cả danh mục
-                </div>
-                {categories.map((category) => (
-                  <div
-                    key={category.id}
-                    className={`flex items-center gap-2.5 px-4 py-2.5 cursor-pointer transition-all duration-200 text-sm ${String(selectedCategory) === String(category.id)
-                      ? 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 font-semibold border-l-[3px] border-amber-400'
-                      : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white hover:pl-5 border-l-[3px] border-transparent'
-                      }`}
-                    onClick={() => { setSelectedCategory(String(category.id)); setArrowIcon(false); }}
-                  >
-                    <i className={`bx bx-lamp text-base ${String(selectedCategory) === String(category.id) ? 'text-amber-500' : 'text-gray-400'}`}></i>
-                    {category.name}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Action icons - desktop */}
@@ -483,12 +442,20 @@ const Header = () =>
           {searchKeyword && (
             <button
               aria-label="Xóa từ khóa tìm kiếm"
-              className='flex items-center justify-center w-6 h-6 mr-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200'
+              className='flex items-center justify-center w-6 h-6 mr-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200'
               onClick={() => { setSearchKeyword(''); setSuggestions({ categories: [], products: [] }); setShowSuggestions(false); }}
             >
               <i className='bx bx-x text-gray-400 text-base'></i>
             </button>
           )}
+          {/* Nút tìm kiếm mobile */}
+          <button
+            aria-label="Tìm kiếm"
+            className='flex items-center justify-center w-8 h-8 mr-1 bg-amber-500 hover:bg-amber-600 text-white rounded-full transition-all duration-200 active:scale-90 cursor-pointer shrink-0'
+            onClick={handleSearch}
+          >
+            <i className='bx bx-search text-base'></i>
+          </button>
         </div>
         {/* Mobile Search Suggestions */}
         {
