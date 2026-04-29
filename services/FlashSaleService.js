@@ -102,6 +102,20 @@ class FlashSaleService
         }
     }
 
+    // Cập nhật sản phẩm trong flash sale
+    async updateItem(flashSaleId, itemId, itemData)
+    {
+        try
+        {
+            const response = await axiosInstance.put(`/api/FlashSales/${flashSaleId}/items/${itemId}`, itemData);
+            return response.data;
+        } catch (error)
+        {
+            console.error('Error updating flash sale item:', error);
+            throw error;
+        }
+    }
+
     // Xóa sản phẩm khỏi flash sale
     async removeItem(flashSaleId, itemId)
     {

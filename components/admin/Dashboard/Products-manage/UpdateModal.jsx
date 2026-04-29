@@ -180,7 +180,7 @@ const UpdateModal = ({ openUpdate, handleUpdateClose, fetchProducts, style, cate
             sellCount: productData?.sellCount,
             dateAdded: productData?.dateAdded,
             status: productData?.status,
-            addOnProductIds: (productData?.addOnProducts || []).map(a => a.id),
+            addOnProductIds: (productData?.addOnProducts?.$values || productData?.addOnProducts || []).map(a => a.id),
             price: variant?.price,
             discountPrice: variant?.discountPrice,
             stock: variant?.stock,

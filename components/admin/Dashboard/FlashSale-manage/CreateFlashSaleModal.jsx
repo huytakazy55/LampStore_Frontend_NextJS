@@ -132,10 +132,18 @@ const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) => {
                         await FlashSaleService.removeItem(flashSale.id, oldId);
                     }
                 }
-                // Add new items (no id = new)
+                // Add new items or update existing items
                 for (const item of items) {
                     if (!item.id) {
                         await FlashSaleService.addItem(flashSale.id, {
+                            productId: item.productId,
+                            discountPercent: Number(item.discountPercent),
+                            flashSalePrice: Number(item.flashSalePrice),
+                            stock: Number(item.stock),
+                            order: Number(item.order)
+                        });
+                    } else {
+                        await FlashSaleService.updateItem(flashSale.id, item.id, {
                             productId: item.productId,
                             discountPercent: Number(item.discountPercent),
                             flashSalePrice: Number(item.flashSalePrice),
