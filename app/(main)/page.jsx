@@ -18,7 +18,6 @@ const SectionProductCardCarousel = lazy(() => import('@/components/user/MainPage
 const NewsSection = lazy(() => import('@/components/user/MainPage/NewsSection/NewsSection'));
 const AllProducts = lazy(() => import('@/components/user/MainPage/AllProducts/AllProducts'));
 const BannerImage = lazy(() => import('@/components/user/MainPage/BannerImage/BannerImage'));
-const BrandCarousel = lazy(() => import('@/components/user/MainPage/BrandCarousel/BrandCarousel'));
 const Newsletter = lazy(() => import('@/components/user/MainPage/Newsletter/Newsletter'));
 const FlashSale = lazy(() => import('@/components/user/MainPage/FlashSale/FlashSale'));
 
@@ -112,12 +111,6 @@ export default function HomePage() {
                         </Suspense>
                     </LazySection>
                 </div>
-
-                <LazySection height="112px">
-                    <Suspense fallback={<SectionSpinner height="112px" />}>
-                        <BrandCarousel />
-                    </Suspense>
-                </LazySection>
 
                 <LazySection height="80px">
                     <Suspense fallback={<SectionSpinner height="80px" />}>

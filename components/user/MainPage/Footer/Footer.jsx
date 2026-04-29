@@ -95,16 +95,16 @@ const Footer = () => {
                             <h4 className='text-sm font-semibold text-yellow-400 mb-3 uppercase tracking-wider'>Hỗ trợ khách hàng</h4>
                             <div className='grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2'>
                                 {[
-                                    'Giới thiệu',
-                                    'Bảo hành sản phẩm',
-                                    'Hướng dẫn sử dụng',
-                                    'Vận chuyển & thanh toán',
-                                    'Hướng dẫn chọn mua',
-                                    'Chính sách đổi trả',
-                                ].map((text, i) => (
-                                    <a key={i} href='#' className='text-xs text-gray-400 hover:text-gray-200 transition-colors duration-300 flex items-center gap-2'>
+                                    { text: 'Giới thiệu', href: '/ho-tro/gioi-thieu' },
+                                    { text: 'Bảo hành sản phẩm', href: '/ho-tro/bao-hanh' },
+                                    { text: 'Hướng dẫn sử dụng', href: '/ho-tro/huong-dan-su-dung' },
+                                    { text: 'Vận chuyển & thanh toán', href: '/ho-tro/van-chuyen-thanh-toan' },
+                                    { text: 'Hướng dẫn chọn mua', href: '/ho-tro/huong-dan-chon-mua' },
+                                    { text: 'Chính sách đổi trả', href: '/ho-tro/chinh-sach-doi-tra' },
+                                ].map((item, i) => (
+                                    <a key={i} href={item.href} className='text-xs text-gray-400 hover:text-gray-200 transition-colors duration-300 flex items-center gap-2'>
                                         <i className='bx bx-chevron-right text-yellow-400/50'></i>
-                                        {text}
+                                        {item.text}
                                     </a>
                                 ))}
                             </div>
