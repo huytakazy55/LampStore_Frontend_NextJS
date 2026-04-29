@@ -51,6 +51,7 @@ const ProductCard = ({ product, isLast, navigate, onAddToCartClick, isInWishlist
           : 'bg-white/80 text-gray-400 hover:bg-rose-50 hover:text-rose-500 hover:scale-110'
           }`}
         onClick={(e) => { e.stopPropagation(); onToggleWishlist(product.id); }}
+        aria-label={isInWishlist ? 'Bỏ yêu thích' : 'Thêm yêu thích'}
       >
         <i className={`bx ${isInWishlist ? 'bxs-heart' : 'bx-heart'} text-base`}></i>
       </button>
@@ -96,6 +97,7 @@ const ProductCard = ({ product, isLast, navigate, onAddToCartClick, isInWishlist
               e.stopPropagation();
               onAddToCartClick(product);
             }}
+            aria-label="Thêm vào giỏ hàng"
           >
             <i className='bx bxs-cart-add text-lg md:text-xl'></i>
           </button>

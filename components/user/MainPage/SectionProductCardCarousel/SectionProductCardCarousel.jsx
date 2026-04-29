@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 import Slider2 from "react-slick";
 import { useNavigate } from '@/lib/router-compat';
@@ -13,6 +13,7 @@ const CustomPrevArrow = ({ onClick }) => (
   <button
     className='absolute -top-[50px] md:-top-[70px] right-8 bg-gray-300 hover:bg-gray-400'
     onClick={onClick}
+    aria-label="Sản phẩm trước"
   >
     <i className="bx bx-chevron-left text-2xl md:text-3xl text-white"></i>
   </button>
@@ -22,6 +23,7 @@ const CustomNextArrow = ({ onClick }) => (
   <button
     className='absolute -top-[50px] md:-top-[70px] right-0 bg-gray-300 hover:bg-gray-400'
     onClick={onClick}
+    aria-label="Sản phẩm tiếp theo"
   >
     <i className="bx bx-chevron-right text-2xl md:text-3xl text-white"></i>
   </button>
@@ -99,6 +101,8 @@ const ProductCardItem = ({ product, onClick, isInWishlist, onToggleWishlist, onA
             <button
               className='w-7 h-7 md:w-8 md:h-8 rounded-sm bg-amber-50 text-amber-600 flex items-center justify-center transition-all duration-300 group-hover:bg-amber-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-amber-200 group-hover:scale-105 active:scale-95'
               onClick={(e) => { e.stopPropagation(); onAddToCartClick && onAddToCartClick(product); }}
+              tabIndex={-1}
+              aria-hidden="true"
             >
               <i className='bx bxs-cart-add text-sm md:text-base'></i>
             </button>
@@ -124,6 +128,30 @@ const SectionProductCardCarousel = () =>
   const navigate = useNavigate();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const [cartModalProduct, setCartModalProduct] = useState(null);
+  const sliderContainerRef = useRef(null);
+
+  // Fix ARIA: disable focus on interactive elements inside aria-hidden slides
+  const fixAriaHiddenFocus = useCallback(() => {
+    if (!sliderContainerRef.current) return;
+    const hiddenSlides = sliderContainerRef.current.querySelectorAll('[aria-hidden="true"]');
+    hiddenSlides.forEach((slide) => {
+      const focusable = slide.querySelectorAll('button, a, input, [tabindex]');
+      focusable.forEach((el) => el.setAttribute('tabindex', '-1'));
+    });
+    const visibleSlides = sliderContainerRef.current.querySelectorAll('[aria-hidden="false"]');
+    visibleSlides.forEach((slide) => {
+      const focusable = slide.querySelectorAll('button, a, input');
+      focusable.forEach((el) => el.removeAttribute('tabindex'));
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      // Run after slider mounts and DOM settles
+      const timer = setTimeout(fixAriaHiddenFocus, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [loading, fixAriaHiddenFocus]);
 
   const products = useMemo(() =>
   {
@@ -174,13 +202,13 @@ const SectionProductCardCarousel = () =>
           Sản phẩm bán chạy
         </h3>
       </div>
-      <div style={{ minHeight: loading ? '300px' : 'auto', contain: 'layout style' }}>
+      <div ref={sliderContainerRef} style={{ minHeight: loading ? '300px' : 'auto', contain: 'layout style' }}>
         {loading ? (
           <div className='flex items-center justify-center h-[300px]'>
             <i className='bx bx-loader-alt bx-spin text-3xl text-yellow-400'></i>
           </div>
         ) : (
-          <Slider2 {...settings}>
+          <Slider2 {...settings} afterChange={fixAriaHiddenFocus}>
             {products.map((product) => (
               <ProductCardItem
                 key={product.id}

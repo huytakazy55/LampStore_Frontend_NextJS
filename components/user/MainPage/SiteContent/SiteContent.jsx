@@ -100,7 +100,7 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate('/#products')}
-              className="bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold px-5 py-2 rounded-sm transition-all duration-300 cursor-pointer flex items-center gap-1.5"
+              className="bg-amber-700 hover:bg-amber-800 text-white text-xs font-semibold px-5 py-2 rounded-sm transition-all duration-300 cursor-pointer flex items-center gap-1.5"
             >
               Khám Phá
               <i className='bx bx-right-arrow-alt text-base' />
@@ -196,7 +196,7 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
             <div className="flex flex-wrap items-center gap-4 md:gap-6">
               <button
                 onClick={() => navigate('/#products')}
-                className="bg-amber-500 hover:bg-amber-600 text-white text-xs md:text-sm font-semibold px-6 md:px-8 py-2.5 md:py-3 rounded-sm transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/25 active:scale-95 cursor-pointer flex items-center gap-2"
+                className="bg-amber-700 hover:bg-amber-800 text-white text-xs md:text-sm font-semibold px-6 md:px-8 py-2.5 md:py-3 rounded-sm transition-all duration-300 hover:shadow-lg hover:shadow-amber-700/25 active:scale-95 cursor-pointer flex items-center gap-2"
               >
                 Khám Phá Ngay
                 <i className='bx bx-right-arrow-alt text-lg' />

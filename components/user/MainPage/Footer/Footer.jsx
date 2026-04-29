@@ -161,15 +161,15 @@ const Footer = () => {
             {/* Copyright bar */}
             <div className='w-full py-4' style={{ background: '#111' }}>
                 <div className='flex flex-col sm:flex-row justify-between items-center gap-2 xl:mx-auto xl:max-w-[1440px] px-6 xl:px-0'>
-                    <div className='text-xs md:text-sm text-gray-500 text-center'>
+                    <div className='text-xs md:text-sm text-gray-400 text-center'>
                         © 2024 | Bản quyền thuộc về <span className='text-yellow-400 font-semibold'>CapyLumine.com</span>
                     </div>
-                    <div className='flex items-center gap-4 text-gray-500 text-xs'>
-                        <a href='#' className='hover:text-gray-400 transition-colors'>Điều khoản</a>
+                    <div className='flex items-center gap-4 text-gray-400 text-xs'>
+                        <a href='#' className='hover:text-gray-200 transition-colors'>Điều khoản</a>
                         <span>•</span>
-                        <a href='#' className='hover:text-gray-400 transition-colors'>Chính sách</a>
+                        <a href='#' className='hover:text-gray-200 transition-colors'>Chính sách</a>
                         <span>•</span>
-                        <a href='#' className='hover:text-gray-400 transition-colors'>Liên hệ</a>
+                        <a href='#' className='hover:text-gray-200 transition-colors'>Liên hệ</a>
                     </div>
                 </div>
             </div>

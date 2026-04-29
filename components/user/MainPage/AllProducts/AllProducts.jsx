@@ -85,6 +85,7 @@ const SmallProductCard = ({ product, navigate, onAddToCartClick }) => {
               e.stopPropagation();
               onAddToCartClick(product);
             }}
+            aria-label="Thêm vào giỏ hàng"
           >
             <i className='bx bxs-cart-add text-base md:text-lg'></i>
           </button>

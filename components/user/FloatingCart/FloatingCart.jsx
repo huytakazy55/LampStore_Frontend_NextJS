@@ -223,6 +223,7 @@ const FloatingCart = () =>
                         <button
                             onClick={() => setIsExpanded(false)}
                             className="text-white/80 hover:text-white transition-colors"
+                            aria-label="Đóng giỏ hàng"
                         >
                             <i className="bx bx-x text-xl"></i>
                         </button>

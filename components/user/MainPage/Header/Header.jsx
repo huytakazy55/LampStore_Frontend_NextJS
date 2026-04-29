@@ -225,7 +225,7 @@ const Header = () =>
             </div>
             <div className='hidden sm:block'>
               <div className='text-lg md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white transition-colors duration-300'>
-                Capy<span className='text-amber-600'>Lumine</span>
+                Capy<span className='text-amber-700'>Lumine</span>
               </div>
               <div className='text-[9px] md:text-[10px] text-gray-500 dark:text-gray-400 font-medium tracking-[0.15em] uppercase -mt-1 transition-colors duration-300'>
                 Premium Lighting
