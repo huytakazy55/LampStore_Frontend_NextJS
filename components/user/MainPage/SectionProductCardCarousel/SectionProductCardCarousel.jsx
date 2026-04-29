@@ -102,7 +102,7 @@ const ProductCardItem = ({ product, onClick, isInWishlist, onToggleWishlist, onA
               className='w-7 h-7 md:w-8 md:h-8 rounded-sm bg-amber-50 text-amber-600 flex items-center justify-center transition-all duration-300 group-hover:bg-amber-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-amber-200 group-hover:scale-105 active:scale-95'
               onClick={(e) => { e.stopPropagation(); onAddToCartClick && onAddToCartClick(product); }}
               tabIndex={-1}
-              aria-hidden="true"
+              aria-label="Thêm vào giỏ hàng"
             >
               <i className='bx bxs-cart-add text-sm md:text-base'></i>
             </button>
