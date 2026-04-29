@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
 import Header from '@/components/user/MainPage/Header/Header';
 import NavbarPrimary from '@/components/user/MainPage/NavbarPrimary/NavbarPrimary';
@@ -29,6 +29,7 @@ const getImgSrc = (path) =>
 export default function CheckoutPage()
 {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const { cartItems, cartTotal, clearCart } = useCart();
 
     // Buy Now: read items from sessionStorage on mount
@@ -47,7 +48,21 @@ export default function CheckoutPage()
         {
             console.error('Error reading buyNow items:', e);
         }
-    }, []);
+
+        // Handle PayOS return
+        const isSuccess = searchParams.get('orderSuccess');
+        const isCancel = searchParams.get('orderCancel');
+        const paramOrderCode = searchParams.get('orderCode');
+
+        if (isSuccess === 'true') {
+            setOrderId(paramOrderCode || 'N/A');
+            setOrderSuccess(true);
+            clearCart();
+            toast.success('Thanh toán thành công!');
+        } else if (isCancel === 'true') {
+            toast.error('Thanh toán đã bị hủy.');
+        }
+    }, [searchParams, clearCart]);
 
     const checkoutItems = buyNowItems || cartItems;
 
@@ -295,7 +310,13 @@ export default function CheckoutPage()
                 created = await OrderService.createGuestOrder(orderData);
             }
 
-            setOrderId(created.id ? created.id.substring(0, 8).toUpperCase() : 'LS-' + Date.now().toString(36).toUpperCase());
+            if (created.checkoutUrl)
+            {
+                window.location.href = created.checkoutUrl;
+                return;
+            }
+
+            setOrderId(created.orderCode?.toString() || (created.id ? created.id.substring(0, 8).toUpperCase() : 'LS-' + Date.now().toString(36).toUpperCase()));
             setSavedTotal(total);
             setOrderSuccess(true);
             if (!buyNowItems) clearCart();
@@ -349,6 +370,45 @@ export default function CheckoutPage()
                                     </span>
                                 </div>
                             </div>
+
+                            {/* Bank Transfer Info on Success (Hide if came back from PayOS) */}
+                            {formData.paymentMethod === 'bank' && !searchParams.get('orderSuccess') && (
+                                <div className='mt-2 mb-6 p-4 border border-blue-200 bg-blue-50/50 rounded-lg text-left'>
+                                    <div className='flex items-center gap-2 mb-3'>
+                                        <i className='bx bx-qr-scan text-xl text-blue-600'></i>
+                                        <h3 className='text-sm font-semibold text-gray-800'>Hướng dẫn thanh toán</h3>
+                                    </div>
+                                    <div className='space-y-2 text-sm text-gray-600 mb-4'>
+                                        <div className='flex justify-between'>
+                                            <span>Ngân hàng:</span>
+                                            <span className='font-medium text-gray-900'>VietinBank - Chi nhánh Đống Đa</span>
+                                        </div>
+                                        <div className='flex justify-between'>
+                                            <span>Số tài khoản:</span>
+                                            <span className='font-bold text-blue-600 text-base'>104873037731</span>
+                                        </div>
+                                        <div className='flex justify-between'>
+                                            <span>Chủ tài khoản:</span>
+                                            <span className='font-medium text-gray-900'>Lê Quang Huy</span>
+                                        </div>
+                                        <div className='flex justify-between items-start'>
+                                            <span>Nội dung:</span>
+                                            <span className='font-bold text-gray-900 text-right max-w-[200px]'>{orderId} {formData.phone}</span>
+                                        </div>
+                                    </div>
+
+                                    <div className='flex flex-col items-center bg-white p-3 rounded-lg border border-gray-200'>
+                                        <img
+                                            src={`https://img.vietqr.io/image/VietinBank-104873037731-compact2.png?amount=${savedTotal}&addInfo=${orderId} ${formData.phone}&accountName=LE QUANG HUY`}
+                                            alt="Mã QR Chuyển khoản"
+                                            className='w-48 h-48 object-contain'
+                                        />
+                                        <p className='text-xs text-gray-500 mt-2 flex items-center gap-1'>
+                                            <i className='bx bx-scan'></i> Mở App Ngân hàng để quét mã
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
 
                             <div className='flex gap-3'>
                                 <button
