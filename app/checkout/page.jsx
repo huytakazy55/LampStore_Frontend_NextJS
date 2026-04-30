@@ -175,15 +175,33 @@ export default function CheckoutPage()
         fetchWards();
     }, [formData.district]);
 
-    // Pre-fill user info if logged in
+    // Pre-fill user info if logged in, or guest info if available
     useEffect(() =>
     {
         if (typeof window !== 'undefined')
         {
-            const savedName = localStorage.getItem('userName');
-            const savedEmail = localStorage.getItem('userEmail');
-            if (savedName) setFormData(prev => ({ ...prev, fullName: savedName }));
-            if (savedEmail) setFormData(prev => ({ ...prev, email: savedEmail }));
+            const isLoggedIn = !!localStorage.getItem('token');
+            if (isLoggedIn)
+            {
+                const savedName = localStorage.getItem('userName');
+                const savedEmail = localStorage.getItem('userEmail');
+                if (savedName) setFormData(prev => ({ ...prev, fullName: savedName }));
+                if (savedEmail) setFormData(prev => ({ ...prev, email: savedEmail }));
+            } else
+            {
+                // Auto-fill from saved guest info
+                const guestInfo = GuestProfileService.getGuestInfo();
+                if (guestInfo)
+                {
+                    setFormData(prev => ({
+                        ...prev,
+                        fullName: guestInfo.fullName || prev.fullName,
+                        phone: guestInfo.phone || prev.phone,
+                        email: guestInfo.email || prev.email,
+                        address: guestInfo.address || prev.address,
+                    }));
+                }
+            }
         }
     }, []);
 
@@ -326,6 +344,17 @@ export default function CheckoutPage()
             setSavedTotal(total);
             setOrderSuccess(true);
             if (!buyNowItems) clearCart();
+
+            // Save guest info for future auto-fill (if guest checkout)
+            if (!isLoggedIn)
+            {
+                GuestProfileService.saveGuestInfo({
+                    fullName: formData.fullName,
+                    phone: formData.phone,
+                    email: formData.email,
+                    address: formData.address,
+                });
+            }
         } catch (error)
         {
             console.error('Order error:', error);

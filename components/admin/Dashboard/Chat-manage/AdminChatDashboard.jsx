@@ -47,22 +47,23 @@ const AdminChatDashboard = () => {
     const notification = event.detail;
     if (notification.type !== 'chat') return;
 
-    const dedupKey = `${notification.chatId}_${(notification.message || '').substring(0, 40)}_${Math.floor(Date.now() / 5000)}`;
+    const contentText = notification.content || notification.Content || '';
+    const dedupKey = `${notification.chatId}_${contentText.substring(0, 40)}_${Math.floor(Date.now() / 5000)}`;
     if (shownNotifKeysRef.current.has(dedupKey)) return;
     shownNotifKeysRef.current.add(dedupKey);
     setTimeout(() => shownNotifKeysRef.current.delete(dedupKey), 5000);
 
     message.info({
-      content: `📨 ${notification.senderName || 'Khách hàng'}: ${(notification.message || '').substring(0, 80)}`,
+      content: `📨 ${notification.senderName || notification.SenderName || 'Khách hàng'}: ${contentText.substring(0, 80)}`,
       duration: 5,
       style: { marginTop: '60px' }
     });
 
     const entry = {
       id: Date.now(),
-      chatId: notification.chatId,
-      userName: notification.senderName || 'Khách hàng',
-      content: notification.message || '',
+      chatId: notification.chatId || notification.ChatId,
+      userName: notification.senderName || notification.SenderName || 'Khách hàng',
+      content: contentText,
       timestamp: new Date().toLocaleTimeString('vi-VN'),
       isNew: true
     };
@@ -133,7 +134,8 @@ const AdminChatDashboard = () => {
       key: 'userName',
       width: 220,
       render: (userName, record) => {
-        const name = userName || 'Khách';
+        // Fix: Use GuestName from the backend if it exists for guest chats
+        const name = userName || record.guestName || record.GuestName || 'Khách';
         const isActive = record.status === 1 || record.status === 2;
         return (
           <div className="chat-user-cell">
@@ -364,7 +366,7 @@ const AdminChatDashboard = () => {
 
       {/* Chat Window Modal */}
       <Modal
-        title={`💬 Chat với ${selectedChat?.user?.userName || 'Khách hàng'}`}
+        title={`💬 Chat với ${selectedChat?.user?.userName || selectedChat?.guestName || selectedChat?.GuestName || 'Khách hàng'}`}
         open={isChatWindowOpen}
         onCancel={closeChatWindow}
         footer={null}

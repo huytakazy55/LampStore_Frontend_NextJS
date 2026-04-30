@@ -129,11 +129,13 @@ class AuthService
             if (!guestToken) return;
 
             await axiosInstance.post('/api/Account/ClaimGuestOrders', { guestToken });
-            GuestProfileService.clearGuestToken();
+            // Clear ALL guest data (token, code, info) to avoid conflicts
+            GuestProfileService.clearAllGuestData();
         } catch (error)
         {
             console.error('Failed to claim guest orders:', error);
-            // Non-critical — don't block login flow
+            // Still clear guest data even if claim fails (user is now authenticated)
+            GuestProfileService.clearAllGuestData();
         }
     }
 }

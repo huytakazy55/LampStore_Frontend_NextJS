@@ -49,8 +49,10 @@ const nextConfig = {
   // Proxy backend static asset paths (images uploaded via admin)
   async rewrites()
   {
-    const apiEndpoint = process.env.INTERNAL_API_ENDPOINT || process.env.NEXT_PUBLIC_API_ENDPOINT || 'http://localhost:5001';
+    const apiEndpoint = process.env.INTERNAL_API_ENDPOINT || process.env.NEXT_PUBLIC_API_ENDPOINT || 'http://localhost:5000';
     return [
+      { source: '/api/:path*', destination: `${apiEndpoint}/api/:path*` },
+      { source: '/chatHub', destination: `${apiEndpoint}/chatHub` },
       { source: '/NewsImages/:path*', destination: `${apiEndpoint}/NewsImages/:path*` },
       { source: '/ImageImport/:path*', destination: `${apiEndpoint}/ImageImport/:path*` },
       { source: '/BannerImages/:path*', destination: `${apiEndpoint}/BannerImages/:path*` },

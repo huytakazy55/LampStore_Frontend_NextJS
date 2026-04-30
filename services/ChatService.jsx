@@ -443,6 +443,49 @@ class ChatService
             return false;
         }
     }
+
+    // ── Guest Chat API methods (no auth, uses X-Guest-Token header) ──
+
+    _getGuestHeaders()
+    {
+        const GuestProfileService = require('./GuestProfileService').default;
+        const guestToken = GuestProfileService.getExistingGuestToken();
+        return guestToken ? { 'X-Guest-Token': guestToken } : {};
+    }
+
+    async createGuestChat(subject, guestName, priority = 2)
+    {
+        const response = await axiosInstance.post("/api/GuestChat/guest/create",
+            { subject, guestName, priority },
+            { headers: this._getGuestHeaders() }
+        );
+        return response.data;
+    }
+
+    async getGuestChats()
+    {
+        const response = await axiosInstance.get("/api/GuestChat/guest/my-chats",
+            { headers: this._getGuestHeaders() }
+        );
+        return response.data;
+    }
+
+    async getGuestChatMessages(chatId)
+    {
+        const response = await axiosInstance.get(`/api/GuestChat/guest/${chatId}/messages`,
+            { headers: this._getGuestHeaders() }
+        );
+        return response.data;
+    }
+
+    async sendGuestMessage(chatId, content, type = 1)
+    {
+        const response = await axiosInstance.post(`/api/GuestChat/guest/${chatId}/messages`,
+            { content, type },
+            { headers: this._getGuestHeaders() }
+        );
+        return response.data;
+    }
 }
 
 const chatServiceInstance = new ChatService();

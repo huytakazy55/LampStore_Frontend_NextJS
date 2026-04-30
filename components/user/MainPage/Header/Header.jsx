@@ -16,6 +16,7 @@ import { useNavigate } from '@/lib/router-compat';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useTheme } from '@/contexts/ThemeContext';
+import GuestProfileService from '@/services/GuestProfileService';
 
 const Header = () =>
 {
@@ -533,10 +534,27 @@ const Header = () =>
                       </div>
                     </>
                   ) : (
-                    <div onClick={() => { toggleLoginForm(); setMobileMenuOpen(false); }} className='flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer'>
-                      <i className='bx bx-user text-xl text-gray-600'></i>
-                      <span className='text-sm'>Đăng nhập</span>
-                    </div>
+                    <>
+                      {GuestProfileService.getGuestCode() && (
+                        <div className='flex items-center gap-3 p-2 rounded-lg bg-amber-50 border border-amber-200'>
+                          <div className='w-10 h-10 flex items-center justify-center rounded-full bg-amber-100'>
+                            <i className='bx bx-user-circle text-2xl text-amber-600'></i>
+                          </div>
+                          <div>
+                            <span className='font-medium text-xs text-gray-500'>Khách vãng lai</span>
+                            <p className='font-bold text-sm text-amber-700'>{GuestProfileService.getGuestCode()}</p>
+                          </div>
+                        </div>
+                      )}
+                      <div onClick={() => { toggleLoginForm(); setMobileMenuOpen(false); }} className='flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer'>
+                        <i className='bx bx-log-in text-xl text-gray-600'></i>
+                        <span className='text-sm'>Đăng nhập</span>
+                      </div>
+                      <div onClick={() => { navigate('/my-orders/guest'); setMobileMenuOpen(false); }} className='flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer'>
+                        <i className='bx bx-package text-xl text-gray-600'></i>
+                        <span className='text-sm'>Đơn hàng của tôi</span>
+                      </div>
+                    </>
                   )}
                   <div onClick={() => { toggleFormcart(); setMobileMenuOpen(false); }} className='flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer'>
                     <i className='bx bx-shopping-bag text-xl text-gray-600'></i>

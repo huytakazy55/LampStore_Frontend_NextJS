@@ -186,7 +186,7 @@ export default function OrderHistoryPage()
                                                 <div className='w-12 h-12 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700 border border-gray-100 dark:border-gray-700'>
                                                     <img src={getImgSrc(item.productImage)} alt={item.productName}
                                                         className='w-full h-full object-cover'
-                                                        onError={(e) => { e.target.src = '/images/placeholder.png'; }} />
+                                                        onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/images/placeholder.png'; }} />
                                                 </div>
                                                 <div className='min-w-0'>
                                                     <p className='text-sm font-medium text-gray-800 dark:text-gray-200 line-clamp-1 cursor-pointer hover:text-rose-600 transition-colors'
@@ -378,7 +378,7 @@ export default function OrderHistoryPage()
                                                     <div className='w-14 h-14 flex-shrink-0 rounded-lg overflow-hidden bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700'>
                                                         <img src={getImgSrc(item.productImage)} alt={item.productName}
                                                             className='w-full h-full object-cover'
-                                                            onError={(e) => { e.target.src = '/images/placeholder.png'; }} />
+                                                            onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/images/placeholder.png'; }} />
                                                     </div>
                                                     <div className='flex-1 min-w-0'>
                                                         <p className='text-sm text-gray-800 dark:text-gray-200 line-clamp-1 group-hover:text-rose-600 transition-colors'>{item.productName}</p>

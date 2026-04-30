@@ -2,14 +2,19 @@
 
 import React, { useEffect, useState } from 'react'
 import AuthService from '@/services/AuthService';
+import GuestProfileService from '@/services/GuestProfileService';
 
 const TopBar = () => {
     const [name, setName] = useState('');
     const [token, setToken] = useState(null);
+    const [guestCode, setGuestCode] = useState(null);
 
     useEffect(() => {
         const t = localStorage.getItem('token');
         setToken(t);
+        if (!t) {
+            setGuestCode(GuestProfileService.getGuestCode());
+        }
     }, []);
 
     useEffect(() => {
@@ -41,7 +46,7 @@ const TopBar = () => {
                         <li className='hidden lg:block text-slate-300 relative top-[3px]'>|</li>
                         <li className='cursor-pointer flex items-center gap-1'><i className='bx bx-shopping-bag text-base md:text-h3 relative top-[1px]'></i> <span className='hidden sm:inline'>Shop</span></li>
                         <li className='text-slate-300 relative top-[3px]'>|</li>
-                        <li className='cursor-pointer flex items-center gap-1'><i className='bx bx-user text-base md:text-h3 relative top-[1px]'></i> <span className='truncate max-w-[80px] sm:max-w-none'>{name ? name : 'My Account'}</span></li>
+                        <li className='cursor-pointer flex items-center gap-1'><i className='bx bx-user text-base md:text-h3 relative top-[1px]'></i> <span className='truncate max-w-[80px] sm:max-w-none'>{name ? name : (guestCode ? `Khách: ${guestCode}` : 'My Account')}</span></li>
                     </ul>
                 </div>
             </nav>

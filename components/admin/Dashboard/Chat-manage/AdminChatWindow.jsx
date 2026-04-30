@@ -28,10 +28,9 @@ const AdminChatWindow = ({ chat, onClose, onUpdate }) => {
 
     // Cleanup function
     return () => {
-      if (chat?.id) {
-        ChatService.leaveChat(chat.id);
-      }
-      // Note: event listeners được quản lý bởi useEffect riêng (useCallback handlers)
+      // NOTE: Removed ChatService.leaveChat(chat.id) from here to fix a React Strict Mode 
+      // race condition where leaveChat would fire after the second joinChat.
+      // event listeners được quản lý bởi useEffect riêng (useCallback handlers)
     };
   }, [chat?.id]);
 
@@ -50,7 +49,10 @@ const AdminChatWindow = ({ chat, onClose, onUpdate }) => {
   // tránh removeEventListener không gỡ được do stale reference
   const handleNewMessage = useCallback((event) => {
     const newMsg = event.detail;
-    if (chat && (newMsg.ChatId === chat.id || newMsg.chatId === chat.id)) {
+    const targetChatId = (newMsg.ChatId || newMsg.chatId)?.toString().toLowerCase();
+    const currentChatId = chat?.id?.toString().toLowerCase();
+    
+    if (chat && targetChatId === currentChatId) {
       const messageId = newMsg.MessageId || newMsg.messageId || newMsg.id;
       const content = newMsg.content || newMsg.Content;
       const senderId = newMsg.senderId || newMsg.SenderId;
@@ -342,9 +344,9 @@ const AdminChatWindow = ({ chat, onClose, onUpdate }) => {
             const currentUserId = getCurrentAdminUserId();
 
             // Bug fix: chỉ so sánh senderId với chat.user.id để xác định admin/user
-            // Nếu senderId khớp với user của chat -> là customer
+            // Nếu senderId khớp với user của chat HOẶC senderId là null HOẶC bắt đầu bằng 'guest_' -> là customer
             // Ngược lại (bao gồm optimistic message của admin) -> là admin
-            const isFromUser = msg.senderId === chat?.user?.id;
+            const isFromUser = msg.senderId === chat?.user?.id || !msg.senderId || (typeof msg.senderId === 'string' && msg.senderId.startsWith('guest_'));
             const isFromAdmin = !isFromUser;
 
             return (

@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, Minimize2, MessageSquare } from 'lucide-react';
 import ChatService from '@/services/ChatService';
+import GuestProfileService from '@/services/GuestProfileService';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMessages, addMessage } from '@/redux/slices/chatSlice';
 
@@ -25,61 +26,96 @@ const ChatWindow = ({ onClose }) =>
   useEffect(() => { currentChatRef.current = currentChat; }, [currentChat]);
   useEffect(() => { messagesRef.current = messages; }, [messages]);
 
+  const isGuestMode = () => !localStorage.getItem('token') && !!GuestProfileService.getExistingGuestToken();
+
   const getCurrentUserId = () =>
   {
     try
     {
       const token = localStorage.getItem('token');
-      if (!token) return null;
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      return payload.nameid || payload.sub || payload.userId || payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
+      if (token)
+      {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return payload.nameid || payload.sub || payload.userId || payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
+      }
+      // Guest mode: return guest identifier
+      const guestToken = GuestProfileService.getExistingGuestToken();
+      if (guestToken) return `guest_${guestToken.substring(0, 8)}`;
+      return null;
     } catch (error)
     {
       return null;
     }
   };
 
-  // ── On mount: initialize SignalR + auto-create/reuse chat ──
+  const isInitializingRef = useRef(false);
+
+  // ── On mount: initialize chat (SignalR for logged-in, API-only for guest) ──
   useEffect(() =>
   {
+    if (isInitializingRef.current) return;
+    
     const init = async () =>
     {
+      isInitializingRef.current = true;
       setLoading(true);
       try
       {
-        // Initialize SignalR
-        if (!hasSetupListenersRef.current)
+        if (isGuestMode())
         {
-          const connected = await ChatService.initializeConnection();
-          if (connected)
+          // Guest mode: skip SignalR, use API only
+          const response = await ChatService.getGuestChats();
+          let guestChats = [];
+          if (response && response.$values && Array.isArray(response.$values))
           {
-            setupRealTimeListeners();
-            hasSetupListenersRef.current = true;
+            guestChats = response.$values;
+          } else if (Array.isArray(response))
+          {
+            guestChats = response;
           }
-        }
 
-        // Find or create a chat
-        const response = await ChatService.getUserChats();
-        let userChats = [];
-        if (response && response.$values && Array.isArray(response.$values))
-        {
-          userChats = response.$values;
-        } else if (Array.isArray(response))
-        {
-          userChats = response;
-        }
-
-        // Use the most recent open chat, or create a new one
-        const openChat = userChats.find(c => c.status === 1 || c.status === 2) || userChats[0];
-
-        if (openChat)
-        {
-          await enterChat(openChat);
+          const openChat = guestChats.find(c => c.status === 1 || c.status === 2) || guestChats[0];
+          if (openChat)
+          {
+            await enterChat(openChat);
+          } else
+          {
+            const guestCode = GuestProfileService.getGuestCode() || 'Khách vãng lai';
+            const newChat = await ChatService.createGuestChat('Chat hỗ trợ', guestCode);
+            await enterChat(newChat);
+          }
         } else
         {
-          // Auto-create a new chat
-          const newChat = await ChatService.createChat('Chat hỗ trợ', 2);
-          await enterChat(newChat);
+          // Logged-in mode: use SignalR
+          if (!hasSetupListenersRef.current)
+          {
+            const connected = await ChatService.initializeConnection();
+            if (connected)
+            {
+              setupRealTimeListeners();
+              hasSetupListenersRef.current = true;
+            }
+          }
+
+          const response = await ChatService.getUserChats();
+          let userChats = [];
+          if (response && response.$values && Array.isArray(response.$values))
+          {
+            userChats = response.$values;
+          } else if (Array.isArray(response))
+          {
+            userChats = response;
+          }
+
+          const openChat = userChats.find(c => c.status === 1 || c.status === 2) || userChats[0];
+          if (openChat)
+          {
+            await enterChat(openChat);
+          } else
+          {
+            const newChat = await ChatService.createChat('Chat hỗ trợ', 2);
+            await enterChat(newChat);
+          }
         }
       } catch (error)
       {
@@ -92,25 +128,43 @@ const ChatWindow = ({ onClose }) =>
 
     init();
 
+    // Guest mode: poll for new messages every 5s
+    let pollInterval;
+    if (isGuestMode())
+    {
+      pollInterval = setInterval(() =>
+      {
+        if (currentChatRef.current)
+        {
+          loadMessages(currentChatRef.current.id);
+        }
+      }, 5000);
+    }
+
     return () =>
     {
-      if (currentChatRef.current)
+      if (currentChatRef.current && !isGuestMode())
       {
-        ChatService.leaveChat(currentChatRef.current.id);
+        // NOTE: Removed leaveChat to fix Strict Mode race condition
+        // ChatService.leaveChat(currentChatRef.current.id);
       }
       removeEventListeners();
       hasSetupListenersRef.current = false;
+      if (pollInterval) clearInterval(pollInterval);
     };
   }, []);
 
   const enterChat = async (chat) =>
   {
-    if (currentChatRef.current)
+    if (currentChatRef.current && !isGuestMode())
     {
       await ChatService.leaveChat(currentChatRef.current.id);
     }
     setCurrentChat(chat);
-    await ChatService.joinChat(chat.id);
+    if (!isGuestMode())
+    {
+      await ChatService.joinChat(chat.id);
+    }
     await loadMessages(chat.id);
   };
 
@@ -158,10 +212,11 @@ const ChatWindow = ({ onClose }) =>
       isFromSignalR: true
     };
 
-    const activeChatId = currentChatRef.current?.id;
+    const activeChatId = currentChatRef.current?.id?.toString().toLowerCase();
     const currentMessages = messagesRef.current;
+    const normalizedTargetChatId = targetChatId?.toString().toLowerCase();
 
-    if (activeChatId && targetChatId === activeChatId)
+    if (activeChatId && normalizedTargetChatId === activeChatId)
     {
       const exists = currentMessages.some(msg =>
       {
@@ -214,7 +269,9 @@ const ChatWindow = ({ onClose }) =>
   {
     try
     {
-      const response = await ChatService.getChatMessages(chatId);
+      const response = isGuestMode()
+        ? await ChatService.getGuestChatMessages(chatId)
+        : await ChatService.getChatMessages(chatId);
       let chatMessages = [];
       if (response && response.$values && Array.isArray(response.$values))
       {
@@ -256,7 +313,13 @@ const ChatWindow = ({ onClose }) =>
     if (!newMessage.trim() || !currentChat) return;
     try
     {
-      await ChatService.sendMessage(currentChat.id, newMessage);
+      if (isGuestMode())
+      {
+        await ChatService.sendGuestMessage(currentChat.id, newMessage);
+      } else
+      {
+        await ChatService.sendMessage(currentChat.id, newMessage);
+      }
       setNewMessage('');
       await loadMessages(currentChat.id);
     } catch (error)
@@ -398,7 +461,8 @@ const ChatWindow = ({ onClose }) =>
         ) : (
           messages.map((message) =>
           {
-            const isFromCurrentUser = message.senderId === currentUserId;
+            // If senderId is null/undefined and we're in guest mode, it's the guest's own message
+            const isFromCurrentUser = message.senderId === currentUserId || (isGuestMode() && !message.senderId);
             return (
               <div key={message.id} style={{ display: 'flex', justifyContent: isFromCurrentUser ? 'flex-end' : 'flex-start' }}>
                 <div style={{ display: 'flex', alignItems: 'flex-end', gap: '0.4rem', maxWidth: '80%' }}>

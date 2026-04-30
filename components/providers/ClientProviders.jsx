@@ -2,7 +2,7 @@
 
 import { Provider } from 'react-redux';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -15,6 +15,7 @@ import AOSProvider from './AOSProvider';
 import LenisProvider from '@/components/common/LenisProvider';
 import FloatingCart from '@/components/user/FloatingCart/FloatingCart';
 import ChatButton from '@/components/user/Chat/ChatButton';
+import GuestProfileService from '@/services/GuestProfileService';
 import '@/lib/axiosConfig';
 import '@/lib/i18n';
 import ScrollToTop from '@/components/common/ScrollToTop';
@@ -27,6 +28,15 @@ if (typeof window !== 'undefined') {
 export default function ClientProviders({ children }) {
     const pathname = usePathname();
     const isAdminPage = pathname?.startsWith('/admin');
+
+    // Auto-init guest profile on first visit (non-logged-in users)
+    useEffect(() =>
+    {
+        if (!isAdminPage)
+        {
+            GuestProfileService.getGuestToken();
+        }
+    }, [isAdminPage]);
 
     const [queryClient] = useState(() => new QueryClient({
         defaultOptions: {
