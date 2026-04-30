@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from 'react'
+import { usePathname } from 'next/navigation'
 import FormLogin from './FormLogin'
 import FormCart from './FormCart';
 import FormActionLogin from './FormActionLogin';
@@ -20,6 +21,8 @@ const Header = () =>
 {
   const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
   const navigate = useNavigate();
+  const pathname = usePathname();
+  const prevPathnameRef = useRef(pathname);
   const { cartCount, cartTotal } = useCart();
   const { wishlistCount } = useWishlist();
   const { isDark, toggleDarkMode } = useTheme();
@@ -47,6 +50,7 @@ const Header = () =>
   const buttonActionRef = useRef(null);
   const buttonProfileRef = useRef(null);
   const searchRef = useRef(null);
+  const mobileMenuBtnRef = useRef(null);
   const avatarURL = useSelector((state) => state.avatar.avatar);
 
   useEffect(() => { setMounted(true); }, []);
@@ -208,11 +212,29 @@ const Header = () =>
     };
   }, []);
 
-  // Close mobile menu on route change
+  // Close mobile menu on route change (only when pathname actually changes)
   useEffect(() =>
   {
-    setMobileMenuOpen(false);
-  }, [navigate]);
+    if (prevPathnameRef.current !== pathname)
+    {
+      setMobileMenuOpen(false);
+      prevPathnameRef.current = pathname;
+    }
+  }, [pathname]);
+
+  // Native DOM click listener for hamburger button (bypasses React hydration issues)
+  useEffect(() =>
+  {
+    const btn = mobileMenuBtnRef.current;
+    if (!btn) return;
+    const handleClick = (e) =>
+    {
+      e.stopPropagation();
+      setMobileMenuOpen(prev => !prev);
+    };
+    btn.addEventListener('click', handleClick);
+    return () => btn.removeEventListener('click', handleClick);
+  }, []);
 
   return (
     <>
@@ -234,20 +256,15 @@ const Header = () =>
           </a>
         </div>
 
-        {/* Mobile menu toggle */}
+        {/* Menu toggle - visible on mobile & tablet (below lg breakpoint) */}
         <button
-          className='md:hidden cursor-pointer bg-transparent border-none p-2 z-[60] relative'
+          ref={mobileMenuBtnRef}
+          className='lg:hidden cursor-pointer bg-transparent border-none p-2 z-[60] relative'
           style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
           aria-label={mobileMenuOpen ? 'Đóng menu' : 'Mở menu'}
-          onClick={(e) => { e.stopPropagation(); setMobileMenuOpen(!mobileMenuOpen); }}
         >
           <i className={`bx ${mobileMenuOpen ? 'bx-x' : 'bx-menu'} text-2xl text-gray-800 dark:text-white pointer-events-none`}></i>
         </button>
-
-        {/* Desktop menu icon (hidden on mobile) */}
-        <div className='hidden md:block lg:hidden'>
-          <i className='bx bx-menu leading-none align-middle text-h2'></i>
-        </div>
 
         {/* Search bar - hidden on mobile, shown on md+ */}
         <div className='hidden md:flex items-center bg-gray-50 dark:bg-gray-800 rounded-full w-2/5 lg:w-1/2 h-11 relative border-2 border-amber-400 dark:border-amber-500 focus-within:ring-2 focus-within:ring-amber-400/20 focus-within:bg-white dark:focus-within:bg-gray-900 transition-all duration-300 shadow-sm hover:shadow-md' ref={searchRef}>
@@ -415,8 +432,8 @@ const Header = () =>
                 </>
             }
           </ul>
-          <FormLogin toggleLogin={toggleLogin} setToggleLogin={setToggleLogin} />
         </div>
+        <FormLogin toggleLogin={toggleLogin} setToggleLogin={setToggleLogin} />
       </div>
 
       {/* Mobile search bar - shown below header on mobile */}
@@ -492,7 +509,7 @@ const Header = () =>
       {/* Mobile navigation drawer */}
       {
         mobileMenuOpen && (
-          <div className='md:hidden fixed inset-0 z-[100]'>
+          <div className='lg:hidden fixed inset-0 z-[100]'>
             {/* Overlay */}
             <div className='absolute inset-0 bg-black/50' onClick={() => setMobileMenuOpen(false)}></div>
             {/* Drawer */}
