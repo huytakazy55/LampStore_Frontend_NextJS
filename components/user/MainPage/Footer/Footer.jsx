@@ -6,27 +6,34 @@ const MAPS_EMBED_URL = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d37
 
 const LazyMap = () => {
     const [loaded, setLoaded] = useState(false);
-    if (loaded) {
-        return (
-            <iframe
-                className='w-full h-full'
-                title="Bản đồ vị trí cửa hàng CapyLumine"
-                src={MAPS_EMBED_URL}
-                style={{ border: 0 }}
-                allowFullScreen=""
-                referrerPolicy="no-referrer-when-downgrade"
-            />
-        );
-    }
     return (
-        <button
-            onClick={() => setLoaded(true)}
-            className='w-full h-full bg-amber-600/80 dark:bg-gray-800 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-amber-600 dark:hover:bg-gray-700 transition-colors group'
-            aria-label="Nhấn để xem bản đồ Google Maps"
-        >
-            <i className='bx bx-map text-3xl text-white dark:text-yellow-400 group-hover:scale-110 transition-transform' />
-            <span className='text-xs text-white/80 dark:text-gray-300 font-medium'>Xem bản đồ</span>
-        </button>
+        <div className='relative w-full h-full'>
+            {/* Placeholder button — always rendered to reserve space, hidden after load */}
+            {!loaded && (
+                <button
+                    onClick={() => setLoaded(true)}
+                    className='absolute inset-0 w-full h-full bg-amber-600/80 dark:bg-gray-800 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-amber-600 dark:hover:bg-gray-700 transition-colors group z-10'
+                    aria-label="Nhấn để xem bản đồ Google Maps"
+                >
+                    <i className='bx bx-map text-3xl text-white dark:text-yellow-400 group-hover:scale-110 transition-transform' />
+                    <span className='text-xs text-white dark:text-gray-300 font-medium'>Xem bản đồ</span>
+                </button>
+            )}
+            {/* Iframe — only mounted after click, takes same space */}
+            {loaded && (
+                <iframe
+                    className='absolute inset-0 w-full h-full'
+                    title="Bản đồ vị trí cửa hàng CapyLumine"
+                    src={MAPS_EMBED_URL}
+                    width="256"
+                    height="256"
+                    style={{ border: 0 }}
+                    allowFullScreen=""
+                    referrerPolicy="no-referrer-when-downgrade"
+                    loading="lazy"
+                />
+            )}
+        </div>
     );
 };
 
@@ -165,12 +172,12 @@ const Footer = () => {
             </div>
 
             {/* Copyright bar */}
-            <div className='w-full py-4 bg-amber-600 dark:bg-[#111]'>
+            <div className='w-full py-4 bg-amber-900 dark:bg-[#111]'>
                 <div className='flex flex-col sm:flex-row justify-between items-center gap-2 xl:mx-auto xl:max-w-[1440px] px-6 xl:px-0'>
-                    <div className='text-xs md:text-sm text-amber-100/80 dark:text-gray-400 text-center'>
+                    <div className='text-xs md:text-sm text-amber-100 dark:text-gray-400 text-center'>
                         © 2024 | Bản quyền thuộc về <span className='text-white dark:text-yellow-400 font-semibold'>CapyLumine.com</span>
                     </div>
-                    <div className='flex items-center gap-4 text-amber-100/70 dark:text-gray-400 text-xs'>
+                    <div className='flex items-center gap-4 text-amber-200 dark:text-gray-400 text-xs'>
                         <a href='#' className='hover:text-white dark:hover:text-gray-200 transition-colors'>Điều khoản</a>
                         <span>•</span>
                         <a href='#' className='hover:text-white dark:hover:text-gray-200 transition-colors'>Chính sách</a>
