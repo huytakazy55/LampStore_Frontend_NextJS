@@ -431,6 +431,11 @@ html {
   background: #f59e0b;
 }
 
+/* ---- Global Modal border-radius override ---- */
+.ant-modal-content {
+  border-radius: 4px !important;
+}
+
 /* Fade in animation */
 @keyframes fadeIn {
   from {

@@ -14,6 +14,8 @@ const sidebarLinks = [
     { href: '/ho-tro/bao-hanh', label: 'Bảo hành sản phẩm', icon: 'bx-shield-quarter' },
     { href: '/ho-tro/van-chuyen-thanh-toan', label: 'Vận chuyển & thanh toán', icon: 'bx-package' },
     { href: '/ho-tro/chinh-sach-doi-tra', label: 'Chính sách đổi trả', icon: 'bx-transfer' },
+    { href: '/ho-tro/dieu-khoan-su-dung', label: 'Điều khoản sử dụng', icon: 'bx-file' },
+    { href: '/ho-tro/chinh-sach-bao-mat', label: 'Chính sách bảo mật', icon: 'bx-shield' },
 ];
 
 export default function HoTroLayout({ children }) {

@@ -63,7 +63,7 @@ const OrderDetailModal = ({ order, onClose, onStatusChange }) =>
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                borderRadius: '8px 8px 0 0'
+                borderRadius: '4px 4px 0 0'
             }}>
                 <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>

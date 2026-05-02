@@ -127,7 +127,7 @@ const OrderReviewModal = ({ isOpen, onClose, order }) =>
         <div className='fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4'
             onClick={onClose}
             onWheel={e => e.stopPropagation()}>
-            <div className='bg-white dark:bg-gray-900 w-full max-w-2xl max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden'
+            <div className='bg-white dark:bg-gray-900 w-full max-w-2xl max-h-[90vh] rounded-lg shadow-2xl overflow-hidden'
                 onClick={e => e.stopPropagation()}>
                 {/* Header */}
                 <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-amber-50 to-rose-50 dark:from-gray-800 dark:to-gray-800'>

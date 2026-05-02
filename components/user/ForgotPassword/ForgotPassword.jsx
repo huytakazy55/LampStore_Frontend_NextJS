@@ -49,7 +49,7 @@ const ForgotPassword = ({ visible, onCancel }) => {
       <div onClick={(e) => e.stopPropagation()}
         className="relative z-10 w-full max-w-[400px] animate-fadeIn">
 
-        <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-gray-900 shadow-[0_25px_60px_rgba(0,0,0,0.3)]">
+        <div className="relative overflow-hidden rounded-lg bg-white dark:bg-gray-900 shadow-[0_25px_60px_rgba(0,0,0,0.3)]">
 
           {/* Header */}
           <div className="relative h-28 overflow-hidden bg-gradient-to-br from-amber-400 via-orange-400 to-rose-400">

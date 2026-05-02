@@ -178,9 +178,9 @@ const Footer = () => {
                         © 2024 | Bản quyền thuộc về <span className='text-white dark:text-yellow-400 font-semibold'>CapyLumine.com</span>
                     </div>
                     <div className='flex items-center gap-4 text-amber-200 dark:text-gray-400 text-xs'>
-                        <a href='#' className='hover:text-white dark:hover:text-gray-200 transition-colors'>Điều khoản</a>
+                        <a href='/ho-tro/dieu-khoan-su-dung' className='hover:text-white dark:hover:text-gray-200 transition-colors'>Điều khoản</a>
                         <span>•</span>
-                        <a href='#' className='hover:text-white dark:hover:text-gray-200 transition-colors'>Chính sách</a>
+                        <a href='/ho-tro/chinh-sach-bao-mat' className='hover:text-white dark:hover:text-gray-200 transition-colors'>Chính sách</a>
                         <span>•</span>
                         <a href='#' className='hover:text-white dark:hover:text-gray-200 transition-colors'>Liên hệ</a>
                     </div>

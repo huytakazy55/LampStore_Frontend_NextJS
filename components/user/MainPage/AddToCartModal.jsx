@@ -174,7 +174,7 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
         >
             {/* Modal Box */}
             <div
-                className="bg-white dark:bg-gray-900 rounded-lg shadow-xl w-full max-w-3xl overflow-hidden relative animate-fadeIn"
+                className="bg-white dark:bg-gray-900 rounded-md shadow-xl w-full max-w-3xl overflow-hidden relative animate-fadeIn"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Close Button */}

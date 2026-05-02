@@ -314,7 +314,7 @@ const Header = () =>
           {showSuggestions && (suggestions.categories.length > 0 || suggestions.products.length > 0) && (
             <div
               ref={suggestionsRef}
-              className='absolute top-[calc(100%+8px)] left-0 w-full bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 z-[60] overflow-hidden animate-fadeIn backdrop-blur-sm'
+              className='absolute top-[calc(100%+8px)] left-0 w-full bg-white dark:bg-gray-900 rounded-lg shadow-2xl border border-gray-100 dark:border-gray-800 z-[60] overflow-hidden animate-fadeIn backdrop-blur-sm'
             >
               {/* Category suggestions */}
               {suggestions.categories.length > 0 && (
@@ -480,7 +480,7 @@ const Header = () =>
           showSuggestions && (suggestions.categories.length > 0 || suggestions.products.length > 0) && (
             <div
               ref={suggestionsRef}
-              className='w-full bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 z-[60] overflow-hidden animate-fadeIn mt-2'
+              className='w-full bg-white dark:bg-gray-900 rounded-lg shadow-2xl border border-gray-100 dark:border-gray-800 z-[60] overflow-hidden animate-fadeIn mt-2'
             >
               {suggestions.categories.length > 0 && (
                 <div className='border-b border-gray-100 dark:border-gray-800'>

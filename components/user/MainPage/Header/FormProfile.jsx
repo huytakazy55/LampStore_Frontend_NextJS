@@ -171,7 +171,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
 
       {/* Modal */}
       <div ref={popupProfileRef} onClick={(e) => e.stopPropagation()}
-        className={`relative w-[95%] max-w-[820px] bg-white dark:bg-gray-900 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.2)] overflow-hidden transition-all duration-300 ${toggleProfile ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'}`}>
+        className={`relative w-[95%] max-w-[820px] bg-white dark:bg-gray-900 rounded-lg shadow-[0_20px_60px_rgba(0,0,0,0.2)] overflow-hidden transition-all duration-300 ${toggleProfile ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'}`}>
 
         {/* Header */}
         <div className='relative bg-gradient-to-r from-rose-600 to-amber-500 px-6 py-5 overflow-hidden'>

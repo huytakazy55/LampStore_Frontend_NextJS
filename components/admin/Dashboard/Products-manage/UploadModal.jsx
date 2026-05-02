@@ -177,7 +177,7 @@ const UploadModal = ({ openUpload, handleUploadClose, setProductData, style, upd
     {
         const customStyles = `
             .custom-modal .ant-modal-content {
-                border-radius: 8px;
+                border-radius: 4px;
                 overflow: hidden;
             }
 

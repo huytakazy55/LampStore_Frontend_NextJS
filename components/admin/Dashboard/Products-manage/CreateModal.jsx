@@ -157,7 +157,7 @@ const CreateModal = ({ openCreate, handleCreateClose, fetchProducts, style, cate
   useEffect(() => {
     const customStyles = `
           .custom-modal .ant-modal-content {
-              border-radius: 8px;
+              border-radius: 4px;
               overflow: hidden;
           }
 

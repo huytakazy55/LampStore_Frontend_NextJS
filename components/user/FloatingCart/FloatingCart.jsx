@@ -209,7 +209,7 @@ const FloatingCart = () =>
                 <div
                     ref={expandedRef}
                     onWheel={(e) => e.stopPropagation()}
-                    className={`absolute bottom-[72px] right-0 w-72 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden transition-all duration-300 origin-bottom-right ${isExpanded && cartItems.length > 0
+                    className={`absolute bottom-[72px] right-0 w-72 bg-white dark:bg-gray-900 rounded-lg shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden transition-all duration-300 origin-bottom-right ${isExpanded && cartItems.length > 0
                         ? 'opacity-100 scale-100 translate-y-0'
                         : 'opacity-0 scale-90 translate-y-4 pointer-events-none'
                         }`}

@@ -12,7 +12,7 @@ const ModalHeader = ({ icon, title }) => (
     padding: '20px 24px 16px',
     borderBottom: '1.5px solid #e5e7eb',
     background: 'linear-gradient(135deg, #f7f9ff 0%, #eff3fc 100%)',
-    borderRadius: '8px 8px 0 0',
+    borderRadius: '4px 4px 0 0',
     margin: '-20px -24px 0',
   }}>
     <div style={{ fontSize: '1.15rem', fontWeight: 700, color: '#1a2340' }}>
