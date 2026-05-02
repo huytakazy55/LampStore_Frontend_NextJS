@@ -1,0 +1,49 @@
+/* Slick dots override for best-seller section — cannot be done with Tailwind since these target library-generated elements */
+.bestseller-dots-custom .slick-dots {
+  bottom: -28px;
+}
+
+.bestseller-dots-custom .slick-dots li {
+  width: 10px;
+  height: 10px;
+  margin: 0 3px;
+}
+
+.bestseller-dots-custom .slick-dots li button {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+}
+
+.bestseller-dots-custom .slick-dots li button::before {
+  font-size: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #d1d5db;
+  content: '';
+  opacity: 1;
+  transition: all 0.3s ease;
+  top: 1px;
+  left: 1px;
+}
+
+.bestseller-dots-custom .slick-dots li.slick-active button::before {
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+  width: 20px;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(245, 158, 11, 0.3);
+}
+
+.bestseller-dots-custom .slick-dotted.slick-slider {
+  margin-bottom: 40px;
+}
+
+/* Dark mode */
+.dark .bestseller-dots-custom .slick-dots li button::before {
+  background: #404040;
+}
+
+.dark .bestseller-dots-custom .slick-dots li.slick-active button::before {
+  background: linear-gradient(135deg, #b8860b, #d97706);
+}

@@ -30,6 +30,7 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
     const [showError, setShowError] = useState(false);
     const [addedSuccess, setAddedSuccess] = useState(false);
     const [displayImage, setDisplayImage] = useState(null);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
     // Fetch full product data when product changes
     useEffect(() => {
@@ -65,6 +66,7 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
         setShowError(false);
         setAddedSuccess(false);
         setDisplayImage(null);
+        setCurrentImageIndex(0);
     }, [product]);
 
     useEffect(() => {
@@ -93,9 +95,26 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
     const discountPercent = hasDiscount ? Math.round((1 - variant.discountPrice / variant.price) * 100) : 0;
     const stock = variant?.stock || 0;
 
-    const mainImage = images.length > 0
-        ? getImgSrc(images[0]?.imagePath || images[0]?.ImagePath)
-        : defaultImg;
+    const allImageSrcs = images.length > 0
+        ? images.map(img => getImgSrc(img?.imagePath || img?.ImagePath))
+        : [defaultImg];
+
+    const mainImage = allImageSrcs[0] || defaultImg;
+
+    // The currently displayed image: variant option image overrides, otherwise carousel index
+    const currentCarouselImage = displayImage || allImageSrcs[currentImageIndex] || mainImage;
+
+    const handlePrevImage = (e) => {
+        e.stopPropagation();
+        setDisplayImage(null);
+        setCurrentImageIndex(prev => (prev - 1 + allImageSrcs.length) % allImageSrcs.length);
+    };
+
+    const handleNextImage = (e) => {
+        e.stopPropagation();
+        setDisplayImage(null);
+        setCurrentImageIndex(prev => (prev + 1) % allImageSrcs.length);
+    };
 
     const handleDecrease = () => setQuantity((prev) => Math.max(prev - 1, 1));
     const handleIncrease = () => setQuantity((prev) => Math.min(prev + 1, stock || 999));
@@ -167,14 +186,56 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
                 </button>
 
                 <div className="flex flex-col md:flex-row h-full">
-                    {/* Left: Image */}
-                    <div className="w-full md:w-2/5 bg-gray-50 dark:bg-gray-800 p-6 flex justify-center items-center border-r border-gray-100 dark:border-gray-700">
-                        <img
-                            src={displayImage || mainImage}
-                            alt={product.name}
-                            className="max-h-80 w-auto object-contain drop-shadow-md rounded transition-all duration-300"
-                            onError={(e) => { e.target.src = defaultImg; }}
-                        />
+                    {/* Left: Image Carousel */}
+                    <div className="w-full md:w-2/5 bg-gray-50 dark:bg-gray-800 p-6 flex flex-col justify-center items-center border-r border-gray-100 dark:border-gray-700 relative">
+                        {/* Main Image */}
+                        <div className="relative w-full flex justify-center items-center">
+                            {allImageSrcs.length > 1 && (
+                                <button
+                                    onClick={handlePrevImage}
+                                    className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 dark:bg-gray-700/80 shadow-md hover:bg-white dark:hover:bg-gray-600 transition-all text-gray-600 dark:text-gray-200 hover:text-rose-600 dark:hover:text-rose-400 cursor-pointer backdrop-blur-sm"
+                                    aria-label="Previous image"
+                                >
+                                    <i className="bx bx-chevron-left text-xl"></i>
+                                </button>
+                            )}
+                            <img
+                                src={currentCarouselImage}
+                                alt={product.name}
+                                className="max-h-72 w-auto object-contain drop-shadow-md rounded transition-all duration-300"
+                                onError={(e) => { e.target.src = defaultImg; }}
+                            />
+                            {allImageSrcs.length > 1 && (
+                                <button
+                                    onClick={handleNextImage}
+                                    className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 dark:bg-gray-700/80 shadow-md hover:bg-white dark:hover:bg-gray-600 transition-all text-gray-600 dark:text-gray-200 hover:text-rose-600 dark:hover:text-rose-400 cursor-pointer backdrop-blur-sm"
+                                    aria-label="Next image"
+                                >
+                                    <i className="bx bx-chevron-right text-xl"></i>
+                                </button>
+                            )}
+                        </div>
+                        {/* Dot Indicators */}
+                        {allImageSrcs.length > 1 && (
+                            <div className="flex items-center justify-center gap-1.5 mt-3">
+                                {allImageSrcs.map((src, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setDisplayImage(null);
+                                            setCurrentImageIndex(idx);
+                                        }}
+                                        className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
+                                            (!displayImage && currentImageIndex === idx)
+                                                ? 'bg-rose-500 scale-125'
+                                                : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
+                                        }`}
+                                        aria-label={`View image ${idx + 1}`}
+                                    />
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     {/* Right: Details */}

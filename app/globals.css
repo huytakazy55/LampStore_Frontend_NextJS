@@ -1,4 +1,5 @@
 @import '../styles/admin-table.css';
+@import '../styles/best-seller.css';
 @import "tailwindcss";
 
 /* Tell Tailwind v4 to use .dark class strategy instead of prefers-color-scheme */

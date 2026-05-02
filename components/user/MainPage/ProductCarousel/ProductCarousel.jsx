@@ -34,32 +34,32 @@ const ProductCard = ({ product, isLast, navigate, onAddToCartClick, isInWishlist
 
   return (
     <div
-      className="relative group cursor-pointer bg-white rounded-sm overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:-translate-y-1.5 border border-gray-100 m-1"
+      className="relative group cursor-pointer bg-white dark:bg-[#1a1a1a] rounded-sm overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08),0_0_0_1px_rgba(245,158,11,0.1)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:-translate-y-1 border border-gray-100 dark:border-[#2a2a2a] hover:border-amber-200 dark:hover:border-[#4a3800]"
       onClick={() => navigate(`/product/${product.slug || product.id}`)}
     >
       {/* Discount Badge */}
       {hasDiscount && (
-        <div className="absolute top-3 left-3 z-10 bg-gradient-to-r from-red-500 to-rose-400 text-white text-[10px] font-bold px-2.5 py-1 rounded-sm shadow-lg">
+        <div className="absolute top-2.5 left-2.5 z-10 bg-gradient-to-r from-red-500 to-orange-500 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(239,68,68,0.25)]">
           -{discountPercent}%
         </div>
       )}
 
       {/* Wishlist Button */}
       <button
-        className={`absolute top-3 right-3 z-10 w-8 h-8 rounded-sm flex items-center justify-center transition-all duration-300 shadow-md backdrop-blur-sm ${isInWishlist
-          ? 'bg-rose-500 text-white scale-110'
-          : 'bg-white/80 text-gray-400 hover:bg-rose-50 hover:text-rose-500 hover:scale-110'
+        className={`absolute top-2.5 right-2.5 z-10 w-7 h-7 md:w-8 md:h-8 rounded-sm flex items-center justify-center transition-all duration-300 shadow-sm backdrop-blur-sm ${isInWishlist
+          ? 'bg-rose-500 text-white scale-105'
+          : 'bg-white/80 dark:bg-[#1a1a1a]/80 text-gray-400 dark:text-gray-500 hover:bg-rose-50 dark:hover:bg-rose-900/30 hover:text-rose-500 hover:scale-105'
           }`}
         onClick={(e) => { e.stopPropagation(); onToggleWishlist(product.id); }}
         aria-label={isInWishlist ? 'Bỏ yêu thích' : 'Thêm yêu thích'}
       >
-        <i className={`bx ${isInWishlist ? 'bxs-heart' : 'bx-heart'} text-base`}></i>
+        <i className={`bx ${isInWishlist ? 'bxs-heart' : 'bx-heart'} text-sm md:text-base`}></i>
       </button>
 
       {/* Image Container */}
-      <div className="relative h-44 sm:h-52 md:h-56 overflow-hidden">
+      <div className="relative h-40 sm:h-48 md:h-52 overflow-hidden bg-gradient-to-b from-gray-50 to-white dark:from-[#111] dark:to-[#1a1a1a]">
         <img
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-108"
           src={getImageSrc(product)}
           alt={product.name}
           loading="lazy"
@@ -68,38 +68,38 @@ const ProductCard = ({ product, isLast, navigate, onAddToCartClick, isInWishlist
       </div>
 
       {/* Content */}
-      <div className="p-3.5 md:p-4">
+      <div className="p-3 md:p-3.5">
         {/* Category */}
-        <p className="text-[10px] md:text-xs text-gray-500 font-medium uppercase tracking-wider mb-1.5">
+        <p className="text-[9px] md:text-[10px] text-gray-400 dark:text-gray-500 font-medium uppercase tracking-wider mb-1">
           {product.category?.name || 'Đèn ngủ'}
         </p>
 
         {/* Title */}
-        <h3 className="text-xs md:text-sm font-semibold text-gray-800 line-clamp-2 leading-snug min-h-[2.4em] group-hover:text-amber-700 transition-colors duration-200">
+        <h3 className="text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300 line-clamp-2 leading-snug min-h-[2.4em] group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors duration-200">
           {product.name}
         </h3>
 
         {/* Price + Cart Row */}
-        <div className="flex items-end justify-between mt-3 pt-3 border-t border-gray-100">
+        <div className="flex items-end justify-between mt-2.5 pt-2.5 border-t border-gray-100 dark:border-[#2a2a2a]">
           <div>
-            <div className="text-base md:text-lg font-bold text-amber-600">
-              {formatPrice(price)}<span className="text-xs font-normal ml-0.5">₫</span>
+            <div className="text-sm md:text-base font-bold text-orange-600 dark:text-orange-400">
+              {formatPrice(price)}<span className="text-[10px] font-normal ml-0.5">₫</span>
             </div>
             {hasDiscount && (
-              <div className="text-[10px] md:text-xs text-gray-500 line-through -mt-0.5">
+              <div className="text-[10px] md:text-xs text-gray-400 dark:text-[#6b6b6b] line-through -mt-0.5">
                 {formatPrice(originalPrice)}₫
               </div>
             )}
           </div>
           <button
-            className="w-9 h-9 md:w-10 md:h-10 rounded-sm bg-amber-50 text-amber-600 flex items-center justify-center transition-all duration-300 group-hover:bg-amber-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-amber-200 group-hover:scale-105 active:scale-95"
+            className="w-8 h-8 md:w-9 md:h-9 rounded-sm bg-gradient-to-br from-amber-100 to-amber-200 dark:from-[#3d2e00] dark:to-[#4a3200] text-amber-600 dark:text-amber-400 flex items-center justify-center transition-all duration-300 hover:from-amber-500 hover:to-orange-500 hover:text-white hover:shadow-[0_2px_8px_rgba(245,158,11,0.3)] active:scale-95"
             onClick={(e) => {
               e.stopPropagation();
               onAddToCartClick(product);
             }}
             aria-label="Thêm vào giỏ hàng"
           >
-            <i className='bx bxs-cart-add text-lg md:text-xl'></i>
+            <i className='bx bxs-cart-add text-base md:text-lg'></i>
           </button>
         </div>
       </div>
@@ -178,12 +178,13 @@ const ProductCarousel = () => {
 
   return (
     <div className='w-full mb-4 xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0'>
+      {/* Tab Selector */}
       <div className='flex justify-center items-center mb-6 md:mb-8'>
-        <div className='inline-flex items-center bg-gray-50 dark:bg-gray-800/80 rounded-full p-1 md:p-1.5 border border-gray-200/60 dark:border-gray-700/50 shadow-sm'>
+        <div className='inline-flex items-center bg-gray-50 dark:bg-gray-800/80 rounded-sm p-1 md:p-1.5 border border-gray-200/60 dark:border-gray-700/50 shadow-sm'>
           {tabs.map((tab) => (
             <button
               key={tab.key}
-              className={`relative flex items-center gap-1.5 md:gap-2 px-5 md:px-7 py-2 md:py-2.5 rounded-full text-xs md:text-sm font-semibold transition-all duration-300 ${activeTab === tab.key
+              className={`relative flex items-center gap-1.5 md:gap-2 px-5 md:px-7 py-2 md:py-2.5 rounded-sm text-xs md:text-sm font-semibold transition-all duration-300 ${activeTab === tab.key
                 ? 'bg-white dark:bg-gray-700 text-amber-600 dark:text-amber-400 shadow-md'
                 : 'text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
                 }`}
@@ -195,6 +196,8 @@ const ProductCarousel = () => {
           ))}
         </div>
       </div>
+
+      {/* Product Grid */}
       <div className='tab-content'>
         <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4'>
           {displayProducts.length > 0 ? (

@@ -11,21 +11,21 @@ import { resolveImagePath } from '@/lib/imageUtils';
 
 const CustomPrevArrow = ({ onClick }) => (
   <button
-    className='absolute -top-[50px] md:-top-[70px] right-8 bg-gray-300 hover:bg-gray-400'
+    className='absolute -top-[52px] md:-top-[56px] right-[44px] md:right-[50px] z-10 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-sm bg-gradient-to-br from-amber-500 to-orange-500 text-white cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(245,158,11,0.25)] hover:from-amber-600 hover:to-orange-600 hover:shadow-[0_4px_14px_rgba(245,158,11,0.4)] hover:scale-105 active:scale-95'
     onClick={onClick}
     aria-label="Sản phẩm trước"
   >
-    <i className="bx bx-chevron-left text-2xl md:text-3xl text-white"></i>
+    <i className="bx bx-chevron-left text-xl md:text-2xl leading-none"></i>
   </button>
 );
 
 const CustomNextArrow = ({ onClick }) => (
   <button
-    className='absolute -top-[50px] md:-top-[70px] right-0 bg-gray-300 hover:bg-gray-400'
+    className='absolute -top-[52px] md:-top-[56px] right-1 z-10 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-sm bg-gradient-to-br from-amber-500 to-orange-500 text-white cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(245,158,11,0.25)] hover:from-amber-600 hover:to-orange-600 hover:shadow-[0_4px_14px_rgba(245,158,11,0.4)] hover:scale-105 active:scale-95'
     onClick={onClick}
     aria-label="Sản phẩm tiếp theo"
   >
-    <i className="bx bx-chevron-right text-2xl md:text-3xl text-white"></i>
+    <i className="bx bx-chevron-right text-xl md:text-2xl leading-none"></i>
   </button>
 );
 
@@ -51,21 +51,23 @@ const ProductCardItem = ({ product, onClick, isInWishlist, onToggleWishlist, onA
   };
 
   return (
-    <div
-      className='!w-[98%] h-[12rem] md:h-[14rem] cursor-pointer relative m-1 group bg-white rounded-sm overflow-hidden border border-gray-100 hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:-translate-y-1 transition-all duration-300'
-      onClick={onClick}
-    >
-      <div className='flex gap-3 h-full'>
-        {/* Image */}
-        <div className='h-full aspect-square flex-shrink-0 bg-gradient-to-br from-gray-50 to-white flex items-center justify-center p-3 relative overflow-hidden'>
+    <div className='p-[5px]' onClick={onClick}>
+      <div className='flex gap-0 h-48 md:h-54 rounded-sm overflow-hidden bg-white dark:bg-[#1a1a1a] border border-gray-100 dark:border-[#2a2a2a] cursor-pointer transition-all duration-300 relative hover:border-amber-200 dark:hover:border-[#4a3800] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08),0_0_0_1px_rgba(245,158,11,0.1)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.3),0_0_0_1px_rgba(180,134,11,0.15)] hover:-translate-y-0.5 group'>
+        {/* Image Section */}
+        <div className='relative w-[42%] flex-shrink-0 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-[#111] dark:to-[#1a1a1a] flex items-center justify-center p-3 overflow-hidden'>
           {/* Discount Badge */}
           {hasDiscount && (
-            <div className="absolute top-2 left-2 z-10 bg-gradient-to-r from-red-500 to-rose-400 text-white text-[9px] font-bold px-2 py-0.5 rounded-sm shadow-md">
+            <div className="absolute top-2 left-2 z-10 bg-gradient-to-r from-red-500 to-orange-500 text-white text-[0.6rem] md:text-[0.65rem] font-bold px-1.5 md:px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(239,68,68,0.25)] tracking-wide">
               -{discountPercent}%
             </div>
           )}
+          {/* Sold Badge */}
+          <div className="absolute bottom-1.5 left-1.5 z-10 flex items-center gap-[3px] bg-white/90 dark:bg-[#1a1a1a]/90 backdrop-blur-sm text-gray-500 dark:text-gray-400 text-[0.6rem] md:text-[0.65rem] font-medium px-1.5 md:px-2 py-0.5 md:py-[3px] rounded-sm border border-black/5 dark:border-white/5">
+            <i className='bx bx-purchase-tag text-amber-500 text-[0.7rem]'></i>
+            {product.sellCount || 0} đã bán
+          </div>
           {imageSrc ? (
-            <Image src={imageSrc} alt={product.name} className='w-full h-full object-contain drop-shadow-md transition-transform duration-500 group-hover:scale-110' fill sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw" quality={50} />
+            <Image src={imageSrc} alt={product.name} className='object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.08)] transition-transform duration-500 group-hover:scale-108' fill sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw" quality={50} />
           ) : (
             <div className='w-full h-full flex items-center justify-center'>
               <i className='bx bx-image text-3xl text-gray-300'></i>
@@ -73,48 +75,48 @@ const ProductCardItem = ({ product, onClick, isInWishlist, onToggleWishlist, onA
           )}
         </div>
 
-        {/* Info */}
-        <div className='flex flex-col flex-1 py-3 pr-3 min-w-0'>
-          {/* Sell Count */}
-          <div className='text-[10px] md:text-xs text-gray-400 flex items-center gap-1 mb-1.5'>
-            <i className='bx bx-purchase-tag text-amber-500 text-xs'></i>
-            Đã bán {product.sellCount || 0}
-          </div>
-
+        {/* Info Section */}
+        <div className='flex-1 flex flex-col py-3 px-3 md:py-4 md:px-4 min-w-0'>
           {/* Title */}
-          <h3 className='text-xs md:text-sm font-semibold text-gray-800 line-clamp-2 leading-snug group-hover:text-amber-700 transition-colors duration-200'>
+          <h3 className='text-[0.78rem] md:text-[0.85rem] font-semibold text-gray-700 dark:text-gray-300 leading-snug line-clamp-2 m-0 transition-colors duration-200 group-hover:text-amber-600 dark:group-hover:text-amber-400'>
             {product.name}
           </h3>
 
-          {/* Price */}
-          <div className='mt-auto flex items-end justify-between'>
-            <div>
-              <div className='text-sm md:text-base font-bold text-amber-600'>
-                {formatPrice(displayPrice)}<span className='text-[10px] md:text-xs font-normal ml-0.5'>₫</span>
-              </div>
+          {/* Price Row */}
+          <div className='mt-auto flex items-end justify-between gap-2'>
+            <div className='flex flex-col gap-px'>
+              <span className='text-[0.95rem] md:text-[1.05rem] font-bold text-orange-600 dark:text-orange-400 leading-tight'>
+                {formatPrice(displayPrice)}<span className='text-[0.7rem] font-medium ml-px'>₫</span>
+              </span>
               {hasDiscount && (
-                <div className='text-[10px] md:text-xs text-gray-400 line-through'>
+                <span className='text-[0.65rem] md:text-[0.72rem] text-gray-400 dark:text-[#6b6b6b] line-through leading-none'>
                   {formatPrice(price)}₫
-                </div>
+                </span>
               )}
             </div>
+          </div>
+
+          {/* Bottom Actions */}
+          <div className='flex items-center gap-1.5 md:gap-2 mt-2 md:mt-2.5 pt-[0.45rem] md:pt-[0.55rem] border-t border-gray-100 dark:border-[#2a2a2a]'>
             <button
-              className='w-7 h-7 md:w-8 md:h-8 rounded-sm bg-amber-50 text-amber-600 flex items-center justify-center transition-all duration-300 group-hover:bg-amber-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-amber-200 group-hover:scale-105 active:scale-95'
+              className={`w-7 h-7 md:w-8 md:h-8 flex items-center justify-center border rounded-sm bg-white dark:bg-[#222] text-[0.9rem] md:text-[1rem] cursor-pointer transition-all duration-200 flex-shrink-0 ${isInWishlist
+                ? 'text-rose-500 border-rose-200 bg-rose-50 dark:bg-[#2a1520] dark:border-[#5a2035]'
+                : 'text-gray-300 dark:text-[#555] border-gray-200 dark:border-[#333] hover:text-rose-500 hover:border-rose-200 hover:bg-rose-50 dark:hover:bg-[#2a1520] dark:hover:border-[#5a2035]'
+                }`}
+              onClick={(e) => { e.stopPropagation(); onToggleWishlist(product.id); }}
+              aria-label="Yêu thích"
+            >
+              <i className={`bx ${isInWishlist ? 'bxs-heart' : 'bx-heart'}`}></i>
+            </button>
+            <button
+              className='flex-1 flex items-center justify-center gap-1.5 h-7 md:h-8 border-none rounded-sm bg-gradient-to-r from-amber-100 to-amber-200 dark:from-[#3d2e00] dark:to-[#4a3200] text-amber-800 dark:text-amber-400 text-[0.68rem] md:text-[0.72rem] font-semibold cursor-pointer transition-all duration-200 hover:from-amber-500 hover:to-orange-500 dark:hover:from-amber-600 dark:hover:to-orange-600 hover:text-white hover:shadow-[0_2px_8px_rgba(245,158,11,0.3)] active:scale-[0.97]'
               onClick={(e) => { e.stopPropagation(); onAddToCartClick && onAddToCartClick(product); }}
               tabIndex={-1}
               aria-label="Thêm vào giỏ hàng"
             >
-              <i className='bx bxs-cart-add text-sm md:text-base'></i>
+              <i className='bx bx-cart-add text-sm md:text-[0.95rem]'></i>
+              <span>Thêm giỏ</span>
             </button>
-          </div>
-
-          {/* Wishlist */}
-          <div
-            className={`flex items-center gap-1 text-[10px] md:text-xs cursor-pointer transition-all mt-1.5 ${isInWishlist ? 'text-rose-500' : 'text-gray-400 hover:text-rose-400'}`}
-            onClick={(e) => { e.stopPropagation(); onToggleWishlist(product.id); }}
-          >
-            <i className={`bx ${isInWishlist ? 'bxs-heart' : 'bx-heart'} text-sm`}></i>
-            <span>{isInWishlist ? 'Đã thích' : 'Yêu thích'}</span>
           </div>
         </div>
       </div>
@@ -196,20 +198,28 @@ const SectionProductCardCarousel = () =>
 
   return (
     <div className='w-full overflow-hidden xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0 mb-8'>
-      <div className='border-b border-gray-300 pb-1 relative mb-6 md:mb-8 after:w-[30%] md:after:w-[16%] after:h-[1px] after:bg-yellow-400 after:absolute after:bottom-0 after:left-0'>
-        <h3 className='font-medium text-sm md:text-h3 text-black flex items-center gap-2'>
-          <i className='bx bx-trending-up text-yellow-500'></i>
-          Sản phẩm bán chạy
-        </h3>
+      {/* Section Header */}
+      <div className='flex items-center justify-between mb-6 pb-3 border-b border-gray-300 dark:border-[#333] relative after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-40 after:h-0.5 after:bg-gradient-to-r after:from-amber-500 after:to-orange-500 after:rounded-sm'>
+        <div className='flex items-center gap-3'>
+          <div className='w-9 h-9 md:w-[42px] md:h-[42px] flex items-center justify-center bg-gradient-to-br from-amber-100 to-orange-100 dark:from-[#3d2e00] dark:to-[#4a3200] rounded-md flex-shrink-0'>
+            <i className='bx bx-trending-up text-xl md:text-[1.4rem] text-amber-600 dark:text-amber-400'></i>
+          </div>
+          <div>
+            <h3 className='text-sm md:text-h3 font-bold text-gray-800 dark:text-gray-200 m-0 leading-tight'>Sản phẩm bán chạy</h3>
+            <p className='text-[0.7rem] md:text-xs text-gray-400 dark:text-[#666] m-0 leading-tight'>Được yêu thích nhất tại CapyLumine</p>
+          </div>
+        </div>
       </div>
-      <div ref={sliderContainerRef} style={{ minHeight: loading ? '300px' : 'auto', contain: 'layout style' }}>
+
+      {/* Slider */}
+      <div ref={sliderContainerRef} className='bestseller-dots-custom' style={{ minHeight: loading ? '300px' : 'auto', contain: 'layout style' }}>
         {loading ? (
           <div className='flex items-center justify-center h-[300px]'>
-            <i className='bx bx-loader-alt bx-spin text-3xl text-yellow-400'></i>
+            <i className='bx bx-loader-alt bx-spin text-3xl text-amber-500'></i>
           </div>
         ) : (
           <Slider2 {...settings} afterChange={fixAriaHiddenFocus}>
-            {products.map((product) => (
+            {products.map((product, index) => (
               <ProductCardItem
                 key={product.id}
                 product={product}

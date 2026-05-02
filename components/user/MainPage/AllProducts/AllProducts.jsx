@@ -34,19 +34,20 @@ const SmallProductCard = ({ product, navigate, onAddToCartClick }) => {
 
   return (
     <div
-      className='relative group cursor-pointer bg-white rounded-sm overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:-translate-y-1.5 border border-gray-100'
+      className='relative group cursor-pointer bg-white dark:bg-[#1a1a1a] rounded-sm overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08),0_0_0_1px_rgba(245,158,11,0.1)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:-translate-y-1 border border-gray-100 dark:border-[#2a2a2a] hover:border-amber-200 dark:hover:border-[#4a3800]'
       onClick={() => navigate(`/product/${product.slug || product.id}`)}
     >
       {/* Discount Badge */}
       {hasDiscount && (
-        <div className="absolute top-3 left-3 z-10 bg-gradient-to-r from-red-500 to-rose-400 text-white text-[10px] font-bold px-2.5 py-1 rounded-sm shadow-lg">
+        <div className="absolute top-2.5 left-2.5 z-10 bg-gradient-to-r from-red-500 to-orange-500 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(239,68,68,0.25)]">
           -{discountPercent}%
         </div>
       )}
 
-      <div className='relative h-36 sm:h-44 md:h-52 overflow-hidden'>
+      {/* Image */}
+      <div className='relative h-32 sm:h-40 md:h-48 overflow-hidden bg-gradient-to-b from-gray-50 to-white dark:from-[#111] dark:to-[#1a1a1a]'>
         <Image
-          className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-110'
+          className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-108'
           src={getImageSrc(product)}
           alt={product.name}
           fill
@@ -56,38 +57,38 @@ const SmallProductCard = ({ product, navigate, onAddToCartClick }) => {
       </div>
 
       {/* Content */}
-      <div className='p-3 md:p-4'>
+      <div className='p-2.5 md:p-3.5'>
         {/* Category */}
-        <p className='text-[10px] md:text-xs text-gray-500 font-medium uppercase tracking-wider mb-1'>
+        <p className='text-[9px] md:text-[10px] text-gray-400 dark:text-gray-500 font-medium uppercase tracking-wider mb-1'>
           {product.category?.name || 'Đèn ngủ'}
         </p>
 
         {/* Title */}
-        <h3 className='text-xs md:text-sm font-semibold text-gray-800 line-clamp-2 leading-snug min-h-[2.4em] group-hover:text-amber-700 transition-colors duration-200'>
+        <h3 className='text-[11px] md:text-sm font-semibold text-gray-700 dark:text-gray-300 line-clamp-2 leading-snug min-h-[2.4em] group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors duration-200'>
           {product.name}
         </h3>
 
         {/* Price + Cart */}
-        <div className='flex items-end justify-between mt-2.5 pt-2.5 border-t border-gray-100'>
+        <div className='flex items-end justify-between mt-2 pt-2 border-t border-gray-100 dark:border-[#2a2a2a]'>
           <div>
-            <div className='text-sm md:text-base font-bold text-amber-600'>
+            <div className='text-sm md:text-base font-bold text-orange-600 dark:text-orange-400'>
               {formatPrice(price)}<span className='text-[10px] font-normal ml-0.5'>₫</span>
             </div>
             {hasDiscount && (
-              <div className='text-[10px] text-gray-500 line-through -mt-0.5'>
+              <div className='text-[9px] md:text-[10px] text-gray-400 dark:text-[#6b6b6b] line-through -mt-0.5'>
                 {formatPrice(originalPrice)}₫
               </div>
             )}
           </div>
           <button
-            className='w-8 h-8 md:w-9 md:h-9 rounded-sm bg-amber-50 text-amber-600 flex items-center justify-center transition-all duration-300 group-hover:bg-amber-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-amber-200 group-hover:scale-105 active:scale-95'
+            className='w-7 h-7 md:w-8 md:h-8 rounded-sm bg-gradient-to-br from-amber-100 to-amber-200 dark:from-[#3d2e00] dark:to-[#4a3200] text-amber-600 dark:text-amber-400 flex items-center justify-center transition-all duration-300 hover:from-amber-500 hover:to-orange-500 hover:text-white hover:shadow-[0_2px_8px_rgba(245,158,11,0.3)] active:scale-95'
             onClick={(e) => {
               e.stopPropagation();
               onAddToCartClick(product);
             }}
             aria-label="Thêm vào giỏ hàng"
           >
-            <i className='bx bxs-cart-add text-base md:text-lg'></i>
+            <i className='bx bxs-cart-add text-sm md:text-base'></i>
           </button>
         </div>
       </div>
@@ -151,11 +152,17 @@ const AllProducts = () => {
   return (
     <div className='w-full bg-transparent'>
       <div className='xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0'>
-        <div className='border-b border-gray-300 pb-1 relative mb-6 md:mb-8 pt-4 md:pt-6 flex flex-col sm:flex-row justify-between gap-2 sm:gap-0 after:w-1/12 after:h-[1px] after:absolute after:bottom-0 after:bg-yellow-400'>
-          <h3 className='text-sm md:text-h3 font-medium text-black'>Tất cả sản phẩm</h3>
+        {/* Section Header — matching style */}
+        <div className='flex flex-col sm:flex-row justify-between gap-2 sm:gap-0 mb-6 md:mb-8 pb-3 pt-4 md:pt-6 border-b border-gray-300 dark:border-[#333] relative after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-24 after:h-0.5 after:bg-gradient-to-r after:from-amber-500 after:to-orange-500 after:rounded-sm'>
+          <div className='flex items-center gap-3'>
+            <div className='w-9 h-9 md:w-[42px] md:h-[42px] flex items-center justify-center bg-gradient-to-br from-amber-100 to-orange-100 dark:from-[#3d2e00] dark:to-[#4a3200] rounded-md flex-shrink-0'>
+              <i className='bx bx-grid-alt text-xl md:text-[1.4rem] text-amber-600 dark:text-amber-400'></i>
+            </div>
+            <h3 className='text-sm md:text-h3 font-bold text-gray-800 dark:text-gray-200 m-0'>Tất cả sản phẩm</h3>
+          </div>
           <div className='text-xs md:text-normal flex justify-start sm:justify-end gap-4 md:gap-8 items-center font-medium overflow-x-auto pr-1'>
             <button
-              className={`transition-colors whitespace-nowrap ${!activeCategory ? 'text-yellow-600 font-bold' : 'text-gray-500 hover:text-gray-600'}`}
+              className={`transition-colors whitespace-nowrap ${!activeCategory ? 'text-amber-600 dark:text-amber-400 font-bold' : 'text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'}`}
               onClick={() => setActiveCategory(null)}
             >
               Tất cả
@@ -163,7 +170,7 @@ const AllProducts = () => {
             {categories.map((cat) => (
               <button
                 key={cat.id}
-                className={`transition-colors whitespace-nowrap ${activeCategory === cat.id ? 'text-yellow-600 font-bold' : 'text-gray-500 hover:text-gray-600'}`}
+                className={`transition-colors whitespace-nowrap ${activeCategory === cat.id ? 'text-amber-600 dark:text-amber-400 font-bold' : 'text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'}`}
                 onClick={() => setActiveCategory(cat.id)}
               >
                 {cat.name}
@@ -171,6 +178,8 @@ const AllProducts = () => {
             ))}
           </div>
         </div>
+
+        {/* Product Grid */}
         <div className='w-full'>
           <style jsx global>{`
             @keyframes fadeInUp {
@@ -202,7 +211,7 @@ const AllProducts = () => {
             <div className="mt-6 flex justify-center">
               <button
                 onClick={() => setVisibleRows(prev => prev + 2)}
-                className="px-8 py-2 border-2 border-amber-400 text-amber-600 font-medium rounded hover:bg-amber-50 transition-colors"
+                className="px-8 py-2 border-2 border-amber-400 dark:border-amber-600 text-amber-600 dark:text-amber-400 font-medium rounded-sm hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors"
               >
                 Xem thêm
               </button>
