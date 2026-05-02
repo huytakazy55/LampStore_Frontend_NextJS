@@ -23,21 +23,31 @@ export const metadata = {
     metadataBase: new URL('https://capylumine.com'),
     keywords: ['đèn ngủ', 'đèn trang trí', 'đèn bàn học', 'đèn LED', 'đèn anime', 'đèn dễ thương', 'mua đèn online', 'CapyLumine', 'đèn capybara', 'đèn nghệ thuật'],
     openGraph: {
+        title: 'CapyLumine - Đèn Ngủ & Đèn Trang Trí Cao Cấp',
+        description: 'Cửa hàng đèn trang trí cao cấp hàng đầu Việt Nam. Đèn ngủ dễ thương, đèn bàn học, đèn LED nghệ thuật. Giao hàng toàn quốc, đổi trả miễn phí 15 ngày.',
+        url: 'https://capylumine.com',
         type: 'website',
         locale: 'vi_VN',
         siteName: 'CapyLumine',
         images: [
             {
-                url: '/og-image.png',
+                url: 'https://capylumine.com/og-image.png',
                 width: 1200,
                 height: 630,
                 alt: 'CapyLumine - Đèn trang trí cao cấp',
+                type: 'image/png',
             },
         ],
     },
     twitter: {
         card: 'summary_large_image',
         site: '@capylumine',
+        title: 'CapyLumine - Đèn Ngủ & Đèn Trang Trí Cao Cấp',
+        description: 'Cửa hàng đèn trang trí cao cấp hàng đầu Việt Nam. Đèn ngủ, đèn bàn, đèn LED nghệ thuật.',
+        images: ['https://capylumine.com/og-image.png'],
+    },
+    other: {
+        'fb:app_id': '',
     },
     robots: {
         index: true,
