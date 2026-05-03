@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useContext, useMemo } from 'react';
-import { Table, Input, Breadcrumb, Pagination, Modal, message, Space, Tag, Select, Button } from 'antd';
-import { EyeOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Table, Input, Breadcrumb, Pagination, Modal, message, Space, Tag, Select, Button, Tooltip } from 'antd';
+import { EyeOutlined, DeleteOutlined, CheckCircleOutlined, CloseCircleOutlined, CarOutlined, FileDoneOutlined } from '@ant-design/icons';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import OrderService from '@/services/OrderService';
 import OrderDetailModal from './OrderDetailModal';
@@ -14,6 +14,30 @@ const statusConfig = {
     Shipping: { color: 'cyan', label: 'Đang giao' },
     Completed: { color: 'green', label: 'Hoàn thành' },
     Cancelled: { color: 'red', label: 'Đã hủy' },
+};
+
+const colorMap = {
+    Pending: { bg: '#fef3c7', border: '#fcd34d', text: '#b45309', icon: 'bx-time-five' },
+    Confirmed: { bg: '#dbeafe', border: '#93c5fd', text: '#1d4ed8', icon: 'bx-check-circle' },
+    Shipping: { bg: '#e0e7ff', border: '#a5b4fc', text: '#4338ca', icon: 'bx-package' },
+    Completed: { bg: '#d1fae5', border: '#6ee7b7', text: '#065f46', icon: 'bx-check-double' },
+    Cancelled: { bg: '#fee2e2', border: '#fca5a5', text: '#b91c1c', icon: 'bx-x-circle' },
+};
+
+const nextActions = {
+    Pending: [
+        { status: 'Confirmed', label: 'Xác nhận', icon: <CheckCircleOutlined />, color: '#1d4ed8', bg: '#dbeafe', border: '#93c5fd' },
+        { status: 'Cancelled', label: 'Hủy', icon: <CloseCircleOutlined />, color: '#b91c1c', bg: '#fee2e2', border: '#fca5a5' },
+    ],
+    Confirmed: [
+        { status: 'Shipping', label: 'Giao hàng', icon: <CarOutlined />, color: '#4338ca', bg: '#e0e7ff', border: '#a5b4fc' },
+        { status: 'Cancelled', label: 'Hủy', icon: <CloseCircleOutlined />, color: '#b91c1c', bg: '#fee2e2', border: '#fca5a5' },
+    ],
+    Shipping: [
+        { status: 'Completed', label: 'Hoàn thành', icon: <FileDoneOutlined />, color: '#065f46', bg: '#d1fae5', border: '#6ee7b7' },
+    ],
+    Completed: [],
+    Cancelled: [],
 };
 
 const formatPrice = (price) =>
@@ -89,8 +113,24 @@ const OrdersManage = () =>
             fetchOrders();
         } catch (error)
         {
-            message.error('Lỗi khi cập nhật trạng thái');
+            const errMsg = error?.response?.data?.message || 'Lỗi khi cập nhật trạng thái';
+            message.error(errMsg);
         }
+    };
+
+    const confirmStatusChange = (orderId, newStatus, actionLabel) =>
+    {
+        const isCancelling = newStatus === 'Cancelled';
+        Modal.confirm({
+            title: isCancelling ? 'Xác nhận hủy đơn hàng' : 'Xác nhận chuyển trạng thái',
+            content: isCancelling
+                ? 'Bạn có chắc muốn hủy đơn hàng này? Hành động này không thể hoàn tác.'
+                : `Chuyển đơn hàng sang trạng thái "${statusConfig[newStatus]?.label}"?`,
+            okText: actionLabel,
+            okType: isCancelling ? 'danger' : 'primary',
+            cancelText: 'Đóng',
+            onOk: () => handleStatusChange(orderId, newStatus),
+        });
     };
 
     const filteredOrders = useMemo(() =>
@@ -194,54 +234,45 @@ const OrdersManage = () =>
             title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
-            width: 170,
+            width: 200,
             align: 'center',
             render: (status, record) =>
             {
-                const colorMap = {
-                    Pending: { bg: '#fef3c7', border: '#fcd34d', text: '#b45309', icon: 'bx-time-five' },
-                    Confirmed: { bg: '#dbeafe', border: '#93c5fd', text: '#1d4ed8', icon: 'bx-check-circle' },
-                    Shipping: { bg: '#e0e7ff', border: '#a5b4fc', text: '#4338ca', icon: 'bx-package' },
-                    Completed: { bg: '#d1fae5', border: '#6ee7b7', text: '#065f46', icon: 'bx-check-double' },
-                    Cancelled: { bg: '#fee2e2', border: '#fca5a5', text: '#b91c1c', icon: 'bx-x-circle' },
-                };
+                const cm = colorMap[status] || colorMap.Pending;
+                const actions = nextActions[status] || [];
                 return (
-                    <Select
-                        value={status}
-                        size="small"
-                        style={{ width: 158 }}
-                        onChange={(val) => handleStatusChange(record.id, val)}
-                        popupMatchSelectWidth={false}
-                        variant="borderless"
-                        labelRender={({ value: v }) =>
-                        {
-                            const cm = colorMap[v] || colorMap.Pending;
-                            const lb = statusConfig[v]?.label || v;
-                            return (
-                                <span style={{
-                                    display: 'inline-flex', alignItems: 'center', gap: 5,
-                                    padding: '2px 10px', borderRadius: 20, fontSize: 12, fontWeight: 600,
-                                    background: cm.bg, color: cm.text, border: `1px solid ${cm.border}`,
-                                }}>
-                                    <i className={`bx ${cm.icon}`} style={{ fontSize: 13 }}></i>
-                                    {lb}
-                                </span>
-                            );
-                        }}
-                        options={Object.entries(statusConfig).map(([key, val]) =>
-                        {
-                            const cm = colorMap[key] || colorMap.Pending;
-                            return {
-                                value: key,
-                                label: (
-                                    <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 500, color: cm.text }}>
-                                        <i className={`bx ${cm.icon}`} style={{ fontSize: 14 }}></i>
-                                        {val.label}
-                                    </span>
-                                ),
-                            };
-                        })}
-                    />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'center', flexWrap: 'wrap' }}>
+                        <span style={{
+                            display: 'inline-flex', alignItems: 'center', gap: 4,
+                            padding: '2px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600,
+                            background: cm.bg, color: cm.text, border: `1px solid ${cm.border}`,
+                            whiteSpace: 'nowrap',
+                        }}>
+                            <i className={`bx ${cm.icon}`} style={{ fontSize: 12 }}></i>
+                            {statusConfig[status]?.label || status}
+                        </span>
+                        {actions.length > 0 && (
+                            <div style={{ display: 'flex', gap: 4 }}>
+                                {actions.map(action => (
+                                    <Tooltip key={action.status} title={action.label}>
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); confirmStatusChange(record.id, action.status, action.label); }}
+                                            style={{
+                                                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                                                width: 26, height: 26, borderRadius: 6, border: `1px solid ${action.border}`,
+                                                background: action.bg, color: action.color, cursor: 'pointer',
+                                                fontSize: 13, transition: 'all 0.2s',
+                                            }}
+                                            onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.1)'; e.currentTarget.style.boxShadow = `0 2px 8px ${action.border}`; }}
+                                            onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = 'none'; }}
+                                        >
+                                            {action.icon}
+                                        </button>
+                                    </Tooltip>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 );
             },
         },

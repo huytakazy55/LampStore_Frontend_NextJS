@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Modal, Select } from 'antd';
+import { Modal, Button } from 'antd';
 
 const statusConfig = {
     Pending: { label: 'Chờ xử lý', bg: '#fef3c7', border: '#fcd34d', text: '#b45309', icon: 'bx-time-five' },
@@ -11,6 +11,14 @@ const statusConfig = {
     Cancelled: { label: 'Đã hủy', bg: '#fee2e2', border: '#fca5a5', text: '#b91c1c', icon: 'bx-x-circle' },
 };
 
+const STATUS_STEPS = ['Pending', 'Confirmed', 'Shipping', 'Completed'];
+
+const nextActionsMap = {
+    Pending: { status: 'Confirmed', label: 'Xác nhận đơn hàng', icon: 'bx-check-circle' },
+    Confirmed: { status: 'Shipping', label: 'Chuyển giao hàng', icon: 'bx-package' },
+    Shipping: { status: 'Completed', label: 'Hoàn thành giao hàng', icon: 'bx-check-double' },
+};
+
 const formatPrice = (price) =>
 {
     if (!price && price !== 0) return '0';
@@ -18,6 +26,80 @@ const formatPrice = (price) =>
 };
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
+
+const OrderStatusTimeline = ({ currentStatus }) =>
+{
+    const isCancelled = currentStatus === 'Cancelled';
+    const currentIdx = STATUS_STEPS.indexOf(currentStatus);
+
+    if (isCancelled)
+    {
+        return (
+            <div style={{ padding: '16px 20px', background: '#fef2f2', borderRadius: 10, border: '1px solid #fecaca', marginBottom: 20 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <div style={{
+                        width: 32, height: 32, borderRadius: '50%', background: '#ef4444', color: '#fff',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16
+                    }}>
+                        <i className='bx bx-x'></i>
+                    </div>
+                    <div>
+                        <div style={{ fontWeight: 600, color: '#b91c1c', fontSize: 14 }}>Đơn hàng đã bị hủy</div>
+                        <div style={{ fontSize: 12, color: '#dc2626' }}>Đơn hàng này không thể thay đổi trạng thái</div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div style={{ padding: '20px 16px', background: '#f9fafb', borderRadius: 10, border: '1px solid #f3f4f6', marginBottom: 20 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative' }}>
+                <div style={{ position: 'absolute', top: 18, left: 36, right: 36, height: 3, background: '#e5e7eb', borderRadius: 2, zIndex: 0 }} />
+                <div style={{
+                    position: 'absolute', top: 18, left: 36, height: 3, borderRadius: 2, zIndex: 1,
+                    background: 'linear-gradient(90deg, #10b981, #3b82f6)',
+                    width: currentIdx >= 0 ? `${(currentIdx / (STATUS_STEPS.length - 1)) * (100 - (72 / (STATUS_STEPS.length - 1) * 100 / 100))}%` : '0%',
+                    transition: 'width 0.5s ease',
+                }} />
+                {STATUS_STEPS.map((step, idx) =>
+                {
+                    const config = statusConfig[step];
+                    const isCompleted = idx < currentIdx;
+                    const isCurrent = idx === currentIdx;
+                    return (
+                        <div key={step} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 2, flex: 1 }}>
+                            <div style={{
+                                width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                fontSize: 16, fontWeight: 600, transition: 'all 0.3s',
+                                background: isCompleted ? '#10b981' : isCurrent ? config.bg : '#f3f4f6',
+                                color: isCompleted ? '#fff' : isCurrent ? config.text : '#d1d5db',
+                                border: `2.5px solid ${isCompleted ? '#10b981' : isCurrent ? config.border : '#e5e7eb'}`,
+                                boxShadow: isCurrent ? `0 0 0 4px ${config.bg}` : 'none',
+                                animation: isCurrent ? 'pulse-ring 2s infinite' : 'none',
+                            }}>
+                                {isCompleted ? <i className='bx bx-check'></i> : <i className={`bx ${config.icon}`}></i>}
+                            </div>
+                            <div style={{
+                                marginTop: 8, fontSize: 11, fontWeight: isCurrent ? 700 : 500, textAlign: 'center',
+                                color: isCompleted ? '#10b981' : isCurrent ? config.text : '#9ca3af',
+                            }}>
+                                {config.label}
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+            <style>{`
+                @keyframes pulse-ring {
+                    0% { box-shadow: 0 0 0 0 rgba(59,130,246,0.3); }
+                    70% { box-shadow: 0 0 0 8px rgba(59,130,246,0); }
+                    100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); }
+                }
+            `}</style>
+        </div>
+    );
+};
 
 const OrderDetailModal = ({ order, onClose, onStatusChange }) =>
 {
@@ -43,6 +125,33 @@ const OrderDetailModal = ({ order, onClose, onStatusChange }) =>
     {
         if (!path) return null;
         return path.startsWith('http') ? path : `${API_ENDPOINT}${path}`;
+    };
+
+    const nextAction = nextActionsMap[order.status];
+    const canCancel = order.status === 'Pending' || order.status === 'Confirmed';
+
+    const handleNextStep = () =>
+    {
+        if (!nextAction) return;
+        Modal.confirm({
+            title: 'Xác nhận chuyển trạng thái',
+            content: `Chuyển đơn hàng sang "${statusConfig[nextAction.status]?.label}"?`,
+            okText: nextAction.label,
+            cancelText: 'Đóng',
+            onOk: () => onStatusChange(order.id, nextAction.status),
+        });
+    };
+
+    const handleCancel = () =>
+    {
+        Modal.confirm({
+            title: 'Xác nhận hủy đơn hàng',
+            content: 'Bạn có chắc muốn hủy đơn hàng này? Hành động này không thể hoàn tác.',
+            okText: 'Hủy đơn',
+            okType: 'danger',
+            cancelText: 'Đóng',
+            onOk: () => onStatusChange(order.id, 'Cancelled'),
+        });
     };
 
     return (
@@ -86,37 +195,44 @@ const OrderDetailModal = ({ order, onClose, onStatusChange }) =>
 
             {/* Body */}
             <div style={{ padding: '20px 24px', maxHeight: 'calc(85vh - 80px)', overflowY: 'auto' }}>
-                {/* Status bar */}
-                <div style={{
-                    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                    padding: '12px 16px', background: '#f9fafb', borderRadius: 10, marginBottom: 20, border: '1px solid #f3f4f6'
-                }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <span style={{ color: '#6b7280', fontSize: 13 }}>Trạng thái:</span>
-                        <span style={{
-                            display: 'inline-flex', alignItems: 'center', gap: 5,
-                            padding: '3px 12px', borderRadius: 20, fontSize: 12, fontWeight: 600,
-                            background: status.bg, color: status.text, border: `1px solid ${status.border}`
-                        }}>
-                            <i className={`bx ${status.icon}`} style={{ fontSize: 14 }}></i>
-                            {status.label}
-                        </span>
+                {/* Status Timeline */}
+                <OrderStatusTimeline currentStatus={order.status} />
+
+                {/* Action buttons */}
+                {(nextAction || canCancel) && (
+                    <div style={{ display: 'flex', gap: 10, marginBottom: 20, justifyContent: 'center' }}>
+                        {nextAction && (
+                            <Button
+                                type="primary"
+                                size="middle"
+                                onClick={handleNextStep}
+                                style={{
+                                    background: statusConfig[nextAction.status]?.text,
+                                    borderColor: statusConfig[nextAction.status]?.border,
+                                    display: 'flex', alignItems: 'center', gap: 6,
+                                    borderRadius: 8, fontWeight: 600, height: 38,
+                                }}
+                            >
+                                <i className={`bx ${nextAction.icon}`} style={{ fontSize: 16 }}></i>
+                                {nextAction.label}
+                            </Button>
+                        )}
+                        {canCancel && (
+                            <Button
+                                danger
+                                size="middle"
+                                onClick={handleCancel}
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: 6,
+                                    borderRadius: 8, fontWeight: 600, height: 38,
+                                }}
+                            >
+                                <i className='bx bx-x-circle' style={{ fontSize: 16 }}></i>
+                                Hủy đơn hàng
+                            </Button>
+                        )}
                     </div>
-                    <Select
-                        value={order.status}
-                        size="small"
-                        style={{ width: 160 }}
-                        onChange={(val) => onStatusChange(order.id, val)}
-                        options={Object.entries(statusConfig).map(([key, val]) => ({
-                            value: key,
-                            label: (
-                                <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13 }}>
-                                    <i className={`bx ${val.icon}`}></i> {val.label}
-                                </span>
-                            ),
-                        }))}
-                    />
-                </div>
+                )}
 
                 {/* Customer info - Table layout */}
                 <div style={{ marginBottom: 20 }}>

@@ -14,6 +14,7 @@ import Settings from '../Settings-manage/Settings';
 import Roles from '../Roles-manage/Roles';
 import NewsManage from '../News-manage/NewsManage';
 import OrdersManage from '../Orders-manage/OrdersManage';
+import DeliveryManage from '../Delivery-manage/DeliveryManage';
 import AnalyticsPage from '../Analytics-manage/AnalyticsPage';
 
 const RightBody = () => {
@@ -58,6 +59,9 @@ const RightBody = () => {
     }
     else if (location.pathname === '/admin/orders') {
       return <OrdersManage />
+    }
+    else if (location.pathname === '/admin/delivery') {
+      return <DeliveryManage />
     }
     return null;
   };

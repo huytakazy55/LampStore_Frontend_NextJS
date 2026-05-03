@@ -121,14 +121,69 @@ export default function OrderHistoryPage()
 
                     {/* Modal Body */}
                     <div className='overflow-y-auto max-h-[calc(90vh-70px)] p-6 space-y-5'>
-                        {/* Status Badge */}
-                        <div className='flex items-center gap-3'>
-                            <span className='text-sm text-gray-500 dark:text-gray-400'>Trạng thái:</span>
-                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${statusInfo.bg} ${statusInfo.border} ${statusInfo.text}`}>
-                                <i className={`bx ${statusInfo.icon}`}></i>
-                                {statusInfo.label}
-                            </span>
-                        </div>
+                        {/* Status Timeline */}
+                        {order.status === 'Cancelled' ? (
+                            <div className='flex items-center gap-3 px-4 py-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl'>
+                                <div className='w-9 h-9 rounded-full bg-red-500 text-white flex items-center justify-center text-lg'>
+                                    <i className='bx bx-x'></i>
+                                </div>
+                                <div>
+                                    <div className='font-semibold text-red-700 dark:text-red-400 text-sm'>Đơn hàng đã bị hủy</div>
+                                    <div className='text-xs text-red-500 dark:text-red-500'>Đơn hàng này không thể thay đổi trạng thái</div>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className='px-2 py-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-700'>
+                                <div className='flex items-center justify-between relative'>
+                                    {/* Background line */}
+                                    <div className='absolute top-[18px] left-[36px] right-[36px] h-[3px] bg-gray-200 dark:bg-gray-700 rounded' />
+                                    {/* Active line */}
+                                    <div
+                                        className='absolute top-[18px] left-[36px] h-[3px] rounded transition-all duration-500'
+                                        style={{
+                                            background: 'linear-gradient(90deg, #10b981, #3b82f6)',
+                                            width: `${((['Pending','Confirmed','Shipping','Completed'].indexOf(order.status)) / 3) * (100 - 24)}%`,
+                                        }}
+                                    />
+
+                                    {['Pending','Confirmed','Shipping','Completed'].map((step, idx) => {
+                                        const stepLabels = { Pending: 'Chờ xử lý', Confirmed: 'Đã xác nhận', Shipping: 'Đang giao', Completed: 'Hoàn thành' };
+                                        const stepIcons = { Pending: 'bx-time-five', Confirmed: 'bx-check-circle', Shipping: 'bx-package', Completed: 'bx-check-double' };
+                                        const currentIdx = ['Pending','Confirmed','Shipping','Completed'].indexOf(order.status);
+                                        const isCompleted = idx < currentIdx;
+                                        const isCurrent = idx === currentIdx;
+
+                                        return (
+                                            <div key={step} className='flex flex-col items-center z-10 flex-1'>
+                                                <div
+                                                    className={`w-9 h-9 rounded-full flex items-center justify-center text-base font-semibold transition-all duration-300
+                                                        ${isCompleted ? 'bg-emerald-500 text-white border-[2.5px] border-emerald-500' :
+                                                        isCurrent ? `border-[2.5px] ${statusInfo.bg} ${statusInfo.text} ${statusInfo.border}` :
+                                                        'bg-gray-100 dark:bg-gray-700 text-gray-300 dark:text-gray-500 border-[2.5px] border-gray-200 dark:border-gray-600'}`}
+                                                    style={isCurrent ? { animation: 'pulse-timeline 2s infinite', boxShadow: '0 0 0 4px rgba(59,130,246,0.1)' } : {}}
+                                                >
+                                                    {isCompleted ? <i className='bx bx-check'></i> : <i className={`bx ${stepIcons[step]}`}></i>}
+                                                </div>
+                                                <span className={`mt-2 text-[11px] font-medium text-center
+                                                    ${isCompleted ? 'text-emerald-600 dark:text-emerald-400' :
+                                                    isCurrent ? `${statusInfo.text} font-bold` :
+                                                    'text-gray-400 dark:text-gray-500'}`}
+                                                >
+                                                    {stepLabels[step]}
+                                                </span>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                                <style>{`
+                                    @keyframes pulse-timeline {
+                                        0% { box-shadow: 0 0 0 0 rgba(59,130,246,0.3); }
+                                        70% { box-shadow: 0 0 0 8px rgba(59,130,246,0); }
+                                        100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); }
+                                    }
+                                `}</style>
+                            </div>
+                        )}
 
                         {/* Customer Info */}
                         <div>
