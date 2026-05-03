@@ -169,25 +169,25 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
 
     return createPortal(
         <div
-            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 transition-opacity"
+            className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center bg-black/50 transition-opacity"
             onClick={onClose}
         >
             {/* Modal Box */}
             <div
-                className="bg-white dark:bg-gray-900 rounded-md shadow-xl w-full max-w-3xl overflow-hidden relative animate-fadeIn"
+                className="bg-white dark:bg-gray-900 rounded-t-lg sm:rounded-md shadow-xl w-full sm:mx-4 max-w-3xl max-h-[90vh] sm:max-h-[85vh] overflow-y-auto relative animate-fadeIn"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Close Button */}
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 text-gray-400 dark:text-gray-500 hover:text-rose-600 dark:hover:text-rose-400 transition-colors z-10"
+                    className="absolute top-2 right-2 sm:top-4 sm:right-4 w-8 h-8 sm:w-auto sm:h-auto flex items-center justify-center text-gray-400 dark:text-gray-500 hover:text-rose-600 dark:hover:text-rose-400 transition-colors z-10"
                 >
-                    <i className="bx bx-x text-3xl"></i>
+                    <i className="bx bx-x text-2xl sm:text-3xl"></i>
                 </button>
 
-                <div className="flex flex-col md:flex-row h-full">
+                <div className="flex flex-col md:flex-row">
                     {/* Left: Image Carousel */}
-                    <div className="w-full md:w-2/5 bg-gray-50 dark:bg-gray-800 p-6 flex flex-col justify-center items-center border-r border-gray-100 dark:border-gray-700 relative">
+                    <div className="w-full md:w-2/5 bg-gray-50 dark:bg-gray-800 p-3 sm:p-6 flex flex-col justify-center items-center md:border-r border-b md:border-b-0 border-gray-100 dark:border-gray-700 relative">
                         {/* Main Image */}
                         <div className="relative w-full flex justify-center items-center">
                             {allImageSrcs.length > 1 && (
@@ -202,7 +202,7 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
                             <img
                                 src={currentCarouselImage}
                                 alt={product.name}
-                                className="max-h-72 w-auto object-contain drop-shadow-md rounded transition-all duration-300"
+                                className="max-h-36 sm:max-h-72 w-auto object-contain drop-shadow-md rounded transition-all duration-300"
                                 onError={(e) => { e.target.src = defaultImg; }}
                             />
                             {allImageSrcs.length > 1 && (
@@ -217,7 +217,7 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
                         </div>
                         {/* Dot Indicators */}
                         {allImageSrcs.length > 1 && (
-                            <div className="flex items-center justify-center gap-1.5 mt-3">
+                            <div className="flex items-center justify-center gap-1.5 mt-2 sm:mt-3">
                                 {allImageSrcs.map((src, idx) => (
                                     <button
                                         key={idx}
@@ -239,14 +239,14 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
                     </div>
 
                     {/* Right: Details */}
-                    <div className="w-full md:w-3/5 p-6 flex flex-col max-h-[80vh] overflow-y-auto">
-                        <h2 className="text-xl font-medium text-gray-800 dark:text-gray-100 mb-2 leading-snug pr-6">
+                    <div className="w-full md:w-3/5 p-3 sm:p-6 flex flex-col">
+                        <h2 className="text-base sm:text-xl font-medium text-gray-800 dark:text-gray-100 mb-1 sm:mb-2 leading-snug pr-6">
                             {product.name}
                         </h2>
 
                         {/* Price Area */}
-                        <div className="flex items-end gap-3 mt-2 mb-5 bg-rose-50/50 dark:bg-rose-900/20 p-4 rounded-md border border-rose-100/50 dark:border-rose-800/30">
-                            <span className="text-2xl font-bold text-rose-600">₫{formatPrice(price)}</span>
+                        <div className="flex items-end gap-3 mt-1 sm:mt-2 mb-3 sm:mb-5 bg-rose-50/50 dark:bg-rose-900/20 p-2.5 sm:p-4 rounded-md border border-rose-100/50 dark:border-rose-800/30">
+                            <span className="text-xl sm:text-2xl font-bold text-rose-600">₫{formatPrice(price)}</span>
                             {hasDiscount && (
                                 <>
                                     <span className="text-sm line-through text-gray-400 dark:text-gray-500 mb-1">
@@ -261,7 +261,7 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
 
                         {/* Variant Types — Selectable */}
                         {variantTypes.length > 0 && (
-                            <div className="mb-4">
+                            <div className="mb-2 sm:mb-4">
                                 {variantTypes.map((vt) => {
                                     const values = Array.isArray(vt.values) ? vt.values : [];
                                     if (values.length === 0) return null;
@@ -319,7 +319,7 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
                         )}
 
                         {/* Quantity */}
-                        <div className="mb-6 flex items-center gap-6">
+                        <div className="mb-3 sm:mb-6 flex items-center gap-3 sm:gap-6 flex-wrap">
                             <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">Số lượng:</h3>
                             <div className="flex items-center border border-gray-300 dark:border-gray-600 rounded overflow-hidden bg-white dark:bg-gray-800">
                                 <button onClick={handleDecrease} className="w-9 h-9 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-rose-600 transition font-medium text-lg">-</button>
@@ -338,10 +338,10 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
                         )}
 
                         {/* Action Buttons */}
-                        <div className="mt-auto flex gap-4">
+                        <div className="mt-auto flex gap-3 sm:gap-4 pt-3 sm:pt-4 border-t border-gray-100 dark:border-gray-800">
                             <button
                                 onClick={handleAddToCart}
-                                className="flex-1 bg-rose-50 dark:bg-rose-900/30 border border-rose-600 text-rose-600 dark:text-rose-400 py-3 rounded-md font-medium hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors flex justify-center items-center gap-2 cursor-pointer"
+                                className="flex-1 bg-rose-50 dark:bg-rose-900/30 border border-rose-600 text-rose-600 dark:text-rose-400 py-2.5 sm:py-3 rounded-md font-medium hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors flex justify-center items-center gap-2 cursor-pointer text-sm sm:text-base"
                             >
                                 <i className="bx bx-cart-add text-xl"></i>
                                 Thêm vào giỏ
@@ -370,7 +370,7 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
                                     sessionStorage.setItem('buyNowItems', JSON.stringify([buyItem]));
                                     navigate('/checkout');
                                 }}
-                                className="flex-1 bg-rose-600 text-white py-3 rounded-md font-medium hover:bg-rose-700 transition-colors shadow-sm cursor-pointer"
+                                className="flex-1 bg-rose-600 text-white py-2.5 sm:py-3 rounded-md font-medium hover:bg-rose-700 transition-colors shadow-sm cursor-pointer text-sm sm:text-base"
                             >
                                 Mua ngay
                             </button>
