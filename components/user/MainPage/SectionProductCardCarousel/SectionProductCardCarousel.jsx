@@ -124,6 +124,12 @@ const ProductCardItem = ({ product, onClick, isInWishlist, onToggleWishlist, onA
   );
 };
 
+const getSlidesForWidth = (w) => {
+  if (w < 640) return 1;
+  if (w < 1024) return 2;
+  return 3;
+};
+
 const SectionProductCardCarousel = () =>
 {
   const { data: allProducts = [], isLoading: loading } = useProducts();
@@ -131,6 +137,17 @@ const SectionProductCardCarousel = () =>
   const { isInWishlist, toggleWishlist } = useWishlist();
   const [cartModalProduct, setCartModalProduct] = useState(null);
   const sliderContainerRef = useRef(null);
+  const [slidesToShow, setSlidesToShow] = useState(3);
+  const [mounted, setMounted] = useState(false);
+
+  // Manage slidesToShow via resize listener — bypasses react-slick responsive which is unreliable in SSR
+  useEffect(() => {
+    const update = () => setSlidesToShow(getSlidesForWidth(window.innerWidth));
+    update();
+    setMounted(true);
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
 
   // Fix ARIA: disable focus on interactive elements inside aria-hidden slides
   const fixAriaHiddenFocus = useCallback(() => {
@@ -148,12 +165,12 @@ const SectionProductCardCarousel = () =>
   }, []);
 
   useEffect(() => {
-    if (!loading) {
+    if (!loading && mounted) {
       // Run after slider mounts and DOM settles
       const timer = setTimeout(fixAriaHiddenFocus, 100);
       return () => clearTimeout(timer);
     }
-  }, [loading, fixAriaHiddenFocus]);
+  }, [loading, mounted, fixAriaHiddenFocus]);
 
   const products = useMemo(() =>
   {
@@ -165,32 +182,14 @@ const SectionProductCardCarousel = () =>
 
   var settings = {
     dots: true,
-    infinite: products.length > 3,
-    slidesToShow: 3,
-    slidesToScroll: 3,
+    infinite: products.length > slidesToShow,
+    slidesToShow: slidesToShow,
+    slidesToScroll: slidesToShow,
     autoplay: false,
     autoplaySpeed: 3000,
     rows: 2,
     prevArrow: <CustomPrevArrow />,
     nextArrow: <CustomNextArrow />,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-          rows: 2,
-        }
-      },
-      {
-        breakpoint: 640,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          rows: 2,
-        }
-      }
-    ]
   };
 
   // Hide section if no products
@@ -212,13 +211,13 @@ const SectionProductCardCarousel = () =>
       </div>
 
       {/* Slider */}
-      <div ref={sliderContainerRef} className='bestseller-dots-custom' style={{ minHeight: loading ? '300px' : 'auto', contain: 'layout style' }}>
-        {loading ? (
+      <div ref={sliderContainerRef} className='bestseller-dots-custom' style={{ minHeight: (loading || !mounted) ? '300px' : 'auto', contain: 'layout style' }}>
+        {(loading || !mounted) ? (
           <div className='flex items-center justify-center h-[300px]'>
             <i className='bx bx-loader-alt bx-spin text-3xl text-amber-500'></i>
           </div>
         ) : (
-          <Slider2 {...settings} afterChange={fixAriaHiddenFocus}>
+          <Slider2 key={`slider-${slidesToShow}`} {...settings} afterChange={fixAriaHiddenFocus}>
             {products.map((product, index) => (
               <ProductCardItem
                 key={product.id}
@@ -243,3 +242,4 @@ const SectionProductCardCarousel = () =>
 }
 
 export default SectionProductCardCarousel
+
