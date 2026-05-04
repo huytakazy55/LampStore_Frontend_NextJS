@@ -77,7 +77,7 @@ const UpdateModal = ({ banner, onClose, onSuccess }) =>
             onSuccess();
         } catch (error)
         {
-            message.error(error.response?.data || 'Lỗi khi cập nhật banner');
+            message.error(error.response?.data?.message || 'Lỗi khi cập nhật banner');
         } finally
         {
             setLoading(false);

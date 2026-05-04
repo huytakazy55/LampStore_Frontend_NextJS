@@ -125,7 +125,7 @@ const UploadModal = ({ openUpload, handleUploadClose, setProductData, style, upd
         } catch (error)
         {
 
-            toast.error("Có lỗi xảy ra khi tải lên hình ảnh! " + error.response.data);
+            toast.error(error.response?.data?.message || "Có lỗi xảy ra khi tải lên hình ảnh!");
         } finally
         {
             setUploading(false);
@@ -143,7 +143,7 @@ const UploadModal = ({ openUpload, handleUploadClose, setProductData, style, upd
             toast.success("Xóa hình ảnh thành công!");
         } catch (error)
         {
-            toast.error("Có lỗi xảy ra khi xóa hình ảnh! " + error);
+            toast.error(error.response?.data?.message || "Có lỗi xảy ra khi xóa hình ảnh!");
         }
     };
 

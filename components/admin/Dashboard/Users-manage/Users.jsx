@@ -302,8 +302,8 @@ const Users = () => {
       console.error('Error assigning roles:', error);
       if (error.response?.status === 401 || error.response?.status === 403) {
         message.error('Bạn không có quyền thực hiện hành động này!');
-      } else if (error.response?.data) {
-        message.error(error.response.data);
+      } else if (error.response?.data?.message) {
+        message.error(error.response.data.message);
       } else {
         message.error('Có lỗi xảy ra khi cập nhật quyền');
       }

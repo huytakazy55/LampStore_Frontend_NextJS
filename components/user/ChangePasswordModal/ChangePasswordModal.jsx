@@ -63,7 +63,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) =>
             handleClose();
         } catch (err)
         {
-            const msg = err.response?.data?.Message || err.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại.';
+            const msg = err.response?.data?.message || err.response?.data?.detail || 'Có lỗi xảy ra, vui lòng thử lại.';
             toast.error(msg);
         } finally
         {

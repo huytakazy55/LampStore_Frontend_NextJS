@@ -87,11 +87,13 @@ const CreateModal = ({ onClose, onSuccess }) =>
                 message.error('Lỗi: Vui lòng chọn hình ảnh cho banner!');
             } else if (error.response?.data?.errors)
             {
-                const errorMessages = Object.values(error.response.data.errors).flat();
+                const errorsData = error.response.data.errors;
+                const errorMessages = Array.isArray(errorsData) ? errorsData : 
+                    (errorsData.$values ? errorsData.$values : Object.values(errorsData).flat());
                 message.error(`Lỗi: ${errorMessages.join(', ')}`);
-            } else if (error.response?.data)
+            } else if (error.response?.data?.message)
             {
-                message.error(`Lỗi: ${error.response.data}`);
+                message.error(`Lỗi: ${error.response.data.message}`);
             } else
             {
                 message.error('Lỗi khi tạo banner');

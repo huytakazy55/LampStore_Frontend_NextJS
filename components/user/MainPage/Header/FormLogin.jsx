@@ -12,6 +12,7 @@ import { useNavigate } from '@/lib/router-compat';
 import GoogleSignIn from './GoogleSignIn';
 import ForgotPassword from '../../ForgotPassword/ForgotPassword';
 import { useCart } from '@/contexts/CartContext';
+import { getApiErrorMessage, getApiValidationErrors } from '@/lib/apiErrorHelper';
 
 const FormLogin = ({ toggleLogin, setToggleLogin }) => {
     const dispatch = useDispatch();
@@ -150,7 +151,7 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                 syncCartOnLogin();
             }
         } catch (err) {
-            const errorMessage = err.response?.data || "Không thể kết nối tới máy chủ.";
+            const errorMessage = getApiErrorMessage(err, "Không thể kết nối tới máy chủ.");
             showToast(errorMessage, "error");
         } finally {
             setIsLoading(false);
@@ -168,7 +169,8 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
             setAcceptTerms(false);
             setChangeForm(false);
         } catch (err) {
-            const errorMessage = err.response?.data?.errors?.$values?.[0] || err.response?.data || "Có lỗi xảy ra khi đăng ký!";
+            const validationErrors = getApiValidationErrors(err);
+            const errorMessage = validationErrors?.[0] || getApiErrorMessage(err, "Có lỗi xảy ra khi đăng ký!");
             showToast(errorMessage, "error");
         } finally {
             setIsLoading(false);

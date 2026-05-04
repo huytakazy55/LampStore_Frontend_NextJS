@@ -20,13 +20,13 @@ const ForgotPassword = ({ visible, onCancel }) => {
     try {
       const response = await AuthService.ForgotPassword(emailOrUsername);
       if (response.data.message || response.data.Message) {
-        toast.success(response.data.message || response.data.Message);
+        toast.success(response.data.message || response.data.Message || 'Yêu cầu đã được gửi thành công.');
         setEmailOrUsername('');
         onCancel();
       }
     } catch (err) {
       const errorMessage = err.response?.data?.message ||
-        err.response?.data?.Message ||
+        err.response?.data?.detail ||
         'Đã xảy ra lỗi. Vui lòng thử lại.';
       toast.error(errorMessage);
     } finally {

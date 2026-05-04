@@ -57,7 +57,7 @@ class ProductManage {
         } catch (error) {
             return {
                 success: false,
-                error: error.response?.data || error.message
+                error: error.response?.data?.message || error.response?.data || error.message
             }
         }
     }
