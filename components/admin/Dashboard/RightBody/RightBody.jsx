@@ -16,6 +16,7 @@ import NewsManage from '../News-manage/NewsManage';
 import OrdersManage from '../Orders-manage/OrdersManage';
 import DeliveryManage from '../Delivery-manage/DeliveryManage';
 import AnalyticsPage from '../Analytics-manage/AnalyticsPage';
+import VisitorMapPage from '../VisitorMap-manage/VisitorMapPage';
 
 const RightBody = () => {
   const location = useLocation();
@@ -26,6 +27,9 @@ const RightBody = () => {
     }
     else if (location.pathname === '/admin/analytics') {
       return <AnalyticsPage />;
+    }
+    else if (location.pathname === '/admin/visitor-map') {
+      return <VisitorMapPage />;
     }
     else if (location.pathname === '/admin/category') {
       return <Category />;

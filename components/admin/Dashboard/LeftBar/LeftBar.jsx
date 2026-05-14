@@ -59,6 +59,7 @@ const LeftBar = () =>
     const menuItems = [
         { name: "HomePage", icon: "bxs-home", path: "/admin", roles: null },
         { name: "Analytics", icon: "bxs-chart", path: "/admin/analytics", roles: ["Administrator"] },
+        { name: "VisitorMap", icon: "bxs-map", path: "/admin/visitor-map", roles: ["Administrator"] },
         { name: "Users", icon: "bxs-user", path: "/admin/users", roles: ["Administrator"] },
         { name: "Roles", icon: "bxs-shield-alt-2", path: "/admin/roles", roles: ["Administrator"] },
         { name: "Category", icon: "bxs-category", path: "/admin/category", roles: ["Administrator", "Manager", "Warehouse staff"] },
@@ -79,6 +80,7 @@ const LeftBar = () =>
         {
             return menuItems.filter(item =>
                 userMenus.includes(item.name) ||
+                (["Analytics", "VisitorMap"].includes(item.name) && userRoles.includes("Administrator")) ||
                 (item.name === "News" && userRoles.includes("Administrator")) ||
                 (item.name === "Flash Sale" && userRoles.some(r => ["Administrator", "Manager"].includes(r)))
             );
