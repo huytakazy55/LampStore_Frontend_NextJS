@@ -1,11 +1,51 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Alert, Button, Empty, Select, Spin, Table, Tag, Tooltip } from "antd";
 import { EnvironmentOutlined, GlobalOutlined, ReloadOutlined } from "@ant-design/icons";
 import axiosInstance from "@/services/axiosConfig";
 
 const normalizeList = (value) => value?.$values || value || [];
+const TILE_SIZE = 256;
+
+const clampLatitude = (lat) => Math.max(-85.05112878, Math.min(85.05112878, Number(lat)));
+
+const latLngToPixel = (lat, lng, zoom) => {
+    const sinLat = Math.sin((clampLatitude(lat) * Math.PI) / 180);
+    const scale = TILE_SIZE * 2 ** zoom;
+
+    return {
+        x: ((Number(lng) + 180) / 360) * scale,
+        y: (0.5 - Math.log((1 + sinLat) / (1 - sinLat)) / (4 * Math.PI)) * scale,
+    };
+};
+
+const pixelToLatLng = (x, y, zoom) => {
+    const scale = TILE_SIZE * 2 ** zoom;
+    const lng = (x / scale) * 360 - 180;
+    const n = Math.PI - (2 * Math.PI * y) / scale;
+    const lat = (180 / Math.PI) * Math.atan(0.5 * (Math.exp(n) - Math.exp(-n)));
+
+    return { lat: clampLatitude(lat), lng };
+};
+
+const getMapZoom = (locations) => {
+    if (locations.length <= 1) return 5;
+
+    const lats = locations.map((item) => Number(item.latitude));
+    const lngs = locations.map((item) => Number(item.longitude));
+    const latSpan = Math.max(...lats) - Math.min(...lats);
+    const lngSpan = Math.max(...lngs) - Math.min(...lngs);
+    const span = Math.max(latSpan, lngSpan);
+
+    if (span > 120) return 2;
+    if (span > 60) return 3;
+    if (span > 25) return 4;
+    if (span > 10) return 5;
+    if (span > 4) return 6;
+    if (span > 1) return 8;
+    return 10;
+};
 
 const formatDate = (value) => {
     if (!value) return "-";
@@ -19,10 +59,14 @@ const formatDate = (value) => {
 };
 
 export default function VisitorMapPage() {
+    const mapRef = useRef(null);
+    const dragRef = useRef(null);
     const [data, setData] = useState(null);
     const [days, setDays] = useState(30);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [mapSize, setMapSize] = useState({ width: 0, height: 0 });
+    const [mapView, setMapView] = useState(null);
 
     const fetchLocations = async () => {
         setLoading(true);
@@ -47,11 +91,151 @@ export default function VisitorMapPage() {
         fetchLocations();
     }, [days]);
 
+    useEffect(() => {
+        if (!mapRef.current) return;
+
+        const updateSize = () => {
+            const rect = mapRef.current.getBoundingClientRect();
+            setMapSize({ width: rect.width, height: rect.height });
+        };
+
+        updateSize();
+        const observer = new ResizeObserver(updateSize);
+        observer.observe(mapRef.current);
+
+        return () => observer.disconnect();
+    }, []);
+
     const locations = data?.locations || [];
+    const defaultMapView = useMemo(() => {
+        if (locations.length === 0) return null;
+
+        const center = locations.reduce(
+            (acc, item) => ({
+                lat: acc.lat + Number(item.latitude),
+                lng: acc.lng + Number(item.longitude),
+            }),
+            { lat: 0, lng: 0 }
+        );
+
+        return {
+            lat: center.lat / locations.length,
+            lng: center.lng / locations.length,
+            zoom: getMapZoom(locations),
+        };
+    }, [locations]);
+
+    useEffect(() => {
+        if (defaultMapView) {
+            setMapView(defaultMapView);
+        }
+    }, [defaultMapView]);
+
     const maxVisits = useMemo(
         () => Math.max(1, ...locations.map((item) => item.visitCount || 0)),
         [locations]
     );
+    const mapState = useMemo(() => {
+        if (!mapView || !mapSize.width || !mapSize.height) {
+            return null;
+        }
+
+        const zoom = mapView.zoom;
+        const centerPixel = latLngToPixel(mapView.lat, mapView.lng, zoom);
+        const topLeft = {
+            x: centerPixel.x - mapSize.width / 2,
+            y: centerPixel.y - mapSize.height / 2,
+        };
+        const tileCount = 2 ** zoom;
+        const minTileX = Math.floor(topLeft.x / TILE_SIZE);
+        const maxTileX = Math.floor((topLeft.x + mapSize.width) / TILE_SIZE);
+        const minTileY = Math.max(0, Math.floor(topLeft.y / TILE_SIZE));
+        const maxTileY = Math.min(tileCount - 1, Math.floor((topLeft.y + mapSize.height) / TILE_SIZE));
+        const tiles = [];
+
+        for (let x = minTileX; x <= maxTileX; x++) {
+            for (let y = minTileY; y <= maxTileY; y++) {
+                const wrappedX = ((x % tileCount) + tileCount) % tileCount;
+                tiles.push({
+                    key: `${zoom}-${x}-${y}`,
+                    url: `https://tile.openstreetmap.org/${zoom}/${wrappedX}/${y}.png`,
+                    left: x * TILE_SIZE - topLeft.x,
+                    top: y * TILE_SIZE - topLeft.y,
+                });
+            }
+        }
+
+        return { zoom, topLeft, tiles };
+    }, [mapView, mapSize]);
+
+    const updateZoom = (nextZoom, anchor = null) => {
+        setMapView((current) => {
+            if (!current) return current;
+
+            const zoom = Math.max(2, Math.min(18, nextZoom));
+            if (zoom === current.zoom) return current;
+
+            if (!anchor || !mapState) {
+                return { ...current, zoom };
+            }
+
+            const beforePixel = {
+                x: mapState.topLeft.x + anchor.x,
+                y: mapState.topLeft.y + anchor.y,
+            };
+            const anchorLatLng = pixelToLatLng(beforePixel.x, beforePixel.y, current.zoom);
+            const anchorPixelAfterZoom = latLngToPixel(anchorLatLng.lat, anchorLatLng.lng, zoom);
+            const centerPixelAfterZoom = {
+                x: anchorPixelAfterZoom.x - anchor.x + mapSize.width / 2,
+                y: anchorPixelAfterZoom.y - anchor.y + mapSize.height / 2,
+            };
+            const center = pixelToLatLng(centerPixelAfterZoom.x, centerPixelAfterZoom.y, zoom);
+
+            return { ...center, zoom };
+        });
+    };
+
+    const handleWheel = (event) => {
+        if (!mapRef.current || !mapView) return;
+
+        event.preventDefault();
+        const rect = mapRef.current.getBoundingClientRect();
+        updateZoom(mapView.zoom + (event.deltaY < 0 ? 1 : -1), {
+            x: event.clientX - rect.left,
+            y: event.clientY - rect.top,
+        });
+    };
+
+    const handlePointerDown = (event) => {
+        if (!mapState || !mapView) return;
+
+        event.currentTarget.setPointerCapture(event.pointerId);
+        dragRef.current = {
+            pointerId: event.pointerId,
+            startX: event.clientX,
+            startY: event.clientY,
+            startTopLeft: mapState.topLeft,
+            zoom: mapView.zoom,
+        };
+    };
+
+    const handlePointerMove = (event) => {
+        if (!dragRef.current) return;
+
+        const drag = dragRef.current;
+        const centerPixel = {
+            x: drag.startTopLeft.x - (event.clientX - drag.startX) + mapSize.width / 2,
+            y: drag.startTopLeft.y - (event.clientY - drag.startY) + mapSize.height / 2,
+        };
+        const center = pixelToLatLng(centerPixel.x, centerPixel.y, drag.zoom);
+        setMapView({ ...center, zoom: drag.zoom });
+    };
+
+    const handlePointerUp = (event) => {
+        if (dragRef.current?.pointerId === event.pointerId) {
+            dragRef.current = null;
+        }
+    };
 
     const ipColumns = [
         {
@@ -153,10 +337,15 @@ export default function VisitorMapPage() {
                 </div>
 
                 <div className="px-6 pb-6">
-                    <div className="relative overflow-hidden rounded-lg border border-slate-200 bg-slate-950 h-[460px]">
-                        <div className="absolute inset-0 visitor-map-grid" />
-                        <div className="absolute inset-0 visitor-map-land" />
-
+                    <div
+                        ref={mapRef}
+                        className="relative overflow-hidden rounded-lg border border-slate-200 bg-[#dbe7f0] h-[460px] cursor-grab active:cursor-grabbing touch-none"
+                        onWheel={handleWheel}
+                        onPointerDown={handlePointerDown}
+                        onPointerMove={handlePointerMove}
+                        onPointerUp={handlePointerUp}
+                        onPointerCancel={handlePointerUp}
+                    >
                         {loading ? (
                             <div className="absolute inset-0 flex items-center justify-center bg-white/70">
                                 <Spin size="large" tip="Đang quy đổi IP sang vị trí..." />
@@ -166,29 +355,91 @@ export default function VisitorMapPage() {
                                 <Empty description="Chưa có IP public nào định vị được" />
                             </div>
                         ) : (
-                            locations.map((item, index) => {
-                                const left = ((Number(item.longitude) + 180) / 360) * 100;
-                                const top = ((90 - Number(item.latitude)) / 180) * 100;
-                                const size = 18 + Math.sqrt((item.visitCount || 1) / maxVisits) * 34;
-                                const title = [item.city, item.region, item.country].filter(Boolean).join(", ");
+                            <>
+                                {mapState?.tiles.map((tile) => (
+                                    <img
+                                        key={tile.key}
+                                        src={tile.url}
+                                        alt=""
+                                        draggable={false}
+                                        className="absolute select-none"
+                                        style={{
+                                            left: tile.left,
+                                            top: tile.top,
+                                            width: TILE_SIZE,
+                                            height: TILE_SIZE,
+                                        }}
+                                    />
+                                ))}
 
-                                return (
-                                    <Tooltip
-                                        key={`${item.latitude}-${item.longitude}-${index}`}
-                                        title={`${title || "Không rõ khu vực"} - ${item.visitCount} lượt / ${item.uniqueVisitors} khách`}
-                                    >
-                                        <div
-                                            className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white/90 bg-blue-500/80 shadow-[0_0_28px_rgba(59,130,246,0.55)] cursor-pointer"
-                                            style={{ left: `${left}%`, top: `${top}%`, width: size, height: size }}
+                                {locations.map((item, index) => {
+                                    if (!mapState) return null;
+
+                                    const pixel = latLngToPixel(item.latitude, item.longitude, mapState.zoom);
+                                    const left = pixel.x - mapState.topLeft.x;
+                                    const top = pixel.y - mapState.topLeft.y;
+                                    const size = 18 + Math.sqrt((item.visitCount || 1) / maxVisits) * 34;
+                                    const title = [item.city, item.region, item.country].filter(Boolean).join(", ");
+
+                                    return (
+                                        <Tooltip
+                                            key={`${item.latitude}-${item.longitude}-${index}`}
+                                            title={`${title || "Không rõ khu vực"} - ${item.visitCount} lượt / ${item.uniqueVisitors} khách`}
                                         >
-                                            <div className="absolute inset-0 rounded-full animate-ping bg-blue-300/40" />
-                                            <span className="absolute inset-0 flex items-center justify-center text-[11px] font-bold text-white">
-                                                {item.visitCount}
-                                            </span>
-                                        </div>
-                                    </Tooltip>
-                                );
-                            })
+                                            <div
+                                                className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white/95 bg-blue-600/85 shadow-[0_0_28px_rgba(37,99,235,0.55)] cursor-pointer z-10"
+                                                style={{ left, top, width: size, height: size }}
+                                            >
+                                                <div className="absolute inset-0 rounded-full animate-ping bg-blue-300/40" />
+                                                <span className="absolute inset-0 flex items-center justify-center text-[11px] font-bold text-white">
+                                                    {item.visitCount}
+                                                </span>
+                                            </div>
+                                        </Tooltip>
+                                    );
+                                })}
+
+                                <div
+                                    className="absolute left-3 top-3 z-20 flex flex-col overflow-hidden rounded-md bg-white shadow-lg border border-gray-200"
+                                    onPointerDown={(event) => event.stopPropagation()}
+                                    onWheel={(event) => event.stopPropagation()}
+                                >
+                                    <button
+                                        type="button"
+                                        className="h-9 w-9 text-xl font-semibold text-gray-700 hover:bg-gray-100"
+                                        onClick={() => updateZoom((mapView?.zoom || 5) + 1)}
+                                        aria-label="Phóng to bản đồ"
+                                    >
+                                        +
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="h-9 w-9 border-t border-gray-200 text-xl font-semibold text-gray-700 hover:bg-gray-100"
+                                        onClick={() => updateZoom((mapView?.zoom || 5) - 1)}
+                                        aria-label="Thu nhỏ bản đồ"
+                                    >
+                                        -
+                                    </button>
+                                </div>
+
+                                <button
+                                    type="button"
+                                    className="absolute left-3 top-[88px] z-20 rounded-md bg-white px-3 py-2 text-xs font-semibold text-gray-700 shadow-lg border border-gray-200 hover:bg-gray-100"
+                                    onClick={() => defaultMapView && setMapView(defaultMapView)}
+                                    onPointerDown={(event) => event.stopPropagation()}
+                                    onWheel={(event) => event.stopPropagation()}
+                                >
+                                    Reset
+                                </button>
+
+                                <div className="absolute left-3 bottom-2 z-20 rounded bg-white/90 px-2 py-1 text-[11px] text-gray-600 shadow-sm">
+                                    Kéo để di chuyển, cuộn để thu phóng
+                                </div>
+
+                                <div className="absolute bottom-2 right-2 z-20 rounded bg-white/85 px-2 py-1 text-[11px] text-gray-600 shadow-sm">
+                                    © OpenStreetMap
+                                </div>
+                            </>
                         )}
                     </div>
                 </div>
@@ -204,24 +455,6 @@ export default function VisitorMapPage() {
                 </div>
             </div>
 
-            <style jsx>{`
-                .visitor-map-grid {
-                    background-image:
-                        linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
-                    background-size: 8.333% 16.666%;
-                }
-
-                .visitor-map-land {
-                    opacity: 0.82;
-                    background:
-                        radial-gradient(ellipse at 22% 34%, rgba(34,197,94,0.38) 0 12%, transparent 12.5%),
-                        radial-gradient(ellipse at 31% 57%, rgba(34,197,94,0.32) 0 10%, transparent 10.5%),
-                        radial-gradient(ellipse at 50% 38%, rgba(34,197,94,0.34) 0 15%, transparent 15.5%),
-                        radial-gradient(ellipse at 67% 43%, rgba(34,197,94,0.36) 0 18%, transparent 18.5%),
-                        radial-gradient(ellipse at 78% 68%, rgba(34,197,94,0.32) 0 8%, transparent 8.5%);
-                }
-            `}</style>
         </div>
     );
 }
