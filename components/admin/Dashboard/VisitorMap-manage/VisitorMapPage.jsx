@@ -47,6 +47,48 @@ const getMapZoom = (locations) => {
     return 10;
 };
 
+const getDensityLevel = (visitCount, maxVisits) => {
+    const ratio = maxVisits > 0 ? visitCount / maxVisits : 0;
+
+    if (ratio >= 0.75) {
+        return {
+            label: "Rất nhiều",
+            color: "bg-red-500/85",
+            border: "border-red-100",
+            glow: "shadow-[0_0_34px_rgba(239,68,68,0.62)]",
+            ping: "bg-red-300/40",
+        };
+    }
+
+    if (ratio >= 0.45) {
+        return {
+            label: "Nhiều",
+            color: "bg-orange-500/85",
+            border: "border-orange-100",
+            glow: "shadow-[0_0_30px_rgba(249,115,22,0.58)]",
+            ping: "bg-orange-300/40",
+        };
+    }
+
+    if (ratio >= 0.18) {
+        return {
+            label: "Vừa",
+            color: "bg-yellow-400/90",
+            border: "border-yellow-50",
+            glow: "shadow-[0_0_26px_rgba(234,179,8,0.52)]",
+            ping: "bg-yellow-200/40",
+        };
+    }
+
+    return {
+        label: "Ít",
+        color: "bg-blue-500/85",
+        border: "border-blue-100",
+        glow: "shadow-[0_0_22px_rgba(59,130,246,0.5)]",
+        ping: "bg-blue-300/40",
+    };
+};
+
 const formatDate = (value) => {
     if (!value) return "-";
     return new Date(value).toLocaleString("vi-VN", {
@@ -378,19 +420,22 @@ export default function VisitorMapPage() {
                                     const pixel = latLngToPixel(item.latitude, item.longitude, mapState.zoom);
                                     const left = pixel.x - mapState.topLeft.x;
                                     const top = pixel.y - mapState.topLeft.y;
-                                    const size = 18 + Math.sqrt((item.visitCount || 1) / maxVisits) * 34;
+                                    const visitCount = item.visitCount || 1;
+                                    const ratio = visitCount / maxVisits;
+                                    const size = 12 + Math.sqrt(ratio) * 50;
+                                    const density = getDensityLevel(visitCount, maxVisits);
                                     const title = [item.city, item.region, item.country].filter(Boolean).join(", ");
 
                                     return (
                                         <Tooltip
                                             key={`${item.latitude}-${item.longitude}-${index}`}
-                                            title={`${title || "Không rõ khu vực"} - ${item.visitCount} lượt / ${item.uniqueVisitors} khách`}
+                                            title={`${title || "Không rõ khu vực"} - ${density.label}: ${item.visitCount} lượt / ${item.uniqueVisitors} khách`}
                                         >
                                             <div
-                                                className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white/95 bg-blue-600/85 shadow-[0_0_28px_rgba(37,99,235,0.55)] cursor-pointer z-10"
+                                                className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full border-2 ${density.border} ${density.color} ${density.glow} cursor-pointer z-10`}
                                                 style={{ left, top, width: size, height: size }}
                                             >
-                                                <div className="absolute inset-0 rounded-full animate-ping bg-blue-300/40" />
+                                                <div className={`absolute inset-0 rounded-full animate-ping ${density.ping}`} />
                                                 <span className="absolute inset-0 flex items-center justify-center text-[11px] font-bold text-white">
                                                     {item.visitCount}
                                                 </span>
@@ -434,6 +479,25 @@ export default function VisitorMapPage() {
 
                                 <div className="absolute left-3 bottom-2 z-20 rounded bg-white/90 px-2 py-1 text-[11px] text-gray-600 shadow-sm">
                                     Kéo để di chuyển, cuộn để thu phóng
+                                </div>
+
+                                <div className="absolute right-3 top-3 z-20 rounded-md bg-white/92 p-3 text-xs text-gray-700 shadow-lg border border-gray-200">
+                                    <div className="mb-2 font-semibold text-gray-800">Mật độ truy cập</div>
+                                    {[
+                                        ["Ít", "bg-blue-500", "Nhỏ"],
+                                        ["Vừa", "bg-yellow-400", "Trung bình"],
+                                        ["Nhiều", "bg-orange-500", "Lớn"],
+                                        ["Rất nhiều", "bg-red-500", "Rất lớn"],
+                                    ].map(([label, color, sizeLabel], idx) => (
+                                        <div key={label} className="flex items-center gap-2 py-1">
+                                            <span
+                                                className={`inline-block rounded-full border border-white ${color}`}
+                                                style={{ width: 9 + idx * 4, height: 9 + idx * 4 }}
+                                            />
+                                            <span className="min-w-14">{label}</span>
+                                            <span className="text-gray-400">{sizeLabel}</span>
+                                        </div>
+                                    ))}
                                 </div>
 
                                 <div className="absolute bottom-2 right-2 z-20 rounded bg-white/85 px-2 py-1 text-[11px] text-gray-600 shadow-sm">
