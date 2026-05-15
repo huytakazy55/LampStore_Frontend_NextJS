@@ -10,6 +10,11 @@ import { jwtDecode } from 'jwt-decode'
 import { toast } from 'react-toastify'
 import Compressor from 'compressorjs';
 
+const PROVINCE_API = 'https://provinces.open-api.vn/api';
+
+const formatFullAddress = (data) =>
+  [data.Address, data.WardName, data.DistrictName, data.CityName].filter(Boolean).join(' - ');
+
 const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profileApiData }) =>
 {
   const dispatch = useDispatch();
@@ -39,6 +44,14 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
   });
 
   const [previewImage, setPreviewImage] = useState('');
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+  const [loadingProvinces, setLoadingProvinces] = useState(false);
+  const [loadingDistricts, setLoadingDistricts] = useState(false);
+  const [loadingWards, setLoadingWards] = useState(false);
+  const [addressPopupOpen, setAddressPopupOpen] = useState(false);
+  const [addressDraft, setAddressDraft] = useState(null);
 
   // Map profile data from Header's API response when modal opens
   useEffect(() =>
@@ -64,6 +77,89 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
       });
     }
   }, [toggleProfile, profileApiData]);
+
+  useEffect(() =>
+  {
+    if (!toggleProfile || provinces.length > 0) return;
+
+    const fetchProvinces = async () =>
+    {
+      setLoadingProvinces(true);
+      try
+      {
+        const res = await fetch(`${PROVINCE_API}/p/`);
+        const data = await res.json();
+        setProvinces(Array.isArray(data) ? data : []);
+      } catch (error)
+      {
+        console.error('Error fetching provinces:', error);
+        toast.error('Không tải được danh sách tỉnh/thành phố.');
+      } finally
+      {
+        setLoadingProvinces(false);
+      }
+    };
+
+    fetchProvinces();
+  }, [toggleProfile, provinces.length]);
+
+  useEffect(() =>
+  {
+    if (!addressDraft?.City)
+    {
+      setDistricts([]);
+      return;
+    }
+
+    const fetchDistricts = async () =>
+    {
+      setLoadingDistricts(true);
+      try
+      {
+        const res = await fetch(`${PROVINCE_API}/p/${addressDraft.City}?depth=2`);
+        const data = await res.json();
+        setDistricts(data.districts || []);
+      } catch (error)
+      {
+        console.error('Error fetching districts:', error);
+        toast.error('Không tải được danh sách quận/huyện.');
+      } finally
+      {
+        setLoadingDistricts(false);
+      }
+    };
+
+    fetchDistricts();
+  }, [addressDraft?.City]);
+
+  useEffect(() =>
+  {
+    if (!addressDraft?.District)
+    {
+      setWards([]);
+      return;
+    }
+
+    const fetchWards = async () =>
+    {
+      setLoadingWards(true);
+      try
+      {
+        const res = await fetch(`${PROVINCE_API}/d/${addressDraft.District}?depth=2`);
+        const data = await res.json();
+        setWards(data.wards || []);
+      } catch (error)
+      {
+        console.error('Error fetching wards:', error);
+        toast.error('Không tải được danh sách phường/xã.');
+      } finally
+      {
+        setLoadingWards(false);
+      }
+    };
+
+    fetchWards();
+  }, [addressDraft?.District]);
 
   const handleSubmit = (e) =>
   {
@@ -114,6 +210,86 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
   {
     const { name, value } = e.target;
     setProfileData({ ...profileData, [name]: value });
+  };
+
+  const openAddressPopup = () =>
+  {
+    setAddressDraft({
+      Address: profileData.Address || '',
+      City: profileData.City || '',
+      CityName: profileData.CityName || '',
+      District: profileData.District || '',
+      DistrictName: profileData.DistrictName || '',
+      Ward: profileData.Ward || '',
+      WardName: profileData.WardName || '',
+    });
+    setAddressPopupOpen(true);
+  };
+
+  const closeAddressPopup = () =>
+  {
+    setAddressPopupOpen(false);
+    setAddressDraft(null);
+  };
+
+  const saveAddressDraft = () =>
+  {
+    if (!addressDraft?.City || !addressDraft?.District || !addressDraft?.Address?.trim())
+    {
+      toast.error('Vui lòng chọn tỉnh/thành phố, quận/huyện và nhập địa chỉ cụ thể.');
+      return;
+    }
+
+    setProfileData(prev => ({
+      ...prev,
+      Address: addressDraft.Address,
+      City: addressDraft.City,
+      CityName: addressDraft.CityName,
+      District: addressDraft.District,
+      DistrictName: addressDraft.DistrictName,
+      Ward: addressDraft.Ward,
+      WardName: addressDraft.WardName,
+    }));
+    closeAddressPopup();
+  };
+
+  const handleProvinceChange = (e) =>
+  {
+    const code = e.target.value;
+    const name = e.target.options[e.target.selectedIndex]?.text || '';
+    setAddressDraft(prev => ({
+      ...prev,
+      City: code,
+      CityName: code ? name : '',
+      District: '',
+      DistrictName: '',
+      Ward: '',
+      WardName: '',
+    }));
+  };
+
+  const handleDistrictChange = (e) =>
+  {
+    const code = e.target.value;
+    const name = e.target.options[e.target.selectedIndex]?.text || '';
+    setAddressDraft(prev => ({
+      ...prev,
+      District: code,
+      DistrictName: code ? name : '',
+      Ward: '',
+      WardName: '',
+    }));
+  };
+
+  const handleWardChange = (e) =>
+  {
+    const code = e.target.value;
+    const name = e.target.options[e.target.selectedIndex]?.text || '';
+    setAddressDraft(prev => ({
+      ...prev,
+      Ward: code,
+      WardName: code ? name : '',
+    }));
   };
 
   const handleDeleteAvatar = (e) =>
@@ -304,13 +480,20 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
                         placeholder='0xxx xxx xxx' />
                     </div>
                     <div>
-                      <label className='block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2' htmlFor='Address'>
+                      <label className='block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2' htmlFor='AddressSummary'>
                         Địa chỉ
                       </label>
-                      <input
-                        className='w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-800 dark:text-gray-200 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all placeholder-gray-300'
-                        type="text" id='Address' name='Address' value={profileData.Address || ''} onChange={handleInputChange}
-                        placeholder='Số nhà, đường, quận/huyện...' />
+                      <button
+                        type='button'
+                        id='AddressSummary'
+                        onClick={openAddressPopup}
+                        className='w-full min-h-[42px] px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-left text-gray-800 dark:text-gray-200 outline-none hover:border-rose-300 focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all cursor-pointer flex items-center justify-between gap-3'
+                      >
+                        <span className={`truncate ${formatFullAddress(profileData) ? '' : 'text-gray-300'}`}>
+                          {formatFullAddress(profileData) || 'Bấm để thêm địa chỉ'}
+                        </span>
+                        <i className='bx bx-map text-rose-500 text-lg flex-shrink-0' />
+                      </button>
                     </div>
                   </div>
 
