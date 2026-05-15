@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
+import { jwtDecode } from 'jwt-decode';
 import Header from '@/components/user/MainPage/Header/Header';
 import NavbarPrimary from '@/components/user/MainPage/NavbarPrimary/NavbarPrimary';
 import TopBar from '@/components/user/MainPage/TopBar/TopBar';
@@ -10,6 +11,7 @@ import Footer from '@/components/user/MainPage/Footer/Footer';
 import { useCart } from '@/contexts/CartContext';
 import OrderService from '@/services/OrderService';
 import GuestProfileService from '@/services/GuestProfileService';
+import ProfileService from '@/services/ProfileService';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 const PROVINCE_API = 'https://provinces.open-api.vn/api';
@@ -91,6 +93,7 @@ export default function CheckoutPage()
     const [orderSuccess, setOrderSuccess] = useState(false);
     const [orderId, setOrderId] = useState(null);
     const [savedTotal, setSavedTotal] = useState(0);
+    const [userProfile, setUserProfile] = useState(null);
 
     // Province data states
     const [provinces, setProvinces] = useState([]);
@@ -187,6 +190,30 @@ export default function CheckoutPage()
                 const savedEmail = localStorage.getItem('userEmail');
                 if (savedName) setFormData(prev => ({ ...prev, fullName: savedName }));
                 if (savedEmail) setFormData(prev => ({ ...prev, email: savedEmail }));
+
+                ProfileService.GetCurrentProfile()
+                    .then((res) =>
+                    {
+                        const profile = res.data;
+                        setUserProfile(profile);
+                        setFormData(prev => ({
+                            ...prev,
+                            fullName: profile.fullName || prev.fullName,
+                            phone: profile.phoneNumber || prev.phone,
+                            email: profile.email || prev.email,
+                            address: profile.address || prev.address,
+                            city: profile.city || prev.city,
+                            cityName: profile.cityName || prev.cityName,
+                            district: profile.district || prev.district,
+                            districtName: profile.districtName || prev.districtName,
+                            ward: profile.ward || prev.ward,
+                            wardName: profile.wardName || prev.wardName,
+                        }));
+                    })
+                    .catch((error) =>
+                    {
+                        console.error('Error fetching checkout profile:', error);
+                    });
             } else
             {
                 // Auto-fill from saved guest info
@@ -204,6 +231,80 @@ export default function CheckoutPage()
             }
         }
     }, []);
+
+    const getCurrentUserId = () =>
+    {
+        const token = localStorage.getItem('token');
+        if (!token) return '';
+
+        try
+        {
+            const decoded = jwtDecode(token);
+            return decoded.nameid || decoded.sub || decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] || '';
+        } catch
+        {
+            return '';
+        }
+    };
+
+    const saveCheckoutInfoToProfile = async () =>
+    {
+        let profile = userProfile;
+        if (!profile?.id)
+        {
+            try
+            {
+                const res = await ProfileService.GetCurrentProfile();
+                profile = res.data;
+                setUserProfile(profile);
+            } catch
+            {
+                profile = null;
+            }
+        }
+
+        const userId = profile?.userId || getCurrentUserId();
+        if (!userId) return;
+
+        const shippingInfo = {
+            city: formData.city,
+            cityName: formData.cityName,
+            district: formData.district,
+            districtName: formData.districtName,
+            ward: formData.ward,
+            wardName: formData.wardName,
+        };
+
+        try
+        {
+            if (profile?.id)
+            {
+                await ProfileService.UpdateUserProfile(
+                    profile.id,
+                    formData.fullName,
+                    userId,
+                    formData.email,
+                    formData.phone,
+                    formData.address,
+                    shippingInfo
+                );
+            } else
+            {
+                const res = await ProfileService.CreateUserProfile(
+                    formData.fullName,
+                    userId,
+                    formData.email,
+                    formData.phone,
+                    formData.address,
+                    shippingInfo
+                );
+                setUserProfile(res.data);
+            }
+        } catch (error)
+        {
+            console.error('Error saving checkout info to profile:', error);
+        }
+    };
 
     const subtotal = checkoutItems.reduce((sum, item) => sum + (item.finalPrice * item.quantity), 0);
 
@@ -331,6 +432,11 @@ export default function CheckoutPage()
                 // Guest checkout: attach guestToken
                 orderData.guestToken = GuestProfileService.getGuestToken();
                 created = await OrderService.createGuestOrder(orderData);
+            }
+
+            if (isLoggedIn)
+            {
+                await saveCheckoutInfoToProfile();
             }
 
             if (created.checkoutUrl)

@@ -27,6 +27,12 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
     PhoneNumber: '',
     UserId: '',
     Address: '',
+    City: '',
+    CityName: '',
+    District: '',
+    DistrictName: '',
+    Ward: '',
+    WardName: '',
     username: '',
     password: '',
     ProfileAvatar: ''
@@ -48,6 +54,12 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
         Email: profileApiData?.email || '',
         PhoneNumber: profileApiData?.phoneNumber || '',
         Address: profileApiData?.address || '',
+        City: profileApiData?.city || '',
+        CityName: profileApiData?.cityName || '',
+        District: profileApiData?.district || '',
+        DistrictName: profileApiData?.districtName || '',
+        Ward: profileApiData?.ward || '',
+        WardName: profileApiData?.wardName || '',
         ProfileAvatar: profileApiData?.profileAvatar || ''
       });
     }
@@ -59,7 +71,14 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
 
     if (profileData.id)
     {
-      ProfileService.UpdateUserProfile(profileData.id, profileData.FullName, profileData.UserId, profileData.Email, profileData.PhoneNumber, profileData.Address)
+      ProfileService.UpdateUserProfile(profileData.id, profileData.FullName, profileData.UserId, profileData.Email, profileData.PhoneNumber, profileData.Address, {
+        city: profileData.City,
+        cityName: profileData.CityName,
+        district: profileData.District,
+        districtName: profileData.DistrictName,
+        ward: profileData.Ward,
+        wardName: profileData.WardName
+      })
         .then((response) =>
         {
           toast.success("Đã cập nhật thông tin hồ sơ.");
@@ -72,7 +91,14 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
         });
     } else
     {
-      ProfileService.CreateUserProfile(profileData.FullName, profileData.UserId, profileData.Email, profileData.PhoneNumber, profileData.Address)
+      ProfileService.CreateUserProfile(profileData.FullName, profileData.UserId, profileData.Email, profileData.PhoneNumber, profileData.Address, {
+        city: profileData.City,
+        cityName: profileData.CityName,
+        district: profileData.District,
+        districtName: profileData.DistrictName,
+        ward: profileData.Ward,
+        wardName: profileData.WardName
+      })
         .then((res) =>
         {
           toast.success("Thêm mới hồ sơ thành công.");
