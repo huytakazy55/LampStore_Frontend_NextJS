@@ -487,9 +487,9 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
                         type='button'
                         id='AddressSummary'
                         onClick={openAddressPopup}
-                        className='w-full min-h-[42px] px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-left text-gray-800 dark:text-gray-200 outline-none hover:border-rose-300 focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all cursor-pointer flex items-center justify-between gap-3'
+                        className='w-full min-h-[42px] px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-left text-gray-800 dark:text-gray-200 outline-none hover:border-rose-300 focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all cursor-pointer flex items-start justify-between gap-3'
                       >
-                        <span className={`truncate ${formatFullAddress(profileData) ? '' : 'text-gray-300'}`}>
+                        <span className={`leading-relaxed break-words ${formatFullAddress(profileData) ? '' : 'text-gray-300'}`}>
                           {formatFullAddress(profileData) || 'Bấm để thêm địa chỉ'}
                         </span>
                         <i className='bx bx-map text-rose-500 text-lg flex-shrink-0' />
@@ -522,6 +522,142 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
           </div>
         </div>
       </div>
+
+      {addressPopupOpen && addressDraft && (
+        <div className='fixed inset-0 z-[10000] flex items-center justify-center bg-black/45 backdrop-blur-sm px-4' onClick={closeAddressPopup}>
+          <div
+            className='w-full max-w-[740px] rounded-lg bg-white dark:bg-gray-900 shadow-[0_24px_70px_rgba(0,0,0,0.28)] border border-gray-100 dark:border-gray-800 p-5 md:p-7'
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className='flex items-start justify-between gap-4 mb-6'>
+              <div>
+                <h3 className='text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3'>
+                  <i className='bx bx-map text-rose-600 text-2xl'></i>
+                  Địa chỉ giao hàng
+                </h3>
+                <p className='text-sm text-gray-500 dark:text-gray-400 mt-1'>
+                  Chọn đúng khu vực để hệ thống tự ghép địa chỉ đầy đủ.
+                </p>
+              </div>
+              <button
+                type='button'
+                onClick={closeAddressPopup}
+                className='w-9 h-9 rounded-full border border-gray-200 dark:border-gray-700 text-gray-400 hover:text-rose-600 hover:border-rose-200 dark:hover:border-rose-900 transition-colors flex items-center justify-center'
+                aria-label='Đóng popup địa chỉ'
+              >
+                <i className='bx bx-x text-2xl'></i>
+              </button>
+            </div>
+
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
+              <div>
+                <label className='block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2' htmlFor='ProfileCity'>
+                  Tỉnh / Thành phố <span className='text-rose-500'>*</span>
+                </label>
+                <select
+                  id='ProfileCity'
+                  value={addressDraft.City || ''}
+                  onChange={handleProvinceChange}
+                  disabled={loadingProvinces}
+                  className='w-full px-3.5 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-gray-100 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all'
+                >
+                  <option value=''>{loadingProvinces ? 'Đang tải...' : '-- Chọn Tỉnh/Thành phố --'}</option>
+                  {provinces.map((province) => (
+                    <option key={province.code} value={province.code}>
+                      {province.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className='block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2' htmlFor='ProfileDistrict'>
+                  Quận / Huyện <span className='text-rose-500'>*</span>
+                </label>
+                <select
+                  id='ProfileDistrict'
+                  value={addressDraft.District || ''}
+                  onChange={handleDistrictChange}
+                  disabled={!addressDraft.City || loadingDistricts}
+                  className='w-full px-3.5 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-gray-100 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all disabled:bg-gray-50 disabled:text-gray-400 dark:disabled:bg-gray-800/50'
+                >
+                  <option value=''>
+                    {!addressDraft.City ? 'Chọn tỉnh trước' : loadingDistricts ? 'Đang tải...' : '-- Chọn Quận/Huyện --'}
+                  </option>
+                  {districts.map((district) => (
+                    <option key={district.code} value={district.code}>
+                      {district.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className='block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2' htmlFor='ProfileWard'>
+                  Phường / Xã
+                </label>
+                <select
+                  id='ProfileWard'
+                  value={addressDraft.Ward || ''}
+                  onChange={handleWardChange}
+                  disabled={!addressDraft.District || loadingWards}
+                  className='w-full px-3.5 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-gray-100 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all disabled:bg-gray-50 disabled:text-gray-400 dark:disabled:bg-gray-800/50'
+                >
+                  <option value=''>
+                    {!addressDraft.District ? 'Chọn quận/huyện trước' : loadingWards ? 'Đang tải...' : '-- Chọn Phường/Xã --'}
+                  </option>
+                  {wards.map((ward) => (
+                    <option key={ward.code} value={ward.code}>
+                      {ward.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className='md:col-span-2'>
+                <label className='block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2' htmlFor='ProfileAddressDetail'>
+                  Địa chỉ cụ thể <span className='text-rose-500'>*</span>
+                </label>
+                <input
+                  id='ProfileAddressDetail'
+                  type='text'
+                  value={addressDraft.Address || ''}
+                  onChange={(e) => setAddressDraft(prev => ({ ...prev, Address: e.target.value }))}
+                  className='w-full px-3.5 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-gray-100 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all placeholder-gray-400'
+                  placeholder='Ví dụ: A2 Vĩnh Hồ'
+                />
+              </div>
+            </div>
+
+            <div className='mt-5 rounded-lg border border-rose-100 dark:border-rose-900/40 bg-rose-50/70 dark:bg-rose-950/20 px-4 py-3'>
+              <p className='text-xs font-semibold uppercase tracking-wider text-rose-600 dark:text-rose-300 mb-1'>
+                Địa chỉ sẽ hiển thị
+              </p>
+              <p className='text-sm text-gray-800 dark:text-gray-200 leading-relaxed break-words'>
+                {formatFullAddress(addressDraft) || 'Chưa có địa chỉ đầy đủ'}
+              </p>
+            </div>
+
+            <div className='mt-6 flex flex-col-reverse sm:flex-row sm:justify-end gap-3'>
+              <button
+                type='button'
+                onClick={closeAddressPopup}
+                className='px-5 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors'
+              >
+                Hủy
+              </button>
+              <button
+                type='button'
+                onClick={saveAddressDraft}
+                className='px-5 py-2.5 rounded-lg bg-gradient-to-r from-rose-600 to-amber-500 text-sm font-semibold text-white hover:from-rose-700 hover:to-amber-600 shadow-md shadow-rose-200 dark:shadow-rose-900/30 transition-all flex items-center justify-center gap-2'
+              >
+                <i className='bx bx-check-circle text-base'></i>
+                Lưu địa chỉ
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>,
     document.body
   )
