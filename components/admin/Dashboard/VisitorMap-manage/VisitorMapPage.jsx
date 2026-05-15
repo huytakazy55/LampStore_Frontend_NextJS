@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Alert, Button, Empty, Select, Spin, Table, Tag, Tooltip } from "antd";
-import { EnvironmentOutlined, GlobalOutlined, ReloadOutlined } from "@ant-design/icons";
+import { CompressOutlined, EnvironmentOutlined, ExpandOutlined, GlobalOutlined, ReloadOutlined } from "@ant-design/icons";
 import axiosInstance from "@/services/axiosConfig";
 
 const normalizeList = (value) => value?.$values || value || [];
@@ -109,6 +109,7 @@ export default function VisitorMapPage() {
     const [error, setError] = useState("");
     const [mapSize, setMapSize] = useState({ width: 0, height: 0 });
     const [mapView, setMapView] = useState(null);
+    const [isMapFullscreen, setIsMapFullscreen] = useState(false);
 
     const fetchLocations = async () => {
         setLoading(true);
@@ -172,6 +173,17 @@ export default function VisitorMapPage() {
             setMapView(defaultMapView);
         }
     }, [defaultMapView]);
+
+    useEffect(() => {
+        const handleKeyDown = (event) => {
+            if (event.key === "Escape") {
+                setIsMapFullscreen(false);
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, []);
 
     const maxVisits = useMemo(
         () => Math.max(1, ...locations.map((item) => item.visitCount || 0)),
@@ -378,10 +390,10 @@ export default function VisitorMapPage() {
                     ))}
                 </div>
 
-                <div className="px-6 pb-6">
+                <div className={isMapFullscreen ? "fixed inset-0 z-[9999] bg-slate-950 p-4" : "px-6 pb-6"}>
                     <div
                         ref={mapRef}
-                        className="relative overflow-hidden rounded-lg border border-slate-200 bg-[#dbe7f0] h-[460px] cursor-grab active:cursor-grabbing touch-none"
+                        className={`relative overflow-hidden rounded-lg border border-slate-200 bg-[#dbe7f0] cursor-grab active:cursor-grabbing touch-none ${isMapFullscreen ? "h-full" : "h-[460px]"}`}
                         onWheel={handleWheel}
                         onPointerDown={handlePointerDown}
                         onPointerMove={handlePointerMove}
@@ -477,8 +489,19 @@ export default function VisitorMapPage() {
                                     Reset
                                 </button>
 
+                                <button
+                                    type="button"
+                                    className="absolute left-3 top-[130px] z-20 flex items-center gap-2 rounded-md bg-white px-3 py-2 text-xs font-semibold text-gray-700 shadow-lg border border-gray-200 hover:bg-gray-100"
+                                    onClick={() => setIsMapFullscreen((value) => !value)}
+                                    onPointerDown={(event) => event.stopPropagation()}
+                                    onWheel={(event) => event.stopPropagation()}
+                                >
+                                    {isMapFullscreen ? <CompressOutlined /> : <ExpandOutlined />}
+                                    {isMapFullscreen ? "Thu nhỏ" : "Toàn màn hình"}
+                                </button>
+
                                 <div className="absolute left-3 bottom-2 z-20 rounded bg-white/90 px-2 py-1 text-[11px] text-gray-600 shadow-sm">
-                                    Kéo để di chuyển, cuộn để thu phóng
+                                    Kéo để di chuyển, cuộn để thu phóng{isMapFullscreen ? ", Esc để thoát" : ""}
                                 </div>
 
                                 <div className="absolute right-3 top-3 z-20 rounded-md bg-white/92 p-3 text-xs text-gray-700 shadow-lg border border-gray-200">
