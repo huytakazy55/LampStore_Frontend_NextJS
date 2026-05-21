@@ -524,21 +524,16 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
       </div>
 
       {addressPopupOpen && addressDraft && (
-        <div className='fixed inset-0 z-[10000] flex items-center justify-center bg-black/45 backdrop-blur-sm px-4' onClick={closeAddressPopup}>
+        <div className='fixed inset-0 z-[10000] flex items-center justify-center bg-gray-100/80 backdrop-blur-sm px-3 md:px-6' onClick={closeAddressPopup}>
           <div
-            className='w-full max-w-[740px] rounded-lg bg-white dark:bg-gray-900 shadow-[0_24px_70px_rgba(0,0,0,0.28)] border border-gray-100 dark:border-gray-800 p-5 md:p-7'
+            className='w-full max-w-[1480px] max-h-[90vh] overflow-y-auto rounded-xl bg-white dark:bg-gray-900 shadow-[0_4px_16px_rgba(15,23,42,0.12)] border border-gray-100 dark:border-gray-800 p-7 md:p-12'
             onClick={(e) => e.stopPropagation()}
           >
-            <div className='flex items-start justify-between gap-4 mb-6'>
-              <div>
-                <h3 className='text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3'>
-                  <i className='bx bx-map text-rose-600 text-2xl'></i>
-                  Địa chỉ giao hàng
-                </h3>
-                <p className='text-sm text-gray-500 dark:text-gray-400 mt-1'>
-                  Chọn đúng khu vực để hệ thống tự ghép địa chỉ đầy đủ.
-                </p>
-              </div>
+            <div className='flex items-start justify-between gap-4 mb-9'>
+              <h3 className='text-2xl md:text-[32px] font-bold text-gray-900 dark:text-gray-100 flex items-center gap-4 leading-tight'>
+                <i className='bx bx-map-pin text-rose-600 text-[34px]'></i>
+                Địa chỉ giao hàng
+              </h3>
               <button
                 type='button'
                 onClick={closeAddressPopup}
@@ -549,9 +544,9 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
               </button>
             </div>
 
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8'>
               <div>
-                <label className='block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2' htmlFor='ProfileCity'>
+                <label className='block text-xl md:text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-4' htmlFor='ProfileCity'>
                   Tỉnh / Thành phố <span className='text-rose-500'>*</span>
                 </label>
                 <select
@@ -559,7 +554,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
                   value={addressDraft.City || ''}
                   onChange={handleProvinceChange}
                   disabled={loadingProvinces}
-                  className='w-full px-3.5 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-gray-100 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all'
+                  className='w-full h-[82px] px-8 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl text-xl md:text-2xl text-gray-900 dark:text-gray-100 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all'
                 >
                   <option value=''>{loadingProvinces ? 'Đang tải...' : '-- Chọn Tỉnh/Thành phố --'}</option>
                   {provinces.map((province) => (
@@ -571,7 +566,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
               </div>
 
               <div>
-                <label className='block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2' htmlFor='ProfileDistrict'>
+                <label className='block text-xl md:text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-4' htmlFor='ProfileDistrict'>
                   Quận / Huyện <span className='text-rose-500'>*</span>
                 </label>
                 <select
@@ -579,7 +574,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
                   value={addressDraft.District || ''}
                   onChange={handleDistrictChange}
                   disabled={!addressDraft.City || loadingDistricts}
-                  className='w-full px-3.5 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-gray-100 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all disabled:bg-gray-50 disabled:text-gray-400 dark:disabled:bg-gray-800/50'
+                  className='w-full h-[82px] px-8 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl text-xl md:text-2xl text-gray-900 dark:text-gray-100 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all disabled:bg-gray-50 disabled:text-gray-400 dark:disabled:bg-gray-800/50'
                 >
                   <option value=''>
                     {!addressDraft.City ? 'Chọn tỉnh trước' : loadingDistricts ? 'Đang tải...' : '-- Chọn Quận/Huyện --'}
@@ -593,7 +588,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
               </div>
 
               <div>
-                <label className='block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2' htmlFor='ProfileWard'>
+                <label className='block text-xl md:text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-4' htmlFor='ProfileWard'>
                   Phường / Xã
                 </label>
                 <select
@@ -601,7 +596,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
                   value={addressDraft.Ward || ''}
                   onChange={handleWardChange}
                   disabled={!addressDraft.District || loadingWards}
-                  className='w-full px-3.5 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-gray-100 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all disabled:bg-gray-50 disabled:text-gray-400 dark:disabled:bg-gray-800/50'
+                  className='w-full h-[82px] px-8 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl text-xl md:text-2xl text-gray-900 dark:text-gray-100 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all disabled:bg-gray-50 disabled:text-gray-400 dark:disabled:bg-gray-800/50'
                 >
                   <option value=''>
                     {!addressDraft.District ? 'Chọn quận/huyện trước' : loadingWards ? 'Đang tải...' : '-- Chọn Phường/Xã --'}
@@ -615,7 +610,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
               </div>
 
               <div className='md:col-span-2'>
-                <label className='block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2' htmlFor='ProfileAddressDetail'>
+                <label className='block text-xl md:text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-4' htmlFor='ProfileAddressDetail'>
                   Địa chỉ cụ thể <span className='text-rose-500'>*</span>
                 </label>
                 <input
@@ -623,33 +618,24 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
                   type='text'
                   value={addressDraft.Address || ''}
                   onChange={(e) => setAddressDraft(prev => ({ ...prev, Address: e.target.value }))}
-                  className='w-full px-3.5 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-gray-100 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all placeholder-gray-400'
+                  className='w-full h-[82px] px-8 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl text-xl md:text-2xl text-gray-900 dark:text-gray-100 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all placeholder-gray-400'
                   placeholder='Ví dụ: A2 Vĩnh Hồ'
                 />
               </div>
             </div>
 
-            <div className='mt-5 rounded-lg border border-rose-100 dark:border-rose-900/40 bg-rose-50/70 dark:bg-rose-950/20 px-4 py-3'>
-              <p className='text-xs font-semibold uppercase tracking-wider text-rose-600 dark:text-rose-300 mb-1'>
-                Địa chỉ sẽ hiển thị
-              </p>
-              <p className='text-sm text-gray-800 dark:text-gray-200 leading-relaxed break-words'>
-                {formatFullAddress(addressDraft) || 'Chưa có địa chỉ đầy đủ'}
-              </p>
-            </div>
-
-            <div className='mt-6 flex flex-col-reverse sm:flex-row sm:justify-end gap-3'>
+            <div className='mt-9 flex flex-col-reverse sm:flex-row sm:justify-end gap-3'>
               <button
                 type='button'
                 onClick={closeAddressPopup}
-                className='px-5 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors'
+                className='px-5 py-3 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors'
               >
                 Hủy
               </button>
               <button
                 type='button'
                 onClick={saveAddressDraft}
-                className='px-5 py-2.5 rounded-lg bg-gradient-to-r from-rose-600 to-amber-500 text-sm font-semibold text-white hover:from-rose-700 hover:to-amber-600 shadow-md shadow-rose-200 dark:shadow-rose-900/30 transition-all flex items-center justify-center gap-2'
+                className='px-6 py-3 rounded-lg bg-gradient-to-r from-rose-600 to-amber-500 text-sm font-semibold text-white hover:from-rose-700 hover:to-amber-600 shadow-md shadow-rose-200 dark:shadow-rose-900/30 transition-all flex items-center justify-center gap-2'
               >
                 <i className='bx bx-check-circle text-base'></i>
                 Lưu địa chỉ

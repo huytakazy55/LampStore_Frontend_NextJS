@@ -61,6 +61,28 @@ class AuthService
         return response;
     }
 
+    async facebookSignIn(facebookUserData)
+    {
+        const response = await axiosInstance.post("/api/Account/FacebookSignIn", {
+            email: facebookUserData.email,
+            name: facebookUserData.name,
+            picture: facebookUserData.picture,
+            facebookUserId: facebookUserData.id,
+            accessToken: facebookUserData.accessToken
+        });
+
+        if (response.data && response.data.accessToken)
+        {
+            localStorage.setItem('token', response.data.accessToken);
+            localStorage.setItem('refreshToken', response.data.refreshToken);
+            localStorage.setItem('tokenExpiry', Date.now() + (response.data.expiresIn * 1000));
+
+            await this._claimGuestOrdersIfNeeded();
+        }
+
+        return response;
+    }
+
     async logout()
     {
         try

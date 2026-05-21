@@ -10,6 +10,7 @@ import { login as loginAction } from '@/redux/slices/authSlice';
 import { useSelector } from 'react-redux';
 import { useNavigate } from '@/lib/router-compat';
 import GoogleSignIn from './GoogleSignIn';
+import FacebookSignIn from './FacebookSignIn';
 import ForgotPassword from '../../ForgotPassword/ForgotPassword';
 import { useCart } from '@/contexts/CartContext';
 import { getApiErrorMessage, getApiValidationErrors } from '@/lib/apiErrorHelper';
@@ -106,6 +107,36 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
     const handleGoogleLoginError = (error) => {
         console.error('Google login error:', error);
         showToast('Có lỗi xảy ra khi đăng nhập Google!', 'error');
+    };
+
+    const handleFacebookLoginSuccess = async (facebookUserData) => {
+        try {
+            if (!facebookUserData.email) {
+                showToast('Tài khoản Facebook chưa cấp email. Vui lòng thử tài khoản khác.', 'error');
+                return;
+            }
+
+            const response = await AuthService.facebookSignIn(facebookUserData);
+            const tokenResponse = response.data;
+            showToast('Đăng nhập Facebook thành công!');
+            window.dispatchEvent(new Event('userLoginStatusChanged'));
+            localStorage.removeItem('rememberedUsername');
+            localStorage.removeItem('rememberMe');
+            handleModalClose();
+            if (tokenResponse?.accessToken) {
+                const decoded = jwtDecode(tokenResponse.accessToken);
+                dispatch(loginAction({ token: tokenResponse.accessToken, role: decoded.role }));
+                await syncCartOnLogin();
+            }
+        } catch (error) {
+            console.error('Facebook login error:', error);
+            showToast('Đăng nhập Facebook thất bại!', 'error');
+        }
+    };
+
+    const handleFacebookLoginError = (error) => {
+        console.error('Facebook login error:', error);
+        showToast('Có lỗi xảy ra khi đăng nhập Facebook!', 'error');
     };
 
     const validateFormSignin = () => {
@@ -307,9 +338,7 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                                             <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent"></div>
                                         </div>
                                         <div className="flex gap-3 mb-4 sm:mb-5">
-                                            <button type="button" className="flex-1 flex items-center justify-center gap-2 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-all text-sm text-gray-600 dark:text-gray-300 font-medium cursor-pointer">
-                                                <i className='bx bxl-facebook-circle text-blue-600 text-xl'></i>Facebook
-                                            </button>
+                                            <FacebookSignIn onFacebookLoginSuccess={handleFacebookLoginSuccess} onFacebookLoginError={handleFacebookLoginError} />
                                             <GoogleSignIn onGoogleLoginSuccess={handleGoogleLoginSuccess} onGoogleLoginError={handleGoogleLoginError} />
                                         </div>
                                         <p className="text-center text-sm text-gray-500 sm:hidden">Chưa có tài khoản?{' '}<button type="button" onClick={ChangeFormLogin} className="text-amber-600 font-semibold cursor-pointer">Đăng ký ngay</button></p>
