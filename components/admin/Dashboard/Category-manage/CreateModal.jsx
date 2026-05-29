@@ -53,32 +53,41 @@ const CreateModal = ({ openCreate, handleCreateClose, setCategoryData }) =>
   };
 
   return (
-    <Modal open={openCreate} onCancel={handleCreateClose} footer={null} destroyOnHidden title={null} width={620} styles={{ body: { padding: 0 } }}>
+    <Modal
+      open={openCreate}
+      onCancel={handleCreateClose}
+      footer={null}
+      destroyOnHidden
+      title={null}
+      width={900}
+      className="admin-category-modal"
+      styles={{ body: { padding: 0 } }}
+    >
       <ModalHeader icon="➕" title={t('Create')} />
-      <div style={{ padding: '20px 24px 16px', maxHeight: '72vh', overflowY: 'auto' }}>
+      <div className="admin-category-modal-body">
         <Form form={form} layout="vertical" onFinish={handleSubmitCreate}>
-          <Row gutter={20}>
+          <Row gutter={28}>
             {/* Left column - Form fields */}
-            <Col xs={24} sm={15}>
-              <Form.Item name="name" label="Tên danh mục" rules={[{ required: true, message: 'Vui lòng nhập tên danh mục!' }]} style={{ marginBottom: 14 }}>
+            <Col xs={24} md={14}>
+              <Form.Item name="name" label="Tên danh mục" rules={[{ required: true, message: 'Vui lòng nhập tên danh mục!' }]}>
                 <Input placeholder="Nhập tên danh mục" autoFocus />
               </Form.Item>
-              <Form.Item name="description" label="Mô tả" style={{ marginBottom: 14 }}>
-                <ReactQuill theme="snow" placeholder="Nhập mô tả danh mục" style={{ minHeight: 80, maxHeight: 110, overflow: 'auto' }} />
+              <Form.Item name="description" label="Mô tả">
+                <ReactQuill theme="snow" placeholder="Nhập mô tả danh mục" className="admin-category-editor" />
               </Form.Item>
-              <Form.Item name="isDisplayed" label="Hiển thị" valuePropName="checked" initialValue={true} style={{ marginBottom: 8 }}>
+              <Form.Item name="isDisplayed" label="Hiển thị" valuePropName="checked" initialValue={true}>
                 <Switch checkedChildren="Hiện" unCheckedChildren="Ẩn" defaultChecked />
               </Form.Item>
             </Col>
 
             {/* Right column - Image */}
-            <Col xs={24} sm={9}>
-              <Form.Item label="Ảnh danh mục" style={{ marginBottom: 8 }}>
+            <Col xs={24} md={10}>
+              <Form.Item label="Ảnh danh mục">
                 {imageUrl ? (
-                  <div style={{ position: 'relative', width: '100%', maxWidth: 160, margin: '0 auto' }}>
+                  <div className="admin-category-image-frame">
                     <Image
                       width="100%"
-                      height={140}
+                      height={220}
                       src={`${process.env.NEXT_PUBLIC_API_ENDPOINT}${imageUrl}`}
                       style={{ objectFit: 'cover', borderRadius: 8, border: '1px solid #e5e7eb' }}
                     />
@@ -89,31 +98,25 @@ const CreateModal = ({ openCreate, handleCreateClose, setCategoryData }) =>
                       icon={<DeleteOutlined />}
                       onClick={() => setImageUrl('')}
                       style={{
-                        position: 'absolute', top: 4, right: 4,
+                        position: 'absolute', top: 10, right: 10,
                         background: 'rgba(255,255,255,0.85)', borderRadius: '50%',
-                        width: 26, height: 26, padding: 0, minWidth: 0,
+                        width: 34, height: 34, padding: 0, minWidth: 0,
                         boxShadow: '0 1px 4px rgba(0,0,0,0.12)'
                       }}
                     />
                   </div>
                 ) : (
-                  <div style={{
-                    width: '100%', maxWidth: 160, height: 140, margin: '0 auto',
-                    background: '#f9fafb', border: '1.5px dashed #d1d5db', borderRadius: 8,
-                    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                    color: '#9ca3af', gap: 6
-                  }}>
-                    <PictureOutlined style={{ fontSize: 26 }} />
-                    <span style={{ fontSize: 12 }}>Chưa có ảnh</span>
+                  <div className="admin-category-image-empty">
+                    <PictureOutlined style={{ fontSize: 38 }} />
+                    <span>Chưa có ảnh</span>
                   </div>
                 )}
                 <Upload beforeUpload={handleImageUpload} showUploadList={false} accept="image/*">
-                  <Button icon={<UploadOutlined />} loading={uploading} size="small"
-                    style={{ width: '100%', maxWidth: 160, display: 'block', margin: '8px auto 0', height: 32 }}>
+                  <Button icon={<UploadOutlined />} loading={uploading} className="admin-category-upload-btn">
                     {uploading ? 'Đang upload...' : 'Chọn ảnh'}
                   </Button>
                 </Upload>
-                <div style={{ fontSize: 11, color: '#9ca3af', textAlign: 'center', marginTop: 4 }}>Tối đa 2MB, tự nén</div>
+                <div className="admin-category-upload-note">Tối đa 2MB, tự nén</div>
               </Form.Item>
             </Col>
           </Row>

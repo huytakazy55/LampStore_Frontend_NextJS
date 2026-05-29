@@ -338,62 +338,69 @@ export default function VisitorMapPage() {
     ];
 
     return (
-        <div className="p-4 min-h-full">
-            <div className="admin-table-card">
+        <div className="admin-visitor-page">
+            <div className="admin-table-card admin-visitor-card">
                 <AdminPageHeader
                     title="Bản đồ truy cập"
-                    description={`Tổng hợp IP đã ghi nhận và quy đổi thành khu vực trong ${days} ngày gần nhất.`}
                     breadcrumbItems={[
                         { title: "Trang chủ" },
                         { title: "Bản đồ truy cập" },
                     ]}
                     actions={(
                         <>
-                        <Select
-                            value={days}
-                            onChange={setDays}
-                            style={{ width: 150 }}
-                            options={[
-                                { value: 7, label: "7 ngày" },
-                                { value: 30, label: "30 ngày" },
-                                { value: 90, label: "90 ngày" },
-                                { value: 365, label: "365 ngày" },
-                            ]}
-                        />
-                        <Button icon={<ReloadOutlined />} onClick={fetchLocations} loading={loading}>
-                            Làm mới
-                        </Button>
+                            <Select
+                                value={days}
+                                onChange={setDays}
+                                style={{ width: 150 }}
+                                options={[
+                                    { value: 7, label: "7 ngày" },
+                                    { value: 30, label: "30 ngày" },
+                                    { value: 90, label: "90 ngày" },
+                                    { value: 365, label: "365 ngày" },
+                                ]}
+                            />
+                            <Button icon={<ReloadOutlined />} onClick={fetchLocations} loading={loading}>
+                                Làm mới
+                            </Button>
                         </>
                     )}
                 />
 
                 {error && (
-                    <div className="pb-4">
+                    <div className="admin-visitor-alert">
                         <Alert type="warning" showIcon message={error} />
                     </div>
                 )}
 
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 pb-6">
+                <div className="admin-visitor-stats">
                     {[
-                        ["IP đã ghi nhận", data?.totalIpCount || 0, "bg-blue-50 text-blue-600"],
-                        ["IP định vị được", data?.resolvedIpCount || 0, "bg-green-50 text-green-600"],
-                        ["IP nội bộ", data?.privateIpCount || 0, "bg-gray-50 text-gray-600"],
-                        ["Chưa định vị", data?.unresolvedIpCount || 0, "bg-amber-50 text-amber-600"],
-                    ].map(([label, value, color]) => (
-                        <div key={label} className="bg-white border border-gray-100 rounded-lg p-4">
-                            <div className={`w-10 h-10 rounded-lg ${color} flex items-center justify-center mb-3`}>
+                        ["IP đã ghi nhận", data?.totalIpCount || 0, "blue", "Tổng", `${days} ngày`],
+                        ["IP định vị được", data?.resolvedIpCount || 0, "green", "OK", "Public IP"],
+                        ["IP nội bộ", data?.privateIpCount || 0, "gray", "Local", "Nội bộ"],
+                        ["Chưa định vị", data?.unresolvedIpCount || 0, "amber", "Pending", "Chờ dữ liệu"],
+                    ].map(([label, value, tone, badge, meta]) => (
+                        <div key={label} className={`admin-visitor-stat-card admin-visitor-stat-card-${tone}`}>
+                            <div className={`admin-visitor-stat-icon admin-visitor-stat-icon-${tone}`}>
                                 <EnvironmentOutlined />
                             </div>
-                            <div className="text-2xl font-bold text-gray-800">{value.toLocaleString("vi-VN")}</div>
-                            <div className="text-sm text-gray-500">{label}</div>
+                            <div className="admin-visitor-stat-main">
+                                <div className="admin-visitor-stat-value">{value.toLocaleString("vi-VN")}</div>
+                                <div className="admin-visitor-stat-label">{label}</div>
+                            </div>
+                            <div className="admin-visitor-stat-meta">
+                                <div className={`admin-visitor-stat-badge admin-visitor-stat-badge-${tone}`}>
+                                    {badge}
+                                </div>
+                                <div className="admin-visitor-stat-time">{meta}</div>
+                            </div>
                         </div>
                     ))}
                 </div>
 
-                <div className={isMapFullscreen ? "fixed inset-0 z-[9999] bg-slate-950 p-4" : "pb-6"}>
+                <div className={isMapFullscreen ? "admin-visitor-map-fullscreen" : "admin-visitor-map-section"}>
                     <div
                         ref={mapRef}
-                        className={`relative overflow-hidden rounded-lg border border-slate-200 bg-[#dbe7f0] cursor-grab active:cursor-grabbing touch-none ${isMapFullscreen ? "h-full" : "h-[460px]"}`}
+                        className={`admin-visitor-map ${isMapFullscreen ? "admin-visitor-map-expanded" : ""}`}
                         onWheel={handleWheel}
                         onPointerDown={handlePointerDown}
                         onPointerMove={handlePointerMove}
@@ -401,11 +408,11 @@ export default function VisitorMapPage() {
                         onPointerCancel={handlePointerUp}
                     >
                         {loading ? (
-                            <div className="absolute inset-0 flex items-center justify-center bg-white/70">
+                            <div className="admin-visitor-map-state">
                                 <Spin size="large" tip="Đang quy đổi IP sang vị trí..." />
                             </div>
                         ) : locations.length === 0 ? (
-                            <div className="absolute inset-0 flex items-center justify-center bg-white/85">
+                            <div className="admin-visitor-map-state">
                                 <Empty description="Chưa có IP public nào định vị được" />
                             </div>
                         ) : (
@@ -457,13 +464,13 @@ export default function VisitorMapPage() {
                                 })}
 
                                 <div
-                                    className="absolute left-3 top-3 z-20 flex flex-col overflow-hidden rounded-md bg-white shadow-lg border border-gray-200"
+                                    className="admin-visitor-zoom-control"
                                     onPointerDown={(event) => event.stopPropagation()}
                                     onWheel={(event) => event.stopPropagation()}
                                 >
                                     <button
                                         type="button"
-                                        className="h-9 w-9 text-xl font-semibold text-gray-700 hover:bg-gray-100"
+                                        className="admin-visitor-map-icon-btn"
                                         onClick={() => updateZoom((mapView?.zoom || 5) + 1)}
                                         aria-label="Phóng to bản đồ"
                                     >
@@ -471,7 +478,7 @@ export default function VisitorMapPage() {
                                     </button>
                                     <button
                                         type="button"
-                                        className="h-9 w-9 border-t border-gray-200 text-xl font-semibold text-gray-700 hover:bg-gray-100"
+                                        className="admin-visitor-map-icon-btn"
                                         onClick={() => updateZoom((mapView?.zoom || 5) - 1)}
                                         aria-label="Thu nhỏ bản đồ"
                                     >
@@ -481,7 +488,7 @@ export default function VisitorMapPage() {
 
                                 <button
                                     type="button"
-                                    className="absolute left-3 top-[88px] z-20 rounded-md bg-white px-3 py-2 text-xs font-semibold text-gray-700 shadow-lg border border-gray-200 hover:bg-gray-100"
+                                    className="admin-visitor-map-button admin-visitor-map-reset"
                                     onClick={() => defaultMapView && setMapView(defaultMapView)}
                                     onPointerDown={(event) => event.stopPropagation()}
                                     onWheel={(event) => event.stopPropagation()}
@@ -491,7 +498,7 @@ export default function VisitorMapPage() {
 
                                 <button
                                     type="button"
-                                    className="absolute left-3 top-[130px] z-20 flex items-center gap-2 rounded-md bg-white px-3 py-2 text-xs font-semibold text-gray-700 shadow-lg border border-gray-200 hover:bg-gray-100"
+                                    className="admin-visitor-map-button admin-visitor-map-fullscreen-btn"
                                     onClick={() => setIsMapFullscreen((value) => !value)}
                                     onPointerDown={(event) => event.stopPropagation()}
                                     onWheel={(event) => event.stopPropagation()}
@@ -500,30 +507,30 @@ export default function VisitorMapPage() {
                                     {isMapFullscreen ? "Thu nhỏ" : "Toàn màn hình"}
                                 </button>
 
-                                <div className="absolute left-3 bottom-2 z-20 rounded bg-white/90 px-2 py-1 text-[11px] text-gray-600 shadow-sm">
+                                <div className="admin-visitor-map-hint">
                                     Kéo để di chuyển, cuộn để thu phóng{isMapFullscreen ? ", Esc để thoát" : ""}
                                 </div>
 
-                                <div className="absolute right-3 top-3 z-20 rounded-md bg-white/92 p-3 text-xs text-gray-700 shadow-lg border border-gray-200">
-                                    <div className="mb-2 font-semibold text-gray-800">Mật độ truy cập</div>
+                                <div className="admin-visitor-legend">
+                                    <div className="admin-visitor-legend-title">Mật độ truy cập</div>
                                     {[
                                         ["Ít", "bg-blue-500", "Nhỏ"],
                                         ["Vừa", "bg-yellow-400", "Trung bình"],
                                         ["Nhiều", "bg-orange-500", "Lớn"],
                                         ["Rất nhiều", "bg-red-500", "Rất lớn"],
                                     ].map(([label, color, sizeLabel], idx) => (
-                                        <div key={label} className="flex items-center gap-2 py-1">
+                                        <div key={label} className="admin-visitor-legend-item">
                                             <span
-                                                className={`inline-block rounded-full border border-white ${color}`}
+                                                className={`admin-visitor-legend-dot ${color}`}
                                                 style={{ width: 9 + idx * 4, height: 9 + idx * 4 }}
                                             />
-                                            <span className="min-w-14">{label}</span>
-                                            <span className="text-gray-400">{sizeLabel}</span>
+                                            <span className="admin-visitor-legend-label">{label}</span>
+                                            <span className="admin-visitor-legend-size">{sizeLabel}</span>
                                         </div>
                                     ))}
                                 </div>
 
-                                <div className="absolute bottom-2 right-2 z-20 rounded bg-white/85 px-2 py-1 text-[11px] text-gray-600 shadow-sm">
+                                <div className="admin-visitor-map-credit">
                                     © OpenStreetMap
                                 </div>
                             </>
@@ -531,7 +538,7 @@ export default function VisitorMapPage() {
                     </div>
                 </div>
 
-                <div className="admin-table-wrapper" style={{ padding: "0 24px 24px" }}>
+                <div className="admin-visitor-table">
                     <Table
                         columns={ipColumns}
                         dataSource={(data?.ipVisits || []).map((item, index) => ({ ...item, key: item.rawIpAddress || index }))}

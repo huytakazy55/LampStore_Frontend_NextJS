@@ -2,8 +2,7 @@
 
 import React, { useContext, useState, useEffect, useMemo } from 'react'
 import AdminPageHeader from '../shared/AdminPageHeader';
-import { Input, Button, Table, Pagination, Space, Typography, Card, Row, Col, Select, DatePicker, Tag } from 'antd';
-import { Link as RouterLink } from '@/lib/router-compat';
+import { Input, Button, Table, Space, DatePicker, Tag } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import { toast } from 'react-toastify';
@@ -12,7 +11,6 @@ import CreateModal from './CreateModal';
 import UpdateModal from './UpdateModal';
 import { DeleteOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
-import axios from 'axios';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
@@ -224,7 +222,7 @@ const Tags = () => {
     {
       title: 'Thao tác',
       key: 'action',
-      width: 82,
+      width: 104,
       align: 'center',
       render: (_, record) => (
         <Space size={6} className="admin-action-group">
@@ -286,46 +284,7 @@ const Tags = () => {
           { title: t('Home') },
           { title: t('Tags') }
         ]}
-      />
-      <div className="admin-table-card">
-        {/* Filter Bar */}
-        <div
-          className="admin-filter-bar"
-          style={{
-            padding: '16px 24px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: '16px'
-          }}
-        >
-          <Space>
-            <Input
-              prefix={<i className='bx bx-search-alt-2'></i>}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Tìm kiếm tag..."
-              style={{ width: '240px' }}
-            />
-            <Button
-              type="default"
-              icon={<i className='bx bx-filter'></i>}
-              onClick={() => setOpenFilter(true)}
-            >
-              {t('Filter')} {filterCount > 0 && `(${filterCount})`}
-            </Button>
-            {selectedRowKeys.length > 0 && (
-              <Button
-                type="primary"
-                danger
-                icon={<DeleteOutlined />}
-                onClick={() => setOpenBulkDelete(true)}
-                loading={bulkDeleteLoading}
-              >
-                {t('DeleteSelected')} ({selectedRowKeys.length})
-              </Button>
-            )}
-          </Space>
+        actions={(
           <Button
             type="primary"
             onClick={handleCreateOpen}
@@ -333,17 +292,40 @@ const Tags = () => {
           >
             {t('Create')}
           </Button>
-        </div>
+        )}
+      />
+      <div className="admin-table-card">
         {/* Filter options */}
-        <Row gutter={[16, 16]} style={{ margin: '16px 0' }}>
-          <Col span={12}>
-            <DatePicker.RangePicker
-              style={{ width: '100%' }}
-              onChange={setDateRange}
-              placeholder={['Từ ngày', 'Đến ngày']}
-            />
-          </Col>
-        </Row>
+        <div className="admin-tag-filter-row">
+          <Input
+            prefix={<i className='bx bx-search-alt-2'></i>}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Tìm kiếm tag..."
+          />
+          <Button
+            type="default"
+            icon={<i className='bx bx-filter'></i>}
+            onClick={() => setOpenFilter(true)}
+          >
+            {t('Filter')} {filterCount > 0 && `(${filterCount})`}
+          </Button>
+          <DatePicker.RangePicker
+            onChange={setDateRange}
+            placeholder={['Từ ngày', 'Đến ngày']}
+          />
+          {selectedRowKeys.length > 0 && (
+            <Button
+              type="primary"
+              danger
+              icon={<DeleteOutlined />}
+              onClick={() => setOpenBulkDelete(true)}
+              loading={bulkDeleteLoading}
+            >
+              {t('DeleteSelected')} ({selectedRowKeys.length})
+            </Button>
+          )}
+        </div>
         {/* Table */}
         <div className="admin-table-wrapper" style={{ padding: '24px' }}>
           <Table

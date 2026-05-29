@@ -203,9 +203,17 @@ const Roles = () => {
       key: 'action',
       width: 120,
       render: (_, record) => (
-        <Button size="small" onClick={() => openRoleModal(record)}>
-          Phân quyền
-        </Button>
+        <Space size={6} className="admin-action-group">
+          <Button
+            type="text"
+            className="admin-action-btn"
+            size="small"
+            icon={<i className="bx bx-shield-quarter"></i>}
+            onClick={() => openRoleModal(record)}
+          >
+            Phân quyền
+          </Button>
+        </Space>
       ),
     },
   ];

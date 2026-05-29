@@ -2,7 +2,7 @@
 
 import React, { useContext, useState, useEffect, useMemo } from 'react'
 import AdminPageHeader from '../shared/AdminPageHeader';
-import { Input, Button, Table, Pagination, Space, Typography, Card, Row, Col, Select, DatePicker, Tag } from 'antd';
+import { Input, Button, Table, Pagination, Space, Select, DatePicker, Tag } from 'antd';
 import { Link as RouterLink } from '@/lib/router-compat';
 import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '@/contexts/ThemeContext';
@@ -464,47 +464,8 @@ const Products = () => {
           { title: t('Home') },
           { title: t('Product') }
         ]}
-      />
-      <div className="admin-table-card">
-        {/* Filter Bar */}
-        <div
-          className="admin-filter-bar"
-          style={{
-            padding: '16px 24px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: '16px'
-          }}
-        >
-          <Space>
-            <Input
-              prefix={<i className='bx bx-search-alt-2'></i>}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Tìm kiếm sản phẩm..."
-              style={{ width: '240px' }}
-            />
-            <Button
-              type="default"
-              icon={<i className='bx bx-filter'></i>}
-              onClick={() => setOpenFilter(true)}
-            >
-              {t('Filter')} {filterCount > 0 && `(${filterCount})`}
-            </Button>
-            {selectedRowKeys.length > 0 && (
-              <Button
-                type="primary"
-                danger
-                icon={<DeleteOutlined />}
-                onClick={() => setOpenBulkDelete(true)}
-                loading={bulkDeleteLoading}
-              >
-                {t('DeleteSelected')} ({selectedRowKeys.length})
-              </Button>
-            )}
-          </Space>
-          <div className="flex gap-2">
+        actions={(
+          <>
             <ColumnVisibilityDropdown
               columns={columns}
               hiddenKeys={hiddenColumns}
@@ -526,43 +487,60 @@ const Products = () => {
             >
               Import Excel
             </Button>
-          </div>
-        </div>
+          </>
+        )}
+      />
+      <div className="admin-table-card">
         {/* Filter options */}
-        <Row gutter={[16, 16]} style={{ margin: '16px 0' }}>
-          <Col span={6}>
-            <Select
-              style={{ width: '100%' }}
-              placeholder="Lọc theo danh mục"
-              allowClear
-              onChange={setSelectedCategory}
+        <div className="admin-product-filter-row">
+          <Input
+            prefix={<i className='bx bx-search-alt-2'></i>}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Tìm kiếm sản phẩm..."
+          />
+          <Button
+            type="default"
+            icon={<i className='bx bx-filter'></i>}
+            onClick={() => setOpenFilter(true)}
+          >
+            {t('Filter')} {filterCount > 0 && `(${filterCount})`}
+          </Button>
+          <Select
+            placeholder="Lọc theo danh mục"
+            allowClear
+            onChange={setSelectedCategory}
+          >
+            {categories.map((category) => (
+              <Select.Option key={category.id} value={category.id}>
+                {category.name}
+              </Select.Option>
+            ))}
+          </Select>
+          <DatePicker.RangePicker
+            onChange={setDateRange}
+            placeholder={['Từ ngày', 'Đến ngày']}
+          />
+          <Select
+            placeholder="Lọc theo trạng thái"
+            allowClear
+            onChange={setStatusFilter}
+          >
+            <Select.Option value={1}>Hoạt động</Select.Option>
+            <Select.Option value={0}>Ẩn</Select.Option>
+          </Select>
+          {selectedRowKeys.length > 0 && (
+            <Button
+              type="primary"
+              danger
+              icon={<DeleteOutlined />}
+              onClick={() => setOpenBulkDelete(true)}
+              loading={bulkDeleteLoading}
             >
-              {categories.map((category) => (
-                <Select.Option key={category.id} value={category.id}>
-                  {category.name}
-                </Select.Option>
-              ))}
-            </Select>
-          </Col>
-          <Col span={6}>
-            <DatePicker.RangePicker
-              style={{ width: '100%' }}
-              onChange={setDateRange}
-              placeholder={['Từ ngày', 'Đến ngày']}
-            />
-          </Col>
-          <Col span={6}>
-            <Select
-              style={{ width: '100%' }}
-              placeholder="Lọc theo trạng thái"
-              allowClear
-              onChange={setStatusFilter}
-            >
-              <Select.Option value={1}>Hoạt động</Select.Option>
-              <Select.Option value={0}>Ẩn</Select.Option>
-            </Select>
-          </Col>
-        </Row>
+              {t('DeleteSelected')} ({selectedRowKeys.length})
+            </Button>
+          )}
+        </div>
         {/* Table */}
         <div className="admin-table-wrapper" style={{ padding: '24px' }}>
           <Table

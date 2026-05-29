@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import AdminPageHeader from '../shared/AdminPageHeader';
 import { Table, Input, Button, Pagination, Modal, Space, Tag } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import FlashSaleService from '@/services/FlashSaleService';
 import { toast } from 'react-toastify';
@@ -175,14 +175,18 @@ const FlashSales = () => {
                         {record.isActive ? 'Bật' : 'Tắt'}
                     </Button>
                     <Button
-                        icon={<EditOutlined />}
+                        type="text"
+                        className="admin-action-btn"
+                        icon={<i className='bx bx-edit'></i>}
                         onClick={() => { setEditingFlashSale(record); setShowCreateModal(true); }}
                         size="small"
                     >
                         Sửa
                     </Button>
                     <Button
-                        icon={<DeleteOutlined />}
+                        type="text"
+                        className="admin-action-btn"
+                        icon={<i className='bx bx-trash'></i>}
                         onClick={() => handleDelete(record.id, record.title)}
                         danger
                         size="small"

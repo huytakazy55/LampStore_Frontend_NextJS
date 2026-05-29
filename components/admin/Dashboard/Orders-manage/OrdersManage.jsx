@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import AdminPageHeader from '../shared/AdminPageHeader';
 import { Table, Input, Pagination, Modal, message, Space, Tag, Select, Button, Tooltip } from 'antd';
-import { EyeOutlined, DeleteOutlined, CheckCircleOutlined, CloseCircleOutlined, CarOutlined, FileDoneOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CloseCircleOutlined, CarOutlined, FileDoneOutlined } from '@ant-design/icons';
 import OrderService from '@/services/OrderService';
 import OrderDetailModal from './OrderDetailModal';
 import ColumnVisibilityDropdown from '../shared/ColumnVisibilityDropdown';
@@ -290,9 +290,9 @@ const OrdersManage = () =>
             width: 120,
             align: 'center',
             render: (_, record) => (
-                <Space size="small">
-                    <Button icon={<EyeOutlined />} onClick={() => setSelectedOrder(record)} size="small">Chi tiết</Button>
-                    <Button icon={<DeleteOutlined />} onClick={() => handleDelete(record.id)} danger size="small" />
+                <Space size={6} className="admin-action-group">
+                    <Button type="text" className="admin-action-btn" icon={<i className='bx bx-show'></i>} onClick={() => setSelectedOrder(record)} size="small">Chi tiết</Button>
+                    <Button type="text" className="admin-action-btn" icon={<i className='bx bx-trash'></i>} onClick={() => handleDelete(record.id)} danger size="small" />
                 </Space>
             ),
         },

@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import AdminPageHeader from '../shared/AdminPageHeader';
 import { Table, Input, Button, Modal, Pagination, message, Space, Row, Col, Card, Checkbox, Tag } from 'antd';
-import { LockOutlined, UnlockOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import UserManage from '@/services/UserManage';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from '@/lib/router-compat';
@@ -215,16 +215,19 @@ const Users = () => {
         <Space size={6} className="admin-action-group">
           {record.lockoutEnd && new Date(record.lockoutEnd) > new Date() ? (
             <Button
-              icon={<UnlockOutlined />}
+              type="text"
+              className="admin-action-btn"
+              icon={<i className='bx bx-lock-open'></i>}
               onClick={() => UnLockUser(record.id, record.userName)}
-              type="primary"
               size="small"
             >
               Mở khóa
             </Button>
           ) : (
             <Button
-              icon={<LockOutlined />}
+              type="text"
+              className="admin-action-btn"
+              icon={<i className='bx bx-lock'></i>}
               onClick={() => LockUser(record.id, record.userName)}
               danger
               size="small"
@@ -232,7 +235,13 @@ const Users = () => {
               Khóa
             </Button>
           )}
-          <Button size="small" onClick={() => openRoleModal(record)}>
+          <Button
+            type="text"
+            className="admin-action-btn"
+            size="small"
+            icon={<i className="bx bx-shield-quarter"></i>}
+            onClick={() => openRoleModal(record)}
+          >
             Phân quyền
           </Button>
         </Space>

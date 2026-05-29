@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useContext, useMemo } from 'react';
 import AdminPageHeader from '../shared/AdminPageHeader';
 import { Table, Input, Button, Pagination, Modal, message, Space, Row, Col, Card, Tag } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import BannerService from '@/services/BannerService';
 import { useTranslation } from 'react-i18next';
@@ -211,14 +211,18 @@ const Banners = () => {
             render: (text, record) => (
                 <Space size={6} className="admin-action-group">
                     <Button
-                        icon={<EditOutlined />}
+                        type="text"
+                        className="admin-action-btn"
+                        icon={<i className='bx bx-edit'></i>}
                         onClick={() => handleEdit(record)}
                         size="small"
                     >
                         Sửa
                     </Button>
                     <Button
-                        icon={<DeleteOutlined />}
+                        type="text"
+                        className="admin-action-btn"
+                        icon={<i className='bx bx-trash'></i>}
                         onClick={() => handleDelete(record.id, record.title)}
                         danger
                         size="small"

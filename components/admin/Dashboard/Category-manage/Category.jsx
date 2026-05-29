@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import AdminPageHeader from '../shared/AdminPageHeader';
 import { Table, Input, Button, Pagination, Modal, message, Space, Row, Col, Card, Image, Switch } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import CategoryManage from '@/services/CategoryManage';
 import { useTranslation } from 'react-i18next';
 import CreateModal from './CreateModal';
@@ -233,7 +233,9 @@ const Category = () => {
       render: (text, record) => (
         <Space size={6} className="admin-action-group">
           <Button
-            icon={<EditOutlined />}
+            type="text"
+            className="admin-action-btn"
+            icon={<i className='bx bx-edit'></i>}
             onClick={() => {
               setUpdateId(record.id);
               setOpenUpdate(true);
@@ -243,7 +245,9 @@ const Category = () => {
             Sửa
           </Button>
           <Button
-            icon={<DeleteOutlined />}
+            type="text"
+            className="admin-action-btn"
+            icon={<i className='bx bx-trash'></i>}
             onClick={() => handleDelete(record.id, record.name)}
             danger
             size="small"
