@@ -334,7 +334,7 @@ const Category = () => {
               </Button>
             )}
           </Space>
-          <Button type="primary" icon={<PlusOutlined />} onClick={() => setOpenCreate(true)}>
+          <Button type="primary" className="admin-theme-primary-btn" icon={<PlusOutlined />} onClick={() => setOpenCreate(true)}>
             {t('Create')}
           </Button>
         </div>

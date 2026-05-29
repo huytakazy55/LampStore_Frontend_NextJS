@@ -224,7 +224,7 @@ const NewsManage = () =>
                             hiddenKeys={hiddenColumns}
                             onChange={setHiddenColumns}
                         />
-                        <Button type="primary" icon={<PlusOutlined />} onClick={() => setShowCreateModal(true)} style={{ background: themeColors.StartColorLinear }}>
+                        <Button type="primary" className="admin-theme-primary-btn" icon={<PlusOutlined />} onClick={() => setShowCreateModal(true)}>
                             Thêm bài viết
                         </Button>
                     </Space>

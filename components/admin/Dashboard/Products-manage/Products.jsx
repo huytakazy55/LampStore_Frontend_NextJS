@@ -473,17 +473,17 @@ const Products = () => {
             />
             <Button
               type="primary"
+              className="admin-theme-primary-btn"
               onClick={handleCreateOpen}
               icon={<i className='bx bx-plus'></i>}
-              style={{ background: themeColors.StartColorLinear }}
             >
               Thêm mới
             </Button>
             <Button
               type="primary"
+              className="admin-theme-primary-btn"
               onClick={handleImportOpen}
               icon={<FileExcelOutlined />}
-              style={{ background: themeColors.StartColorLinear }}
             >
               Import Excel
             </Button>

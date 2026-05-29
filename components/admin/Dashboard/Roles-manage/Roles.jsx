@@ -249,7 +249,7 @@ const Roles = () => {
             <Button onClick={openMenuConfigModal}>
               Cấu hình menu theo quyền
             </Button>
-            <Button type="primary" onClick={() => setCreateModalOpen(true)}>
+            <Button type="primary" className="admin-theme-primary-btn" onClick={() => setCreateModalOpen(true)}>
               Thêm quyền
             </Button>
           </Space>

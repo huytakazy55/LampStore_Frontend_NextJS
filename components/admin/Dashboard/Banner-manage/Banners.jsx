@@ -276,9 +276,9 @@ const Banners = () => {
                     </Space>
                     <Button
                         type="primary"
+                        className="admin-theme-primary-btn"
                         icon={<PlusOutlined />}
                         onClick={() => setShowCreateModal(true)}
-                        style={{ background: themeColors.StartColorLinear }}
                     >
                         Thêm Banner
                     </Button>

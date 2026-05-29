@@ -388,7 +388,7 @@ const UpdateModal = ({ openUpdate, handleUpdateClose, fetchProducts, style, cate
       }
       open={openUpdate}
       onCancel={handleUpdateClose}
-      width={1200}
+      width={1600}
       footer={[
         <Button
           key="cancel"
@@ -408,7 +408,7 @@ const UpdateModal = ({ openUpdate, handleUpdateClose, fetchProducts, style, cate
           Lưu lại
         </Button>
       ]}
-      className="custom-modal"
+      className="custom-modal product-modal"
     >
       <Form
         form={form}
@@ -424,7 +424,7 @@ const UpdateModal = ({ openUpdate, handleUpdateClose, fetchProducts, style, cate
           <Input placeholder="Nhập tên sản phẩm" />
         </Form.Item>
 
-        <div className="flex gap-4">
+        <div className="product-form-grid product-form-grid-4">
           <Form.Item
             name="categoryId"
             label="Danh mục sản phẩm"
@@ -467,9 +467,7 @@ const UpdateModal = ({ openUpdate, handleUpdateClose, fetchProducts, style, cate
               placeholder="Nhập số lượng"
             />
           </Form.Item>
-        </div>
 
-        <div className="flex gap-4">
           <Form.Item
             name="discountPrice"
             label="Giá khuyến mãi"
@@ -483,6 +481,9 @@ const UpdateModal = ({ openUpdate, handleUpdateClose, fetchProducts, style, cate
               parser={value => value.replace(/\$\s?|(,*)/g, '')}
             />
           </Form.Item>
+        </div>
+
+        <div className="product-form-grid product-form-grid-4">
 
           <Form.Item
             name="materials"
@@ -504,9 +505,6 @@ const UpdateModal = ({ openUpdate, handleUpdateClose, fetchProducts, style, cate
               placeholder="Nhập cân nặng"
             />
           </Form.Item>
-        </div>
-
-        <div className="flex gap-4">
           <Form.Item
             name="sku"
             label="SKU"
@@ -518,7 +516,7 @@ const UpdateModal = ({ openUpdate, handleUpdateClose, fetchProducts, style, cate
           <Form.Item
             name="tags"
             label="Tags"
-            className="w-2/3"
+            className="w-1/3"
           >
             <Select
               mode="multiple"
@@ -538,7 +536,7 @@ const UpdateModal = ({ openUpdate, handleUpdateClose, fetchProducts, style, cate
           </Form.Item>
         </div>
 
-        <div className="mt-4 mb-4">
+        <div className="product-variant-section">
           {productTypes.map((type, typeIndex) => (
             <div key={typeIndex} className="mb-4 p-4 border border-gray-200 rounded-lg">
               <div className="flex gap-4">
@@ -638,7 +636,7 @@ const UpdateModal = ({ openUpdate, handleUpdateClose, fetchProducts, style, cate
         </div>
 
         <Form.Item name="description" label="Mô tả">
-          <ReactQuill theme="snow" placeholder="Nhập mô tả sản phẩm" />
+          <ReactQuill theme="snow" placeholder="Nhập mô tả sản phẩm" className="product-description-editor" />
         </Form.Item>
 
         <Divider orientation="left" style={{ color: themeColors.StartColorLinear }}>

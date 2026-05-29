@@ -229,9 +229,9 @@ const FlashSales = () => {
                     </Space>
                     <Button
                         type="primary"
+                        className="admin-theme-primary-btn"
                         icon={<PlusOutlined />}
                         onClick={() => { setEditingFlashSale(null); setShowCreateModal(true); }}
-                        style={{ background: themeColors.StartColorLinear }}
                     >
                         Tạo Flash Sale
                     </Button>

@@ -284,15 +284,6 @@ const Tags = () => {
           { title: t('Home') },
           { title: t('Tags') }
         ]}
-        actions={(
-          <Button
-            type="primary"
-            onClick={handleCreateOpen}
-            icon={<i className='bx bx-plus'></i>}
-          >
-            {t('Create')}
-          </Button>
-        )}
       />
       <div className="admin-table-card">
         {/* Filter options */}
@@ -314,6 +305,15 @@ const Tags = () => {
             onChange={setDateRange}
             placeholder={['Từ ngày', 'Đến ngày']}
           />
+          <span className="admin-filter-spacer" />
+          <Button
+            type="primary"
+            className="admin-theme-primary-btn"
+            onClick={handleCreateOpen}
+            icon={<i className='bx bx-plus'></i>}
+          >
+            {t('Create')}
+          </Button>
           {selectedRowKeys.length > 0 && (
             <Button
               type="primary"
