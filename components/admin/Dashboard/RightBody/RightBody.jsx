@@ -71,7 +71,7 @@ const RightBody = () => {
   };
 
   return (
-    <div className='flex-1 admin-scroll-container bg-gray-100 dark:bg-gray-900'>
+    <div className='flex-1 admin-scroll-container'>
       <div key={location.pathname} className='relative page-enter'>
         {renderContent()}
       </div>

@@ -79,7 +79,8 @@ const CreateModal = ({ onClose, onSuccess }) =>
             width={1000}
             okText="Thêm mới"
             cancelText="Hủy"
-            styles={{ body: { maxHeight: '75vh', overflowY: 'auto' } }}
+            className="custom-modal"
+            styles={{ body: { maxHeight: 'calc(90vh - 160px)', overflowY: 'auto' } }}
         >
             <Form
                 form={form}

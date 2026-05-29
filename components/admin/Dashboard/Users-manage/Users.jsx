@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useContext, useEffect, useState, useMemo } from 'react';
-import { Table, Input, Button, Breadcrumb, Modal, Pagination, message, Space, Row, Col, Card, Checkbox, Tag } from 'antd';
+import React, { useEffect, useState, useMemo } from 'react';
+import AdminPageHeader from '../shared/AdminPageHeader';
+import { Table, Input, Button, Modal, Pagination, message, Space, Row, Col, Card, Checkbox, Tag } from 'antd';
 import { LockOutlined, UnlockOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
-import { ThemeContext } from '@/contexts/ThemeContext';
 import UserManage from '@/services/UserManage';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from '@/lib/router-compat';
@@ -14,7 +14,6 @@ import EditUser from './EditUser';
 const API_URL = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
 const Users = () => {
-  const { themeColors } = useContext(ThemeContext);
   const { t } = useTranslation();
   const location = useLocation();
   const [userData, setUserData] = useState([]);
@@ -213,7 +212,7 @@ const Users = () => {
       width: 120,
       align: 'center',
       render: (text, record) => (
-        <Space size="middle" style={{ justifyContent: 'center', width: '100%' }}>
+        <Space size={6} className="admin-action-group">
           {record.lockoutEnd && new Date(record.lockoutEnd) > new Date() ? (
             <Button
               icon={<UnlockOutlined />}
@@ -314,37 +313,20 @@ const Users = () => {
 
 
   return (
-    <div style={{ padding: '24px' }}>
+    <div style={{ padding: '16px' }}>
+      <AdminPageHeader
+        title={t('Users')}
+        breadcrumbItems={[
+          { title: t('Home') },
+          { title: t('Users') }
+        ]}
+      />
       <div className="admin-table-card">
-        {/* Title Bar */}
-        <div
-          className="admin-title-bar"
-          style={{
-            background: '#f6f8fc',
-            borderTopLeftRadius: 8,
-            borderTopRightRadius: 8,
-            padding: '24px 24px 16px 24px',
-            marginBottom: 0
-          }}
-        >
-          <div style={{ fontSize: '1.5rem', fontWeight: 600, color: themeColors.StartColorLinear }}>
-            {t('Users')}
-          </div>
-          <Breadcrumb
-            items={[
-              { title: t('Home') },
-              { title: t('Users') }
-            ]}
-            style={{ marginTop: '8px' }}
-          />
-        </div>
-
         {/* Filter Bar */}
         <div
           className="admin-filter-bar"
           style={{
             padding: '16px 24px',
-            background: '#fff',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -376,7 +358,7 @@ const Users = () => {
         </div>
 
         {/* Table */}
-        <div style={{ padding: '24px' }}>
+        <div className="admin-table-wrapper">
           <Table
             rowSelection={rowSelection}
             columns={columns}

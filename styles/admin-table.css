@@ -3,20 +3,30 @@
    Không dùng grid border, chỉ dùng row divider mỏng
    ============================================================ */
 
+:root {
+  --admin-theme-start: rgba(136, 70, 249, 1);
+  --admin-theme-end: rgba(255, 175, 0, 1);
+  --admin-control-border: color-mix(in srgb, var(--admin-theme-start) 28%, #d7dce8);
+  --admin-control-border-hover: color-mix(in srgb, var(--admin-theme-start) 55%, #c7d2fe);
+  --admin-control-ring: color-mix(in srgb, var(--admin-theme-start) 18%, transparent);
+  --admin-control-height: 40px;
+  --admin-modal-control-height: 40px;
+}
+
 /* ---- Admin scroll container ---- */
 .admin-scroll-container {
   height: calc(100vh - 4rem) !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
   -webkit-overflow-scrolling: touch;
-  background: #f0f2f5;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.06);
+  background: #f6f8fc;
+  box-shadow: none;
 }
 
 /* ---- Page transition ---- */
 .page-enter {
   animation: pageEnter 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
-  padding-top: 8px;
+  padding-top: 0;
 }
 
 @keyframes pageEnter {
@@ -33,16 +43,33 @@
 
 /* ---- Outer card ---- */
 .admin-table-card {
-  border-radius: 14px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07), 0 4px 20px rgba(0, 0, 0, 0.05);
-  background: #fff;
-  overflow: hidden;
-  border: 1px solid #e5e7eb;
+  background: transparent;
+  box-shadow: none;
+  border: none;
+}
+
+.admin-content-card.ant-card {
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
 }
 
 /* ---- Table wrapper chứa bảng ---- */
 .admin-table-wrapper {
-  padding: 0 20px 20px 20px !important;
+  padding: 0 0 16px 0 !important;
+}
+
+.admin-table-card>.ant-row {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.admin-table-card>.ant-row>.ant-col:first-child {
+  padding-left: 0 !important;
+}
+
+.admin-table-card>.ant-row>.ant-col:last-child {
+  padding-right: 0 !important;
 }
 
 /* ---- Table container: không border grid ---- */
@@ -51,27 +78,139 @@
   background: transparent;
 }
 
+.admin-scroll-container .ant-table-container,
 .custom-table .ant-table-container {
-  border: 1px solid #e5e7eb !important;
-  box-shadow: none !important;
+  border: 1px solid var(--admin-control-border) !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
   border-radius: 8px !important;
   overflow: hidden !important;
 }
 
 /* ---- Header: chữ nhỏ, in hoa, màu xám ---- */
+.admin-scroll-container .ant-table-thead>tr>th,
+.admin-scroll-container .ant-table-thead>tr>td,
 .custom-table .ant-table-thead>tr>th,
 .custom-table .ant-table-thead>tr>td {
-  background: #f3f4f6 !important;
+  background: color-mix(in srgb, var(--admin-theme-start) 7%, #f7f8fb) !important;
   font-weight: 600 !important;
   font-size: 11.5px !important;
   color: #6b7280 !important;
-  padding: 10px 14px !important;
+  padding: 12px 14px !important;
   border-bottom: 1px solid #e5e7eb !important;
   border-right: none !important;
   border-top: none !important;
+  text-align: center !important;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   white-space: nowrap;
+}
+
+.admin-scroll-container .ant-table-column-title,
+.custom-table .ant-table-column-title {
+  text-align: center;
+}
+
+/* ---- Form controls ---- */
+.admin-scroll-container .ant-input,
+.admin-scroll-container .ant-input-affix-wrapper,
+.admin-scroll-container .ant-input-search .ant-input-group-addon .ant-btn,
+.admin-scroll-container .ant-select .ant-select-selector,
+.admin-scroll-container .ant-picker,
+.admin-scroll-container .ant-btn-default {
+  border-color: var(--admin-control-border) !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.admin-filter-bar .ant-input,
+.admin-filter-bar .ant-input-search,
+.admin-filter-bar .ant-input-affix-wrapper,
+.admin-filter-bar .ant-input-search .ant-input-group-addon .ant-btn,
+.admin-filter-bar .ant-select,
+.admin-filter-bar .ant-select .ant-select-selector,
+.admin-filter-bar .ant-picker,
+.admin-filter-bar .ant-btn,
+.admin-page-header-actions .ant-input,
+.admin-page-header-actions .ant-input-search,
+.admin-page-header-actions .ant-input-affix-wrapper,
+.admin-page-header-actions .ant-select,
+.admin-page-header-actions .ant-select .ant-select-selector,
+.admin-page-header-actions .ant-picker,
+.admin-page-header-actions .ant-btn,
+.admin-table-card>.ant-row .ant-input,
+.admin-table-card>.ant-row .ant-input-search,
+.admin-table-card>.ant-row .ant-input-affix-wrapper,
+.admin-table-card>.ant-row .ant-select,
+.admin-table-card>.ant-row .ant-select .ant-select-selector,
+.admin-table-card>.ant-row .ant-picker,
+.admin-table-card>.ant-row .ant-btn {
+  height: var(--admin-control-height) !important;
+  min-height: var(--admin-control-height);
+  font-size: 14px;
+}
+
+.admin-filter-bar .ant-input,
+.admin-filter-bar .ant-picker,
+.admin-page-header-actions .ant-input,
+.admin-page-header-actions .ant-picker,
+.admin-table-card>.ant-row .ant-input,
+.admin-table-card>.ant-row .ant-picker {
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+}
+
+.admin-filter-bar .ant-input-affix-wrapper,
+.admin-page-header-actions .ant-input-affix-wrapper,
+.admin-table-card>.ant-row .ant-input-affix-wrapper {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.admin-filter-bar .ant-input-affix-wrapper>.ant-input,
+.admin-filter-bar .ant-input-search .ant-input,
+.admin-filter-bar .ant-picker-input>input,
+.admin-page-header-actions .ant-input-affix-wrapper>.ant-input,
+.admin-page-header-actions .ant-picker-input>input,
+.admin-table-card>.ant-row .ant-input-affix-wrapper>.ant-input,
+.admin-table-card>.ant-row .ant-picker-input>input {
+  height: auto !important;
+  min-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  box-shadow: none;
+  font-size: 14px;
+}
+
+.admin-filter-bar .ant-select .ant-select-selector,
+.admin-page-header-actions .ant-select .ant-select-selector,
+.admin-table-card>.ant-row .ant-select .ant-select-selector {
+  align-items: center;
+}
+
+.admin-filter-bar .ant-select-selection-placeholder,
+.admin-filter-bar .ant-select-selection-item,
+.admin-page-header-actions .ant-select-selection-placeholder,
+.admin-page-header-actions .ant-select-selection-item,
+.admin-table-card>.ant-row .ant-select-selection-placeholder,
+.admin-table-card>.ant-row .ant-select-selection-item {
+  line-height: calc(var(--admin-control-height) - 2px) !important;
+}
+
+.admin-scroll-container .ant-input:hover,
+.admin-scroll-container .ant-input-affix-wrapper:hover,
+.admin-scroll-container .ant-input-search .ant-input-group-addon .ant-btn:hover,
+.admin-scroll-container .ant-select:hover .ant-select-selector,
+.admin-scroll-container .ant-picker:hover,
+.admin-scroll-container .ant-btn-default:hover {
+  border-color: var(--admin-control-border-hover) !important;
+}
+
+.admin-scroll-container .ant-input:focus,
+.admin-scroll-container .ant-input-focused,
+.admin-scroll-container .ant-input-affix-wrapper-focused,
+.admin-scroll-container .ant-select-focused .ant-select-selector,
+.admin-scroll-container .ant-picker-focused {
+  border-color: var(--admin-theme-start) !important;
+  box-shadow: 0 0 0 2px var(--admin-control-ring) !important;
 }
 
 .custom-table .ant-table-thead>tr>th::before {
@@ -184,6 +323,29 @@
 }
 
 /* ---- Action buttons: icon only, subtle ---- */
+.admin-action-group {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 6px !important;
+  width: 100%;
+}
+
+.admin-action-btn.ant-btn {
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-action-btn .bx {
+  font-size: 18px;
+  line-height: 1;
+}
+
 .custom-table .ant-btn-text {
   padding: 5px 7px;
   border-radius: 8px;
@@ -266,14 +428,457 @@
 
 /* ---- Title bar ---- */
 .admin-title-bar {
-  background: #fff !important;
-  padding-bottom: 0 !important;
+  background: transparent !important;
+  padding: 0 0 16px !important;
+  margin: 0 !important;
+}
+
+.admin-page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.admin-page-header-main {
+  min-width: 0;
+}
+
+.admin-page-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.admin-page-description {
+  margin: 6px 0 0;
+  color: #6b7280;
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.admin-page-breadcrumb {
+  margin-top: 6px;
+}
+
+.admin-page-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 /* ---- Filter bar ---- */
 .admin-filter-bar {
-  border-bottom: 1.5px solid #f0f2f5;
+  border-bottom: none;
+  background: transparent;
+  padding: 8px 0 !important;
+}
+
+/* ============================================================
+   Admin Modal System
+   ============================================================ */
+body.admin-dashboard-active .ant-modal {
+  max-width: calc(100vw - 32px);
+}
+
+body.admin-dashboard-active .ant-modal-container,
+body.admin-dashboard-active .ant-modal-content,
+body.admin-dashboard-active .ant-modal-confirm .ant-modal-content {
+  padding: 0 !important;
+  overflow: hidden !important;
+  border-radius: 10px !important;
+  box-shadow: 0 24px 72px rgba(15, 23, 42, 0.28) !important;
+}
+
+body.admin-dashboard-active .ant-modal-content {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body.admin-dashboard-active .ant-modal-container {
+  background: #fff !important;
+}
+
+body.admin-dashboard-active .ant-modal-content:has(.admin-modal-header),
+.ant-modal-content:has(.admin-modal-header),
+body.admin-dashboard-active .ant-modal-container:has(.admin-modal-header),
+.ant-modal-container:has(.admin-modal-header),
+body.admin-dashboard-active .custom-modal .ant-modal-container,
+.custom-modal .ant-modal-container,
+body.admin-dashboard-active .custom-modal .ant-modal-content,
+.custom-modal .ant-modal-content {
+  padding: 0 !important;
+  overflow: hidden !important;
+  border-radius: 10px !important;
+}
+
+body.admin-dashboard-active .custom-modal .ant-modal-content,
+.custom-modal .ant-modal-content {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body.admin-dashboard-active .custom-modal .ant-modal-container,
+.custom-modal .ant-modal-container {
+  background: #fff !important;
+}
+
+body.admin-dashboard-active .ant-modal-header {
+  min-height: 64px !important;
+  margin: 0 !important;
+  padding: 16px 24px !important;
+  border-bottom: none !important;
+  background: linear-gradient(90deg, #ef4444 0%, #f97316 100%) !important;
+}
+
+body.admin-dashboard-active .custom-modal .ant-modal-header,
+.custom-modal .ant-modal-header {
+  min-height: 64px !important;
+  margin: 0 !important;
+  padding: 16px 24px !important;
+  border-bottom: none !important;
+  background: linear-gradient(90deg, #ef4444 0%, #f97316 100%) !important;
+}
+
+body.admin-dashboard-active .ant-modal-title,
+body.admin-dashboard-active .ant-modal-title .ant-typography,
+body.admin-dashboard-active .ant-modal-title svg {
+  color: #fff !important;
+}
+
+body.admin-dashboard-active .custom-modal .ant-modal-title,
+body.admin-dashboard-active .custom-modal .ant-modal-title .ant-typography,
+body.admin-dashboard-active .custom-modal .ant-modal-title svg,
+.custom-modal .ant-modal-title,
+.custom-modal .ant-modal-title .ant-typography,
+.custom-modal .ant-modal-title svg {
+  color: #fff !important;
+}
+
+body.admin-dashboard-active .ant-modal-title {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+}
+
+body.admin-dashboard-active .ant-modal-close {
+  top: 14px !important;
+  right: 18px !important;
+  color: #fff !important;
+}
+
+body.admin-dashboard-active .ant-modal-close-x {
+  width: 36px !important;
+  height: 36px !important;
+  font-size: 22px !important;
+  line-height: 36px !important;
+}
+
+body.admin-dashboard-active .custom-modal .ant-modal-close,
+.custom-modal .ant-modal-close,
+.ant-modal-content:has(.admin-modal-header) .ant-modal-close {
+  top: 14px !important;
+  right: 18px !important;
+  color: #fff !important;
+}
+
+body.admin-dashboard-active .custom-modal .ant-modal-close-x,
+.custom-modal .ant-modal-close-x,
+.ant-modal-content:has(.admin-modal-header) .ant-modal-close-x {
+  width: 36px !important;
+  height: 36px !important;
+  font-size: 22px !important;
+  line-height: 36px !important;
+}
+
+body.admin-dashboard-active .ant-modal-body {
+  padding: 24px !important;
+  color: #374151;
+}
+
+body.admin-dashboard-active .ant-modal-body:has(.admin-modal-header) {
+  padding: 0 !important;
+}
+
+body.admin-dashboard-active .ant-modal-content:has(.admin-modal-header) .ant-modal-body,
+.ant-modal-content:has(.admin-modal-header) .ant-modal-body,
+body.admin-dashboard-active .ant-modal-container:has(.admin-modal-header) .ant-modal-body,
+.ant-modal-container:has(.admin-modal-header) .ant-modal-body {
+  padding: 0 !important;
+}
+
+body.admin-dashboard-active .ant-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin: 0 !important;
+  padding: 16px 24px !important;
+  border-top: 1px solid #e5e7eb !important;
+  background: #f8fafc !important;
+}
+
+body.admin-dashboard-active .custom-modal .ant-modal-footer,
+.custom-modal .ant-modal-footer {
+  display: flex !important;
+  justify-content: flex-end !important;
+  gap: 12px !important;
+  margin: 0 !important;
+  padding: 16px 24px !important;
+  border-top: 1px solid #e5e7eb !important;
+  background: #f8fafc !important;
+}
+
+body.admin-dashboard-active .ant-modal .ant-btn,
+body.admin-dashboard-active .ant-modal-confirm .ant-btn,
+.admin-modal-footer .ant-btn,
+.admin-standalone-modal .admin-modal-button {
+  min-width: 88px;
+  height: 40px !important;
+  padding: 0 16px !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+}
+
+body.admin-dashboard-active .ant-modal .ant-btn-primary,
+body.admin-dashboard-active .ant-modal-confirm .ant-btn-primary,
+.admin-modal-footer .ant-btn-primary,
+.admin-standalone-modal .admin-modal-button-primary {
+  border: none !important;
+  color: #fff !important;
+  background: linear-gradient(90deg, #ef4444 0%, #f97316 100%) !important;
+  box-shadow: none !important;
+}
+
+body.admin-dashboard-active .ant-modal .ant-btn-default,
+body.admin-dashboard-active .ant-modal-confirm .ant-btn-default,
+.admin-modal-footer .ant-btn-default,
+.admin-standalone-modal .admin-modal-button-secondary {
+  color: #374151 !important;
+  background: #fff !important;
+  border-color: #d1d5db !important;
+}
+
+body.admin-dashboard-active .ant-modal .ant-form-item-label>label,
+body.admin-dashboard-active .ant-modal label,
+.admin-standalone-modal label {
+  color: #374151 !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+body.admin-dashboard-active .ant-modal .ant-input,
+body.admin-dashboard-active .ant-modal .ant-input-affix-wrapper,
+body.admin-dashboard-active .ant-modal .ant-input-number,
+body.admin-dashboard-active .ant-modal .ant-input-number-input,
+body.admin-dashboard-active .ant-modal .ant-select-selector,
+body.admin-dashboard-active .ant-modal .ant-picker,
+body.admin-dashboard-active .ant-modal textarea.ant-input,
+body.admin-dashboard-active .ant-modal input[type="text"],
+body.admin-dashboard-active .ant-modal input[type="number"],
+body.admin-dashboard-active .ant-modal input[type="datetime-local"],
+.admin-standalone-modal input,
+.admin-standalone-modal textarea,
+.admin-standalone-modal select {
+  border-color: #d1d5db !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  box-shadow: none !important;
+}
+
+body.admin-dashboard-active .ant-modal .ant-input,
+body.admin-dashboard-active .ant-modal .ant-input-affix-wrapper,
+body.admin-dashboard-active .ant-modal .ant-input-number,
+body.admin-dashboard-active .ant-modal .ant-select,
+body.admin-dashboard-active .ant-modal .ant-select-selector,
+body.admin-dashboard-active .ant-modal .ant-picker,
+.admin-standalone-modal input,
+.admin-standalone-modal select {
+  height: var(--admin-modal-control-height) !important;
+  min-height: var(--admin-modal-control-height) !important;
+}
+
+body.admin-dashboard-active .ant-modal .ant-input-number-input,
+body.admin-dashboard-active .ant-modal .ant-picker-input>input {
+  height: calc(var(--admin-modal-control-height) - 2px) !important;
+  min-height: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+body.admin-dashboard-active .ant-modal .ant-input-affix-wrapper>.ant-input {
+  height: auto !important;
+  min-height: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+body.admin-dashboard-active .ant-modal .ant-select-selector {
+  align-items: center !important;
+  display: flex !important;
+}
+
+body.admin-dashboard-active .ant-modal .ant-select-single .ant-select-selector .ant-select-selection-item,
+body.admin-dashboard-active .ant-modal .ant-select-single .ant-select-selector .ant-select-selection-placeholder {
+  line-height: calc(var(--admin-modal-control-height) - 2px) !important;
+}
+
+body.admin-dashboard-active .ant-modal .ant-select-multiple .ant-select-selector {
+  min-height: var(--admin-modal-control-height) !important;
+  height: var(--admin-modal-control-height) !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+body.admin-dashboard-active .ant-modal .ant-select-multiple .ant-select-selection-wrap,
+body.admin-dashboard-active .ant-modal .ant-select-multiple .ant-select-selection-overflow {
+  min-height: calc(var(--admin-modal-control-height) - 2px) !important;
+  height: calc(var(--admin-modal-control-height) - 2px) !important;
+  align-items: center !important;
+}
+
+body.admin-dashboard-active .ant-modal .ant-select-multiple .ant-select-selection-search,
+body.admin-dashboard-active .ant-modal .ant-select-multiple .ant-select-selection-search-input {
+  height: calc(var(--admin-modal-control-height) - 2px) !important;
+  line-height: calc(var(--admin-modal-control-height) - 2px) !important;
+}
+
+body.admin-dashboard-active .ant-modal .ant-select-multiple .ant-select-selection-placeholder {
+  line-height: calc(var(--admin-modal-control-height) - 2px) !important;
+  font-size: 14px !important;
+}
+
+body.admin-dashboard-active .ant-modal .ant-select-multiple .ant-select-selection-item {
+  height: 28px !important;
+  line-height: 26px !important;
+  margin: 0 4px 0 0 !important;
+  padding: 0 8px !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 6px !important;
+  background: #f3f4f6 !important;
+  color: #374151 !important;
+  font-size: 14px !important;
+}
+
+body.admin-dashboard-active .ant-modal .ant-select-multiple .ant-select-selection-item-content {
+  line-height: 26px !important;
+}
+
+body.admin-dashboard-active .ant-modal .ant-select-multiple .ant-select-selection-item-remove {
+  display: inline-flex !important;
+  align-items: center !important;
+  color: #6b7280 !important;
+  margin-left: 6px !important;
+}
+
+body.admin-dashboard-active .ant-modal textarea.ant-input,
+.admin-standalone-modal textarea {
+  min-height: 72px !important;
+}
+
+body.admin-dashboard-active .ant-modal .ql-toolbar,
+body.admin-dashboard-active .ant-modal .ql-container {
+  border-color: #d1d5db !important;
+}
+
+body.admin-dashboard-active .ant-modal .ql-toolbar {
+  border-radius: 8px 8px 0 0;
+}
+
+body.admin-dashboard-active .ant-modal .ql-container {
+  border-radius: 0 0 8px 8px;
+}
+
+body.admin-dashboard-active .ant-select-dropdown {
+  padding: 6px !important;
+  border-radius: 10px !important;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.14) !important;
+}
+
+body.admin-dashboard-active .ant-select-dropdown .ant-select-item {
+  min-height: 40px !important;
+  padding: 8px 12px !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  line-height: 24px !important;
+}
+
+body.admin-dashboard-active .ant-select-dropdown .ant-select-item-option-content {
+  line-height: 24px !important;
+}
+
+body.admin-dashboard-active .ant-select-dropdown .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+  background: #f3f4f6 !important;
+}
+
+body.admin-dashboard-active .ant-modal .ant-input:focus,
+body.admin-dashboard-active .ant-modal .ant-input-affix-wrapper-focused,
+body.admin-dashboard-active .ant-modal .ant-select-focused .ant-select-selector,
+body.admin-dashboard-active .ant-modal .ant-picker-focused,
+.admin-standalone-modal input:focus,
+.admin-standalone-modal textarea:focus {
+  border-color: #ff3b30 !important;
+  box-shadow: 0 0 0 2px rgba(255, 59, 48, 0.14) !important;
+  outline: none;
+}
+
+.admin-modal-header {
+  min-height: 64px;
+  margin: 0;
+  padding: 16px 24px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(90deg, #ef4444 0%, #f97316 100%);
+}
+
+.admin-modal-title {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.admin-modal-subtitle {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.35;
+  margin-top: 4px;
+}
+
+.admin-modal-icon {
+  margin-right: 8px;
+}
+
+.admin-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin: 24px -24px -16px;
+  padding: 16px 24px;
+  width: calc(100% + 48px);
+  border-top: 1px solid #e5e7eb;
+  background: #f8fafc;
+}
+
+.admin-standalone-modal {
   background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 24px 72px rgba(15, 23, 42, 0.28);
+}
+
+.admin-standalone-modal-body {
+  overflow-y: auto;
+  max-height: calc(90vh - 164px);
+}
+
+.admin-standalone-modal .admin-modal-footer {
+  margin: 0;
 }
 
 /* ============================================================
@@ -281,14 +886,14 @@
    ============================================================ */
 .dark .admin-scroll-container {
   background: #111827 !important;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: none;
 }
 
 /* ---- Card ---- */
 .dark .admin-table-card {
-  background: #1f2937;
-  border-color: #374151;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2), 0 4px 20px rgba(0, 0, 0, 0.15);
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
 }
 
 /* ---- Table header ---- */
@@ -300,8 +905,9 @@
 }
 
 /* ---- Table container ---- */
+.dark .admin-scroll-container .ant-table-container,
 .dark .custom-table .ant-table-container {
-  border-color: #374151 !important;
+  border-color: color-mix(in srgb, var(--admin-theme-start) 45%, #374151) !important;
 }
 
 /* ---- Table body ---- */
@@ -389,12 +995,31 @@
 
 /* ---- Title bar / Filter bar ---- */
 .dark .admin-title-bar {
-  background: #1f2937 !important;
+  background: transparent !important;
+}
+
+.dark .admin-page-description {
+  color: #9ca3af;
+}
+
+@media (max-width: 768px) {
+  .admin-page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-page-header-actions {
+    justify-content: flex-start;
+  }
+
+  .admin-page-title {
+    font-size: 1.25rem;
+  }
 }
 
 .dark .admin-filter-bar {
-  background: #1f2937;
-  border-bottom-color: #374151;
+  background: transparent;
+  border-bottom: none;
 }
 
 /* ---- Ant Design Card ---- */
@@ -413,12 +1038,19 @@
   color: #e5e7eb;
 }
 
+.dark .admin-content-card.ant-card {
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
 /* ---- Ant Design Input / Select ---- */
-.dark .ant-input,
-.dark .ant-input-affix-wrapper,
-.dark .ant-select-selector {
+.dark .admin-scroll-container .ant-input,
+.dark .admin-scroll-container .ant-input-affix-wrapper,
+.dark .admin-scroll-container .ant-select-selector,
+.dark .admin-scroll-container .ant-picker,
+.dark .admin-scroll-container .ant-btn-default {
   background: #374151 !important;
-  border-color: #4b5563 !important;
+  border-color: color-mix(in srgb, var(--admin-theme-start) 45%, #4b5563) !important;
   color: #e5e7eb !important;
 }
 

@@ -181,9 +181,74 @@ const CreateModal = ({ openCreate, handleCreateClose, fetchProducts, style, cate
           }
 
           .custom-form .ant-input,
-          .custom-form .ant-input-number,
-          .custom-form .ant-select-selector {
-              border-radius: 4px;
+          .custom-form .ant-input-number {
+              border-radius: 8px !important;
+          }
+
+          .custom-form .ant-select {
+              min-height: var(--admin-modal-control-height, 40px) !important;
+          }
+
+          .custom-form .ant-select .ant-select-selector {
+              display: flex !important;
+              align-items: center !important;
+              min-height: var(--admin-modal-control-height, 40px) !important;
+              height: var(--admin-modal-control-height, 40px) !important;
+              border-radius: 8px !important;
+              font-size: 14px !important;
+          }
+
+          .custom-form .ant-select-single .ant-select-selector .ant-select-selection-item,
+          .custom-form .ant-select-single .ant-select-selector .ant-select-selection-placeholder {
+              line-height: calc(var(--admin-modal-control-height, 40px) - 2px) !important;
+          }
+
+          .custom-form .ant-select-multiple .ant-select-selector {
+              height: var(--admin-modal-control-height, 40px) !important;
+              min-height: var(--admin-modal-control-height, 40px) !important;
+              padding-top: 0 !important;
+              padding-bottom: 0 !important;
+          }
+
+          .custom-form .ant-select-multiple .ant-select-selection-wrap,
+          .custom-form .ant-select-multiple .ant-select-selection-overflow {
+              min-height: calc(var(--admin-modal-control-height, 40px) - 2px) !important;
+              height: calc(var(--admin-modal-control-height, 40px) - 2px) !important;
+              align-items: center !important;
+          }
+
+          .custom-form .ant-select-multiple .ant-select-selection-search,
+          .custom-form .ant-select-multiple .ant-select-selection-search-input {
+              height: calc(var(--admin-modal-control-height, 40px) - 2px) !important;
+              line-height: calc(var(--admin-modal-control-height, 40px) - 2px) !important;
+          }
+
+          .custom-form .ant-select-multiple .ant-select-selection-placeholder {
+              line-height: calc(var(--admin-modal-control-height, 40px) - 2px) !important;
+              font-size: 14px !important;
+          }
+
+          .custom-form .ant-select-multiple .ant-select-selection-item {
+              height: 28px !important;
+              line-height: 26px !important;
+              margin: 0 4px 0 0 !important;
+              padding: 0 8px !important;
+              border: 1px solid #e5e7eb !important;
+              border-radius: 6px !important;
+              background: #f3f4f6 !important;
+              color: #374151 !important;
+              font-size: 14px !important;
+          }
+
+          .custom-form .ant-select-multiple .ant-select-selection-item-content {
+              line-height: 26px !important;
+          }
+
+          .custom-form .ant-select-multiple .ant-select-selection-item-remove {
+              display: inline-flex !important;
+              align-items: center !important;
+              color: #6b7280 !important;
+              margin-left: 6px !important;
           }
 
           .custom-form .ant-input:hover,

@@ -153,7 +153,7 @@ const CreateModal = ({ onClose, onSuccess }) =>
                         <Upload {...uploadProps} style={{ width: '100%', display: 'block' }}>
                             <Button
                                 icon={<UploadOutlined />}
-                                style={{ width: '100%', height: 42, fontSize: 14 }}
+                                style={{ width: '100%', height: 40, fontSize: 14 }}
                             >
                                 Chọn ảnh
                             </Button>
@@ -210,15 +210,7 @@ const CreateModal = ({ onClose, onSuccess }) =>
                         <Switch checkedChildren="Hoạt động" unCheckedChildren="Không hoạt động" />
                     </Form.Item>
 
-                    {/* Footer buttons */}
-                    <div style={{
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                        gap: 8,
-                        paddingTop: 8,
-                        borderTop: '1px solid #f0f2f5',
-                        marginTop: 8,
-                    }}>
+                    <ModalFooter>
                         <Button onClick={onClose}>Hủy</Button>
                         <Button
                             type="primary"
@@ -228,7 +220,7 @@ const CreateModal = ({ onClose, onSuccess }) =>
                         >
                             Tạo Banner
                         </Button>
-                    </div>
+                    </ModalFooter>
                 </Form>
             </div>
         </Modal>

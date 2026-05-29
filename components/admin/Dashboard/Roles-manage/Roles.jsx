@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useEffect, useState, useContext, useMemo } from 'react';
-import { Card, Table, Tag, Space, Button, Modal, Checkbox, Row, Col, message, Input, Select, Spin, Breadcrumb } from 'antd';
-import { ThemeContext } from '@/contexts/ThemeContext';
+import React, { useEffect, useState, useMemo } from 'react';
+import AdminPageHeader from '../shared/AdminPageHeader';
+import { Card, Table, Tag, Space, Button, Modal, Checkbox, Row, Col, message, Input, Select, Spin } from 'antd';
 import UserManage from '@/services/UserManage';
 
 const Roles = () => {
-  const { themeColors } = useContext(ThemeContext);
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [roleData, setRoleData] = useState({});
@@ -212,35 +211,20 @@ const Roles = () => {
   ];
 
   return (
-    <div style={{ padding: '24px' }}>
+    <div style={{ padding: '16px' }}>
+      <AdminPageHeader
+        title="Quản lý quyền & vai trò"
+        breadcrumbItems={[
+          { title: 'Trang chủ' },
+          { title: 'Quản lý quyền & vai trò' }
+        ]}
+      />
       <div className="admin-table-card">
-        {/* Title Bar */}
-        <div
-          className="admin-title-bar"
-          style={{
-            borderTopLeftRadius: 8,
-            borderTopRightRadius: 8,
-            padding: '24px 24px 16px 24px',
-            marginBottom: 0
-          }}
-        >
-          <div style={{ fontSize: '1.5rem', fontWeight: 600, color: themeColors.StartColorLinear }}>
-            Quản lý quyền &amp; vai trò
-          </div>
-          <Breadcrumb
-            items={[
-              { title: 'Trang chủ' },
-              { title: 'Quản lý quyền & vai trò' }
-            ]}
-            style={{ marginTop: '8px' }}
-          />
-        </div>
         {/* Filter Bar */}
         <div
           className="admin-filter-bar"
           style={{
             padding: '16px 24px',
-            background: '#fff',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -386,4 +370,3 @@ const Roles = () => {
 };
 
 export default Roles;
-

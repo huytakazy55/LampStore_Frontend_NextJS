@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { Button, Table, Modal, Input, Breadcrumb, message } from 'antd';
+import AdminPageHeader from '../shared/AdminPageHeader';
+import { Button, Table, Modal, Input, message } from 'antd';
 import { MessageOutlined, UserOutlined, ReloadOutlined, CheckCircleOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import ChatService from '@/services/ChatService';
 import AdminChatWindow from './AdminChatWindow';
@@ -219,7 +220,7 @@ const AdminChatDashboard = () => {
   const pendingChats = chats.filter(c => c.status === 1).length;
 
   return (
-    <div style={{ padding: '24px' }}>
+    <div style={{ padding: '16px' }}>
       {/* Realtime Notifications */}
       {realtimeNotifications.length > 0 && (
         <div style={{ position: 'fixed', bottom: 24, right: 24, zIndex: 1000, maxWidth: 420, display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -237,20 +238,17 @@ const AdminChatDashboard = () => {
         </div>
       )}
 
+      <AdminPageHeader
+        title="Tin nhắn"
+        breadcrumbItems={[
+          { title: 'Trang chủ' },
+          { title: 'Tin nhắn' }
+        ]}
+      />
       <div className="admin-table-card">
-        {/* Title Bar */}
-        <div className="admin-title-bar" style={{ padding: '24px 24px 16px' }}>
-          <div style={{ fontSize: '1.5rem', fontWeight: 600, color: themeColors.StartColorLinear }}>
-            Tin nhắn
-          </div>
-          <Breadcrumb
-            items={[{ title: 'Trang chủ' }, { title: 'Tin nhắn' }]}
-            style={{ marginTop: 8 }}
-          />
-        </div>
 
         {/* Stats Cards */}
-        <div className="flex flex-wrap gap-6 p-6 mb-2">
+        <div className="flex flex-wrap gap-6 py-4 mb-2">
           {[
             {
               icon: (

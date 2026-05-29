@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect, useContext, useMemo } from 'react';
-import { Table, Input, Breadcrumb, Pagination, Modal, message, Space, Tag, Button } from 'antd';
+import React, { useState, useEffect, useMemo } from 'react';
+import AdminPageHeader from '../shared/AdminPageHeader';
+import { Table, Input, Pagination, Modal, message, Space, Tag, Button } from 'antd';
 import { EyeOutlined, CheckCircleOutlined } from '@ant-design/icons';
-import { ThemeContext } from '@/contexts/ThemeContext';
 import OrderService from '@/services/OrderService';
 import OrderDetailModal from '../Orders-manage/OrderDetailModal';
 
@@ -15,7 +15,6 @@ const formatPrice = (price) =>
 
 const DeliveryManage = () =>
 {
-    const { themeColors } = useContext(ThemeContext);
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -156,17 +155,16 @@ const DeliveryManage = () =>
     ];
 
     return (
-        <div style={{ padding: '24px' }}>
+        <div style={{ padding: '16px' }}>
+            <AdminPageHeader
+                title="Quản lý Vận chuyển"
+                breadcrumbItems={[
+                    { title: 'Trang chủ' },
+                    { title: 'Quản lý Vận chuyển' }
+                ]}
+            />
             <div className="admin-table-card">
-                <div className="admin-title-bar"
-                    style={{ background: '#f6f8fc', borderTopLeftRadius: 8, borderTopRightRadius: 8, padding: '24px 24px 16px 24px', marginBottom: 0 }}>
-                    <div style={{ fontSize: '1.5rem', fontWeight: 600, color: themeColors.StartColorLinear }}>
-                        Quản lý Vận chuyển
-                    </div>
-                    <Breadcrumb items={[{ title: 'Trang chủ' }, { title: 'Quản lý Vận chuyển' }]} style={{ marginTop: '8px' }} />
-                </div>
-
-                <div className="flex flex-wrap gap-6 p-6 mb-2">
+                <div className="flex flex-wrap gap-6 py-4 mb-2">
                     <div className="bg-white rounded-xl shadow-lg p-5 flex items-center min-w-[200px] flex-1 border-l-8 border-indigo-400 hover:scale-[1.03] hover:shadow-2xl transition-all duration-200"
                         style={{ background: "linear-gradient(135deg, #f8fafc 60%, #f1f5f9 100%)" }}>
                         <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-500 text-2xl">
@@ -192,7 +190,7 @@ const DeliveryManage = () =>
                 </div>
 
                 <div className="admin-filter-bar"
-                    style={{ padding: '16px 24px', background: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px', borderTop: '1px solid #f0f0f0' }}>
+                    style={{ padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px' }}>
                     <Input.Search placeholder="Tìm theo tên, SĐT, mã đơn..." value={searchTerm}
                         onChange={e => setSearchTerm(e.target.value)} style={{ width: 300 }} />
                     <Button onClick={fetchOrders} loading={loading}>

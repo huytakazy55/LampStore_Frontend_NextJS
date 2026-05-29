@@ -2,8 +2,9 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Alert, Button, Empty, Select, Spin, Table, Tag, Tooltip } from "antd";
-import { CompressOutlined, EnvironmentOutlined, ExpandOutlined, GlobalOutlined, ReloadOutlined } from "@ant-design/icons";
+import { CompressOutlined, EnvironmentOutlined, ExpandOutlined, ReloadOutlined } from "@ant-design/icons";
 import axiosInstance from "@/services/axiosConfig";
+import AdminPageHeader from "../shared/AdminPageHeader";
 
 const normalizeList = (value) => value?.$values || value || [];
 const TILE_SIZE = 256;
@@ -337,19 +338,17 @@ export default function VisitorMapPage() {
     ];
 
     return (
-        <div className="p-6 bg-[#f6f8fc] min-h-full">
+        <div className="p-4 min-h-full">
             <div className="admin-table-card">
-                <div className="admin-title-bar" style={{ padding: "24px 24px 16px" }}>
-                    <div>
-                        <h1 className="text-2xl font-bold text-gray-800 m-0 flex items-center gap-3">
-                            <GlobalOutlined className="text-blue-600" />
-                            Bản đồ truy cập
-                        </h1>
-                        <p className="text-sm text-gray-500 mt-2 mb-0">
-                            Tổng hợp IP đã ghi nhận và quy đổi thành khu vực trong {days} ngày gần nhất.
-                        </p>
-                    </div>
-                    <div className="flex items-center gap-3">
+                <AdminPageHeader
+                    title="Bản đồ truy cập"
+                    description={`Tổng hợp IP đã ghi nhận và quy đổi thành khu vực trong ${days} ngày gần nhất.`}
+                    breadcrumbItems={[
+                        { title: "Trang chủ" },
+                        { title: "Bản đồ truy cập" },
+                    ]}
+                    actions={(
+                        <>
                         <Select
                             value={days}
                             onChange={setDays}
@@ -364,16 +363,17 @@ export default function VisitorMapPage() {
                         <Button icon={<ReloadOutlined />} onClick={fetchLocations} loading={loading}>
                             Làm mới
                         </Button>
-                    </div>
-                </div>
+                        </>
+                    )}
+                />
 
                 {error && (
-                    <div className="px-6 pb-4">
+                    <div className="pb-4">
                         <Alert type="warning" showIcon message={error} />
                     </div>
                 )}
 
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 px-6 pb-6">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 pb-6">
                     {[
                         ["IP đã ghi nhận", data?.totalIpCount || 0, "bg-blue-50 text-blue-600"],
                         ["IP định vị được", data?.resolvedIpCount || 0, "bg-green-50 text-green-600"],
@@ -390,7 +390,7 @@ export default function VisitorMapPage() {
                     ))}
                 </div>
 
-                <div className={isMapFullscreen ? "fixed inset-0 z-[9999] bg-slate-950 p-4" : "px-6 pb-6"}>
+                <div className={isMapFullscreen ? "fixed inset-0 z-[9999] bg-slate-950 p-4" : "pb-6"}>
                     <div
                         ref={mapRef}
                         className={`relative overflow-hidden rounded-lg border border-slate-200 bg-[#dbe7f0] cursor-grab active:cursor-grabbing touch-none ${isMapFullscreen ? "h-full" : "h-[460px]"}`}
@@ -538,6 +538,7 @@ export default function VisitorMapPage() {
                         loading={loading}
                         pagination={{ pageSize: 10, showSizeChanger: true }}
                         scroll={{ x: 900 }}
+                        className="custom-table"
                     />
                 </div>
             </div>

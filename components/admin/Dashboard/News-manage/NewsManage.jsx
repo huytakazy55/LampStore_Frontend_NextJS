@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useContext, useMemo } from 'react';
-import { Table, Input, Button, Breadcrumb, Pagination, Modal, message, Space, Tag } from 'antd';
+import AdminPageHeader from '../shared/AdminPageHeader';
+import { Table, Input, Button, Pagination, Modal, message, Space, Tag } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import NewsService from '@/services/NewsService';
@@ -187,7 +188,7 @@ const NewsManage = () =>
             width: 150,
             align: 'center',
             render: (text, record) => (
-                <Space size="middle" style={{ justifyContent: 'center', width: '100%' }}>
+                <Space size={6} className="admin-action-group">
                     <Button icon={<EditOutlined />} onClick={() => handleEdit(record)} size="small">Sửa</Button>
                     <Button icon={<DeleteOutlined />} onClick={() => handleDelete(record.id, record.title)} danger size="small">Xóa</Button>
                 </Space>
@@ -196,24 +197,18 @@ const NewsManage = () =>
     ];
 
     return (
-        <div style={{ padding: '24px' }}>
+        <div style={{ padding: '16px' }}>
+            <AdminPageHeader
+                title="Quản lý Tin tức / Góc nội thất"
+                breadcrumbItems={[
+                    { title: 'Trang chủ' },
+                    { title: 'Quản lý Tin tức' }
+                ]}
+            />
             <div className="admin-table-card">
                 <div
-                    className="admin-title-bar"
-                    style={{ background: '#f6f8fc', borderTopLeftRadius: 8, borderTopRightRadius: 8, padding: '24px 24px 16px 24px', marginBottom: 0 }}
-                >
-                    <div style={{ fontSize: '1.5rem', fontWeight: 600, color: themeColors.StartColorLinear }}>
-                        Quản lý Tin tức / Góc nội thất
-                    </div>
-                    <Breadcrumb
-                        items={[{ title: 'Trang chủ' }, { title: 'Quản lý Tin tức' }]}
-                        style={{ marginTop: '8px' }}
-                    />
-                </div>
-
-                <div
                     className="admin-filter-bar"
-                    style={{ padding: '16px 24px', background: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px' }}
+                    style={{ padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px' }}
                 >
                     <Space>
                         <Input.Search

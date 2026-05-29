@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useContext, useState, useEffect, useMemo } from 'react'
-import { Breadcrumb, Input, Button, Table, Pagination, Space, Typography, Card, Row, Col, Select, DatePicker, Tag } from 'antd';
+import AdminPageHeader from '../shared/AdminPageHeader';
+import { Input, Button, Table, Pagination, Space, Typography, Card, Row, Col, Select, DatePicker, Tag } from 'antd';
 import { Link as RouterLink } from '@/lib/router-compat';
 import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '@/contexts/ThemeContext';
@@ -31,8 +32,7 @@ const style = {
   outline: 'none',
 };
 
-const Products = () =>
-{
+const Products = () => {
   const { themeColors } = useContext(ThemeContext);
   const { t } = useTranslation();
   //modal create
@@ -106,41 +106,33 @@ const Products = () =>
   const handleImportClose = () => setOpenImport(false);
   const [hiddenColumns, setHiddenColumns] = useState([]);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     ProductManage.GetProduct()
-      .then((res) =>
-      {
+      .then((res) => {
         setProductData(res.data.$values);
       })
-      .catch((err) =>
-      {
+      .catch((err) => {
 
       })
   }, [])
 
-  const GetCategoryById = (id) =>
-  {
+  const GetCategoryById = (id) => {
     const category = categories.find(category => category.id === id);
     return category ? category.name : ''
   }
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     CategoryManage.GetCategory()
-      .then((res) =>
-      {
+      .then((res) => {
         setCategories(res.data.$values);
       })
-      .catch((err) =>
-      {
+      .catch((err) => {
         toast.error("Có lỗi xảy ra khi tải danh mục.");
       });
   }, []);
 
   //Search Service
-  const highlightedText = (text, highlight) =>
-  {
+  const highlightedText = (text, highlight) => {
     if (!highlight) return text;
     const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
     return parts.map((part, index) =>
@@ -150,10 +142,8 @@ const Products = () =>
     );
   };
 
-  const filteredProducts = useMemo(() =>
-  {
-    return productData.filter(product =>
-    {
+  const filteredProducts = useMemo(() => {
+    return productData.filter(product => {
       const categoryName = GetCategoryById(product.categoryId || '').toLowerCase();
       const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         categoryName.includes(searchTerm.toLowerCase());
@@ -168,22 +158,18 @@ const Products = () =>
     });
   }, [productData, searchTerm, selectedCategory, dateRange, statusFilter]);
 
-  const stripHtml = (html) =>
-  {
+  const stripHtml = (html) => {
     if (!html) return '';
     return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
   };
 
-  const truncateWords = (text, maxWords) =>
-  {
-    if (!text)
-    {
+  const truncateWords = (text, maxWords) => {
+    if (!text) {
       return '';
     }
     const plainText = stripHtml(text);
     const words = plainText.split(' ');
-    if (words.length > maxWords)
-    {
+    if (words.length > maxWords) {
       return words.slice(0, maxWords).join(' ') + ' ...';
     }
     return plainText;
@@ -192,59 +178,48 @@ const Products = () =>
   // Định dạng số theo ngôn ngữ hiện tại
   const { i18n } = useTranslation();
   const language = i18n.language;
-  const formattedNumber = (number, language) =>
-  {
+  const formattedNumber = (number, language) => {
     return new Intl.NumberFormat(language).format(number);
   };
 
-  const handleChangePage = (page) =>
-  {
+  const handleChangePage = (page) => {
     setPage(page);
   };
 
   //Pagination
-  const currentItems = useMemo(() =>
-  {
+  const currentItems = useMemo(() => {
     return filteredProducts.slice((page - 1) * itemsPerPage, page * itemsPerPage);
   }, [filteredProducts, page, itemsPerPage]);
 
-  const DeleteProduct = (id, name) =>
-  {
+  const DeleteProduct = (id, name) => {
     ProductManage.DeleteProduct(id, name)
-      .then((res) =>
-      {
+      .then((res) => {
         setProductData(prevData => prevData.filter(product => product.id !== id));
         toast.success(`Đã xóa bản ghi: ${name}`);
       })
-      .catch((err) =>
-      {
+      .catch((err) => {
         toast.error("Có lỗi xảy ra");
       });
   };
 
-  const handleUpdateClick = (id) =>
-  {
+  const handleUpdateClick = (id) => {
     const product = productData.find((item) => item.id === id);
     setSelectedProduct(product);
     handleUpdateOpen();
     setUpdateId(id);
   }
 
-  const handleUploadClick = (id) =>
-  {
+  const handleUploadClick = (id) => {
     handleUploadOpen();
     setUpdateId(id);
   }
 
-  const fetchProducts = () =>
-  {
+  const fetchProducts = () => {
     ProductManage.GetProduct()
-      .then((res) =>
-      {
+      .then((res) => {
         setProductData(res.data.$values);
       })
-      .catch((err) =>
-      {
+      .catch((err) => {
 
       });
   };
@@ -264,10 +239,8 @@ const Products = () =>
       key: 'images',
       width: '5%',
       align: 'center',
-      render: (images) =>
-      {
-        if (images && images.$values.length > 0)
-        {
+      render: (images) => {
+        if (images && images.$values.length > 0) {
           const imagePath = images.$values[0].imagePath
           const imageUrl = imagePath.startsWith('http') ? imagePath : `${API_ENDPOINT}${imagePath}`
           return (
@@ -374,8 +347,7 @@ const Products = () =>
       key: 'updatedAt',
       width: '7%',
       align: 'center',
-      sorter: (a, b) =>
-      {
+      sorter: (a, b) => {
         if (!a.updatedAt) return -1;
         if (!b.updatedAt) return 1;
         return new Date(a.updatedAt) - new Date(b.updatedAt);
@@ -396,13 +368,11 @@ const Products = () =>
         { text: 'Hoạt động', value: 1 },
         { text: 'Ẩn', value: 0 }
       ],
-      onFilter: (value, record) =>
-      {
+      onFilter: (value, record) => {
         if (value === null) return true;
         return Boolean(record.status) === Boolean(value);
       },
-      render: (status) =>
-      {
+      render: (status) => {
         const statusConfig = {
           1: { text: 'Hoạt động', color: 'success' },
           0: { text: 'Ẩn', color: 'error' },
@@ -422,24 +392,27 @@ const Products = () =>
     {
       title: 'Thao tác',
       key: 'action',
-      width: '7%',
+      width: '10%',
       align: 'center',
       render: (_, record) => (
-        <Space size="middle" style={{ justifyContent: 'center', width: '100%' }}>
+        <Space size={6} className="admin-action-group">
           <Button
             type="text"
+            className="admin-action-btn"
             icon={<i className='bx bx-image-add'></i>}
             onClick={() => handleUploadClick(record.id)}
             style={{ color: themeColors.EndColorLinear }}
           />
           <Button
             type="text"
+            className="admin-action-btn"
             icon={<i className='bx bx-edit'></i>}
             onClick={() => handleUpdateClick(record.id)}
             style={{ color: themeColors.EndColorLinear }}
           />
           <Button
             type="text"
+            className="admin-action-btn"
             danger
             icon={<i className='bx bx-trash'></i>}
             onClick={() => DeleteProduct(record.id, record.name)}
@@ -449,8 +422,7 @@ const Products = () =>
     }
   ];
 
-  const onSelectChange = (newSelectedRowKeys) =>
-  {
+  const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
@@ -461,67 +433,44 @@ const Products = () =>
     columnTitle: '',
   };
 
-  const handleBulkDelete = async () =>
-  {
-    try
-    {
+  const handleBulkDelete = async () => {
+    try {
       setBulkDeleteLoading(true);
-      if (!selectedRowKeys || selectedRowKeys.length === 0)
-      {
+      if (!selectedRowKeys || selectedRowKeys.length === 0) {
         toast.error('Vui lòng chọn bản ghi để xóa!');
         return;
       }
       const response = await ProductManage.BulkDeleteProducts(selectedRowKeys);
-      if (response.status === 200 || response.status === 204)
-      {
+      if (response.status === 200 || response.status === 204) {
         toast.success(`Đã xóa ${selectedRowKeys.length} bản ghi!`);
         setSelectedRowKeys([]);
         fetchProducts();
-      } else
-      {
+      } else {
         toast.error('Có lỗi xảy ra khi xóa bản ghi!');
       }
-    } catch (error)
-    {
+    } catch (error) {
       toast.error('Có lỗi xảy ra khi xóa bản ghi!');
-    } finally
-    {
+    } finally {
       setBulkDeleteLoading(false);
       setOpenBulkDelete(false);
     }
   };
 
   return (
-    <div style={{ padding: '24px' }}>
+    <div style={{ padding: '16px' }}>
+      <AdminPageHeader
+        title={t('Product')}
+        breadcrumbItems={[
+          { title: t('Home') },
+          { title: t('Product') }
+        ]}
+      />
       <div className="admin-table-card">
-        {/* Title Bar */}
-        <div
-          className="admin-title-bar"
-          style={{
-            background: '#f6f8fc',
-            borderTopLeftRadius: 8,
-            borderTopRightRadius: 8,
-            padding: '24px 24px 16px 24px',
-            marginBottom: 0
-          }}
-        >
-          <div style={{ fontSize: '1.5rem', fontWeight: 600, color: themeColors.StartColorLinear }}>
-            {t('Product')}
-          </div>
-          <Breadcrumb
-            items={[
-              { title: t('Home') },
-              { title: t('Product') }
-            ]}
-            style={{ marginTop: '8px' }}
-          />
-        </div>
         {/* Filter Bar */}
         <div
           className="admin-filter-bar"
           style={{
             padding: '16px 24px',
-            background: '#fff',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -580,7 +529,7 @@ const Products = () =>
           </div>
         </div>
         {/* Filter options */}
-        <Row gutter={[16, 16]} style={{ margin: '16px 0', padding: '0 16px' }}>
+        <Row gutter={[16, 16]} style={{ margin: '16px 0' }}>
           <Col span={6}>
             <Select
               style={{ width: '100%' }}
@@ -627,8 +576,7 @@ const Products = () =>
               total: filteredProducts.length,
               showSizeChanger: true,
               showTotal: (total) => `Tổng số ${total} sản phẩm`,
-              onChange: (page, pageSize) =>
-              {
+              onChange: (page, pageSize) => {
                 setPage(page);
                 setItemsPerPage(pageSize);
               }
@@ -682,8 +630,7 @@ const Products = () =>
         title={t('Filter')}
         open={openFilter}
         onCancel={() => setOpenFilter(false)}
-        onOk={() =>
-        {
+        onOk={() => {
           setOpenFilter(false);
           // Handle filter application
         }}
@@ -707,5 +654,3 @@ const Products = () =>
 }
 
 export default Products
-
-

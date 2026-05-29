@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect, useContext, useMemo } from 'react';
-import { Table, Input, Breadcrumb, Pagination, Modal, message, Space, Tag, Select, Button, Tooltip } from 'antd';
+import React, { useState, useEffect, useMemo } from 'react';
+import AdminPageHeader from '../shared/AdminPageHeader';
+import { Table, Input, Pagination, Modal, message, Space, Tag, Select, Button, Tooltip } from 'antd';
 import { EyeOutlined, DeleteOutlined, CheckCircleOutlined, CloseCircleOutlined, CarOutlined, FileDoneOutlined } from '@ant-design/icons';
-import { ThemeContext } from '@/contexts/ThemeContext';
 import OrderService from '@/services/OrderService';
 import OrderDetailModal from './OrderDetailModal';
 import ColumnVisibilityDropdown from '../shared/ColumnVisibilityDropdown';
@@ -48,7 +48,6 @@ const formatPrice = (price) =>
 
 const OrdersManage = () =>
 {
-    const { themeColors } = useContext(ThemeContext);
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -309,24 +308,18 @@ const OrdersManage = () =>
     }), [orders]);
 
     return (
-        <div style={{ padding: '24px' }}>
+        <div style={{ padding: '16px' }}>
+            <AdminPageHeader
+                title="Quản lý Đơn hàng"
+                breadcrumbItems={[
+                    { title: 'Trang chủ' },
+                    { title: 'Quản lý Đơn hàng' }
+                ]}
+            />
             <div className="admin-table-card">
-                {/* Header */}
-                <div
-                    className="admin-title-bar"
-                    style={{ background: '#f6f8fc', borderTopLeftRadius: 8, borderTopRightRadius: 8, padding: '24px 24px 16px 24px', marginBottom: 0 }}
-                >
-                    <div style={{ fontSize: '1.5rem', fontWeight: 600, color: themeColors.StartColorLinear }}>
-                        Quản lý Đơn hàng
-                    </div>
-                    <Breadcrumb
-                        items={[{ title: 'Trang chủ' }, { title: 'Quản lý Đơn hàng' }]}
-                        style={{ marginTop: '8px' }}
-                    />
-                </div>
 
                 {/* Stats Cards */}
-                <div className="flex flex-wrap gap-6 p-6 mb-2">
+                <div className="flex flex-wrap gap-6 py-4 mb-2">
                     {[
                         {
                             icon: (
@@ -426,7 +419,7 @@ const OrdersManage = () =>
                 {/* Filter bar */}
                 <div
                     className="admin-filter-bar"
-                    style={{ padding: '16px 24px', background: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px', borderTop: '1px solid #f0f0f0' }}
+                    style={{ padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px' }}
                 >
                     <Space>
                         <Input.Search

@@ -31,6 +31,12 @@ export const ThemeProvider = ({ children }) => {
         localStorage.setItem('darkMode', isDark);
     }, [isDark]);
 
+    useEffect(() => {
+        const root = document.documentElement;
+        root.style.setProperty('--admin-theme-start', themeColors.StartColorLinear);
+        root.style.setProperty('--admin-theme-end', themeColors.EndColorLinear);
+    }, [themeColors]);
+
     // Lấy màu từ localStorage nếu có
     useEffect(() => {
         const savedColors = localStorage.getItem('themeColors') ? JSON.parse(localStorage.getItem('themeColors')) : null;

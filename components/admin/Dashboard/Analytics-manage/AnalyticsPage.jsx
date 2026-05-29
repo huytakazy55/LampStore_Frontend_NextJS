@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Table, Card, Typography, Spin, Row, Col, Statistic, Space } from "antd";
+import AdminPageHeader from '../shared/AdminPageHeader';
+import { Table, Card, Spin, Row, Col, Statistic, Space } from "antd";
 import { RiseOutlined, UserOutlined, ShopOutlined, EyeOutlined } from '@ant-design/icons';
-
-const { Title } = Typography;
 
 export default function AnalyticsPage() {
     const [stats, setStats] = useState(null);
@@ -72,12 +71,14 @@ export default function AnalyticsPage() {
     }
 
     return (
-        <div className="p-6 bg-[#f6f8fc] min-h-full">
-            <div className="mb-6 flex items-center justify-between">
-                <Title level={2} style={{ margin: 0, color: '#1f2937' }}>
-                    Phân Tích Chi Tiết
-                </Title>
-            </div>
+        <div className="p-4 min-h-full">
+            <AdminPageHeader
+                title="Phân Tích Chi Tiết"
+                breadcrumbItems={[
+                    { title: 'Trang chủ' },
+                    { title: 'Phân Tích Chi Tiết' }
+                ]}
+            />
 
             <div className="flex flex-wrap gap-6 mb-8">
                 {[

@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useContext } from 'react';
-import { Table, Input, Button, Breadcrumb, Pagination, Modal, Space, Tag } from 'antd';
+import AdminPageHeader from '../shared/AdminPageHeader';
+import { Table, Input, Button, Pagination, Modal, Space, Tag } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import FlashSaleService from '@/services/FlashSaleService';
@@ -164,7 +165,7 @@ const FlashSales = () => {
             width: 180,
             align: 'center',
             render: (_, record) => (
-                <Space size="middle" style={{ justifyContent: 'center', width: '100%' }}>
+                <Space size={6} className="admin-action-group">
                     <Button
                         size="small"
                         type={record.isActive ? 'primary' : 'default'}
@@ -194,37 +195,20 @@ const FlashSales = () => {
     ];
 
     return (
-        <div style={{ padding: '24px' }}>
+        <div style={{ padding: '16px' }}>
+            <AdminPageHeader
+                title="⚡ Quản lý Flash Sale"
+                breadcrumbItems={[
+                    { title: 'Trang chủ' },
+                    { title: 'Quản lý Flash Sale' }
+                ]}
+            />
             <div className="admin-table-card">
-                {/* Title Bar */}
-                <div
-                    className="admin-title-bar"
-                    style={{
-                        background: '#f6f8fc',
-                        borderTopLeftRadius: 8,
-                        borderTopRightRadius: 8,
-                        padding: '24px 24px 16px 24px',
-                        marginBottom: 0
-                    }}
-                >
-                    <div style={{ fontSize: '1.5rem', fontWeight: 600, color: themeColors.StartColorLinear }}>
-                        ⚡ Quản lý Flash Sale
-                    </div>
-                    <Breadcrumb
-                        items={[
-                            { title: 'Trang chủ' },
-                            { title: 'Quản lý Flash Sale' }
-                        ]}
-                        style={{ marginTop: '8px' }}
-                    />
-                </div>
-
                 {/* Filter Bar */}
                 <div
                     className="admin-filter-bar"
                     style={{
                         padding: '16px 24px',
-                        background: '#fff',
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center',

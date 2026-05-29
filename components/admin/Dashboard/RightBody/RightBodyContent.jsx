@@ -1,37 +1,21 @@
 "use client";
 
-import React, { useContext } from 'react';
-import { Breadcrumb, Card, Row, Col, Typography } from 'antd';
-import { ThemeContext } from '@/contexts/ThemeContext';
+import React from 'react';
+import { Row, Col } from 'antd';
+import AdminPageHeader from '../shared/AdminPageHeader';
 import AnalyticOverview from '../AnalyticOverview/AnalyticOverview';
 import AnalyticChart from '../AnalyticChart/AnalyticChart';
 
-const { Title } = Typography;
-
 const RightBodyContent = () => {
-  const { themeColors } = useContext(ThemeContext);
-
   return (
-    <Card
-      style={{
-        height: '100%',
-        padding: '24px',
-        backgroundColor: '#f5f5f5',
-        borderRadius: '8px',
-      }}
-    >
-      <div style={{ marginBottom: '24px' }}>
-        <div style={{fontSize: '1.5rem', fontWeight: 600, color: themeColors.StartColorLinear}}>
-          Dashboard
-        </div>
-        <Breadcrumb
-          items={[
-            { title: 'Home' },
-            { title: 'Dashboard' }
-          ]}
-          style={{ marginTop: '8px' }}
-        />
-      </div>
+    <div style={{ padding: '16px' }}>
+      <AdminPageHeader
+        title="Dashboard"
+        breadcrumbItems={[
+          { title: 'Home' },
+          { title: 'Dashboard' }
+        ]}
+      />
 
       <Row gutter={[24, 24]}>
         <Col span={24}>
@@ -41,7 +25,7 @@ const RightBodyContent = () => {
           <AnalyticChart />
         </Col>
       </Row>
-    </Card>
+    </div>
   );
 };
 

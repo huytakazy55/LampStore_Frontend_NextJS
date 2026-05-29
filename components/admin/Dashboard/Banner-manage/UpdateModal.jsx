@@ -99,7 +99,7 @@ const UpdateModal = ({ banner, onClose, onSuccess }) =>
                     </Form.Item>
                     <Form.Item label="Hình ảnh">
                         <Upload {...uploadProps}>
-                            <Button icon={<UploadOutlined />} style={{ width: '100%', height: 42 }}>Thay đổi ảnh</Button>
+                            <Button icon={<UploadOutlined />} style={{ width: '100%', height: 40 }}>Thay đổi ảnh</Button>
                         </Upload>
                         {previewUrl ? (
                             <img src={previewUrl} alt="Preview" style={{ marginTop: 12, width: '100%', maxHeight: 240, objectFit: 'cover', borderRadius: 8, border: '1px solid #e5e7eb' }} />

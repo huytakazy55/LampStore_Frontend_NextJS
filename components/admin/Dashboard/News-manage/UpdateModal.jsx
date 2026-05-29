@@ -100,7 +100,8 @@ const UpdateModal = ({ newsItem, onClose, onSuccess }) =>
             width={1000}
             okText="Lưu thay đổi"
             cancelText="Hủy"
-            styles={{ body: { maxHeight: '75vh', overflowY: 'auto' } }}
+            className="custom-modal"
+            styles={{ body: { maxHeight: 'calc(90vh - 160px)', overflowY: 'auto' } }}
         >
             <Form
                 form={form}

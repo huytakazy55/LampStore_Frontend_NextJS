@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useContext, useEffect, useState, useMemo } from 'react';
-import { Table, Input, Button, Breadcrumb, Pagination, Modal, message, Space, Row, Col, Card, Image, Switch } from 'antd';
+import React, { useEffect, useState, useMemo } from 'react';
+import AdminPageHeader from '../shared/AdminPageHeader';
+import { Table, Input, Button, Pagination, Modal, message, Space, Row, Col, Card, Image, Switch } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { ThemeContext } from '@/contexts/ThemeContext';
 import CategoryManage from '@/services/CategoryManage';
 import { useTranslation } from 'react-i18next';
 import CreateModal from './CreateModal';
@@ -13,7 +13,6 @@ import axios from 'axios';
 const API_URL = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
 const Category = () => {
-  const { themeColors } = useContext(ThemeContext);
   const { t } = useTranslation();
   const [categoryData, setCategoryData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -232,7 +231,7 @@ const Category = () => {
       width: 120,
       align: 'center',
       render: (text, record) => (
-        <Space size="middle" style={{ justifyContent: 'center', width: '100%' }}>
+        <Space size={6} className="admin-action-group">
           <Button
             icon={<EditOutlined />}
             onClick={() => {
@@ -292,36 +291,20 @@ const Category = () => {
 
 
   return (
-    <div style={{ padding: '24px' }}>
+    <div style={{ padding: '16px' }}>
+      <AdminPageHeader
+        title={t('Category')}
+        breadcrumbItems={[
+          { title: t('Home') },
+          { title: t('Category') }
+        ]}
+      />
       <div className="admin-table-card">
-        {/* Title Bar */}
-        <div
-          className="admin-title-bar"
-          style={{
-            background: '#f6f8fc',
-            borderTopLeftRadius: 8,
-            borderTopRightRadius: 8,
-            padding: '24px 24px 16px 24px',
-            marginBottom: 0
-          }}
-        >
-          <div style={{ fontSize: '1.5rem', fontWeight: 600, color: themeColors.StartColorLinear }}>
-            {t('Category')}
-          </div>
-          <Breadcrumb
-            items={[
-              { title: t('Home') },
-              { title: t('Category') }
-            ]}
-            style={{ marginTop: '8px' }}
-          />
-        </div>
         {/* Filter Bar */}
         <div
           className="admin-filter-bar"
           style={{
             padding: '16px 24px',
-            background: '#fff',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',

@@ -136,7 +136,7 @@ export default function AnalyticOverview() {
   ];
 
   return (
-    <div className="flex flex-col gap-6 bg-[#f6f8fc] p-6">
+    <div className="flex flex-col gap-6">
       {/* Stat Cards */}
       <div className="flex flex-wrap gap-6">
         {data.map((item, idx) => (

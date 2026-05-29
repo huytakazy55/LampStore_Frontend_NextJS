@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useContext, useMemo } from 'react';
-import { Table, Input, Button, Breadcrumb, Pagination, Modal, message, Space, Row, Col, Card, Tag } from 'antd';
+import AdminPageHeader from '../shared/AdminPageHeader';
+import { Table, Input, Button, Pagination, Modal, message, Space, Row, Col, Card, Tag } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import BannerService from '@/services/BannerService';
@@ -208,7 +209,7 @@ const Banners = () => {
             width: 120,
             align: 'center',
             render: (text, record) => (
-                <Space size="middle" style={{ justifyContent: 'center', width: '100%' }}>
+                <Space size={6} className="admin-action-group">
                     <Button
                         icon={<EditOutlined />}
                         onClick={() => handleEdit(record)}
@@ -241,37 +242,20 @@ const Banners = () => {
     };
 
     return (
-        <div style={{ padding: '24px' }}>
+        <div style={{ padding: '16px' }}>
+            <AdminPageHeader
+                title="Quản lý Banner"
+                breadcrumbItems={[
+                    { title: 'Trang chủ' },
+                    { title: 'Quản lý Banner' }
+                ]}
+            />
             <div className="admin-table-card">
-                {/* Title Bar */}
-                <div
-                    className="admin-title-bar"
-                    style={{
-                        background: '#f6f8fc',
-                        borderTopLeftRadius: 8,
-                        borderTopRightRadius: 8,
-                        padding: '24px 24px 16px 24px',
-                        marginBottom: 0
-                    }}
-                >
-                    <div style={{ fontSize: '1.5rem', fontWeight: 600, color: themeColors.StartColorLinear }}>
-                        Quản lý Banner
-                    </div>
-                    <Breadcrumb
-                        items={[
-                            { title: 'Trang chủ' },
-                            { title: 'Quản lý Banner' }
-                        ]}
-                        style={{ marginTop: '8px' }}
-                    />
-                </div>
-
                 {/* Filter Bar */}
                 <div
                     className="admin-filter-bar"
                     style={{
                         padding: '16px 24px',
-                        background: '#fff',
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center',

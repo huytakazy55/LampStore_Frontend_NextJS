@@ -14,6 +14,11 @@ const AdminDashboard = () => {
   const leftBar = useSelector((state) => state.leftbar.leftbar);
 
   useEffect(() => {
+    document.body.classList.add('admin-dashboard-active');
+    return () => document.body.classList.remove('admin-dashboard-active');
+  }, []);
+
+  useEffect(() => {
     // Khởi tạo thông báo real-time cho admin
     const initializeNotifications = async () => {
       try {

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useContext } from 'react';
+import AdminPageHeader from '../shared/AdminPageHeader';
 import { Card, Row, Col, Tabs, Switch, Slider, Button, Divider, Select, Input, message } from 'antd';
 import
   {
@@ -294,17 +295,16 @@ const Settings = () =>
   ];
 
   return (
-    <div style={{ padding: '24px' }}>
-      <div className="admin-title-bar" style={{ background: '#f6f8fc', padding: '24px 24px 16px', marginBottom: 24 }}>
-        <div style={{ fontSize: '1.5rem', fontWeight: 600, color: themeColors.StartColorLinear }}>Cài đặt hệ thống</div>
-        <div style={{ marginTop: 8 }}>
-          <span style={{ color: '#888' }}>Trang chủ</span>
-          <span style={{ margin: '0 8px', color: '#bbb' }}>/</span>
-          <span style={{ color: themeColors.StartColorLinear }}>Cài đặt</span>
-        </div>
-      </div>
+    <div style={{ padding: '16px' }}>
+      <AdminPageHeader
+        title="Cài đặt hệ thống"
+        breadcrumbItems={[
+          { title: 'Trang chủ' },
+          { title: 'Cài đặt' }
+        ]}
+      />
 
-      <Card style={{ minHeight: '600px' }}>
+      <Card className="admin-content-card" style={{ minHeight: '600px' }}>
         <Tabs
           activeKey={activeTab}
           onChange={setActiveTab}

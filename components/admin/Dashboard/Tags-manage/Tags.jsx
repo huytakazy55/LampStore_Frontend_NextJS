@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useContext, useState, useEffect, useMemo } from 'react'
-import { Breadcrumb, Input, Button, Table, Pagination, Space, Typography, Card, Row, Col, Select, DatePicker, Tag } from 'antd';
+import AdminPageHeader from '../shared/AdminPageHeader';
+import { Input, Button, Table, Pagination, Space, Typography, Card, Row, Col, Select, DatePicker, Tag } from 'antd';
 import { Link as RouterLink } from '@/lib/router-compat';
 import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '@/contexts/ThemeContext';
@@ -223,18 +224,20 @@ const Tags = () => {
     {
       title: 'Thao tác',
       key: 'action',
-      width: '20%',
+      width: 82,
       align: 'center',
       render: (_, record) => (
-        <Space size="middle" style={{ justifyContent: 'center', width: '100%' }}>
+        <Space size={6} className="admin-action-group">
           <Button
             type="text"
+            className="admin-action-btn"
             icon={<i className='bx bx-edit'></i>}
             onClick={() => handleUpdateClick(record.id)}
             style={{ color: themeColors.EndColorLinear }}
           />
           <Button
             type="text"
+            className="admin-action-btn"
             danger
             icon={<i className='bx bx-trash'></i>}
             onClick={() => DeleteTag(record.id, record.name)}
@@ -276,36 +279,20 @@ const Tags = () => {
   };
 
   return (
-    <div style={{ padding: '24px' }}>
+    <div style={{ padding: '16px' }}>
+      <AdminPageHeader
+        title={t('Tags')}
+        breadcrumbItems={[
+          { title: t('Home') },
+          { title: t('Tags') }
+        ]}
+      />
       <div className="admin-table-card">
-        {/* Title Bar */}
-        <div
-          className="admin-title-bar"
-          style={{
-            background: '#f6f8fc',
-            borderTopLeftRadius: 8,
-            borderTopRightRadius: 8,
-            padding: '24px 24px 16px 24px',
-            marginBottom: 0
-          }}
-        >
-          <div style={{ fontSize: '1.5rem', fontWeight: 600, color: themeColors.StartColorLinear }}>
-            {t('Tags')}
-          </div>
-          <Breadcrumb
-            items={[
-              { title: t('Home') },
-              { title: t('Tags') }
-            ]}
-            style={{ marginTop: '8px' }}
-          />
-        </div>
         {/* Filter Bar */}
         <div
           className="admin-filter-bar"
           style={{
             padding: '16px 24px',
-            background: '#fff',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -348,7 +335,7 @@ const Tags = () => {
           </Button>
         </div>
         {/* Filter options */}
-        <Row gutter={[16, 16]} style={{ margin: '16px 0', padding: '0 16px' }}>
+        <Row gutter={[16, 16]} style={{ margin: '16px 0' }}>
           <Col span={12}>
             <DatePicker.RangePicker
               style={{ width: '100%' }}
@@ -428,4 +415,3 @@ const Tags = () => {
 }
 
 export default Tags
-
