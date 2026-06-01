@@ -1,7 +1,9 @@
 "use client";
 
-import React from 'react';
+import React, { useContext } from 'react';
 import { Modal, Button } from 'antd';
+import { ThemeContext } from '@/contexts/ThemeContext';
+import { ModalHeader } from '../shared/ModalComponents';
 
 const statusConfig = {
     Pending: { label: 'Chờ xử lý', bg: '#fef3c7', border: '#fcd34d', text: '#b45309', icon: 'bx-time-five' },
@@ -53,23 +55,25 @@ const OrderStatusTimeline = ({ currentStatus }) =>
     }
 
     return (
-        <div style={{ padding: '20px 16px', background: '#f9fafb', borderRadius: 10, border: '1px solid #f3f4f6', marginBottom: 20 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative' }}>
-                <div style={{ position: 'absolute', top: 18, left: 36, right: 36, height: 3, background: '#e5e7eb', borderRadius: 2, zIndex: 0 }} />
-                <div style={{
-                    position: 'absolute', top: 18, left: 36, height: 3, borderRadius: 2, zIndex: 1,
-                    background: 'linear-gradient(90deg, #10b981, #3b82f6)',
-                    width: currentIdx >= 0 ? `${(currentIdx / (STATUS_STEPS.length - 1)) * (100 - (72 / (STATUS_STEPS.length - 1) * 100 / 100))}%` : '0%',
-                    transition: 'width 0.5s ease',
-                }} />
+        <div className="order-status-timeline">
+            <div className="order-status-steps">
                 {STATUS_STEPS.map((step, idx) =>
                 {
                     const config = statusConfig[step];
                     const isCompleted = idx < currentIdx;
                     const isCurrent = idx === currentIdx;
+                    const isSegmentActive = idx < currentIdx;
                     return (
-                        <div key={step} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 2, flex: 1 }}>
-                            <div style={{
+                        <div key={step} className="order-status-step">
+                            {idx < STATUS_STEPS.length - 1 && (
+                                <div
+                                    className="order-status-segment"
+                                    style={{
+                                        background: isSegmentActive ? 'linear-gradient(90deg, #10b981, #3b82f6)' : '#e5e7eb'
+                                    }}
+                                />
+                            )}
+                            <div className="order-status-node" style={{
                                 width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
                                 fontSize: 16, fontWeight: 600, transition: 'all 0.3s',
                                 background: isCompleted ? '#10b981' : isCurrent ? config.bg : '#f3f4f6',
@@ -103,10 +107,11 @@ const OrderStatusTimeline = ({ currentStatus }) =>
 
 const OrderDetailModal = ({ order, onClose, onStatusChange }) =>
 {
+    const { themeColors } = useContext(ThemeContext);
+
     if (!order) return null;
 
     const items = order.orderItems?.$values || order.orderItems || [];
-    const status = statusConfig[order.status] || statusConfig.Pending;
     const orderDate = order.orderDate
         ? new Date(order.orderDate).toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' })
         : '--';
@@ -129,6 +134,8 @@ const OrderDetailModal = ({ order, onClose, onStatusChange }) =>
 
     const nextAction = nextActionsMap[order.status];
     const canCancel = order.status === 'Pending' || order.status === 'Confirmed';
+    const orderCode = order.id?.substring(0, 8).toUpperCase();
+    const themeGradient = `linear-gradient(90deg, ${themeColors.StartColorLinear} 0%, ${themeColors.EndColorLinear} 100%)`;
 
     const handleNextStep = () =>
     {
@@ -160,41 +167,155 @@ const OrderDetailModal = ({ order, onClose, onStatusChange }) =>
             open={true}
             onCancel={onClose}
             footer={null}
-            width={720}
-            closable={false}
-            styles={{ body: { padding: 0 } }}
+            width={780}
+            closable
+            className="order-detail-modal"
+            styles={{ body: { padding: 0 }, content: { maxWidth: 'calc(100vw - 32px)' } }}
             centered
         >
-            {/* Header with gradient */}
-            <div style={{
-                background: 'linear-gradient(135deg, #e11d48 0%, #f59e0b 100%)',
-                padding: '20px 24px',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                borderRadius: '4px 4px 0 0'
-            }}>
-                <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <span style={{ fontSize: 18, fontWeight: 700, color: '#fff' }}>Chi tiết đơn hàng</span>
-                        <span style={{
-                            fontSize: 12, fontFamily: 'monospace', background: 'rgba(0,0,0,0.25)', color: '#fcd34d',
-                            padding: '2px 10px', borderRadius: 4
-                        }}>
-                            #{order.id?.substring(0, 8).toUpperCase()}
-                        </span>
-                    </div>
-                </div>
-                <button onClick={onClose} style={{
-                    background: 'rgba(255,255,255,0.2)', border: 'none', borderRadius: '50%',
-                    width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer'
-                }}>
-                    <i className='bx bx-x' style={{ fontSize: 20, color: '#fff' }}></i>
-                </button>
-            </div>
+            <ModalHeader
+                icon={<i className='bx bx-receipt'></i>}
+                title="Chi tiết đơn hàng"
+                subtitle={orderCode ? `Mã đơn #${orderCode}` : undefined}
+            />
+
+            <style jsx global>{`
+                .order-detail-modal .admin-modal-header {
+                    background: ${themeGradient};
+                }
+
+                .order-detail-body {
+                    padding: 20px 24px 24px;
+                    max-height: calc(85vh - 72px);
+                    overflow-y: auto;
+                }
+
+                .order-section-title {
+                    display: flex;
+                    align-items: center;
+                    gap: 7px;
+                    margin: 0 0 10px;
+                    color: #374151;
+                    font-size: 14px;
+                    font-weight: 700;
+                }
+
+                .order-section-title i {
+                    color: ${themeColors.StartColorLinear};
+                    font-size: 17px;
+                }
+
+                .order-status-timeline {
+                    margin-bottom: 18px;
+                    padding: 18px 20px;
+                    border: 1px solid #eef2f7;
+                    border-radius: 10px;
+                    background: #f8fafc;
+                }
+
+                .order-status-steps {
+                    display: grid;
+                    grid-template-columns: repeat(4, minmax(0, 1fr));
+                    position: relative;
+                }
+
+                .order-status-step {
+                    position: relative;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    min-width: 0;
+                }
+
+                .order-status-segment {
+                    position: absolute;
+                    top: 17px;
+                    left: 50%;
+                    width: 100%;
+                    height: 3px;
+                    border-radius: 999px;
+                    transform: translateX(18px);
+                    z-index: 0;
+                }
+
+                .order-status-node,
+                .order-status-step > div:last-child {
+                    position: relative;
+                    z-index: 1;
+                }
+
+                .order-info-grid {
+                    display: grid;
+                    grid-template-columns: 128px minmax(0, 1fr) 128px minmax(0, 1fr);
+                    border: 1px solid #e5e7eb;
+                    border-radius: 10px;
+                    overflow: hidden;
+                    background: #fff;
+                }
+
+                .order-info-label,
+                .order-info-value {
+                    min-height: 44px;
+                    display: flex;
+                    align-items: center;
+                    padding: 10px 14px;
+                    border-right: 1px solid #e5e7eb;
+                    border-bottom: 1px solid #e5e7eb;
+                    font-size: 13px;
+                    line-height: 1.35;
+                }
+
+                .order-info-label {
+                    color: #6b7280;
+                    font-weight: 600;
+                    background: #f8fafc;
+                }
+
+                .order-info-value {
+                    color: #111827;
+                    font-weight: 500;
+                    overflow-wrap: anywhere;
+                }
+
+                .order-info-grid > :nth-child(4n) {
+                    border-right: 0;
+                }
+
+                .order-info-wide-label,
+                .order-info-wide-value {
+                    border-bottom: 0;
+                }
+
+                .order-info-wide-value {
+                    grid-column: span 3;
+                    border-right: 0;
+                }
+
+                @media (max-width: 760px) {
+                    .order-detail-body {
+                        padding: 16px;
+                    }
+
+                    .order-info-grid {
+                        grid-template-columns: 112px minmax(0, 1fr);
+                    }
+
+                    .order-info-grid > * {
+                        border-right: 1px solid #e5e7eb;
+                    }
+
+                    .order-info-grid > :nth-child(2n) {
+                        border-right: 0;
+                    }
+
+                    .order-info-wide-value {
+                        grid-column: auto;
+                    }
+                }
+            `}</style>
 
             {/* Body */}
-            <div style={{ padding: '20px 24px', maxHeight: 'calc(85vh - 80px)', overflowY: 'auto' }}>
+            <div className="order-detail-body">
                 {/* Status Timeline */}
                 <OrderStatusTimeline currentStatus={order.status} />
 
@@ -207,8 +328,8 @@ const OrderDetailModal = ({ order, onClose, onStatusChange }) =>
                                 size="middle"
                                 onClick={handleNextStep}
                                 style={{
-                                    background: statusConfig[nextAction.status]?.text,
-                                    borderColor: statusConfig[nextAction.status]?.border,
+                                    background: themeGradient,
+                                    borderColor: themeColors.StartColorLinear,
                                     display: 'flex', alignItems: 'center', gap: 6,
                                     borderRadius: 8, fontWeight: 600, height: 38,
                                 }}
@@ -236,44 +357,38 @@ const OrderDetailModal = ({ order, onClose, onStatusChange }) =>
 
                 {/* Customer info - Table layout */}
                 <div style={{ marginBottom: 20 }}>
-                    <h3 style={{ fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
-                        <i className='bx bx-user' style={{ color: '#e11d48', fontSize: 16 }}></i>
+                    <h3 className="order-section-title">
+                        <i className='bx bx-user'></i>
                         Thông tin khách hàng
                     </h3>
-                    <div style={{ border: '1px solid #e5e7eb', borderRadius: 10, overflow: 'hidden' }}>
-                        <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr 120px 1fr' }}>
-                            <div style={{ padding: '10px 12px', background: '#f9fafb', color: '#6b7280', fontSize: 13, fontWeight: 500, borderBottom: '1px solid #e5e7eb', borderRight: '1px solid #e5e7eb' }}>Họ tên</div>
-                            <div style={{ padding: '10px 12px', fontSize: 13, color: '#111827', fontWeight: 500, borderBottom: '1px solid #e5e7eb', borderRight: '1px solid #e5e7eb' }}>{order.fullName}</div>
-                            <div style={{ padding: '10px 12px', background: '#f9fafb', color: '#6b7280', fontSize: 13, fontWeight: 500, borderBottom: '1px solid #e5e7eb', borderRight: '1px solid #e5e7eb' }}>Số điện thoại</div>
-                            <div style={{ padding: '10px 12px', fontSize: 13, color: '#111827', borderBottom: '1px solid #e5e7eb' }}>{order.phone}</div>
-                        </div>
-                        <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr 120px 1fr' }}>
-                            <div style={{ padding: '10px 12px', background: '#f9fafb', color: '#6b7280', fontSize: 13, fontWeight: 500, borderBottom: '1px solid #e5e7eb', borderRight: '1px solid #e5e7eb' }}>Email</div>
-                            <div style={{ padding: '10px 12px', fontSize: 13, color: '#111827', borderBottom: '1px solid #e5e7eb', borderRight: '1px solid #e5e7eb' }}>{order.email || '—'}</div>
-                            <div style={{ padding: '10px 12px', background: '#f9fafb', color: '#6b7280', fontSize: 13, fontWeight: 500, borderBottom: '1px solid #e5e7eb', borderRight: '1px solid #e5e7eb' }}>Ngày đặt</div>
-                            <div style={{ padding: '10px 12px', fontSize: 13, color: '#111827', borderBottom: '1px solid #e5e7eb' }}>{orderDate}</div>
-                        </div>
-                        <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr' }}>
-                            <div style={{ padding: '10px 12px', background: '#f9fafb', color: '#6b7280', fontSize: 13, fontWeight: 500, borderRight: '1px solid #e5e7eb' }}>Địa chỉ</div>
-                            <div style={{ padding: '10px 12px', fontSize: 13, color: '#111827' }}>
-                                {[order.address, order.ward, order.district, order.city].filter(Boolean).join(', ')}
-                            </div>
+                    <div className="order-info-grid">
+                        <div className="order-info-label">Họ tên</div>
+                        <div className="order-info-value">{order.fullName}</div>
+                        <div className="order-info-label">Số điện thoại</div>
+                        <div className="order-info-value">{order.phone}</div>
+                        <div className="order-info-label">Email</div>
+                        <div className="order-info-value">{order.email || '—'}</div>
+                        <div className="order-info-label">Ngày đặt</div>
+                        <div className="order-info-value">{orderDate}</div>
+                        <div className="order-info-label order-info-wide-label">Địa chỉ</div>
+                        <div className="order-info-value order-info-wide-value">
+                            {[order.address, order.ward, order.district, order.city].filter(Boolean).join(', ')}
                         </div>
                         {order.note && (
-                            <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', borderTop: '1px solid #e5e7eb' }}>
-                                <div style={{ padding: '10px 12px', background: '#f9fafb', color: '#6b7280', fontSize: 13, fontWeight: 500, borderRight: '1px solid #e5e7eb' }}>Ghi chú</div>
-                                <div style={{ padding: '10px 12px', fontSize: 13, color: '#d97706', fontStyle: 'italic' }}>
+                            <>
+                                <div className="order-info-label order-info-wide-label" style={{ borderTop: '1px solid #e5e7eb' }}>Ghi chú</div>
+                                <div className="order-info-value order-info-wide-value" style={{ color: '#d97706', fontStyle: 'italic', borderTop: '1px solid #e5e7eb' }}>
                                     <i className='bx bx-note' style={{ marginRight: 4 }}></i>{order.note}
                                 </div>
-                            </div>
+                            </>
                         )}
                     </div>
                 </div>
 
                 {/* Product list */}
                 <div style={{ marginBottom: 20 }}>
-                    <h3 style={{ fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
-                        <i className='bx bx-cart' style={{ color: '#e11d48', fontSize: 16 }}></i>
+                    <h3 className="order-section-title">
+                        <i className='bx bx-cart'></i>
                         Danh sách sản phẩm ({items.length})
                     </h3>
                     <div style={{ border: '1px solid #e5e7eb', borderRadius: 10, overflow: 'hidden' }}>
@@ -324,7 +439,7 @@ const OrderDetailModal = ({ order, onClose, onStatusChange }) =>
                                             )}
                                         </div>
                                     </div>
-                                    <div style={{ padding: '10px 12px', textAlign: 'center', fontSize: 13, color: '#e11d48', fontWeight: 500 }}>
+                                    <div style={{ padding: '10px 12px', textAlign: 'center', fontSize: 13, color: themeColors.StartColorLinear, fontWeight: 500 }}>
                                         {formatPrice(item.price)}đ
                                     </div>
                                     <div style={{ padding: '10px 12px', textAlign: 'center', fontSize: 13, color: '#374151' }}>
@@ -365,7 +480,7 @@ const OrderDetailModal = ({ order, onClose, onStatusChange }) =>
                     </div>
                     <div style={{ borderTop: '1px solid #e5e7eb', paddingTop: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <span style={{ fontWeight: 700, fontSize: 15, color: '#111827' }}>Tổng cộng:</span>
-                        <span style={{ fontWeight: 700, fontSize: 22, color: '#e11d48' }}>
+                        <span style={{ fontWeight: 700, fontSize: 22, color: themeColors.StartColorLinear }}>
                             {formatPrice(order.totalAmount)}đ
                         </span>
                     </div>
