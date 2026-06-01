@@ -31,6 +31,9 @@ const STATUS_CONFIG = {
     Shipping: { label: 'Đang giao hàng', bg: 'bg-indigo-50', border: 'border-indigo-200', text: 'text-indigo-700', icon: 'bx-package', dot: 'bg-indigo-400' },
     Completed: { label: 'Hoàn thành', bg: 'bg-emerald-50', border: 'border-emerald-200', text: 'text-emerald-700', icon: 'bx-check-double', dot: 'bg-emerald-400' },
     Cancelled: { label: 'Đã huỷ', bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-700', icon: 'bx-x-circle', dot: 'bg-red-400' },
+    FailedDelivery: { label: 'Không nhận hàng', bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-700', icon: 'bx-error-circle', dot: 'bg-orange-400' },
+    ReturnRequested: { label: 'Đang yêu cầu hoàn trả', bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-700', icon: 'bx-revision', dot: 'bg-purple-400' },
+    Refunded: { label: 'Đã hoàn tiền', bg: 'bg-pink-50', border: 'border-pink-200', text: 'text-pink-700', icon: 'bx-wallet', dot: 'bg-pink-400' },
 };
 
 export default function OrderHistoryPage()
@@ -77,6 +80,22 @@ export default function OrderHistoryPage()
 
     const getStatus = (status) => STATUS_CONFIG[status] || STATUS_CONFIG.Pending;
 
+    const requestReturnRefund = async (order) =>
+    {
+        if (!window.confirm('Bạn muốn gửi yêu cầu trả hàng/hoàn tiền cho đơn hàng này?')) return;
+        try
+        {
+            await OrderService.updateOrderStatus(order.id, 'ReturnRequested');
+            toast.success('Đã gửi yêu cầu trả hàng/hoàn tiền');
+            fetchOrders();
+            setSelectedOrder(prev => prev?.id === order.id ? { ...prev, status: 'ReturnRequested' } : prev);
+        } catch (error)
+        {
+            const errMsg = error?.response?.data?.message || 'Không thể gửi yêu cầu trả hàng/hoàn tiền';
+            toast.error(errMsg);
+        }
+    };
+
     const filterTabs = [
         { key: 'all', label: 'Tất cả', icon: 'bx-list-ul' },
         { key: 'Pending', label: 'Chờ xử lý', icon: 'bx-time-five' },
@@ -84,6 +103,9 @@ export default function OrderHistoryPage()
         { key: 'Shipping', label: 'Đang giao', icon: 'bx-package' },
         { key: 'Completed', label: 'Hoàn thành', icon: 'bx-check-double' },
         { key: 'Cancelled', label: 'Đã huỷ', icon: 'bx-x-circle' },
+        { key: 'ReturnRequested', label: 'Yêu cầu hoàn trả', icon: 'bx-revision' },
+        { key: 'Refunded', label: 'Đã hoàn tiền', icon: 'bx-wallet' },
+        { key: 'FailedDelivery', label: 'Không nhận hàng', icon: 'bx-error-circle' },
     ];
 
     // --- ORDER DETAIL MODAL ---
@@ -122,14 +144,22 @@ export default function OrderHistoryPage()
                     {/* Modal Body */}
                     <div className='overflow-y-auto max-h-[calc(90vh-70px)] p-6 space-y-5'>
                         {/* Status Timeline */}
-                        {order.status === 'Cancelled' ? (
-                            <div className='flex items-center gap-3 px-4 py-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl'>
-                                <div className='w-9 h-9 rounded-full bg-red-500 text-white flex items-center justify-center text-lg'>
-                                    <i className='bx bx-x'></i>
+                        {['Cancelled', 'FailedDelivery', 'ReturnRequested', 'Refunded'].includes(order.status) ? (
+                            <div className={`flex items-center gap-3 px-4 py-3 border rounded-xl ${statusInfo.bg} ${statusInfo.border}`}>
+                                <div className={`w-9 h-9 rounded-full text-white flex items-center justify-center text-lg ${statusInfo.dot}`}>
+                                    <i className={`bx ${statusInfo.icon}`}></i>
                                 </div>
                                 <div>
-                                    <div className='font-semibold text-red-700 dark:text-red-400 text-sm'>Đơn hàng đã bị hủy</div>
-                                    <div className='text-xs text-red-500 dark:text-red-500'>Đơn hàng này không thể thay đổi trạng thái</div>
+                                    <div className={`font-semibold text-sm ${statusInfo.text}`}>{statusInfo.label}</div>
+                                    <div className={`text-xs ${statusInfo.text}`}>
+                                        {order.status === 'ReturnRequested'
+                                            ? 'Yêu cầu của bạn đang chờ cửa hàng xử lý'
+                                            : order.status === 'Refunded'
+                                                ? 'Cửa hàng đã xử lý trả hàng và hoàn tiền'
+                                                : order.status === 'FailedDelivery'
+                                                    ? 'Đơn hàng giao không thành công vì khách không nhận'
+                                                    : 'Đơn hàng này không thể thay đổi trạng thái'}
+                                    </div>
                                 </div>
                             </div>
                         ) : (
@@ -460,13 +490,22 @@ export default function OrderHistoryPage()
                                         </span>
                                         <div className='flex items-center gap-3'>
                                             {order.status === 'Completed' && (
-                                                <button
-                                                    onClick={(e) => { e.stopPropagation(); setReviewOrder(order); }}
-                                                    className='flex items-center gap-1 px-3 py-1.5 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 text-amber-700 dark:text-amber-400 text-xs font-semibold rounded-lg hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors cursor-pointer'
-                                                >
-                                                    <i className='bx bx-star'></i>
-                                                    Đánh giá
-                                                </button>
+                                                <>
+                                                    <button
+                                                        onClick={(e) => { e.stopPropagation(); requestReturnRefund(order); }}
+                                                        className='flex items-center gap-1 px-3 py-1.5 bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-700 text-purple-700 dark:text-purple-400 text-xs font-semibold rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors cursor-pointer'
+                                                    >
+                                                        <i className='bx bx-revision'></i>
+                                                        Trả/hoàn tiền
+                                                    </button>
+                                                    <button
+                                                        onClick={(e) => { e.stopPropagation(); setReviewOrder(order); }}
+                                                        className='flex items-center gap-1 px-3 py-1.5 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 text-amber-700 dark:text-amber-400 text-xs font-semibold rounded-lg hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors cursor-pointer'
+                                                    >
+                                                        <i className='bx bx-star'></i>
+                                                        Đánh giá
+                                                    </button>
+                                                </>
                                             )}
                                             <div className='text-right'>
                                                 <span className='text-[10px] text-gray-400 block leading-tight'>Tổng cộng</span>

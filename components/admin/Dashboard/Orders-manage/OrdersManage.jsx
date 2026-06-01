@@ -14,6 +14,9 @@ const statusConfig = {
     Shipping: { color: 'cyan', label: 'Đang giao' },
     Completed: { color: 'green', label: 'Hoàn thành' },
     Cancelled: { color: 'red', label: 'Đã hủy' },
+    FailedDelivery: { color: 'volcano', label: 'Khách không nhận' },
+    ReturnRequested: { color: 'purple', label: 'Yêu cầu hoàn trả' },
+    Refunded: { color: 'magenta', label: 'Đã hoàn tiền' },
 };
 
 const colorMap = {
@@ -22,6 +25,9 @@ const colorMap = {
     Shipping: { bg: '#e0e7ff', border: '#a5b4fc', text: '#4338ca', icon: 'bx-package' },
     Completed: { bg: '#d1fae5', border: '#6ee7b7', text: '#065f46', icon: 'bx-check-double' },
     Cancelled: { bg: '#fee2e2', border: '#fca5a5', text: '#b91c1c', icon: 'bx-x-circle' },
+    FailedDelivery: { bg: '#fff7ed', border: '#fdba74', text: '#c2410c', icon: 'bx-error-circle' },
+    ReturnRequested: { bg: '#f3e8ff', border: '#d8b4fe', text: '#7e22ce', icon: 'bx-revision' },
+    Refunded: { bg: '#fdf2f8', border: '#f9a8d4', text: '#be185d', icon: 'bx-wallet' },
 };
 
 const nextActions = {
@@ -35,9 +41,15 @@ const nextActions = {
     ],
     Shipping: [
         { status: 'Completed', label: 'Hoàn thành', icon: <FileDoneOutlined />, color: '#065f46', bg: '#d1fae5', border: '#6ee7b7' },
+        { status: 'FailedDelivery', label: 'Khách không nhận', icon: <i className='bx bx-error-circle'></i>, color: '#c2410c', bg: '#fff7ed', border: '#fdba74' },
     ],
     Completed: [],
+    ReturnRequested: [
+        { status: 'Refunded', label: 'Hoàn tiền', icon: <i className='bx bx-wallet'></i>, color: '#be185d', bg: '#fdf2f8', border: '#f9a8d4' },
+    ],
     Cancelled: [],
+    FailedDelivery: [],
+    Refunded: [],
 };
 
 const formatPrice = (price) =>
@@ -120,13 +132,25 @@ const OrdersManage = () =>
     const confirmStatusChange = (orderId, newStatus, actionLabel) =>
     {
         const isCancelling = newStatus === 'Cancelled';
+        const isFailedDelivery = newStatus === 'FailedDelivery';
+        const isRefunding = newStatus === 'Refunded';
         Modal.confirm({
-            title: isCancelling ? 'Xác nhận hủy đơn hàng' : 'Xác nhận chuyển trạng thái',
+            title: isCancelling
+                ? 'Xác nhận hủy đơn hàng'
+                : isFailedDelivery
+                    ? 'Xác nhận khách không nhận hàng'
+                    : isRefunding
+                        ? 'Xác nhận hoàn tiền'
+                        : 'Xác nhận chuyển trạng thái',
             content: isCancelling
                 ? 'Bạn có chắc muốn hủy đơn hàng này? Hành động này không thể hoàn tác.'
-                : `Chuyển đơn hàng sang trạng thái "${statusConfig[newStatus]?.label}"?`,
+                : isFailedDelivery
+                    ? 'Đánh dấu đơn hàng giao không thành công vì khách không nhận hàng?'
+                    : isRefunding
+                        ? 'Xác nhận đã xử lý trả hàng và hoàn tiền cho khách?'
+                        : `Chuyển đơn hàng sang trạng thái "${statusConfig[newStatus]?.label}"?`,
             okText: actionLabel,
-            okType: isCancelling ? 'danger' : 'primary',
+            okType: isCancelling || isFailedDelivery ? 'danger' : 'primary',
             cancelText: 'Đóng',
             onOk: () => handleStatusChange(orderId, newStatus),
         });
@@ -308,6 +332,8 @@ const OrdersManage = () =>
         pending: orders.filter(o => o.status === 'Pending').length,
         shipping: orders.filter(o => o.status === 'Shipping').length,
         completed: orders.filter(o => o.status === 'Completed').length,
+        failedDelivery: orders.filter(o => o.status === 'FailedDelivery').length,
+        returnRequested: orders.filter(o => o.status === 'ReturnRequested').length,
         revenue: orders.filter(o => o.status === 'Completed').reduce((s, o) => s + (o.totalAmount || 0), 0),
     }), [orders]);
 

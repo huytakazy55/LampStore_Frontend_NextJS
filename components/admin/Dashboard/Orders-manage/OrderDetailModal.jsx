@@ -11,6 +11,9 @@ const statusConfig = {
     Shipping: { label: 'Đang giao', bg: '#e0e7ff', border: '#a5b4fc', text: '#4338ca', icon: 'bx-package' },
     Completed: { label: 'Hoàn thành', bg: '#d1fae5', border: '#6ee7b7', text: '#065f46', icon: 'bx-check-double' },
     Cancelled: { label: 'Đã hủy', bg: '#fee2e2', border: '#fca5a5', text: '#b91c1c', icon: 'bx-x-circle' },
+    FailedDelivery: { label: 'Khách không nhận', bg: '#fff7ed', border: '#fdba74', text: '#c2410c', icon: 'bx-error-circle' },
+    ReturnRequested: { label: 'Yêu cầu hoàn trả', bg: '#f3e8ff', border: '#d8b4fe', text: '#7e22ce', icon: 'bx-revision' },
+    Refunded: { label: 'Đã hoàn tiền', bg: '#fdf2f8', border: '#f9a8d4', text: '#be185d', icon: 'bx-wallet' },
 };
 
 const STATUS_STEPS = ['Pending', 'Confirmed', 'Shipping', 'Completed'];
@@ -19,6 +22,7 @@ const nextActionsMap = {
     Pending: { status: 'Confirmed', label: 'Xác nhận đơn hàng', icon: 'bx-check-circle' },
     Confirmed: { status: 'Shipping', label: 'Chuyển giao hàng', icon: 'bx-package' },
     Shipping: { status: 'Completed', label: 'Hoàn thành giao hàng', icon: 'bx-check-double' },
+    ReturnRequested: { status: 'Refunded', label: 'Hoàn tiền', icon: 'bx-wallet' },
 };
 
 const formatPrice = (price) =>
@@ -31,23 +35,31 @@ const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
 const OrderStatusTimeline = ({ currentStatus }) =>
 {
-    const isCancelled = currentStatus === 'Cancelled';
+    const isTerminalException = ['Cancelled', 'FailedDelivery', 'ReturnRequested', 'Refunded'].includes(currentStatus);
     const currentIdx = STATUS_STEPS.indexOf(currentStatus);
 
-    if (isCancelled)
+    if (isTerminalException)
     {
+        const config = statusConfig[currentStatus] || statusConfig.Cancelled;
+        const descriptions = {
+            Cancelled: 'Đơn hàng này không thể thay đổi trạng thái',
+            FailedDelivery: 'Đơn hàng giao không thành công vì khách không nhận hàng',
+            ReturnRequested: 'Khách đã gửi yêu cầu trả hàng/hoàn tiền, cần admin xử lý',
+            Refunded: 'Đơn hàng đã hoàn tất xử lý trả hàng và hoàn tiền',
+        };
+
         return (
-            <div style={{ padding: '16px 20px', background: '#fef2f2', borderRadius: 10, border: '1px solid #fecaca', marginBottom: 20 }}>
+            <div style={{ padding: '16px 20px', background: config.bg, borderRadius: 10, border: `1px solid ${config.border}`, marginBottom: 20 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <div style={{
-                        width: 32, height: 32, borderRadius: '50%', background: '#ef4444', color: '#fff',
+                        width: 32, height: 32, borderRadius: '50%', background: config.text, color: '#fff',
                         display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16
                     }}>
-                        <i className='bx bx-x'></i>
+                        <i className={`bx ${config.icon}`}></i>
                     </div>
                     <div>
-                        <div style={{ fontWeight: 600, color: '#b91c1c', fontSize: 14 }}>Đơn hàng đã bị hủy</div>
-                        <div style={{ fontSize: 12, color: '#dc2626' }}>Đơn hàng này không thể thay đổi trạng thái</div>
+                        <div style={{ fontWeight: 600, color: config.text, fontSize: 14 }}>{config.label}</div>
+                        <div style={{ fontSize: 12, color: config.text }}>{descriptions[currentStatus]}</div>
                     </div>
                 </div>
             </div>
@@ -140,9 +152,12 @@ const OrderDetailModal = ({ order, onClose, onStatusChange }) =>
     const handleNextStep = () =>
     {
         if (!nextAction) return;
+        const isRefunding = nextAction.status === 'Refunded';
         Modal.confirm({
-            title: 'Xác nhận chuyển trạng thái',
-            content: `Chuyển đơn hàng sang "${statusConfig[nextAction.status]?.label}"?`,
+            title: isRefunding ? 'Xác nhận hoàn tiền' : 'Xác nhận chuyển trạng thái',
+            content: isRefunding
+                ? 'Xác nhận đã xử lý trả hàng và hoàn tiền cho khách?'
+                : `Chuyển đơn hàng sang "${statusConfig[nextAction.status]?.label}"?`,
             okText: nextAction.label,
             cancelText: 'Đóng',
             onOk: () => onStatusChange(order.id, nextAction.status),
@@ -336,6 +351,30 @@ const OrderDetailModal = ({ order, onClose, onStatusChange }) =>
                             >
                                 <i className={`bx ${nextAction.icon}`} style={{ fontSize: 16 }}></i>
                                 {nextAction.label}
+                            </Button>
+                        )}
+                        {order.status === 'Shipping' && (
+                            <Button
+                                danger
+                                size="middle"
+                                onClick={() =>
+                                {
+                                    Modal.confirm({
+                                        title: 'Xác nhận khách không nhận hàng',
+                                        content: 'Đánh dấu đơn hàng giao không thành công vì khách không nhận hàng?',
+                                        okText: 'Khách không nhận',
+                                        okType: 'danger',
+                                        cancelText: 'Đóng',
+                                        onOk: () => onStatusChange(order.id, 'FailedDelivery'),
+                                    });
+                                }}
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: 6,
+                                    borderRadius: 8, fontWeight: 600, height: 38,
+                                }}
+                            >
+                                <i className='bx bx-error-circle' style={{ fontSize: 16 }}></i>
+                                Khách không nhận
                             </Button>
                         )}
                         {canCancel && (

@@ -28,8 +28,12 @@ const statusMap = {
     'Pending': { label: 'Chờ xác nhận', color: 'bg-yellow-100 text-yellow-700', icon: 'bx-time-five' },
     'Confirmed': { label: 'Đã xác nhận', color: 'bg-blue-100 text-blue-700', icon: 'bx-check' },
     'Shipping': { label: 'Đang giao', color: 'bg-indigo-100 text-indigo-700', icon: 'bx-package' },
+    'Completed': { label: 'Hoàn thành', color: 'bg-green-100 text-green-700', icon: 'bx-check-double' },
     'Delivered': { label: 'Đã giao', color: 'bg-green-100 text-green-700', icon: 'bx-check-double' },
     'Cancelled': { label: 'Đã hủy', color: 'bg-red-100 text-red-700', icon: 'bx-x' },
+    'FailedDelivery': { label: 'Không nhận hàng', color: 'bg-orange-100 text-orange-700', icon: 'bx-error-circle' },
+    'ReturnRequested': { label: 'Đang yêu cầu hoàn trả', color: 'bg-purple-100 text-purple-700', icon: 'bx-revision' },
+    'Refunded': { label: 'Đã hoàn tiền', color: 'bg-pink-100 text-pink-700', icon: 'bx-wallet' },
 };
 
 const getImgSrc = (path) =>
@@ -46,6 +50,42 @@ export default function GuestOrdersPage()
     const [expandedOrder, setExpandedOrder] = useState(null);
     const guestProfile = GuestProfileService.getGuestProfile();
 
+    const fetchGuestOrders = async () =>
+    {
+        try
+        {
+            const guestToken = GuestProfileService.getExistingGuestToken();
+            if (!guestToken)
+            {
+                setLoading(false);
+                return;
+            }
+            const data = await OrderService.getGuestOrders(guestToken);
+            const orderList = data?.$values || data || [];
+            setOrders(orderList);
+        } catch (error)
+        {
+            console.error('Failed to fetch guest orders:', error);
+        } finally
+        {
+            setLoading(false);
+        }
+    };
+
+    const requestReturnRefund = async (order) =>
+    {
+        if (!window.confirm('Bạn muốn gửi yêu cầu trả hàng/hoàn tiền cho đơn hàng này?')) return;
+        try
+        {
+            await OrderService.updateOrderStatus(order.id, 'ReturnRequested');
+            window.alert('Đã gửi yêu cầu trả hàng/hoàn tiền');
+            fetchGuestOrders();
+        } catch (error)
+        {
+            window.alert(error?.response?.data?.message || 'Không thể gửi yêu cầu trả hàng/hoàn tiền');
+        }
+    };
+
     useEffect(() =>
     {
         // Redirect if user is logged in
@@ -55,27 +95,6 @@ export default function GuestOrdersPage()
             return;
         }
 
-        const fetchGuestOrders = async () =>
-        {
-            try
-            {
-                const guestToken = GuestProfileService.getExistingGuestToken();
-                if (!guestToken)
-                {
-                    setLoading(false);
-                    return;
-                }
-                const data = await OrderService.getGuestOrders(guestToken);
-                const orderList = data?.$values || data || [];
-                setOrders(orderList);
-            } catch (error)
-            {
-                console.error('Failed to fetch guest orders:', error);
-            } finally
-            {
-                setLoading(false);
-            }
-        };
         fetchGuestOrders();
     }, [router]);
 
@@ -255,6 +274,17 @@ export default function GuestOrdersPage()
                                                         <span>{order.paymentMethod === 'cod' ? 'Thanh toán khi nhận hàng' : 'Chuyển khoản ngân hàng'}</span>
                                                     </div>
                                                 </div>
+                                                {order.status === 'Completed' && (
+                                                    <div className='border-t border-gray-100 pt-3 mt-3 flex justify-end'>
+                                                        <button
+                                                            onClick={() => requestReturnRefund(order)}
+                                                            className='px-4 py-2 bg-purple-50 border border-purple-200 text-purple-700 rounded-lg text-sm font-semibold hover:bg-purple-100 transition-colors cursor-pointer flex items-center gap-2'
+                                                        >
+                                                            <i className='bx bx-revision'></i>
+                                                            Yêu cầu trả hàng/hoàn tiền
+                                                        </button>
+                                                    </div>
+                                                )}
                                             </div>
                                         )}
                                     </div>

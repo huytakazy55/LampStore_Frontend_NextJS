@@ -70,6 +70,18 @@ const DeliveryManage = () =>
         });
     };
 
+    const confirmFailedDelivery = (orderId) =>
+    {
+        Modal.confirm({
+            title: 'Xác nhận khách không nhận hàng',
+            content: 'Đánh dấu đơn hàng giao không thành công vì khách không nhận hàng?',
+            okText: 'Khách không nhận',
+            okType: 'danger',
+            cancelText: 'Đóng',
+            onOk: () => handleStatusChange(orderId, 'FailedDelivery'),
+        });
+    };
+
     const filteredOrders = useMemo(() =>
     {
         if (!searchTerm) return orders;
@@ -147,6 +159,11 @@ const DeliveryManage = () =>
                         <Button type="text" className="admin-action-btn" size="small" icon={<i className='bx bx-check-circle'></i>}
                             onClick={() => confirmComplete(record.id)}
                         >Hoàn thành</Button>
+                    </Tooltip>
+                    <Tooltip title="Đánh dấu khách không nhận hàng">
+                        <Button type="text" className="admin-action-btn" danger size="small" icon={<i className='bx bx-error-circle'></i>}
+                            onClick={() => confirmFailedDelivery(record.id)}
+                        >Không nhận</Button>
                     </Tooltip>
                     <Tooltip title="Xem chi tiết đơn giao">
                         <Button type="text" className="admin-action-btn" icon={<i className='bx bx-show'></i>} onClick={() => setSelectedOrder(record)} size="small">Chi tiết</Button>
