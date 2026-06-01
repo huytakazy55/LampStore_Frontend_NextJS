@@ -192,6 +192,7 @@ class NotificationService
       type: 'chat',
       title: 'Tin nhắn mới',
       message: `${senderName}: ${content.substring(0, 100)}`,
+      content,
       chatId,
       senderId,
       senderName,

@@ -2,14 +2,13 @@
 
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import AdminPageHeader from '../shared/AdminPageHeader';
-import { Button, Table, Modal, Input, message } from 'antd';
-import { MessageOutlined, UserOutlined, ReloadOutlined, CheckCircleOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { Button, Table, Modal, Input } from 'antd';
+import { ReloadOutlined } from '@ant-design/icons';
 import ChatService from '@/services/ChatService';
 import AdminChatWindow from './AdminChatWindow';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChats } from '@/redux/slices/chatSlice';
 import { ThemeContext } from '@/contexts/ThemeContext';
-import NotificationService from '@/services/NotificationService';
 import './AdminChatDashboard.css';
 
 const AVATAR_GRADIENTS = [
@@ -40,41 +39,11 @@ const AdminChatDashboard = () => {
   const [isChatWindowOpen, setIsChatWindowOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
   const { themeColors } = useContext(ThemeContext);
-  const [realtimeNotifications, setRealtimeNotifications] = useState([]);
-
-  const shownNotifKeysRef = React.useRef(new Set());
 
   const handleInAppNotification = useCallback((event) => {
     const notification = event.detail;
     if (notification.type !== 'chat') return;
-
-    const contentText = notification.content || notification.Content || '';
-    const dedupKey = `${notification.chatId}_${contentText.substring(0, 40)}_${Math.floor(Date.now() / 5000)}`;
-    if (shownNotifKeysRef.current.has(dedupKey)) return;
-    shownNotifKeysRef.current.add(dedupKey);
-    setTimeout(() => shownNotifKeysRef.current.delete(dedupKey), 5000);
-
-    message.info({
-      content: `📨 ${notification.senderName || notification.SenderName || 'Khách hàng'}: ${contentText.substring(0, 80)}`,
-      duration: 5,
-      style: { marginTop: '60px' }
-    });
-
-    const entry = {
-      id: Date.now(),
-      chatId: notification.chatId || notification.ChatId,
-      userName: notification.senderName || notification.SenderName || 'Khách hàng',
-      content: contentText,
-      timestamp: new Date().toLocaleTimeString('vi-VN'),
-      isNew: true
-    };
-    setRealtimeNotifications(prev => [entry, ...prev.slice(0, 4)]);
     setTimeout(() => loadDashboardData(), 1000);
-    setTimeout(() => {
-      setRealtimeNotifications(prev =>
-        prev.map(n => n.id === entry.id ? { ...n, isNew: false } : n)
-      );
-    }, 30000);
   }, []);
 
   useEffect(() => {
@@ -82,10 +51,6 @@ const AdminChatDashboard = () => {
     window.addEventListener('inAppNotification', handleInAppNotification);
     return () => window.removeEventListener('inAppNotification', handleInAppNotification);
   }, [handleInAppNotification]);
-
-  const clearNotification = (notificationId) => {
-    setRealtimeNotifications(prev => prev.filter(n => n.id !== notificationId));
-  };
 
   const loadDashboardData = async () => {
     try {
@@ -221,23 +186,6 @@ const AdminChatDashboard = () => {
 
   return (
     <div style={{ padding: '16px' }}>
-      {/* Realtime Notifications */}
-      {realtimeNotifications.length > 0 && (
-        <div style={{ position: 'fixed', bottom: 24, right: 24, zIndex: 1000, maxWidth: 420, display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {realtimeNotifications.filter(n => n.isNew).map(notification => (
-            <div key={notification.id} className="realtime-notification notification-slide-in">
-              <div className="notification-header">📨 TIN NHẮN MỚI — {notification.timestamp}</div>
-              <div className="notification-user">👤 {notification.userName}</div>
-              <div className="notification-content">"{notification.content.substring(0, 100)}{notification.content.length > 100 ? '…' : ''}"</div>
-              <div className="notification-actions">
-                <Button size="small" type="primary" onClick={() => { const chat = chats.find(c => c.id === notification.chatId); if (chat) { openChat(chat); clearNotification(notification.id); } }}>Xem chat</Button>
-                <Button size="small" onClick={() => clearNotification(notification.id)}>Đóng</Button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
       <AdminPageHeader
         title="Tin nhắn"
         breadcrumbItems={[
