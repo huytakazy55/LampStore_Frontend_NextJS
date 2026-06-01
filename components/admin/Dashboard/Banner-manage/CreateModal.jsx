@@ -116,99 +116,134 @@ const CreateModal = ({ onClose, onSuccess }) =>
             open={true}
             onCancel={onClose}
             footer={null}
-            width={600}
+            width={960}
             destroyOnHidden
             title={null}
-            styles={{ body: { padding: 0 } }}
+            styles={{ body: { padding: 0 }, content: { maxWidth: 'calc(100vw - 32px)' } }}
         >
             <ModalHeader icon="🖼️" title="Tạo Banner Mới" />
 
             {/* Form body */}
-            <div style={{ padding: '24px 24px 16px' }}>
+            <div style={{ padding: '22px 24px 16px' }}>
+                <style jsx>{`
+                    .banner-create-grid {
+                        display: grid;
+                        grid-template-columns: minmax(0, 1fr) minmax(340px, 0.95fr);
+                        gap: 20px 24px;
+                        align-items: start;
+                    }
+
+                    .banner-create-meta {
+                        display: grid;
+                        grid-template-columns: minmax(0, 1fr) minmax(160px, 0.45fr);
+                        gap: 16px;
+                    }
+
+                    .banner-preview-box {
+                        width: 100%;
+                        aspect-ratio: 16 / 9;
+                        min-height: 210px;
+                        background: #f9fafb;
+                        border: 1.5px dashed #d1d5db;
+                        border-radius: 10px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        color: #9ca3af;
+                        gap: 8px;
+                        overflow: hidden;
+                    }
+
+                    .banner-preview-image {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        display: block;
+                    }
+
+                    @media (max-width: 820px) {
+                        .banner-create-grid,
+                        .banner-create-meta {
+                            grid-template-columns: 1fr;
+                        }
+                    }
+                `}</style>
                 <Form
                     form={form}
                     layout="vertical"
                     onFinish={handleSubmit}
                     initialValues={{ isActive: true, order: 0 }}
                 >
-                    <Form.Item
-                        name="title"
-                        label="Tiêu đề"
-                        rules={[{ required: true, message: 'Vui lòng nhập tiêu đề!' }]}
-                    >
-                        <Input placeholder="Nhập tiêu đề banner" />
-                    </Form.Item>
-
-                    <Form.Item name="description" label="Mô tả">
-                        <Input.TextArea rows={3} placeholder="Nhập mô tả banner" />
-                    </Form.Item>
-
-                    {/* Hình ảnh — full width */}
-                    <Form.Item
-                        label="Hình ảnh"
-                        required
-                        validateStatus={!imageFile ? 'error' : ''}
-                        help={!imageFile ? 'Vui lòng chọn hình ảnh cho banner!' : ''}
-                    >
-                        <Upload {...uploadProps} style={{ width: '100%', display: 'block' }}>
-                            <Button
-                                icon={<UploadOutlined />}
-                                style={{ width: '100%', height: 40, fontSize: 14 }}
+                    <div className="banner-create-grid">
+                        <div>
+                            <Form.Item
+                                name="title"
+                                label="Tiêu đề"
+                                rules={[{ required: true, message: 'Vui lòng nhập tiêu đề!' }]}
                             >
-                                Chọn ảnh
-                            </Button>
-                        </Upload>
+                                <Input placeholder="Nhập tiêu đề banner" />
+                            </Form.Item>
 
-                        {previewUrl ? (
-                            <div style={{ marginTop: 12 }}>
-                                <img
-                                    src={previewUrl}
-                                    alt="Preview"
-                                    style={{
-                                        width: '100%',
-                                        maxHeight: '240px',
-                                        objectFit: 'cover',
-                                        borderRadius: '8px',
-                                        border: '1px solid #e5e7eb',
-                                    }}
-                                />
+                            <Form.Item name="description" label="Mô tả">
+                                <Input.TextArea rows={4} placeholder="Nhập mô tả banner" />
+                            </Form.Item>
+
+                            <Form.Item name="linkUrl" label="Link URL">
+                                <Input placeholder="Nhập link URL (tùy chọn)" />
+                            </Form.Item>
+
+                            <div className="banner-create-meta">
+                                <Form.Item name="order" label="Thứ tự">
+                                    <InputNumber
+                                        min={0}
+                                        placeholder="Nhập thứ tự hiển thị"
+                                        style={{ width: '100%' }}
+                                    />
+                                </Form.Item>
+
+                                <Form.Item name="isActive" label="Trạng thái" valuePropName="checked">
+                                    <Switch checkedChildren="Hoạt động" unCheckedChildren="Không hoạt động" />
+                                </Form.Item>
                             </div>
-                        ) : (
-                            <div style={{
-                                marginTop: 12,
-                                width: '100%',
-                                height: 140,
-                                background: '#f9fafb',
-                                border: '1.5px dashed #d1d5db',
-                                borderRadius: 8,
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                color: '#9ca3af',
-                                gap: 8,
-                            }}>
-                                <PictureOutlined style={{ fontSize: 32 }} />
-                                <span style={{ fontSize: 13 }}>Xem trước ảnh sẽ hiển thị ở đây</span>
-                            </div>
-                        )}
-                    </Form.Item>
+                        </div>
 
-                    <Form.Item name="linkUrl" label="Link URL">
-                        <Input placeholder="Nhập link URL (tùy chọn)" />
-                    </Form.Item>
+                        <div>
+                            <Form.Item
+                                label="Hình ảnh"
+                                required
+                                validateStatus={!imageFile ? 'error' : ''}
+                                help={!imageFile ? 'Vui lòng chọn hình ảnh cho banner!' : ''}
+                            >
+                                <Upload {...uploadProps} style={{ width: '100%', display: 'block' }}>
+                                    <Button
+                                        icon={<UploadOutlined />}
+                                        style={{ width: '100%', height: 40, fontSize: 14 }}
+                                    >
+                                        Chọn ảnh
+                                    </Button>
+                                </Upload>
 
-                    <Form.Item name="order" label="Thứ tự">
-                        <InputNumber
-                            min={0}
-                            placeholder="Nhập thứ tự hiển thị"
-                            style={{ width: '100%' }}
-                        />
-                    </Form.Item>
-
-                    <Form.Item name="isActive" label="Trạng thái" valuePropName="checked">
-                        <Switch checkedChildren="Hoạt động" unCheckedChildren="Không hoạt động" />
-                    </Form.Item>
+                                <div className="banner-preview-box" style={{ marginTop: 12 }}>
+                                    {previewUrl ? (
+                                        <img
+                                            src={previewUrl}
+                                            alt="Preview"
+                                            className="banner-preview-image"
+                                        />
+                                    ) : (
+                                        <>
+                                            <PictureOutlined style={{ fontSize: 34 }} />
+                                            <span style={{ fontSize: 13 }}>Xem trước ảnh sẽ hiển thị ở đây</span>
+                                        </>
+                                    )}
+                                </div>
+                                <div style={{ marginTop: 8, color: '#9ca3af', fontSize: 12 }}>
+                                    Hỗ trợ JPG, PNG, GIF. Tối đa 5MB.
+                                </div>
+                            </Form.Item>
+                        </div>
+                    </div>
 
                     <ModalFooter>
                         <Button onClick={onClose}>Hủy</Button>

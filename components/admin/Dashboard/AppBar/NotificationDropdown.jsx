@@ -141,7 +141,7 @@ const NotificationDropdown = ({ themeColors }) => {
         <div
           ref={dropdownRef}
           onClick={stopDropdownEvent}
-          className="absolute top-10 right-0 w-80 max-h-96 bg-white rounded-xl shadow-2xl z-[1000] overflow-hidden"
+          className="absolute top-10 right-0 w-[25rem] max-w-[calc(100vw-2rem)] max-h-[min(30rem,calc(100vh-6rem))] bg-white rounded-xl shadow-2xl z-[1000] overflow-hidden flex flex-col"
           style={{
             background: 'linear-gradient(145deg, #ffffff 0%, #f8fafc 100%)',
             animation: 'slideInDown 0.3s ease-out'
@@ -156,21 +156,21 @@ const NotificationDropdown = ({ themeColors }) => {
 
           {/* Header */}
           <div
-            className="p-4 border-b"
+            className="p-4 border-b shrink-0"
             style={{
               background: `linear-gradient(135deg, ${themeColors.StartColorLinear} 0%, ${themeColors.EndColorLinear} 100%)`,
               color: 'white'
             }}
           >
-            <div className="flex justify-between items-center">
-              <h3 className="font-semibold text-sm">Thông báo ({unreadCount})</h3>
+            <div className="flex justify-between items-center gap-3">
+              <h3 className="font-semibold text-sm whitespace-nowrap">Thông báo ({unreadCount})</h3>
               {notifications.length > 0 && (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 shrink-0">
                   {unreadCount > 0 && (
                     <button
                       onClick={handleMarkAllAsRead}
                       onMouseDown={stopDropdownEvent}
-                      className="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition-colors"
+                      className="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition-colors whitespace-nowrap"
                     >
                       Đánh dấu tất cả
                     </button>
@@ -178,7 +178,7 @@ const NotificationDropdown = ({ themeColors }) => {
                   <button
                     onClick={handleClearAllNotifications}
                     onMouseDown={stopDropdownEvent}
-                    className="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition-colors"
+                    className="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition-colors whitespace-nowrap"
                   >
                     Xoá hết
                   </button>
@@ -188,7 +188,7 @@ const NotificationDropdown = ({ themeColors }) => {
           </div>
 
           {/* Danh sách thông báo */}
-          <div className="max-h-80 overflow-y-auto">
+          <div className="flex-1 min-h-0 overflow-y-auto">
             {notifications.length === 0 ? (
               <div className="p-6 text-center text-gray-500">
                 <i className="bx bx-bell-off text-4xl mb-2"></i>
@@ -252,7 +252,7 @@ const NotificationDropdown = ({ themeColors }) => {
 
           {/* Footer */}
           {notifications.length > 0 && (
-            <div className="p-3 border-t bg-gray-50 text-center">
+            <div className="p-3 border-t bg-gray-50 text-center shrink-0">
               <button
                 onClick={handleClearAllNotifications}
                 onMouseDown={stopDropdownEvent}

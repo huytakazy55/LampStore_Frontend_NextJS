@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import AdminPageHeader from '../shared/AdminPageHeader';
-import { Button, Table, Modal, Input } from 'antd';
+import { Button, Table, Modal, Input, Tooltip } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 import ChatService from '@/services/ChatService';
 import AdminChatWindow from './AdminChatWindow';
@@ -157,15 +157,17 @@ const AdminChatDashboard = () => {
       width: 110,
       align: 'center',
       render: (_, record) => (
-        <button
-          className="chat-reply-btn"
-          onClick={() => openChat(record)}
-          style={{
-            background: `linear-gradient(135deg, ${themeColors.StartColorLinear}, ${themeColors.EndColorLinear})`,
-          }}
-        >
-          💬 Trả lời
-        </button>
+        <Tooltip title="Trả lời khách hàng">
+          <button
+            className="chat-reply-btn"
+            onClick={() => openChat(record)}
+            style={{
+              background: `linear-gradient(135deg, ${themeColors.StartColorLinear}, ${themeColors.EndColorLinear})`,
+            }}
+          >
+            💬 Trả lời
+          </button>
+        </Tooltip>
       )
     }
   ];

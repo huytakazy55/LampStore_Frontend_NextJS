@@ -502,8 +502,8 @@
 
 /* ---- Scrollbar ---- */
 .custom-table .ant-table-body::-webkit-scrollbar {
-  height: 5px;
-  width: 5px;
+  height: 6px;
+  width: 6px;
 }
 
 .custom-table .ant-table-body::-webkit-scrollbar-track {
@@ -511,12 +511,12 @@
 }
 
 .custom-table .ant-table-body::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-  border-radius: 4px;
+  background: linear-gradient(90deg, var(--admin-theme-start) 0%, var(--admin-theme-end) 100%);
+  border-radius: 999px;
 }
 
 .custom-table .ant-table-body::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
+  background: linear-gradient(90deg, var(--admin-theme-end) 0%, var(--admin-theme-start) 100%);
 }
 
 /* ---- Empty state ---- */
@@ -1781,15 +1781,6 @@ body.admin-dashboard-active .ant-modal .ant-picker-focused,
   border-color: #4b5563;
   color: #9ca3af;
   background: #1f2937;
-}
-
-/* ---- Scrollbar ---- */
-.dark .custom-table .ant-table-body::-webkit-scrollbar-thumb {
-  background: #4b5563;
-}
-
-.dark .custom-table .ant-table-body::-webkit-scrollbar-thumb:hover {
-  background: #6b7280;
 }
 
 /* ---- Title bar / Filter bar ---- */

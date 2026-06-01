@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useContext, useState, useEffect } from 'react';
-import { Modal, Upload, Button, Space, Typography, message, Table, Tabs } from 'antd';
+import { Modal, Upload, Button, Typography, Table, Tabs } from 'antd';
 import { InboxOutlined, FileExcelOutlined, CloseOutlined, SaveOutlined, DownloadOutlined } from '@ant-design/icons';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import * as XLSX from 'xlsx';
@@ -336,67 +336,166 @@ const ImportModal = ({ openImport, handleImportClose, fetchProducts }) => {
                 </Button>
             ]}
             className="custom-modal"
+            styles={{ body: { maxHeight: 'calc(90vh - 150px)', overflowY: 'auto', padding: '18px 24px' } }}
         >
-            <div className="mb-4">
-                <div className="flex justify-between items-center mb-4">
-                    <Button
-                        type="primary"
-                        icon={<DownloadOutlined />}
-                        onClick={handleDownloadTemplate}
-                        style={{ background: themeColors.StartColorLinear }}
-                    >
-                        Tải mẫu Excel
-                    </Button>
-                </div>
-                <Dragger
-                    accept=".xlsx,.xls"
-                    fileList={fileList}
-                    onChange={handleFileUpload}
-                    beforeUpload={() => false}
-                    maxCount={1}
-                >
-                    <p className="ant-upload-drag-icon">
-                        <InboxOutlined />
-                    </p>
-                    <p className="ant-upload-text">Click hoặc kéo thả file Excel vào đây</p>
-                    <p className="ant-upload-hint">
-                        Chỉ chấp nhận file Excel (.xlsx, .xls)
-                    </p>
-                </Dragger>
-            </div>
+            <style jsx>{`
+                .import-modal-top {
+                    display: grid;
+                    grid-template-columns: minmax(320px, 0.85fr) minmax(360px, 1.15fr);
+                    gap: 18px;
+                    align-items: start;
+                }
 
-            <div className="mt-4 mb-4">
-                <Title level={5} style={{ color: themeColors.StartColorLinear, marginBottom: '16px' }}>
-                    <i className='bx bx-info-circle' style={{ marginRight: '8px' }}></i>
-                    Thông tin tham khảo
-                </Title>
-                <Tabs defaultActiveKey="1">
-                    <TabPane tab="Danh mục" key="1">
-                        <Table
-                            columns={categoryColumns}
-                            dataSource={categories}
-                            scroll={{ x: true }}
-                            pagination={{ pageSize: 5 }}
-                            size="small"
-                            rowKey="id"
-                        />
-                    </TabPane>
-                    <TabPane tab="Tags" key="2">
-                        <Table
-                            columns={tagColumns}
-                            dataSource={tags}
-                            scroll={{ x: true }}
-                            pagination={{ pageSize: 5 }}
-                            size="small"
-                            rowKey="id"
-                        />
-                    </TabPane>
-                </Tabs>
+                .import-panel {
+                    border: 1px solid #e5e7eb;
+                    border-radius: 10px;
+                    background: #fff;
+                    padding: 14px;
+                }
+
+                .import-panel-title {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    margin-bottom: 12px;
+                    color: ${themeColors.StartColorLinear};
+                    font-size: 15px;
+                    font-weight: 700;
+                }
+
+                .import-upload :global(.ant-upload-drag) {
+                    min-height: 178px;
+                    padding: 20px 16px;
+                    border-radius: 10px;
+                }
+
+                .import-upload :global(.ant-upload-drag-icon) {
+                    margin-bottom: 8px !important;
+                }
+
+                .import-upload :global(.ant-upload-text) {
+                    margin-bottom: 2px !important;
+                    font-size: 14px !important;
+                    font-weight: 600;
+                }
+
+                .import-reference :global(.ant-tabs-nav) {
+                    margin-bottom: 10px;
+                }
+
+                .import-reference :global(.ant-table-cell) {
+                    padding: 8px 10px !important;
+                    font-size: 12.5px;
+                }
+
+                .import-guide {
+                    display: grid;
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                    gap: 12px;
+                }
+
+                .import-guide-card {
+                    border: 1px solid #e5e7eb;
+                    border-radius: 10px;
+                    background: #f8fafc;
+                    padding: 12px 14px;
+                }
+
+                .import-guide-list {
+                    display: grid;
+                    gap: 7px;
+                    margin: 10px 0 0;
+                    padding: 0;
+                }
+
+                .import-guide-list li {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    margin: 0;
+                    font-size: 13px;
+                    color: #475569;
+                }
+
+                @media (max-width: 900px) {
+                    .import-modal-top,
+                    .import-guide {
+                        grid-template-columns: 1fr;
+                    }
+                }
+            `}</style>
+
+            <div className="import-modal-top mb-4">
+                <div className="import-panel">
+                    <div className="flex items-center justify-between gap-3 mb-3">
+                        <div className="import-panel-title" style={{ marginBottom: 0 }}>
+                            <InboxOutlined />
+                            File import
+                        </div>
+                        <Button
+                            type="primary"
+                            icon={<DownloadOutlined />}
+                            onClick={handleDownloadTemplate}
+                            style={{ background: themeColors.StartColorLinear }}
+                        >
+                            Tải mẫu
+                        </Button>
+                    </div>
+                    <div className="import-upload">
+                        <Dragger
+                            accept=".xlsx,.xls"
+                            fileList={fileList}
+                            onChange={handleFileUpload}
+                            beforeUpload={() => false}
+                            maxCount={1}
+                        >
+                            <p className="ant-upload-drag-icon">
+                                <InboxOutlined />
+                            </p>
+                            <p className="ant-upload-text">Kéo thả hoặc chọn file Excel</p>
+                            <p className="ant-upload-hint">
+                                Hỗ trợ .xlsx, .xls
+                            </p>
+                        </Dragger>
+                    </div>
+                </div>
+
+                <div className="import-panel import-reference">
+                    <div className="import-panel-title">
+                        <i className='bx bx-info-circle'></i>
+                        Thông tin tham khảo
+                    </div>
+                    <Tabs defaultActiveKey="1" size="small">
+                        <TabPane tab="Danh mục" key="1">
+                            <Table
+                                columns={categoryColumns}
+                                dataSource={categories}
+                                scroll={{ x: true, y: 205 }}
+                                pagination={{ pageSize: 4, size: 'small' }}
+                                size="small"
+                                rowKey="id"
+                            />
+                        </TabPane>
+                        <TabPane tab="Tags" key="2">
+                            <Table
+                                columns={tagColumns}
+                                dataSource={tags}
+                                scroll={{ x: true, y: 205 }}
+                                pagination={{ pageSize: 4, size: 'small' }}
+                                size="small"
+                                rowKey="id"
+                            />
+                        </TabPane>
+                    </Tabs>
+                </div>
             </div>
 
             {previewData.length > 0 && (
-                <div className="mt-4">
-                    <Title level={5}>Xem trước dữ liệu</Title>
+                <div className="mt-4 import-panel">
+                    <div className="import-panel-title">
+                        <i className='bx bx-spreadsheet'></i>
+                        Xem trước dữ liệu
+                    </div>
                     <Table
                         columns={columns}
                         dataSource={previewData}
@@ -407,84 +506,69 @@ const ImportModal = ({ openImport, handleImportClose, fetchProducts }) => {
                 </div>
             )}
 
-            <div className="mt-4">
-                <Title level={5} style={{ color: themeColors.StartColorLinear, marginBottom: '16px' }}>
-                    <i className='bx bx-info-circle' style={{ marginRight: '8px' }}></i>
+            <div className="mt-4 import-panel">
+                <div className="import-panel-title">
+                    <i className='bx bx-help-circle'></i>
                     Hướng dẫn import sản phẩm
-                </Title>
-                <div style={{ 
-                    background: '#f8f9fa', 
-                    padding: '16px', 
-                    borderRadius: '8px',
-                    border: '1px solid #e9ecef'
-                }}>
-                    <div style={{ display: 'flex', gap: '24px' }}>
-                        {/* Cột 1: Các trường bắt buộc */}
-                        <div style={{ flex: 1 }}>
-                            <Typography.Text strong style={{ color: '#1f1f1f', display: 'block', marginBottom: '12px' }}>
+                </div>
+                <div>
+                    <div className="import-guide">
+                        <div className="import-guide-card">
+                            <Typography.Text strong style={{ color: '#1f2937', display: 'block' }}>
                                 <i className='bx bx-check-circle' style={{ color: '#52c41a', marginRight: '8px' }}></i>
                                 Các trường bắt buộc:
                             </Typography.Text>
-                            <ul style={{ 
-                                listStyle: 'none', 
-                                padding: 0,
-                                margin: 0
-                            }}>
-                                <li style={{ marginBottom: '8px', display: 'flex', alignItems: 'center' }}>
+                            <ul className="import-guide-list">
+                                <li>
                                     <i className='bx bx-check-circle' style={{ color: '#52c41a', marginRight: '8px' }}></i>
                                     <span><strong>name:</strong> Tên sản phẩm</span>
                                 </li>
-                                <li style={{ marginBottom: '8px', display: 'flex', alignItems: 'center' }}>
+                                <li>
                                     <i className='bx bx-check-circle' style={{ color: '#52c41a', marginRight: '8px' }}></i>
                                     <span><strong>price:</strong> Giá bán (số)</span>
                                 </li>
-                                <li style={{ marginBottom: '8px', display: 'flex', alignItems: 'center' }}>
+                                <li>
                                     <i className='bx bx-check-circle' style={{ color: '#52c41a', marginRight: '8px' }}></i>
                                     <span><strong>stock:</strong> Số lượng (số nguyên)</span>
                                 </li>
-                                <li style={{ marginBottom: '8px', display: 'flex', alignItems: 'center' }}>
+                                <li>
                                     <i className='bx bx-check-circle' style={{ color: '#52c41a', marginRight: '8px' }}></i>
                                     <span><strong>categoryId:</strong> ID danh mục (GUID)</span>
                                 </li>
                             </ul>
                         </div>
 
-                        {/* Cột 2: Các trường tùy chọn */}
-                        <div style={{ flex: 1 }}>
-                            <Typography.Text strong style={{ color: '#1f1f1f', display: 'block', marginBottom: '12px' }}>
+                        <div className="import-guide-card">
+                            <Typography.Text strong style={{ color: '#1f2937', display: 'block' }}>
                                 <i className='bx bx-info-circle' style={{ color: '#1890ff', marginRight: '8px' }}></i>
                                 Các trường tùy chọn:
                             </Typography.Text>
-                            <ul style={{ 
-                                listStyle: 'none', 
-                                padding: 0,
-                                margin: 0
-                            }}>
-                                <li style={{ marginBottom: '8px', display: 'flex', alignItems: 'center' }}>
+                            <ul className="import-guide-list">
+                                <li>
                                     <i className='bx bx-info-circle' style={{ color: '#1890ff', marginRight: '8px' }}></i>
                                     <span><strong>description:</strong> Mô tả sản phẩm</span>
                                 </li>
-                                <li style={{ marginBottom: '8px', display: 'flex', alignItems: 'center' }}>
+                                <li>
                                     <i className='bx bx-info-circle' style={{ color: '#1890ff', marginRight: '8px' }}></i>
                                     <span><strong>discountPrice:</strong> Giá khuyến mãi (số)</span>
                                 </li>
-                                <li style={{ marginBottom: '8px', display: 'flex', alignItems: 'center' }}>
+                                <li>
                                     <i className='bx bx-info-circle' style={{ color: '#1890ff', marginRight: '8px' }}></i>
                                     <span><strong>materials:</strong> Chất liệu (text)</span>
                                 </li>
-                                <li style={{ marginBottom: '8px', display: 'flex', alignItems: 'center' }}>
+                                <li>
                                     <i className='bx bx-info-circle' style={{ color: '#1890ff', marginRight: '8px' }}></i>
                                     <span><strong>weight:</strong> Cân nặng (số thập phân)</span>
                                 </li>
-                                <li style={{ marginBottom: '8px', display: 'flex', alignItems: 'center' }}>
+                                <li>
                                     <i className='bx bx-info-circle' style={{ color: '#1890ff', marginRight: '8px' }}></i>
                                     <span><strong>sku:</strong> Mã SKU (text)</span>
                                 </li>
-                                <li style={{ marginBottom: '8px', display: 'flex', alignItems: 'center' }}>
+                                <li>
                                     <i className='bx bx-info-circle' style={{ color: '#1890ff', marginRight: '8px' }}></i>
                                     <span><strong>status:</strong> Trạng thái (true/false)</span>
                                 </li>
-                                <li style={{ marginBottom: '8px', display: 'flex', alignItems: 'center' }}>
+                                <li>
                                     <i className='bx bx-info-circle' style={{ color: '#1890ff', marginRight: '8px' }}></i>
                                     <span><strong>tags:</strong> Tags (phân cách bằng dấu phẩy)</span>
                                 </li>
@@ -492,12 +576,12 @@ const ImportModal = ({ openImport, handleImportClose, fetchProducts }) => {
                         </div>
                     </div>
 
-                    <div style={{ 
-                        marginTop: '16px', 
-                        padding: '12px', 
-                        background: '#fff3cd', 
+                    <div style={{
+                        marginTop: '12px',
+                        padding: '10px 12px',
+                        background: '#fff3cd',
                         border: '1px solid #ffeeba',
-                        borderRadius: '4px'
+                        borderRadius: '8px'
                     }}>
                         <Typography.Text style={{ color: '#856404' }}>
                             <i className='bx bx-error-circle' style={{ marginRight: '8px' }}></i>

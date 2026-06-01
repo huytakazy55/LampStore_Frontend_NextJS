@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useContext, useMemo } from 'react';
 import AdminPageHeader from '../shared/AdminPageHeader';
-import { Table, Input, Button, Pagination, Modal, message, Space, Tag } from 'antd';
+import { Table, Input, Button, Pagination, Modal, message, Space, Tag, Tooltip } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import NewsService from '@/services/NewsService';
@@ -189,8 +189,12 @@ const NewsManage = () =>
             align: 'center',
             render: (text, record) => (
                 <Space size={6} className="admin-action-group">
-                    <Button type="text" className="admin-action-btn" icon={<i className='bx bx-edit'></i>} onClick={() => handleEdit(record)} size="small">Sửa</Button>
-                    <Button type="text" className="admin-action-btn" icon={<i className='bx bx-trash'></i>} onClick={() => handleDelete(record.id, record.title)} danger size="small">Xóa</Button>
+                    <Tooltip title="Sửa tin tức">
+                        <Button type="text" className="admin-action-btn" icon={<i className='bx bx-edit'></i>} onClick={() => handleEdit(record)} size="small">Sửa</Button>
+                    </Tooltip>
+                    <Tooltip title="Xóa tin tức">
+                        <Button type="text" className="admin-action-btn" icon={<i className='bx bx-trash'></i>} onClick={() => handleDelete(record.id, record.title)} danger size="small">Xóa</Button>
+                    </Tooltip>
                 </Space>
             ),
         },

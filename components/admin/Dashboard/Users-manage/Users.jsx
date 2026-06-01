@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useMemo } from 'react';
 import AdminPageHeader from '../shared/AdminPageHeader';
-import { Table, Input, Button, Modal, Pagination, message, Space, Row, Col, Card, Checkbox, Tag } from 'antd';
+import { Table, Input, Button, Modal, Pagination, message, Space, Row, Col, Card, Checkbox, Tag, Tooltip } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import UserManage from '@/services/UserManage';
 import { useTranslation } from 'react-i18next';
@@ -214,36 +214,42 @@ const Users = () => {
       render: (text, record) => (
         <Space size={6} className="admin-action-group">
           {record.lockoutEnd && new Date(record.lockoutEnd) > new Date() ? (
-            <Button
-              type="text"
-              className="admin-action-btn"
-              icon={<i className='bx bx-lock-open'></i>}
-              onClick={() => UnLockUser(record.id, record.userName)}
-              size="small"
-            >
-              Mở khóa
-            </Button>
+            <Tooltip title="Mở khóa người dùng">
+              <Button
+                type="text"
+                className="admin-action-btn"
+                icon={<i className='bx bx-lock-open'></i>}
+                onClick={() => UnLockUser(record.id, record.userName)}
+                size="small"
+              >
+                Mở khóa
+              </Button>
+            </Tooltip>
           ) : (
+            <Tooltip title="Khóa người dùng">
+              <Button
+                type="text"
+                className="admin-action-btn"
+                icon={<i className='bx bx-lock'></i>}
+                onClick={() => LockUser(record.id, record.userName)}
+                danger
+                size="small"
+              >
+                Khóa
+              </Button>
+            </Tooltip>
+          )}
+          <Tooltip title="Phân quyền người dùng">
             <Button
               type="text"
               className="admin-action-btn"
-              icon={<i className='bx bx-lock'></i>}
-              onClick={() => LockUser(record.id, record.userName)}
-              danger
               size="small"
+              icon={<i className="bx bx-shield-quarter"></i>}
+              onClick={() => openRoleModal(record)}
             >
-              Khóa
+              Phân quyền
             </Button>
-          )}
-          <Button
-            type="text"
-            className="admin-action-btn"
-            size="small"
-            icon={<i className="bx bx-shield-quarter"></i>}
-            onClick={() => openRoleModal(record)}
-          >
-            Phân quyền
-          </Button>
+          </Tooltip>
         </Space>
       ),
     },

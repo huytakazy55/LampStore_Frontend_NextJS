@@ -2,7 +2,7 @@
 
 import React, { useContext, useState, useEffect, useMemo } from 'react'
 import AdminPageHeader from '../shared/AdminPageHeader';
-import { Input, Button, Table, Space, DatePicker, Tag } from 'antd';
+import { Input, Button, Table, Space, DatePicker, Tag, Tooltip } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import { toast } from 'react-toastify';
@@ -226,20 +226,24 @@ const Tags = () => {
       align: 'center',
       render: (_, record) => (
         <Space size={6} className="admin-action-group">
-          <Button
-            type="text"
-            className="admin-action-btn"
-            icon={<i className='bx bx-edit'></i>}
-            onClick={() => handleUpdateClick(record.id)}
-            style={{ color: themeColors.EndColorLinear }}
-          />
-          <Button
-            type="text"
-            className="admin-action-btn"
-            danger
-            icon={<i className='bx bx-trash'></i>}
-            onClick={() => DeleteTag(record.id, record.name)}
-          />
+          <Tooltip title="Sửa tag">
+            <Button
+              type="text"
+              className="admin-action-btn"
+              icon={<i className='bx bx-edit'></i>}
+              onClick={() => handleUpdateClick(record.id)}
+              style={{ color: themeColors.EndColorLinear }}
+            />
+          </Tooltip>
+          <Tooltip title="Xóa tag">
+            <Button
+              type="text"
+              className="admin-action-btn"
+              danger
+              icon={<i className='bx bx-trash'></i>}
+              onClick={() => DeleteTag(record.id, record.name)}
+            />
+          </Tooltip>
         </Space>
       )
     }

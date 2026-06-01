@@ -11,6 +11,8 @@
     position: relative;
     overflow: hidden;
     overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 /* ---- Dark overlay for readability ---- */
@@ -50,20 +52,9 @@
 
 /* ---- Scrollbar ---- */
 .sidebar-container::-webkit-scrollbar {
-    width: 3px;
-}
-
-.sidebar-container::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.sidebar-container::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
-}
-
-.sidebar-container::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.35);
+    width: 0;
+    height: 0;
+    display: none;
 }
 
 /* ---- Navigation ---- */

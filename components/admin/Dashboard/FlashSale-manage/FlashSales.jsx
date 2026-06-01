@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import AdminPageHeader from '../shared/AdminPageHeader';
-import { Table, Input, Button, Pagination, Modal, Space, Tag } from 'antd';
+import { Table, Input, Button, Pagination, Modal, Space, Tag, Tooltip } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import FlashSaleService from '@/services/FlashSaleService';
@@ -166,33 +166,39 @@ const FlashSales = () => {
             align: 'center',
             render: (_, record) => (
                 <Space size={6} className="admin-action-group">
-                    <Button
-                        size="small"
-                        type={record.isActive ? 'primary' : 'default'}
-                        onClick={() => handleToggleActive(record)}
-                        style={record.isActive ? { background: '#22c55e', borderColor: '#22c55e' } : {}}
-                    >
-                        {record.isActive ? 'Bật' : 'Tắt'}
-                    </Button>
-                    <Button
-                        type="text"
-                        className="admin-action-btn"
-                        icon={<i className='bx bx-edit'></i>}
-                        onClick={() => { setEditingFlashSale(record); setShowCreateModal(true); }}
-                        size="small"
-                    >
-                        Sửa
-                    </Button>
-                    <Button
-                        type="text"
-                        className="admin-action-btn"
-                        icon={<i className='bx bx-trash'></i>}
-                        onClick={() => handleDelete(record.id, record.title)}
-                        danger
-                        size="small"
-                    >
-                        Xóa
-                    </Button>
+                    <Tooltip title={record.isActive ? 'Tắt Flash Sale' : 'Bật Flash Sale'}>
+                        <Button
+                            size="small"
+                            type={record.isActive ? 'primary' : 'default'}
+                            onClick={() => handleToggleActive(record)}
+                            style={record.isActive ? { background: '#22c55e', borderColor: '#22c55e' } : {}}
+                        >
+                            {record.isActive ? 'Bật' : 'Tắt'}
+                        </Button>
+                    </Tooltip>
+                    <Tooltip title="Sửa Flash Sale">
+                        <Button
+                            type="text"
+                            className="admin-action-btn"
+                            icon={<i className='bx bx-edit'></i>}
+                            onClick={() => { setEditingFlashSale(record); setShowCreateModal(true); }}
+                            size="small"
+                        >
+                            Sửa
+                        </Button>
+                    </Tooltip>
+                    <Tooltip title="Xóa Flash Sale">
+                        <Button
+                            type="text"
+                            className="admin-action-btn"
+                            icon={<i className='bx bx-trash'></i>}
+                            onClick={() => handleDelete(record.id, record.title)}
+                            danger
+                            size="small"
+                        >
+                            Xóa
+                        </Button>
+                    </Tooltip>
                 </Space>
             ),
         },

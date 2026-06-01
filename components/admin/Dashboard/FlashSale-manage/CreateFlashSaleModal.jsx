@@ -1,14 +1,16 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { createPortal } from 'react-dom';
 import FlashSaleService from '@/services/FlashSaleService';
 import axiosInstance from '@/lib/axiosConfig';
 import { toast } from 'react-toastify';
 import { resolveImagePath } from '@/lib/imageUtils';
+import { ThemeContext } from '@/contexts/ThemeContext';
 
 const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) => {
     const isEditing = !!flashSale;
+    const { themeColors } = useContext(ThemeContext);
     const [form, setForm] = useState({
         title: '',
         description: '',
@@ -194,10 +196,36 @@ const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) => {
     };
 
     return createPortal(
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+        <div
+            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+            onClick={onClose}
+            style={{
+                '--flash-sale-theme-start': themeColors.StartColorLinear,
+                '--flash-sale-theme-end': themeColors.EndColorLinear,
+            }}
+        >
+            <style jsx>{`
+                .flash-sale-theme-gradient {
+                    background: linear-gradient(90deg, var(--flash-sale-theme-start) 0%, var(--flash-sale-theme-end) 100%);
+                }
+
+                .flash-sale-theme-text {
+                    color: var(--flash-sale-theme-start);
+                }
+
+                .flash-sale-theme-text:hover {
+                    color: var(--flash-sale-theme-end);
+                }
+
+                .flash-sale-theme-focus:focus {
+                    border-color: var(--flash-sale-theme-start);
+                    box-shadow: 0 0 0 2px color-mix(in srgb, var(--flash-sale-theme-start) 18%, transparent);
+                    outline: none;
+                }
+            `}</style>
             <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-3xl max-h-[90vh] overflow-hidden shadow-2xl" onClick={e => e.stopPropagation()}>
                 {/* Header */}
-                <div className="bg-gradient-to-r from-red-500 to-orange-500 px-6 py-4 flex items-center justify-between">
+                <div className="flash-sale-theme-gradient px-6 py-4 flex items-center justify-between">
                     <h2 className="text-white font-bold text-lg flex items-center gap-2">
                         <i className='bx bxs-bolt'></i>
                         {isEditing ? 'Chỉnh sửa Flash Sale' : 'Tạo Flash Sale mới'}
@@ -212,13 +240,13 @@ const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) => {
                         {/* Title */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                                Tên chương trình <span className="text-red-500">*</span>
+                                Tên chương trình <span style={{ color: themeColors.StartColorLinear }}>*</span>
                             </label>
                             <input
                                 type="text"
                                 value={form.title}
                                 onChange={e => setForm(prev => ({ ...prev, title: e.target.value }))}
-                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white dark:bg-gray-700 dark:text-white text-sm"
+                                className="flash-sale-theme-focus w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white text-sm"
                                 placeholder="VD: Flash Sale Cuối Tuần"
                                 required
                             />
@@ -232,7 +260,7 @@ const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) => {
                             <textarea
                                 value={form.description}
                                 onChange={e => setForm(prev => ({ ...prev, description: e.target.value }))}
-                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white dark:bg-gray-700 dark:text-white text-sm resize-none"
+                                className="flash-sale-theme-focus w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white text-sm resize-none"
                                 rows={2}
                                 placeholder="Mô tả chương trình..."
                             />
@@ -242,25 +270,25 @@ const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) => {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                                    Bắt đầu <span className="text-red-500">*</span>
+                                    Bắt đầu <span style={{ color: themeColors.StartColorLinear }}>*</span>
                                 </label>
                                 <input
                                     type="datetime-local"
                                     value={form.startTime}
                                     onChange={e => setForm(prev => ({ ...prev, startTime: e.target.value }))}
-                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white dark:bg-gray-700 dark:text-white text-sm"
+                                    className="flash-sale-theme-focus w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white text-sm"
                                     required
                                 />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                                    Kết thúc <span className="text-red-500">*</span>
+                                    Kết thúc <span style={{ color: themeColors.StartColorLinear }}>*</span>
                                 </label>
                                 <input
                                     type="datetime-local"
                                     value={form.endTime}
                                     onChange={e => setForm(prev => ({ ...prev, endTime: e.target.value }))}
-                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white dark:bg-gray-700 dark:text-white text-sm"
+                                    className="flash-sale-theme-focus w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white text-sm"
                                     required
                                 />
                             </div>
@@ -275,7 +303,7 @@ const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) => {
                                 <button
                                     type="button"
                                     onClick={() => setShowProductPicker(!showProductPicker)}
-                                    className="text-sm text-red-600 hover:text-red-700 font-medium flex items-center gap-1"
+                                    className="flash-sale-theme-text text-sm font-medium flex items-center gap-1"
                                 >
                                     <i className='bx bx-plus'></i> Thêm sản phẩm
                                 </button>
@@ -288,7 +316,7 @@ const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) => {
                                         type="text"
                                         value={searchTerm}
                                         onChange={e => setSearchTerm(e.target.value)}
-                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white text-sm mb-2"
+                                        className="flash-sale-theme-focus w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white text-sm mb-2"
                                         placeholder="Tìm sản phẩm..."
                                         autoFocus
                                     />
@@ -341,7 +369,7 @@ const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) => {
                                                     min="1" max="90"
                                                     value={item.discountPercent}
                                                     onChange={e => handleItemChange(index, 'discountPercent', e.target.value)}
-                                                    className="w-16 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm text-center bg-white dark:bg-gray-700 dark:text-white"
+                                                    className="flash-sale-theme-focus w-16 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm text-center bg-white dark:bg-gray-700 dark:text-white"
                                                 />
                                             </div>
                                             <div>
@@ -351,16 +379,16 @@ const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) => {
                                                     min="1"
                                                     value={item.stock}
                                                     onChange={e => handleItemChange(index, 'stock', e.target.value)}
-                                                    className="w-16 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm text-center bg-white dark:bg-gray-700 dark:text-white"
+                                                    className="flash-sale-theme-focus w-16 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm text-center bg-white dark:bg-gray-700 dark:text-white"
                                                 />
                                             </div>
-                                            <div className="text-xs font-semibold text-red-600">
+                                            <div className="text-xs font-semibold" style={{ color: themeColors.StartColorLinear }}>
                                                 {formatPrice(item.flashSalePrice)}
                                             </div>
                                             <button
                                                 type="button"
                                                 onClick={() => handleRemoveItem(index)}
-                                                className="p-1 text-red-400 hover:text-red-600"
+                                                className="p-1 flash-sale-theme-text"
                                             >
                                                 <i className='bx bx-x text-lg'></i>
                                             </button>
@@ -383,7 +411,7 @@ const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) => {
                         <button
                             type="submit"
                             disabled={saving}
-                            className="px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-red-500 to-orange-500 rounded-lg hover:from-red-600 hover:to-orange-600 disabled:opacity-50 flex items-center gap-2"
+                            className="flash-sale-theme-gradient px-6 py-2 text-sm font-medium text-white rounded-lg hover:brightness-105 disabled:opacity-50 flex items-center gap-2"
                         >
                             {saving && <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>}
                             {isEditing ? 'Cập nhật' : 'Tạo Flash Sale'}

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useMemo } from 'react';
 import AdminPageHeader from '../shared/AdminPageHeader';
-import { Table, Input, Button, Pagination, Modal, message, Space, Row, Col, Card, Image, Switch } from 'antd';
+import { Table, Input, Button, Pagination, Modal, message, Space, Row, Col, Card, Image, Switch, Tooltip } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import CategoryManage from '@/services/CategoryManage';
 import { useTranslation } from 'react-i18next';
@@ -232,28 +232,32 @@ const Category = () => {
       align: 'center',
       render: (text, record) => (
         <Space size={6} className="admin-action-group">
-          <Button
-            type="text"
-            className="admin-action-btn"
-            icon={<i className='bx bx-edit'></i>}
-            onClick={() => {
-              setUpdateId(record.id);
-              setOpenUpdate(true);
-            }}
-            size="small"
-          >
-            Sửa
-          </Button>
-          <Button
-            type="text"
-            className="admin-action-btn"
-            icon={<i className='bx bx-trash'></i>}
-            onClick={() => handleDelete(record.id, record.name)}
-            danger
-            size="small"
-          >
-            Xóa
-          </Button>
+          <Tooltip title="Sửa danh mục">
+            <Button
+              type="text"
+              className="admin-action-btn"
+              icon={<i className='bx bx-edit'></i>}
+              onClick={() => {
+                setUpdateId(record.id);
+                setOpenUpdate(true);
+              }}
+              size="small"
+            >
+              Sửa
+            </Button>
+          </Tooltip>
+          <Tooltip title="Xóa danh mục">
+            <Button
+              type="text"
+              className="admin-action-btn"
+              icon={<i className='bx bx-trash'></i>}
+              onClick={() => handleDelete(record.id, record.name)}
+              danger
+              size="small"
+            >
+              Xóa
+            </Button>
+          </Tooltip>
         </Space>
       ),
     },

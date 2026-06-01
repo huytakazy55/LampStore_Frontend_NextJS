@@ -22,6 +22,11 @@ const quillModules = {
     ]
 };
 
+const modalStyles = {
+    body: { maxHeight: 'calc(90vh - 160px)', overflowY: 'auto' },
+    content: { maxWidth: 'calc(100vw - 32px)' }
+};
+
 const UpdateModal = ({ newsItem, onClose, onSuccess }) =>
 {
     const [form] = Form.useForm();
@@ -97,53 +102,100 @@ const UpdateModal = ({ newsItem, onClose, onSuccess }) =>
             onCancel={onClose}
             onOk={() => form.submit()}
             confirmLoading={loading}
-            width={1000}
+            width={1180}
             okText="Lưu thay đổi"
             cancelText="Hủy"
             className="custom-modal"
-            styles={{ body: { maxHeight: 'calc(90vh - 160px)', overflowY: 'auto' } }}
+            styles={modalStyles}
         >
+            <style jsx>{`
+                .news-modal-grid {
+                    display: grid;
+                    grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+                    gap: 20px 24px;
+                    align-items: start;
+                }
+
+                .news-side-card {
+                    position: sticky;
+                    top: 0;
+                }
+
+                .news-upload :global(.ant-upload-drag) {
+                    min-height: 190px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .news-editor :global(.ql-toolbar) {
+                    border-radius: 8px 8px 0 0;
+                }
+
+                .news-editor :global(.ql-container) {
+                    min-height: 220px;
+                    max-height: 260px;
+                    overflow-y: auto;
+                    border-radius: 0 0 8px 8px;
+                }
+
+                @media (max-width: 920px) {
+                    .news-modal-grid {
+                        grid-template-columns: 1fr;
+                    }
+
+                    .news-side-card {
+                        position: static;
+                    }
+                }
+            `}</style>
             <Form
                 form={form}
                 layout="vertical"
                 onFinish={handleSubmit}
             >
-                <Form.Item name="title" label="Tiêu đề" rules={[{ required: true, message: 'Vui lòng nhập tiêu đề' }]}>
-                    <Input placeholder="Nhập tiêu đề tin tức" size="large" />
-                </Form.Item>
-                <Form.Item name="excerpt" label="Mô tả ngắn" rules={[{ required: true, message: 'Vui lòng nhập mô tả ngắn' }]}>
-                    <Input.TextArea rows={2} placeholder="Nhập mô tả ngắn hiển thị trên trang chủ" />
-                </Form.Item>
-                <Form.Item label="Nội dung bài viết" required>
-                    <ReactQuill
-                        theme="snow"
-                        value={content}
-                        onChange={setContent}
-                        modules={quillModules}
-                        placeholder="Soạn nội dung bài viết..."
-                        style={{ minHeight: 250 }}
-                    />
-                </Form.Item>
-                <Form.Item label="Ảnh bài viết" className="mt-4">
-                    <Upload.Dragger
-                        fileList={fileList}
-                        customRequest={handleUpload}
-                        accept="image/*"
-                        maxCount={1}
-                        listType="picture"
-                        onRemove={() => { setImageUrl(''); setFileList([]); }}
-                    >
-                        <p className="ant-upload-drag-icon"><InboxOutlined /></p>
-                        <p className="ant-upload-text">Kéo thả ảnh hoặc bấm để chọn</p>
-                        <p className="ant-upload-hint">Hỗ trợ JPG, PNG, GIF, WebP (tối đa 5MB)</p>
-                    </Upload.Dragger>
-                </Form.Item>
-                <Form.Item name="category" label="Danh mục">
-                    <Input placeholder="Góc tư vấn, Xu hướng, Công nghệ..." />
-                </Form.Item>
-                <Form.Item name="isActive" label="Trạng thái hiển thị" valuePropName="checked">
-                    <Switch checkedChildren="Hiển thị" unCheckedChildren="Ẩn" />
-                </Form.Item>
+                <div className="news-modal-grid">
+                    <div>
+                        <Form.Item name="title" label="Tiêu đề" rules={[{ required: true, message: 'Vui lòng nhập tiêu đề' }]}>
+                            <Input placeholder="Nhập tiêu đề tin tức" size="large" />
+                        </Form.Item>
+                        <Form.Item name="excerpt" label="Mô tả ngắn" rules={[{ required: true, message: 'Vui lòng nhập mô tả ngắn' }]}>
+                            <Input.TextArea rows={3} placeholder="Nhập mô tả ngắn hiển thị trên trang chủ" />
+                        </Form.Item>
+                        <Form.Item label="Nội dung bài viết" required className="news-editor">
+                            <ReactQuill
+                                theme="snow"
+                                value={content}
+                                onChange={setContent}
+                                modules={quillModules}
+                                placeholder="Soạn nội dung bài viết..."
+                            />
+                        </Form.Item>
+                    </div>
+
+                    <div className="news-side-card">
+                        <Form.Item label="Ảnh bài viết" className="news-upload">
+                            <Upload.Dragger
+                                fileList={fileList}
+                                customRequest={handleUpload}
+                                accept="image/*"
+                                maxCount={1}
+                                listType="picture"
+                                onRemove={() => { setImageUrl(''); setFileList([]); }}
+                            >
+                                <p className="ant-upload-drag-icon"><InboxOutlined /></p>
+                                <p className="ant-upload-text">Kéo thả ảnh hoặc bấm để chọn</p>
+                                <p className="ant-upload-hint">Hỗ trợ JPG, PNG, GIF, WebP (tối đa 5MB)</p>
+                            </Upload.Dragger>
+                        </Form.Item>
+                        <Form.Item name="category" label="Danh mục">
+                            <Input placeholder="Góc tư vấn, Xu hướng, Công nghệ..." />
+                        </Form.Item>
+                        <Form.Item name="isActive" label="Trạng thái hiển thị" valuePropName="checked">
+                            <Switch checkedChildren="Hiển thị" unCheckedChildren="Ẩn" />
+                        </Form.Item>
+                    </div>
+                </div>
             </Form>
         </Modal>
     );

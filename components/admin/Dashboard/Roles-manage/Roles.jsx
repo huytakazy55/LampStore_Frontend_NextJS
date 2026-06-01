@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useMemo } from 'react';
 import AdminPageHeader from '../shared/AdminPageHeader';
-import { Card, Table, Tag, Space, Button, Modal, Checkbox, Row, Col, message, Input, Select, Spin } from 'antd';
+import { Card, Table, Tag, Space, Button, Modal, Checkbox, Row, Col, message, Input, Select, Spin, Tooltip } from 'antd';
 import UserManage from '@/services/UserManage';
 
 const Roles = () => {
@@ -204,15 +204,17 @@ const Roles = () => {
       width: 120,
       render: (_, record) => (
         <Space size={6} className="admin-action-group">
-          <Button
-            type="text"
-            className="admin-action-btn"
-            size="small"
-            icon={<i className="bx bx-shield-quarter"></i>}
-            onClick={() => openRoleModal(record)}
-          >
-            Phân quyền
-          </Button>
+          <Tooltip title="Phân quyền">
+            <Button
+              type="text"
+              className="admin-action-btn"
+              size="small"
+              icon={<i className="bx bx-shield-quarter"></i>}
+              onClick={() => openRoleModal(record)}
+            >
+              Phân quyền
+            </Button>
+          </Tooltip>
         </Space>
       ),
     },

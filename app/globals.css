@@ -10,6 +10,34 @@ html {
   scroll-behavior: smooth !important;
 }
 
+/* Global themed thin scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--admin-theme-start) 70%, #9ca3af) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--admin-theme-start) 0%, var(--admin-theme-end) 100%);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--admin-theme-end) 0%, var(--admin-theme-start) 100%);
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 /* Tailwind v4 CSS-based configuration */
 @theme {
   --font-poppins: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif;
@@ -364,19 +392,6 @@ html {
   background-color: #262626 !important;
 }
 
-/* --- Scrollbar --- */
-.dark .custom-scrollbar::-webkit-scrollbar-track {
-  background: #1a1a1a;
-}
-
-.dark .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #404040;
-}
-
-.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #b8860b;
-}
-
 /* --- Dividers --- */
 .dark .divide-gray-100> :not([hidden])~ :not([hidden]) {
   border-color: #262626 !important;
@@ -415,7 +430,8 @@ html {
 
 /* Custom scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
+  width: 5px;
+  height: 5px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
@@ -423,12 +439,12 @@ html {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #d1d5db;
+  background: linear-gradient(180deg, var(--admin-theme-start) 0%, var(--admin-theme-end) 100%);
   border-radius: 999px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #f59e0b;
+  background: linear-gradient(180deg, var(--admin-theme-end) 0%, var(--admin-theme-start) 100%);
 }
 
 /* ---- Global Modal border-radius override ---- */

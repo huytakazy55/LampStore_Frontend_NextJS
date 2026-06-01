@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import AdminPageHeader from '../shared/AdminPageHeader';
-import { Table, Input, Pagination, Modal, message, Space, Tag, Button } from 'antd';
+import { Table, Input, Pagination, Modal, message, Space, Tag, Button, Tooltip } from 'antd';
 import OrderService from '@/services/OrderService';
 import OrderDetailModal from '../Orders-manage/OrderDetailModal';
 
@@ -143,10 +143,14 @@ const DeliveryManage = () =>
             title: 'Thao tác', key: 'action', width: 200, align: 'center',
             render: (_, record) => (
                 <Space size={6} className="admin-action-group">
-                    <Button type="text" className="admin-action-btn" size="small" icon={<i className='bx bx-check-circle'></i>}
-                        onClick={() => confirmComplete(record.id)}
-                    >Hoàn thành</Button>
-                    <Button type="text" className="admin-action-btn" icon={<i className='bx bx-show'></i>} onClick={() => setSelectedOrder(record)} size="small">Chi tiết</Button>
+                    <Tooltip title="Đánh dấu hoàn thành giao hàng">
+                        <Button type="text" className="admin-action-btn" size="small" icon={<i className='bx bx-check-circle'></i>}
+                            onClick={() => confirmComplete(record.id)}
+                        >Hoàn thành</Button>
+                    </Tooltip>
+                    <Tooltip title="Xem chi tiết đơn giao">
+                        <Button type="text" className="admin-action-btn" icon={<i className='bx bx-show'></i>} onClick={() => setSelectedOrder(record)} size="small">Chi tiết</Button>
+                    </Tooltip>
                 </Space>
             ),
         },

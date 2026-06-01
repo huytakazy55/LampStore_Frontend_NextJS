@@ -291,8 +291,12 @@ const OrdersManage = () =>
             align: 'center',
             render: (_, record) => (
                 <Space size={6} className="admin-action-group">
-                    <Button type="text" className="admin-action-btn" icon={<i className='bx bx-show'></i>} onClick={() => setSelectedOrder(record)} size="small">Chi tiết</Button>
-                    <Button type="text" className="admin-action-btn" icon={<i className='bx bx-trash'></i>} onClick={() => handleDelete(record.id)} danger size="small" />
+                    <Tooltip title="Xem chi tiết đơn hàng">
+                        <Button type="text" className="admin-action-btn" icon={<i className='bx bx-show'></i>} onClick={() => setSelectedOrder(record)} size="small">Chi tiết</Button>
+                    </Tooltip>
+                    <Tooltip title="Xóa đơn hàng">
+                        <Button type="text" className="admin-action-btn" icon={<i className='bx bx-trash'></i>} onClick={() => handleDelete(record.id)} danger size="small" />
+                    </Tooltip>
                 </Space>
             ),
         },

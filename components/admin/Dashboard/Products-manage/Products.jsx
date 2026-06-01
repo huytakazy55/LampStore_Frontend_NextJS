@@ -2,7 +2,7 @@
 
 import React, { useContext, useState, useEffect, useMemo } from 'react'
 import AdminPageHeader from '../shared/AdminPageHeader';
-import { Input, Button, Table, Pagination, Space, Select, DatePicker, Tag } from 'antd';
+import { Input, Button, Table, Pagination, Space, Select, DatePicker, Tag, Tooltip } from 'antd';
 import { Link as RouterLink } from '@/lib/router-compat';
 import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '@/contexts/ThemeContext';
@@ -396,27 +396,33 @@ const Products = () => {
       align: 'center',
       render: (_, record) => (
         <Space size={6} className="admin-action-group">
-          <Button
-            type="text"
-            className="admin-action-btn"
-            icon={<i className='bx bx-image-add'></i>}
-            onClick={() => handleUploadClick(record.id)}
-            style={{ color: themeColors.EndColorLinear }}
-          />
-          <Button
-            type="text"
-            className="admin-action-btn"
-            icon={<i className='bx bx-edit'></i>}
-            onClick={() => handleUpdateClick(record.id)}
-            style={{ color: themeColors.EndColorLinear }}
-          />
-          <Button
-            type="text"
-            className="admin-action-btn"
-            danger
-            icon={<i className='bx bx-trash'></i>}
-            onClick={() => DeleteProduct(record.id, record.name)}
-          />
+          <Tooltip title="Quản lý hình ảnh sản phẩm">
+            <Button
+              type="text"
+              className="admin-action-btn"
+              icon={<i className='bx bx-image-add'></i>}
+              onClick={() => handleUploadClick(record.id)}
+              style={{ color: themeColors.EndColorLinear }}
+            />
+          </Tooltip>
+          <Tooltip title="Sửa sản phẩm">
+            <Button
+              type="text"
+              className="admin-action-btn"
+              icon={<i className='bx bx-edit'></i>}
+              onClick={() => handleUpdateClick(record.id)}
+              style={{ color: themeColors.EndColorLinear }}
+            />
+          </Tooltip>
+          <Tooltip title="Xóa sản phẩm">
+            <Button
+              type="text"
+              className="admin-action-btn"
+              danger
+              icon={<i className='bx bx-trash'></i>}
+              onClick={() => DeleteProduct(record.id, record.name)}
+            />
+          </Tooltip>
         </Space>
       )
     }
