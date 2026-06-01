@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   markAsRead,
   markAllAsRead,
   setDropdownOpen,
-  removeNotification
+  removeNotification,
+  clearAllNotifications
 } from '@/redux/slices/notificationSlice';
 
 const NotificationDropdown = ({ themeColors }) => {
@@ -40,14 +41,25 @@ const NotificationDropdown = ({ themeColors }) => {
     dispatch(markAsRead(notificationId));
   };
 
+  const stopDropdownEvent = (event) => {
+    event.stopPropagation();
+    event.nativeEvent?.stopImmediatePropagation?.();
+  };
+
   const handleMarkAllAsRead = (event) => {
-    event.stopPropagation(); // Ngăn event bubbling
+    stopDropdownEvent(event);
     dispatch(markAllAsRead());
     // Không đóng dropdown, chỉ đánh dấu đã đọc
   };
 
-  const handleRemoveNotification = (notificationId) => {
+  const handleRemoveNotification = (event, notificationId) => {
+    stopDropdownEvent(event);
     dispatch(removeNotification(notificationId));
+  };
+
+  const handleClearAllNotifications = (event) => {
+    stopDropdownEvent(event);
+    dispatch(clearAllNotifications());
   };
 
   const getNotificationIcon = (type) => {
@@ -128,6 +140,7 @@ const NotificationDropdown = ({ themeColors }) => {
       {isDropdownOpen && (
         <div
           ref={dropdownRef}
+          onClick={stopDropdownEvent}
           className="absolute top-10 right-0 w-80 max-h-96 bg-white rounded-xl shadow-2xl z-[1000] overflow-hidden"
           style={{
             background: 'linear-gradient(145deg, #ffffff 0%, #f8fafc 100%)',
@@ -151,13 +164,25 @@ const NotificationDropdown = ({ themeColors }) => {
           >
             <div className="flex justify-between items-center">
               <h3 className="font-semibold text-sm">Thông báo ({unreadCount})</h3>
-              {unreadCount > 0 && (
-                <button
-                  onClick={handleMarkAllAsRead}
-                  className="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition-colors"
-                >
-                  Đánh dấu tất cả
-                </button>
+              {notifications.length > 0 && (
+                <div className="flex items-center gap-2">
+                  {unreadCount > 0 && (
+                    <button
+                      onClick={handleMarkAllAsRead}
+                      onMouseDown={stopDropdownEvent}
+                      className="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition-colors"
+                    >
+                      Đánh dấu tất cả
+                    </button>
+                  )}
+                  <button
+                    onClick={handleClearAllNotifications}
+                    onMouseDown={stopDropdownEvent}
+                    className="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition-colors"
+                  >
+                    Xoá hết
+                  </button>
+                </div>
               )}
             </div>
           </div>
@@ -193,11 +218,10 @@ const NotificationDropdown = ({ themeColors }) => {
                           {notification.title}
                         </h4>
                         <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleRemoveNotification(notification.id);
-                          }}
+                          onClick={(e) => handleRemoveNotification(e, notification.id)}
+                          onMouseDown={stopDropdownEvent}
                           className="text-gray-400 hover:text-red-500 transition-colors"
+                          aria-label="Xoá thông báo"
                         >
                           <i className="bx bx-x text-sm"></i>
                         </button>
@@ -230,10 +254,11 @@ const NotificationDropdown = ({ themeColors }) => {
           {notifications.length > 0 && (
             <div className="p-3 border-t bg-gray-50 text-center">
               <button
-                className="text-xs text-gray-600 hover:text-gray-800 transition-colors"
-                style={{ color: themeColors.StartColorLinear }}
+                onClick={handleClearAllNotifications}
+                onMouseDown={stopDropdownEvent}
+                className="text-xs font-medium text-red-500 hover:text-red-600 transition-colors"
               >
-                Xem tất cả thông báo
+                Xoá tất cả thông báo
               </button>
             </div>
           )}
