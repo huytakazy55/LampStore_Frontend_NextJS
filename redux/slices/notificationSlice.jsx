@@ -76,7 +76,7 @@ const notificationSlice = createSlice({
     // Khởi tạo thông báo từ storage
     initNotifications(state, action) {
       state.notifications = action.payload.notifications || [];
-      state.unreadCount = action.payload.unreadCount || 0;
+      state.unreadCount = state.notifications.filter(notification => !notification.isRead).length;
     }
   },
 });

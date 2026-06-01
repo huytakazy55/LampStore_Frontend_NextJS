@@ -22,9 +22,15 @@ class NotificationService
     this._isSetup = false;        // đã setup listeners chưa
     this._isConnecting = false;   // đang kết nối chưa
     this._dedupKeys = new Set();  // dedup: chatId_bucket → expire sau 5s
+    this._unsubscribeStore = null;
+    this._lastSavedState = '';
 
     // load thông báo cũ từ localStorage vào Redux (only in browser)
-    if (typeof window !== 'undefined') this._loadFromStorage();
+    if (typeof window !== 'undefined')
+    {
+      this._loadFromStorage();
+      this._subscribeToStore();
+    }
   }
 
   // ─── Load/save localStorage ───────────────────────────────────────────────
@@ -49,11 +55,40 @@ class NotificationService
     try
     {
       const { notifications, unreadCount } = store.getState().notification;
-      localStorage.setItem(this.storageKey, JSON.stringify({ notifications, unreadCount }));
+      const serializedState = JSON.stringify({ notifications, unreadCount });
+      this._lastSavedState = serializedState;
+      localStorage.setItem(this.storageKey, serializedState);
     } catch (e)
     {
       console.warn('NotificationService: save error', e);
     }
+  }
+
+  _subscribeToStore()
+  {
+    if (this._unsubscribeStore) return;
+
+    const getPersistedState = () =>
+    {
+      const { notifications, unreadCount } = store.getState().notification;
+      return JSON.stringify({ notifications, unreadCount });
+    };
+
+    this._lastSavedState = getPersistedState();
+    this._unsubscribeStore = store.subscribe(() =>
+    {
+      const nextState = getPersistedState();
+      if (nextState === this._lastSavedState) return;
+
+      this._lastSavedState = nextState;
+      try
+      {
+        localStorage.setItem(this.storageKey, nextState);
+      } catch (e)
+      {
+        console.warn('NotificationService: save error', e);
+      }
+    });
   }
 
   // ─── Lấy thông tin user từ JWT ────────────────────────────────────────────
