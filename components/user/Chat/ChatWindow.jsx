@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, Minimize2, MessageSquare } from 'lucide-react';
 import ChatService from '@/services/ChatService';
+import NotificationService from '@/services/NotificationService';
 import GuestProfileService from '@/services/GuestProfileService';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMessages, addMessage } from '@/redux/slices/chatSlice';
@@ -227,6 +228,10 @@ const ChatWindow = ({ onClose }) =>
         return false;
       });
       if (!exists) dispatch(addMessage({ chatId: activeChatId, message: messageToAdd }));
+      if (senderId !== currentUserId)
+      {
+        NotificationService.markChatNotificationsAsRead(activeChatId);
+      }
     } else if (targetChatId)
     {
       dispatch(addMessage({ chatId: targetChatId, message: messageToAdd }));

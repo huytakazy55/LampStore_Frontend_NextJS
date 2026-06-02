@@ -156,7 +156,11 @@ class NotificationService
 
       // Đăng ký listener 1 lần duy nhất
       this._adminHandler = (e) => this._handleAdminNotification(e.detail);
+      this._messageFallbackHandler = (e) => this._handleMessageFallback(e.detail);
+      this._customerHandler = (e) => this._handleCustomerNotification(e.detail);
       window.addEventListener('adminChatNotification', this._adminHandler);
+      window.addEventListener('newMessage', this._messageFallbackHandler);
+      window.addEventListener('customerChatNotification', this._customerHandler);
 
       this._isSetup = true;
       console.log('✅ NotificationService: setup xong');
@@ -228,6 +232,89 @@ class NotificationService
     console.log(`📢 Notification hiện cho admin: [${senderName}] ${content.substring(0, 50)}`);
   }
 
+  _handleMessageFallback(data)
+  {
+    const user = this._getUser();
+    if (!user) return;
+
+    const senderId = data?.SenderId || data?.senderId || '';
+    if (senderId && senderId === user.id) return;
+
+    const content = data?.Content || data?.content || '';
+    if (!content) return;
+
+    if (!this._isAdmin(user))
+    {
+      this._handleCustomerNotification(data);
+      return;
+    }
+
+    this._handleAdminNotification({
+      ChatId: data?.ChatId || data?.chatId,
+      SenderId: senderId,
+      SenderName: data?.SenderName || data?.senderName || data?.UserName || data?.userName || 'Khách hàng',
+      Content: content,
+      Timestamp: data?.Timestamp || data?.timestamp || data?.createdAt,
+      Type: data?.Type || data?.type,
+      ChatSubject: data?.ChatSubject || data?.chatSubject,
+      UserName: data?.UserName || data?.userName || data?.SenderName || data?.senderName,
+      Priority: data?.Priority || data?.priority,
+    });
+  }
+
+  _handleCustomerNotification(data)
+  {
+    const user = this._getUser();
+    if (!user || this._isAdmin(user)) return;
+
+    const senderId = data?.SenderId || data?.senderId || '';
+    if (senderId && senderId === user.id) return;
+
+    const chatId = data?.ChatId || data?.chatId || '';
+    const content = data?.Content || data?.content || '';
+    if (!content) return;
+
+    if (this._isDuplicate(chatId, content)) return;
+
+    const senderName = data?.SenderName || data?.senderName || 'CapyLumine';
+    const notification = {
+      type: 'chat',
+      title: 'Tin nhắn hỗ trợ mới',
+      message: `${senderName}: ${content.substring(0, 100)}`,
+      content,
+      chatId,
+      senderId,
+      senderName,
+      priority: 'normal',
+      createdAt: new Date().toISOString(),
+    };
+
+    store.dispatch(addNotification(notification));
+    this._saveToStorage();
+
+    try { AudioService.playNotificationSound('chat_received'); } catch { }
+
+    if (window.toast)
+    {
+      window.toast.info(notification.message, {
+        toastId: `customer-chat-${chatId}-${content.substring(0, 24)}`,
+      });
+    }
+
+    if ('Notification' in window && Notification.permission === 'granted')
+    {
+      try
+      {
+        const n = new Notification(notification.title, {
+          body: notification.message,
+          icon: '/favicon.ico',
+          tag: `customer-chat-${chatId}`,
+        });
+        setTimeout(() => n.close(), 5000);
+      } catch { }
+    }
+  }
+
   // ─── Reset (khi logout) ───────────────────────────────────────────────────
   reset()
   {
@@ -235,6 +322,16 @@ class NotificationService
     {
       window.removeEventListener('adminChatNotification', this._adminHandler);
       this._adminHandler = null;
+    }
+    if (this._messageFallbackHandler)
+    {
+      window.removeEventListener('newMessage', this._messageFallbackHandler);
+      this._messageFallbackHandler = null;
+    }
+    if (this._customerHandler)
+    {
+      window.removeEventListener('customerChatNotification', this._customerHandler);
+      this._customerHandler = null;
     }
     this._isSetup = false;
     this._isConnecting = false;

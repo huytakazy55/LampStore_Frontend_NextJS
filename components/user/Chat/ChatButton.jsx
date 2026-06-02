@@ -3,13 +3,18 @@
 import React, { useState } from 'react';
 import ChatWindow from './ChatWindow';
 import NotificationBadge from './NotificationBadge';
+import NotificationService from '@/services/NotificationService';
 
 const ChatButton = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
   const toggleChat = () => {
-    setIsChatOpen(!isChatOpen);
+    const nextOpen = !isChatOpen;
+    setIsChatOpen(nextOpen);
+    if (nextOpen) {
+      NotificationService.markChatNotificationsAsRead();
+    }
   };
 
   return (

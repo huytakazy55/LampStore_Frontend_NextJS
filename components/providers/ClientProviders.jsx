@@ -16,6 +16,7 @@ import LenisProvider from '@/components/common/LenisProvider';
 import FloatingCart from '@/components/user/FloatingCart/FloatingCart';
 import ChatButton from '@/components/user/Chat/ChatButton';
 import GuestProfileService from '@/services/GuestProfileService';
+import NotificationService from '@/services/NotificationService';
 import '@/lib/axiosConfig';
 import '@/lib/i18n';
 import ScrollToTop from '@/components/common/ScrollToTop';
@@ -35,8 +36,10 @@ export default function ClientProviders({ children }) {
         if (!isAdminPage)
         {
             GuestProfileService.getGuestToken();
+            NotificationService.setupSignalRNotifications();
+            NotificationService.requestNotificationPermission();
         }
-    }, [isAdminPage]);
+    }, [isAdminPage, pathname]);
 
     const [queryClient] = useState(() => new QueryClient({
         defaultOptions: {

@@ -131,6 +131,7 @@ class ChatService
             this.connection.off("UserOnline");
             this.connection.off("UserOffline");
             this.connection.off("AdminChatNotification");
+            this.connection.off("CustomerChatNotification");
         } catch (error)
         {
             // Silent
@@ -144,6 +145,11 @@ class ChatService
         this.connection.on("AdminChatNotification", (data) =>
         {
             window.dispatchEvent(new CustomEvent("adminChatNotification", { detail: data }));
+        });
+
+        this.connection.on("CustomerChatNotification", (data) =>
+        {
+            window.dispatchEvent(new CustomEvent("customerChatNotification", { detail: data }));
         });
 
         this.connection.on("UserTyping", (data) =>
