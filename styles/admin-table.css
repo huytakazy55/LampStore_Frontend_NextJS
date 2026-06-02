@@ -1382,6 +1382,46 @@ body.admin-dashboard-active .product-modal .custom-form,
   margin-top: 2px;
 }
 
+.product-description-addon-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+  gap: 16px;
+  align-items: stretch;
+  margin-top: 2px;
+}
+
+.product-form-panel {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid #edf0f5;
+  border-radius: 10px;
+  background: #fbfcff;
+}
+
+.product-form-panel .ant-form-item {
+  margin-bottom: 0;
+}
+
+.product-addon-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.product-panel-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.product-status-field {
+  margin-top: auto;
+  padding-top: 8px;
+}
+
 .product-modal .product-description-editor .ql-toolbar {
   border-color: #d1d5db;
   border-radius: 8px 8px 0 0;
@@ -1419,14 +1459,23 @@ body.admin-dashboard-active .product-modal .custom-form,
 
   .product-form-grid-3,
   .product-form-grid-4,
-  .product-form-grid-sku-tags {
+  .product-form-grid-sku-tags,
+  .product-description-addon-grid {
     grid-template-columns: 1fr;
+  }
+
+  .product-form-panel {
+    padding: 12px;
   }
 }
 
 @media (min-width: 769px) and (max-width: 1280px) {
   .product-form-grid-4 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .product-description-addon-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 0.85fr);
   }
 }
 

@@ -57,7 +57,7 @@ const ProductCard = ({ product, isLast, navigate, onAddToCartClick, isInWishlist
       </button>
 
       {/* Image Container */}
-      <div className="relative h-40 sm:h-48 md:h-52 overflow-hidden bg-gradient-to-b from-gray-50 to-white dark:from-[#111] dark:to-[#1a1a1a]">
+      <div className="relative h-48 sm:h-56 md:h-60 overflow-hidden bg-gradient-to-b from-gray-50 to-white dark:from-[#111] dark:to-[#1a1a1a]">
         <img
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-108"
           src={getImageSrc(product)}

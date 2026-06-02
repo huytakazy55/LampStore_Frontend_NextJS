@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useContext, useState, useEffect } from 'react'
-import { Modal, Form, Input, Select, InputNumber, Checkbox, Button, Space, Typography, Divider } from 'antd';
+import { Modal, Form, Input, Select, InputNumber, Checkbox, Button, Space, Typography } from 'antd';
 import { PlusOutlined, SaveOutlined, CloseOutlined, CameraOutlined, LinkOutlined } from '@ant-design/icons';
 import ProductManage from '@/services/ProductManage';
 import TagManage from '@/services/TagManage';
@@ -534,38 +534,44 @@ const CreateModal = ({ openCreate, handleCreateClose, fetchProducts, style, cate
           </Button>
         </div>
 
-        <Form.Item name="description" label="Mô tả">
-          <ReactQuill theme="snow" placeholder="Nhập mô tả sản phẩm" className="product-description-editor" />
-        </Form.Item>
+        <div className="product-description-addon-grid">
+          <div className="product-form-panel">
+            <Form.Item name="description" label="Mô tả">
+              <ReactQuill theme="snow" placeholder="Nhập mô tả sản phẩm" className="product-description-editor" />
+            </Form.Item>
+          </div>
 
-        <Divider orientation="left" style={{ color: themeColors.StartColorLinear }}>
-          <LinkOutlined /> Sản phẩm phụ (Add-on)
-        </Divider>
+          <div className="product-form-panel product-addon-panel">
+            <div className="product-panel-title" style={{ color: themeColors.StartColorLinear }}>
+              <LinkOutlined /> Sản phẩm phụ (Add-on)
+            </div>
 
-        <Form.Item
-          name="addOnProductIds"
-          label="Sản phẩm phụ đi kèm"
-          tooltip="Chọn các sản phẩm sẽ được gợi ý mua kèm trên trang chi tiết"
-        >
-          <Select
-            mode="multiple"
-            placeholder="Chọn sản phẩm phụ (không bắt buộc)"
-            allowClear
-            showSearch
-            optionFilterProp="label"
-            filterOption={(input, option) =>
-              (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-            }
-            options={allProducts.map(p => ({
-              label: `${p.name} - ${p.minPrice?.toLocaleString('vi-VN')}₫`,
-              value: p.id
-            }))}
-          />
-        </Form.Item>
+            <Form.Item
+              name="addOnProductIds"
+              label="Sản phẩm phụ đi kèm"
+              tooltip="Chọn các sản phẩm sẽ được gợi ý mua kèm trên trang chi tiết"
+            >
+              <Select
+                mode="multiple"
+                placeholder="Chọn sản phẩm phụ (không bắt buộc)"
+                allowClear
+                showSearch
+                optionFilterProp="label"
+                filterOption={(input, option) =>
+                  (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                }
+                options={allProducts.map(p => ({
+                  label: `${p.name} - ${p.minPrice?.toLocaleString('vi-VN')}₫`,
+                  value: p.id
+                }))}
+              />
+            </Form.Item>
 
-        <Form.Item name="status" valuePropName="checked">
-          <Checkbox>Hoạt động</Checkbox>
-        </Form.Item>
+            <Form.Item name="status" valuePropName="checked" className="product-status-field">
+              <Checkbox>Hoạt động</Checkbox>
+            </Form.Item>
+          </div>
+        </div>
       </Form>
     </Modal>
   );
