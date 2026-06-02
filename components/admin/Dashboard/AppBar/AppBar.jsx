@@ -175,7 +175,7 @@ const AppBar = () => {
                     {/* Messages */}
                     <div className="appbar-action-item appbar-hidden-mobile">
                         <a className="appbar-icon-btn" href="/admin/chat" onClick={handleOpenMessages} aria-label="Tin nhắn">
-                            <i className='bx bx-envelope' />
+                            <i className='bx bx-message-rounded-dots' />
                             {chatUnreadCount > 0 && (
                                 <span className="appbar-badge appbar-count-badge">
                                     {chatUnreadCount > 99 ? '99+' : chatUnreadCount}

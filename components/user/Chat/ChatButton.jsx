@@ -1,13 +1,104 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ChatWindow from './ChatWindow';
 import NotificationBadge from './NotificationBadge';
+import ChatService from '@/services/ChatService';
+import GuestProfileService from '@/services/GuestProfileService';
 import NotificationService from '@/services/NotificationService';
 
 const ChatButton = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const seenMessageKeysRef = useRef(new Set());
+  const initializedPollRef = useRef(false);
+  const isChatOpenRef = useRef(false);
+
+  useEffect(() => {
+    isChatOpenRef.current = isChatOpen;
+  }, [isChatOpen]);
+
+  const getCurrentUserId = () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return null;
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.nameid || payload.sub || payload.userId || payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
+    } catch {
+      return null;
+    }
+  };
+
+  const normalizeList = (data) => data?.$values || data || [];
+
+  const getLastMessage = (chat) => {
+    const messages = normalizeList(chat.messages || chat.Messages);
+    return chat.lastMessage || chat.LastMessage || messages[0] || messages[messages.length - 1] || null;
+  };
+
+  useEffect(() => {
+    const pollLatestMessage = async () => {
+      if (isChatOpenRef.current) return;
+
+      const isLoggedIn = !!localStorage.getItem('token');
+      const guestToken = GuestProfileService.getExistingGuestToken();
+      if (!isLoggedIn && !guestToken) return;
+
+      try {
+        const chatsData = isLoggedIn
+          ? await ChatService.getUserChats()
+          : await ChatService.getGuestChats();
+        const chats = normalizeList(chatsData);
+        const currentUserId = getCurrentUserId();
+        const guestSenderId = guestToken ? `guest_${guestToken.substring(0, 8)}` : null;
+
+        chats.forEach((chat) => {
+          const lastMessage = getLastMessage(chat);
+          const content = lastMessage?.content || lastMessage?.Content || '';
+          if (!content) return;
+
+          const chatId = chat.id || chat.Id;
+          const messageId = lastMessage.id || lastMessage.Id || lastMessage.messageId || lastMessage.MessageId;
+          const senderId = lastMessage.senderId || lastMessage.SenderId || '';
+          const timestamp = lastMessage.createdAt || lastMessage.CreatedAt || chat.lastMessageAt || chat.LastMessageAt || '';
+          const key = messageId || `${chatId}_${senderId}_${content}_${timestamp}`;
+
+          const isOwnMessage = isLoggedIn
+            ? senderId && senderId === currentUserId
+            : !senderId || senderId === guestSenderId;
+          if (isOwnMessage) {
+            seenMessageKeysRef.current.add(key);
+            return;
+          }
+
+          if (!initializedPollRef.current) {
+            seenMessageKeysRef.current.add(key);
+            return;
+          }
+
+          if (seenMessageKeysRef.current.has(key)) return;
+          seenMessageKeysRef.current.add(key);
+
+          NotificationService.handleCustomerChatNotification({
+            ChatId: chatId,
+            SenderId: senderId,
+            SenderName: lastMessage.senderName || lastMessage.SenderName || 'CapyLumine',
+            Content: content,
+            Timestamp: timestamp,
+            ChatSubject: chat.subject || chat.Subject,
+          });
+        });
+
+        initializedPollRef.current = true;
+      } catch {
+        // Silent: realtime/poll notification should not disturb shopping flow.
+      }
+    };
+
+    pollLatestMessage();
+    const intervalId = setInterval(pollLatestMessage, 6000);
+    return () => clearInterval(intervalId);
+  }, []);
 
   const toggleChat = () => {
     const nextOpen = !isChatOpen;

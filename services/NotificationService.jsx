@@ -4,6 +4,7 @@ import store from '@/redux/store';
 import { addNotification, initNotifications, markAsRead } from '@/redux/slices/notificationSlice';
 import AudioService from './AudioService';
 import ChatService from './ChatService';
+import GuestProfileService from './GuestProfileService';
 
 /**
  * NotificationService — quản lý thông báo real-time (viết lại đơn giản)
@@ -265,10 +266,14 @@ class NotificationService
   _handleCustomerNotification(data)
   {
     const user = this._getUser();
-    if (!user || this._isAdmin(user)) return;
+    if (user && this._isAdmin(user)) return;
+
+    const guestToken = GuestProfileService.getExistingGuestToken();
+    if (!user && !guestToken) return;
 
     const senderId = data?.SenderId || data?.senderId || '';
-    if (senderId && senderId === user.id) return;
+    const guestSenderId = guestToken ? `guest_${guestToken.substring(0, 8)}` : '';
+    if (senderId && (senderId === user?.id || senderId === guestSenderId)) return;
 
     const chatId = data?.ChatId || data?.chatId || '';
     const content = data?.Content || data?.content || '';
@@ -313,6 +318,11 @@ class NotificationService
         setTimeout(() => n.close(), 5000);
       } catch { }
     }
+  }
+
+  handleCustomerChatNotification(data)
+  {
+    this._handleCustomerNotification(data);
   }
 
   // ─── Reset (khi logout) ───────────────────────────────────────────────────
