@@ -6,13 +6,18 @@ import LeftBar from '../LeftBar/LeftBar';
 import RightBody from '../RightBody/RightBody';
 import 'react-toastify/dist/ReactToastify.css';
 import NotificationService from '@/services/NotificationService';
+import ChatService from '@/services/ChatService';
 import { useSelector } from 'react-redux';
 import { ThemeContext } from '@/contexts/ThemeContext';
+import { Modal } from 'antd';
+import AdminChatWindow from '../Chat-manage/AdminChatWindow';
 
 const AdminDashboard = () => {
   const leftBar = useSelector((state) => state.leftbar.leftbar);
   const { themeColors } = useContext(ThemeContext);
   const [realtimeNotifications, setRealtimeNotifications] = useState([]);
+  const [quickChat, setQuickChat] = useState(null);
+  const [isQuickChatOpen, setIsQuickChatOpen] = useState(false);
   const shownNotifKeysRef = useRef(new Set());
 
   const getInitial = (name) => (name || 'K').trim().charAt(0).toUpperCase();
@@ -74,6 +79,43 @@ const AdminDashboard = () => {
     setRealtimeNotifications(prev => prev.filter(item => item.id !== notificationId));
   };
 
+  const normalizeChat = (chat) => ({
+    ...chat,
+    id: chat?.id || chat?.Id,
+    status: chat?.status ?? chat?.Status,
+    user: chat?.user || chat?.User,
+    guestName: chat?.guestName || chat?.GuestName,
+  });
+
+  const openQuickChat = useCallback(async (chatId) => {
+    if (!chatId) return;
+
+    try {
+      NotificationService.markChatNotificationsAsRead(chatId);
+      const chat = await ChatService.getChat(chatId);
+      setQuickChat(normalizeChat(chat));
+      setIsQuickChatOpen(true);
+    } catch (error) {
+      console.error('Không mở được chat từ thông báo:', error);
+    }
+  }, []);
+
+  const openChatNotification = (notification) => {
+    const chatId = notification?.chatId;
+    if (!chatId) return;
+    closeRealtimeNotification(notification.id);
+    openQuickChat(chatId);
+  };
+
+  useEffect(() => {
+    const handleOpenAdminChat = (event) => {
+      openQuickChat(event.detail?.chatId);
+    };
+
+    window.addEventListener('openAdminChat', handleOpenAdminChat);
+    return () => window.removeEventListener('openAdminChat', handleOpenAdminChat);
+  }, [openQuickChat]);
+
   return (
     <div
       className='h-screen overflow-hidden dark:bg-gray-900'
@@ -117,6 +159,7 @@ const AdminDashboard = () => {
           border-radius: 16px;
           background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
           box-shadow: 0 22px 60px rgba(15, 23, 42, 0.18), 0 6px 18px rgba(15, 23, 42, 0.08);
+          cursor: pointer;
         }
 
         .admin-chat-toast::before {
@@ -242,10 +285,12 @@ const AdminDashboard = () => {
           display: inline-flex;
           align-items: center;
           gap: 7px;
+          border: 0;
           border-radius: 9px;
           background: linear-gradient(135deg, var(--chat-toast-start) 0%, var(--chat-toast-end) 100%);
           padding: 7px 12px;
           color: #fff;
+          cursor: pointer;
           font-size: 12px;
           font-weight: 800;
           box-shadow: 0 8px 16px color-mix(in srgb, var(--chat-toast-start) 20%, transparent);
@@ -277,6 +322,15 @@ const AdminDashboard = () => {
             <div
               key={notification.id}
               className="admin-chat-toast admin-notification-slide-in"
+              onClick={() => openChatNotification(notification)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  openChatNotification(notification);
+                }
+              }}
             >
               <div className="admin-chat-toast-inner">
                 <div className="admin-chat-toast-top">
@@ -295,7 +349,10 @@ const AdminDashboard = () => {
                   </div>
                   <button
                     type="button"
-                    onClick={() => closeRealtimeNotification(notification.id)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      closeRealtimeNotification(notification.id);
+                    }}
                     className="admin-chat-toast-close"
                     aria-label="Đóng thông báo"
                   >
@@ -310,10 +367,17 @@ const AdminDashboard = () => {
                 </div>
 
                 <div className="admin-chat-toast-footer">
-                  <a href="/admin/chat" className="admin-chat-toast-link">
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      openChatNotification(notification);
+                    }}
+                    className="admin-chat-toast-link"
+                  >
                     <i className="bx bx-message-rounded-dots" />
                     Xem chat
-                  </a>
+                  </button>
                 </div>
               </div>
             </div>
@@ -326,6 +390,24 @@ const AdminDashboard = () => {
         <LeftBar />
         <RightBody />
       </div>
+      <Modal
+        title={`💬 Chat với ${quickChat?.user?.userName || quickChat?.user?.UserName || quickChat?.guestName || 'Khách hàng'}`}
+        open={isQuickChatOpen}
+        onCancel={() => setIsQuickChatOpen(false)}
+        footer={null}
+        width={800}
+        centered
+        destroyOnHidden
+        styles={{ body: { padding: 0, height: 520 } }}
+      >
+        {quickChat && (
+          <AdminChatWindow
+            chat={quickChat}
+            onClose={() => setIsQuickChatOpen(false)}
+            onUpdate={() => openQuickChat(quickChat.id)}
+          />
+        )}
+      </Modal>
     </div>
   );
 };

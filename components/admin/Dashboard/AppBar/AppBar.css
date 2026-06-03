@@ -206,6 +206,14 @@
     border-color: rgba(255, 255, 255, 0.25);
 }
 
+.appbar-user-btn {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.appbar-user-btn i {
+    font-size: 20px;
+}
+
 /* ---- Language flag ---- */
 .appbar-lang-flag {
     width: 20px;

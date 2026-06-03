@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useState, useContext, useEffect, useMemo, useRef } from 'react'
+import React, { useState, useContext, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { setLeftBar } from '@/redux/slices/leftBarAdminSlice';
 import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import AuthService from '@/services/AuthService';
-import NotificationService from '@/services/NotificationService';
 import NotificationDropdown from './NotificationDropdown';
 import './AppBar.css';
 
@@ -26,11 +25,6 @@ const themePresets = [
 const AppBar = () => {
     const dispatch = useDispatch();
     const leftbar = useSelector(state => state.leftbar.leftbar);
-    const notifications = useSelector(state => state.notification.notifications);
-    const chatUnreadCount = useMemo(
-        () => notifications.filter(notification => notification.type === 'chat' && !notification.isRead).length,
-        [notifications]
-    );
 
     const toggleHideLeftBar = () => dispatch(setLeftBar(!leftbar));
 
@@ -47,10 +41,6 @@ const AppBar = () => {
     const { i18n } = useTranslation();
 
     const changeLanguage = (lng) => i18n.changeLanguage(lng);
-
-    const handleOpenMessages = () => {
-        NotificationService.markChatNotificationsAsRead();
-    };
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -172,23 +162,9 @@ const AppBar = () => {
                     {/* Notifications */}
                     <NotificationDropdown themeColors={themeColors} />
 
-                    {/* Messages */}
-                    <div className="appbar-action-item appbar-hidden-mobile">
-                        <a className="appbar-icon-btn" href="/admin/chat" onClick={handleOpenMessages} aria-label="Tin nhắn">
-                            <i className='bx bx-message-rounded-dots' />
-                            {chatUnreadCount > 0 && (
-                                <span className="appbar-badge appbar-count-badge">
-                                    {chatUnreadCount > 99 ? '99+' : chatUnreadCount}
-                                </span>
-                            )}
-                        </a>
-                    </div>
-
                     {/* User Menu */}
                     <div className="appbar-action-item" ref={buttonServiceRef} onClick={() => setShowUserService(!showUserService)}>
-                        <div className="appbar-avatar" style={{
-                            background: `linear-gradient(135deg, ${themeColors.StartColorLinear}, ${themeColors.EndColorLinear})`,
-                        }}>
+                        <div className="appbar-icon-btn appbar-user-btn">
                             <i className='bx bx-user' />
                         </div>
                         {showUserService && (

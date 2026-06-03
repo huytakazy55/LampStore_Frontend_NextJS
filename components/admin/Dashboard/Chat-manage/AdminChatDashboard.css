@@ -146,6 +146,28 @@
   font-style: italic;
 }
 
+.chat-theme-table .ant-table-tbody>tr.chat-clickable-row>td {
+  cursor: pointer;
+}
+
+.chat-theme-table .ant-table-tbody>tr.chat-row-unread>td {
+  background: color-mix(in srgb, var(--chat-theme-start) 10%, #fff) !important;
+}
+
+.chat-theme-table .ant-table-tbody>tr.chat-row-unread:hover>td {
+  background: color-mix(in srgb, var(--chat-theme-start) 10%, #fff) !important;
+}
+
+.chat-theme-table .ant-table-tbody>tr.chat-row-unread>td:first-child {
+  box-shadow: inset 4px 0 0 var(--chat-theme-start);
+}
+
+.chat-theme-table .ant-table-tbody>tr.chat-row-unread .chat-user-name,
+.chat-theme-table .ant-table-tbody>tr.chat-row-unread .chat-message-text {
+  color: #0f172a;
+  font-weight: 700;
+}
+
 /* ---- Reply Button ---- */
 .chat-reply-btn {
   display: inline-flex;

@@ -9,9 +9,12 @@ import {
   removeNotification,
   clearAllNotifications
 } from '@/redux/slices/notificationSlice';
+import NotificationService from '@/services/NotificationService';
+import { useNavigate } from '@/lib/router-compat';
 
 const NotificationDropdown = ({ themeColors }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { notifications, unreadCount, isDropdownOpen } = useSelector(state => state.notification);
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
@@ -37,10 +40,6 @@ const NotificationDropdown = ({ themeColors }) => {
     dispatch(setDropdownOpen(!isDropdownOpen));
   };
 
-  const handleMarkAsRead = (notificationId) => {
-    dispatch(markAsRead(notificationId));
-  };
-
   const stopDropdownEvent = (event) => {
     event.stopPropagation();
     event.nativeEvent?.stopImmediatePropagation?.();
@@ -60,6 +59,44 @@ const NotificationDropdown = ({ themeColors }) => {
   const handleClearAllNotifications = (event) => {
     stopDropdownEvent(event);
     dispatch(clearAllNotifications());
+  };
+
+  const getNotificationTarget = (notification) => {
+    if (notification.targetUrl || notification.url || notification.link) {
+      return notification.targetUrl || notification.url || notification.link;
+    }
+
+    if (notification.type === 'order') {
+      const orderId = notification.orderId || notification.OrderId;
+      return orderId ? `/admin/orders?orderId=${orderId}` : '/admin/orders';
+    }
+
+    if (notification.type === 'system') {
+      return '/admin/settings';
+    }
+
+    return null;
+  };
+
+  const handleNotificationClick = (notification) => {
+    if (!notification.isRead) {
+      dispatch(markAsRead(notification.id));
+    }
+
+    if (notification.type === 'chat' && notification.chatId) {
+      NotificationService.markChatNotificationsAsRead(notification.chatId);
+      dispatch(setDropdownOpen(false));
+      window.dispatchEvent(new CustomEvent('openAdminChat', {
+        detail: { chatId: notification.chatId },
+      }));
+      return;
+    }
+
+    const target = getNotificationTarget(notification);
+    if (target) {
+      dispatch(setDropdownOpen(false));
+      navigate(target);
+    }
   };
 
   const getNotificationIcon = (type) => {
@@ -198,9 +235,17 @@ const NotificationDropdown = ({ themeColors }) => {
               notifications.map((notification) => (
                 <div
                   key={notification.id}
-                  className={`p-3 border-b border-gray-100 hover:bg-gray-50 transition-colors ${!notification.isRead ? 'bg-blue-50/50' : ''
+                  className={`p-3 border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer ${!notification.isRead ? 'bg-blue-50/50' : ''
                     }`}
-                  onClick={() => !notification.isRead && handleMarkAsRead(notification.id)}
+                  onClick={() => handleNotificationClick(notification)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault();
+                      handleNotificationClick(notification);
+                    }
+                  }}
                 >
                   <div className="flex items-start gap-3">
                     {/* Icon */}
