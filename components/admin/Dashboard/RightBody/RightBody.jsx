@@ -17,6 +17,7 @@ import OrdersManage from '../Orders-manage/OrdersManage';
 import DeliveryManage from '../Delivery-manage/DeliveryManage';
 import AnalyticsPage from '../Analytics-manage/AnalyticsPage';
 import VisitorMapPage from '../VisitorMap-manage/VisitorMapPage';
+import AdminAccountProfile from '../Account-manage/AdminAccountProfile';
 
 const RightBody = () => {
   const location = useLocation();
@@ -60,6 +61,9 @@ const RightBody = () => {
     }
     else if (location.pathname === '/admin/settings') {
       return <Settings />
+    }
+    else if (location.pathname === '/admin/account') {
+      return <AdminAccountProfile />
     }
     else if (location.pathname === '/admin/orders') {
       return <OrdersManage />

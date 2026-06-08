@@ -416,5 +416,54 @@
 
 /* ---- User dropdown ---- */
 .appbar-dropdown-user {
-    min-width: 160px;
+    min-width: 230px;
+    padding: 10px;
+    border-radius: 14px;
+    background:
+        linear-gradient(180deg, rgba(26, 27, 35, 0.98) 0%, rgba(22, 23, 31, 0.98) 100%);
+}
+
+.appbar-dropdown-user .appbar-dropdown-header {
+    padding: 8px 12px 10px;
+    color: rgba(255, 255, 255, 0.36);
+    font-size: 11px;
+    letter-spacing: 2.4px;
+}
+
+.appbar-user-menu-item {
+    min-height: 42px;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.appbar-user-menu-item i {
+    width: 22px;
+    flex: 0 0 22px;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 20px;
+    text-align: center;
+}
+
+.appbar-user-menu-item span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.appbar-user-menu-item:hover {
+    background:
+        linear-gradient(135deg,
+            color-mix(in srgb, var(--appbar-theme-start) 24%, transparent),
+            color-mix(in srgb, var(--appbar-theme-end) 18%, transparent));
+    color: #fff;
+}
+
+.appbar-user-menu-item:hover i {
+    color: #fff;
 }

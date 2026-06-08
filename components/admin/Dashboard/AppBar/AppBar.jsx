@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import AuthService from '@/services/AuthService';
 import NotificationDropdown from './NotificationDropdown';
+import { useNavigate } from '@/lib/router-compat';
 import './AppBar.css';
 
 const Logo = '/images/Capylumine.png';
@@ -39,8 +40,14 @@ const AppBar = () => {
     const buttonLanguageRef = useRef(null);
     const buttonServiceRef = useRef(null);
     const { i18n } = useTranslation();
+    const navigate = useNavigate();
 
     const changeLanguage = (lng) => i18n.changeLanguage(lng);
+    const openAccountProfile = (event) => {
+        event.stopPropagation();
+        setShowUserService(false);
+        navigate('/admin/account');
+    };
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -168,9 +175,20 @@ const AppBar = () => {
                             <i className='bx bx-user' />
                         </div>
                         {showUserService && (
-                            <div ref={serviceRef} className="appbar-dropdown appbar-dropdown-user">
+                            <div
+                                ref={serviceRef}
+                                className="appbar-dropdown appbar-dropdown-user"
+                                style={{
+                                    '--appbar-theme-start': themeColors.StartColorLinear,
+                                    '--appbar-theme-end': themeColors.EndColorLinear,
+                                }}
+                            >
                                 <div className="appbar-dropdown-header">Account</div>
-                                <button className="appbar-dropdown-item appbar-logout" onClick={Logout}>
+                                <button className="appbar-dropdown-item appbar-user-menu-item" onClick={openAccountProfile}>
+                                    <i className='bx bx-user-circle' />
+                                    <span>Thông tin tài khoản</span>
+                                </button>
+                                <button className="appbar-dropdown-item appbar-user-menu-item appbar-logout" onClick={Logout}>
                                     <i className='bx bx-log-out' />
                                     <span>Đăng xuất</span>
                                 </button>
