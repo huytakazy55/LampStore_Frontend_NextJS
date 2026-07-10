@@ -354,15 +354,15 @@ export default function OrderHistoryPage()
                 </nav>
 
                 {/* Page Header */}
-                <div className='bg-gradient-to-br from-primary-900 via-tertiary-900 to-quaternary-900 dark:from-black dark:via-primary-950 dark:to-tertiary-950 rounded-xl p-5 md:p-6 mb-6 text-white relative overflow-hidden'>
+                <div className='bg-gradient-to-r from-indigo-500 to-purple-600 dark:from-indigo-800 dark:to-purple-800 rounded-xl p-5 md:p-6 mb-6 text-white relative overflow-hidden shadow-lg shadow-indigo-500/30'>
                     <div className='absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2'></div>
                     <div className='absolute bottom-0 left-20 w-24 h-24 bg-white/5 rounded-full translate-y-1/2'></div>
                     <div className='relative z-10'>
-                        <h1 className='text-xl md:text-2xl font-bold flex items-center gap-2 mb-1'>
-                            <i className='bx bx-package'></i>
+                        <h1 className='text-xl md:text-2xl font-bold flex items-center gap-2 mb-1 text-white'>
+                            <i className='bx bx-package text-white'></i>
                             Đơn hàng của tôi
                         </h1>
-                        <p className='text-sm text-white/80'>
+                        <p className='text-sm text-white/90'>
                             Theo dõi và quản lý tất cả đơn hàng • {orders.length} đơn hàng
                         </p>
                     </div>

@@ -34,12 +34,12 @@ const ProductCard = ({ product, isLast, navigate, onAddToCartClick, isInWishlist
 
   return (
     <div
-      className="relative group cursor-pointer bg-white dark:bg-[#1a1a1a] rounded-sm overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08),0_0_0_1px_rgba(245,158,11,0.1)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:-translate-y-1 border border-gray-100 dark:border-[#2a2a2a] hover:border-primary-200 dark:hover:border-[#4a3800]"
+      className="relative group cursor-pointer bg-white dark:bg-[#1a1a1a] rounded-sm overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08),0_0_0_1px_rgba(139,92,246,0.1)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:-translate-y-1 border border-gray-100 dark:border-[#2a2a2a] hover:border-primary-200 dark:hover:border-primary-800"
       onClick={() => navigate(`/product/${product.slug || product.id}`)}
     >
       {/* Discount Badge */}
       {hasDiscount && (
-        <div className="absolute top-2.5 left-2.5 z-10 bg-gradient-to-r from-primary-600 via-tertiary-500 to-accent-500 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(245,158,11,0.25)]">
+        <div className="absolute top-2.5 left-2.5 z-10 bg-gradient-to-r from-primary-600 via-tertiary-500 to-accent-500 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)]">
           -{discountPercent}%
         </div>
       )}
@@ -92,7 +92,7 @@ const ProductCard = ({ product, isLast, navigate, onAddToCartClick, isInWishlist
             )}
           </div>
           <button
-            className="w-8 h-8 md:w-9 md:h-9 rounded-sm bg-gradient-to-br from-primary-100 to-primary-200 dark:from-[#3d2e00] dark:to-[#4a3200] text-primary-600 dark:text-primary-400 flex items-center justify-center transition-all duration-300 hover:from-primary-500 hover:to-accent-500 hover:text-white hover:shadow-[0_2px_8px_rgba(245,158,11,0.3)] active:scale-95"
+            className="w-8 h-8 md:w-9 md:h-9 rounded-sm bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900 dark:to-primary-800 text-primary-600 dark:text-primary-300 flex items-center justify-center transition-all duration-300 hover:from-primary-500 hover:to-accent-500 hover:text-white hover:shadow-[0_2px_8px_rgba(139,92,246,0.3)] active:scale-95"
             onClick={(e) => {
               e.stopPropagation();
               onAddToCartClick(product);

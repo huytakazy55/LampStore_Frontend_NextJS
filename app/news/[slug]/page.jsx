@@ -85,7 +85,7 @@ export default function NewsDetailPage() {
             <NavbarPrimary />
 
             <div className="bg-gray-50 min-h-screen">
-                <div className="w-full xl:mx-auto xl:max-w-[900px] px-4 xl:px-0 py-8 md:py-12">
+                <div className="w-full xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0 py-8 md:py-12">
                     {/* Breadcrumb */}
                     <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
                         <a href="/" className="hover:text-primary-600 transition-colors">Trang chủ</a>
