@@ -1,5 +1,68 @@
 const API_ENDPOINT = process.env.INTERNAL_API_ENDPOINT || process.env.NEXT_PUBLIC_API_ENDPOINT;
 const SITE_URL = 'https://capylumine.com';
+const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`;
+
+function stripHtml(value = '', maxLength)
+{
+    const text = value
+        .replace(/<[^>]*>/g, ' ')
+        .replace(/&nbsp;/gi, ' ')
+        .replace(/&amp;/gi, '&')
+        .replace(/&quot;/gi, '"')
+        .replace(/&#39;/gi, "'")
+        .replace(/&lt;/gi, '<')
+        .replace(/&gt;/gi, '>')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+    return maxLength ? text.slice(0, maxLength).trim() : text;
+}
+
+function normalizeArray(value)
+{
+    if (!value) return [];
+    if (Array.isArray(value)) return value;
+    if (Array.isArray(value.$values)) return value.$values;
+    return [];
+}
+
+function getImagePath(image)
+{
+    return image?.imagePath || image?.ImagePath || '';
+}
+
+function toAbsoluteSiteUrl(path, fallback = DEFAULT_OG_IMAGE)
+{
+    if (!path) return fallback;
+    if (path.startsWith('http')) {
+        try
+        {
+            const url = new URL(path);
+            const proxiedFolders = ['/ImageImport', '/NewsImages', '/BannerImages', '/CategoryImages'];
+            if (proxiedFolders.some(folder => url.pathname.startsWith(folder)))
+            {
+                return `${SITE_URL}${url.pathname}${url.search}`;
+            }
+        } catch { }
+
+        return path;
+    }
+
+    return `${SITE_URL}${path.startsWith('/') ? '' : '/'}${path}`;
+}
+
+function getProductImages(product)
+{
+    return normalizeArray(product?.images)
+        .map(image => toAbsoluteSiteUrl(getImagePath(image), null))
+        .filter(Boolean);
+}
+
+function getProductPrice(product)
+{
+    const variant = product?.variant;
+    return variant?.discountPrice || variant?.price || product?.minPrice || 0;
+}
 
 async function fetchProductBySlug(slug)
 {
@@ -17,16 +80,13 @@ export async function generateMetadata({ params })
         const product = await fetchProductBySlug(slug);
         if (!product) return { title: 'Sản phẩm | CapyLumine' };
 
-        const variant = product.variant;
-        const price = variant?.discountPrice || variant?.price || 0;
+        const price = getProductPrice(product);
         const description = product.description
-            ? product.description.replace(/<[^>]*>/g, '').slice(0, 160)
+            ? stripHtml(product.description, 160)
             : `Mua ${product.name} tại CapyLumine với giá ${price.toLocaleString('vi-VN')}₫. Giao hàng toàn quốc.`;
 
-        const images = product.images?.$values || product.images || [];
-        const ogImage = images.length > 0
-            ? (images[0].imagePath?.startsWith('http') ? images[0].imagePath : `${SITE_URL}${images[0].imagePath?.startsWith('/') ? '' : '/'}${images[0].imagePath}`)
-            : `${SITE_URL}/og-image.png`;
+        const productImages = getProductImages(product);
+        const ogImage = productImages[0] || DEFAULT_OG_IMAGE;
 
         return {
             title: product.name,
@@ -65,12 +125,9 @@ async function getProductJsonLd(slug)
         if (!product) return null;
 
         const variant = product.variant;
-        const price = variant?.discountPrice || variant?.price || product.minPrice || 0;
-        const originalPrice = variant?.price || product.maxPrice || 0;
-        const images = product.images?.$values || product.images || [];
-        const imageUrls = images.map(img =>
-            img.imagePath?.startsWith('http') ? img.imagePath : `${SITE_URL}${img.imagePath?.startsWith('/') ? '' : '/'}${img.imagePath}`
-        );
+        const price = getProductPrice(product);
+        const imageUrls = getProductImages(product);
+        const cleanDescription = stripHtml(product.description, 500);
 
         // Fetch reviews using product.id
         let reviews = [];
@@ -91,23 +148,26 @@ async function getProductJsonLd(slug)
         const jsonLd = {
             '@context': 'https://schema.org',
             '@type': 'Product',
+            '@id': `${SITE_URL}/product/${slug}#product`,
             name: product.name,
-            description: product.description?.replace(/<[^>]*>/g, '').slice(0, 500) || '',
-            image: imageUrls,
+            description: cleanDescription || product.name,
+            image: imageUrls.length > 0 ? imageUrls : [DEFAULT_OG_IMAGE],
             url: `${SITE_URL}/product/${slug}`,
             brand: {
                 '@type': 'Brand',
                 name: 'CapyLumine',
             },
+            productID: product.id,
             sku: variant?.sku || product.id,
+            mpn: variant?.sku || product.id,
+            category: product.categoryName || product.category?.name || 'Đèn trang trí',
+            ...(variant?.materials && { material: variant.materials }),
             offers: {
                 '@type': 'Offer',
                 url: `${SITE_URL}/product/${slug}`,
                 priceCurrency: 'VND',
-                price: price,
-                ...(originalPrice > price && {
-                    priceValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                }),
+                price: Number(price).toFixed(0),
+                priceValidUntil: new Date(Date.now() + 180 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
                 availability: (variant?.stock || 0) > 0
                     ? 'https://schema.org/InStock'
                     : 'https://schema.org/OutOfStock',
@@ -118,6 +178,11 @@ async function getProductJsonLd(slug)
                 },
                 shippingDetails: {
                     '@type': 'OfferShippingDetails',
+                    shippingRate: {
+                        '@type': 'MonetaryAmount',
+                        value: 0,
+                        currency: 'VND',
+                    },
                     shippingDestination: {
                         '@type': 'DefinedRegion',
                         addressCountry: 'VN',
