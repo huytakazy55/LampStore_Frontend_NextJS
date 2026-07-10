@@ -151,16 +151,6 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
             weight: variant?.weight || 0
         });
 
-        // Dispatch fly-to-cart animation event
-        const rect = e.currentTarget.getBoundingClientRect();
-        window.dispatchEvent(new CustomEvent('flyToCart', {
-            detail: {
-                x: rect.left + rect.width / 2,
-                y: rect.top,
-                image: mainImage
-            }
-        }));
-
         setAddedSuccess(true);
         setTimeout(() => {
             setAddedSuccess(false);
@@ -180,7 +170,7 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
                 {/* Close Button */}
                 <button
                     onClick={onClose}
-                    className="absolute top-2 right-2 sm:top-4 sm:right-4 w-8 h-8 sm:w-auto sm:h-auto flex items-center justify-center text-gray-400 dark:text-gray-500 hover:text-rose-600 dark:hover:text-rose-400 transition-colors z-10"
+                    className="absolute top-2 right-2 sm:top-4 sm:right-4 w-8 h-8 sm:w-auto sm:h-auto flex items-center justify-center text-gray-400 dark:text-gray-500 hover:text-amber-600 dark:hover:text-amber-500 transition-colors z-10"
                 >
                     <i className="bx bx-x text-2xl sm:text-3xl"></i>
                 </button>
@@ -193,7 +183,7 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
                             {allImageSrcs.length > 1 && (
                                 <button
                                     onClick={handlePrevImage}
-                                    className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 dark:bg-gray-700/80 shadow-md hover:bg-white dark:hover:bg-gray-600 transition-all text-gray-600 dark:text-gray-200 hover:text-rose-600 dark:hover:text-rose-400 cursor-pointer backdrop-blur-sm"
+                                    className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 dark:bg-gray-700/80 shadow-md hover:bg-white dark:hover:bg-gray-600 transition-all text-gray-600 dark:text-gray-200 hover:text-amber-600 dark:hover:text-amber-500 cursor-pointer backdrop-blur-sm"
                                     aria-label="Previous image"
                                 >
                                     <i className="bx bx-chevron-left text-xl"></i>
@@ -208,7 +198,7 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
                             {allImageSrcs.length > 1 && (
                                 <button
                                     onClick={handleNextImage}
-                                    className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 dark:bg-gray-700/80 shadow-md hover:bg-white dark:hover:bg-gray-600 transition-all text-gray-600 dark:text-gray-200 hover:text-rose-600 dark:hover:text-rose-400 cursor-pointer backdrop-blur-sm"
+                                    className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 dark:bg-gray-700/80 shadow-md hover:bg-white dark:hover:bg-gray-600 transition-all text-gray-600 dark:text-gray-200 hover:text-amber-600 dark:hover:text-amber-500 cursor-pointer backdrop-blur-sm"
                                     aria-label="Next image"
                                 >
                                     <i className="bx bx-chevron-right text-xl"></i>
@@ -228,7 +218,7 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
                                         }}
                                         className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
                                             (!displayImage && currentImageIndex === idx)
-                                                ? 'bg-rose-500 scale-125'
+                                                ? 'bg-amber-500 scale-125'
                                                 : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
                                         }`}
                                         aria-label={`View image ${idx + 1}`}
@@ -245,14 +235,14 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
                         </h2>
 
                         {/* Price Area */}
-                        <div className="flex items-end gap-3 mt-1 sm:mt-2 mb-3 sm:mb-5 bg-rose-50/50 dark:bg-rose-900/20 p-2.5 sm:p-4 rounded-md border border-rose-100/50 dark:border-rose-800/30">
-                            <span className="text-xl sm:text-2xl font-bold text-rose-600">₫{formatPrice(price)}</span>
+                        <div className="flex items-end gap-3 mt-1 sm:mt-2 mb-3 sm:mb-5 bg-amber-50/50 dark:bg-amber-900/20 p-2.5 sm:p-4 rounded-md border border-amber-100/50 dark:border-amber-800/30">
+                            <span className="text-xl sm:text-2xl font-bold text-amber-600">₫{formatPrice(price)}</span>
                             {hasDiscount && (
                                 <>
                                     <span className="text-sm line-through text-gray-400 dark:text-gray-500 mb-1">
                                         ₫{formatPrice(originalPrice)}
                                     </span>
-                                    <span className="bg-rose-500 text-white text-xs px-1.5 py-0.5 rounded font-medium mb-1">
+                                    <span className="bg-red-500 text-white text-xs px-1.5 py-0.5 rounded font-medium mb-1">
                                         -{discountPercent}%
                                     </span>
                                 </>
@@ -281,24 +271,24 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
                                                             key={val.id}
                                                             onClick={() => handleSelectOption(vt.name, val)}
                                                             className={`flex items-center gap-2 py-1.5 px-3 cursor-pointer text-sm border rounded transition-all ${isSelected
-                                                                ? 'border-rose-600 text-rose-600 bg-rose-50 dark:bg-rose-900/30 font-medium ring-1 ring-rose-600/20'
+                                                                ? 'border-amber-500 text-amber-600 bg-amber-50 dark:bg-amber-900/30 font-medium ring-1 ring-amber-500/20'
                                                                 : isRequired
-                                                                    ? 'border-red-300 hover:border-rose-300 text-gray-600 dark:text-gray-400'
-                                                                    : 'border-gray-300 dark:border-gray-600 hover:border-rose-300 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400'
+                                                                    ? 'border-red-300 hover:border-amber-300 text-gray-600 dark:text-gray-400'
+                                                                    : 'border-gray-300 dark:border-gray-600 hover:border-amber-300 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400'
                                                                 }`}
                                                         >
                                                             {optionImage && (
                                                                 <img
                                                                     src={optionImage}
                                                                     alt={val.value}
-                                                                    className={`w-8 h-8 rounded object-cover border ${isSelected ? 'border-rose-400' : 'border-gray-200 dark:border-gray-600'}`}
+                                                                    className={`w-8 h-8 rounded object-cover border ${isSelected ? 'border-amber-400' : 'border-gray-200 dark:border-gray-600'}`}
                                                                     onError={(e) => { e.target.style.display = 'none'; }}
                                                                 />
                                                             )}
                                                             <span>
                                                                 {val.value}
                                                                 {val.additionalPrice > 0 && (
-                                                                    <span className="ml-1 text-xs text-rose-500">+₫{formatPrice(val.additionalPrice)}</span>
+                                                                    <span className="ml-1 text-xs text-amber-600">+₫{formatPrice(val.additionalPrice)}</span>
                                                                 )}
                                                             </span>
                                                         </button>
@@ -322,9 +312,11 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
                         <div className="mb-3 sm:mb-6 flex items-center gap-3 sm:gap-6 flex-wrap">
                             <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">Số lượng:</h3>
                             <div className="flex items-center border border-gray-300 dark:border-gray-600 rounded overflow-hidden bg-white dark:bg-gray-800">
-                                <button onClick={handleDecrease} className="w-9 h-9 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-rose-600 transition font-medium text-lg">-</button>
-                                <input type="number" value={quantity} readOnly className="w-12 h-9 text-center text-sm outline-none border-x border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200" />
-                                <button onClick={handleIncrease} className="w-9 h-9 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-rose-600 transition font-medium text-lg">+</button>
+                                <button onClick={handleDecrease} className="w-9 h-9 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-amber-600 transition font-medium text-lg">-</button>
+                                <span aria-label="Số lượng sản phẩm" className="w-12 h-9 flex items-center justify-center text-sm border-x border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 select-none">
+                                    {quantity}
+                                </span>
+                                <button onClick={handleIncrease} className="w-9 h-9 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-amber-600 transition font-medium text-lg">+</button>
                             </div>
                             <span className="text-sm text-gray-400 dark:text-gray-500">{stock} sản phẩm có sẵn</span>
                         </div>
@@ -341,7 +333,7 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
                         <div className="mt-auto flex gap-3 sm:gap-4 pt-3 sm:pt-4 border-t border-gray-100 dark:border-gray-800">
                             <button
                                 onClick={handleAddToCart}
-                                className="flex-1 bg-rose-50 dark:bg-rose-900/30 border border-rose-600 text-rose-600 dark:text-rose-400 py-2.5 sm:py-3 rounded-md font-medium hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors flex justify-center items-center gap-2 cursor-pointer text-sm sm:text-base"
+                                className="flex-1 bg-amber-50 dark:bg-amber-900/30 border border-amber-500 text-amber-600 dark:text-amber-400 py-2.5 sm:py-3 rounded-md font-medium hover:bg-amber-100 dark:hover:bg-amber-900/50 transition-colors flex justify-center items-center gap-2 cursor-pointer text-sm sm:text-base"
                             >
                                 <i className="bx bx-cart-add text-xl"></i>
                                 Thêm vào giỏ
@@ -370,7 +362,7 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
                                     sessionStorage.setItem('buyNowItems', JSON.stringify([buyItem]));
                                     navigate('/checkout');
                                 }}
-                                className="flex-1 bg-rose-600 text-white py-2.5 sm:py-3 rounded-md font-medium hover:bg-rose-700 transition-colors shadow-sm cursor-pointer text-sm sm:text-base"
+                                className="flex-1 bg-amber-500 text-white py-2.5 sm:py-3 rounded-md font-medium hover:bg-amber-600 transition-colors shadow-sm cursor-pointer text-sm sm:text-base"
                             >
                                 Mua ngay
                             </button>

@@ -39,6 +39,16 @@ const stripHtml = (html) => {
     return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
 };
 
+const renderRatingStars = (rating) => [1, 2, 3, 4, 5].map((star) => {
+    const starClass = rating >= star - 0.25
+        ? 'bxs-star text-orange-400'
+        : rating >= star - 0.75
+            ? 'bxs-star-half text-orange-400'
+            : 'bx-star text-gray-300 dark:text-gray-600';
+
+    return <i key={star} className={`bx ${starClass} text-xs`}></i>;
+});
+
 export default function ProductDetailPage() {
     const params = useParams();
     const slug = params.slug;
@@ -276,16 +286,6 @@ export default function ProductDetailPage() {
             });
         });
 
-        // Dispatch fly-to-cart animation event
-        const rect = e.currentTarget.getBoundingClientRect();
-        window.dispatchEvent(new CustomEvent('flyToCart', {
-            detail: {
-                x: rect.left + rect.width / 2,
-                y: rect.top,
-                image: mainImg
-            }
-        }));
-
         setAddedSuccess(true);
         setTimeout(() => setAddedSuccess(false), 2000);
     };
@@ -408,6 +408,22 @@ export default function ProductDetailPage() {
     const discountPercent = hasDiscount ? Math.round((1 - currentVariant.discountPrice / currentVariant.price) * 100) : 0;
     const stock = currentVariant?.stock || 0;
     const mainImage = images.length > 0 ? getImgSrc(images[selectedImage]?.imagePath) : '/images/cameras-2.jpg';
+    const reviewStats = useMemo(() => {
+        const normalizedReviews = Array.isArray(reviews) ? reviews : [];
+        if (normalizedReviews.length > 0) {
+            const totalRating = normalizedReviews.reduce((sum, review) => sum + Number(review.rating || 0), 0);
+            return {
+                count: normalizedReviews.length,
+                average: Number((totalRating / normalizedReviews.length).toFixed(1))
+            };
+        }
+
+        return {
+            count: Number(product?.reviewCount) || 0,
+            average: Number(product?.averageRating) || 0
+        };
+    }, [reviews, product?.reviewCount, product?.averageRating]);
+    const soldCount = Number(product?.sellCount) || 0;
 
     // Related products
     const relatedProducts = useMemo(() => {
@@ -440,7 +456,7 @@ export default function ProductDetailPage() {
                     <div className="text-center text-gray-500">
                         <i className='bx bx-error-circle text-5xl mb-2'></i>
                         <p className="text-lg">Không tìm thấy sản phẩm</p>
-                        <button onClick={() => router.push('/')} className="text-rose-600 hover:underline mt-2 inline-block cursor-pointer">← Về trang chủ</button>
+                        <button onClick={() => router.push('/')} className="text-amber-600 hover:underline mt-2 inline-block cursor-pointer">← Về trang chủ</button>
                     </div>
                 </div>
                 <Footer />
@@ -457,7 +473,7 @@ export default function ProductDetailPage() {
             <main className='w-full mb-2 xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0'>
                 {/* Breadcrumb */}
                 <nav aria-label="Breadcrumb" className='flex items-center py-3 text-xs md:text-sm'>
-                    <a href="/" className='font-medium text-gray-600 dark:text-gray-400 hover:text-rose-600 transition'>Trang chủ</a>
+                    <a href="/" className='font-medium text-gray-600 dark:text-gray-400 hover:text-amber-600 transition'>Trang chủ</a>
                     <i className='bx bx-chevron-right text-base md:text-lg px-1 text-gray-400 dark:text-gray-600'></i>
                     <span className='text-gray-500 dark:text-gray-400 line-clamp-1'>{product.name}</span>
                 </nav>
@@ -487,7 +503,7 @@ export default function ProductDetailPage() {
                             {images.map((img, i) => (
                                 <img
                                     key={img.id || i}
-                                    className={`w-14 h-14 md:w-16 md:h-16 border rounded cursor-pointer object-cover transition flex-shrink-0 ${selectedImage === i ? 'border-rose-600 border-2' : 'border-gray-200 dark:border-gray-700 hover:border-rose-300'} bg-white dark:bg-gray-800`}
+                                    className={`w-14 h-14 md:w-16 md:h-16 border rounded cursor-pointer object-cover transition flex-shrink-0 ${selectedImage === i ? 'border-amber-500 border-2' : 'border-gray-200 dark:border-gray-700 hover:border-amber-300'} bg-white dark:bg-gray-800`}
                                     src={getImgSrc(img.imagePath)}
                                     alt={`${product.name} - Ảnh ${i + 1}`}
                                     onClick={() => setSelectedImage(i)}
@@ -496,7 +512,7 @@ export default function ProductDetailPage() {
                             ))}
                         </div>
                         <div
-                            className={`flex justify-end items-center text-xs md:text-sm h-8 mt-2 cursor-pointer transition-colors ${isInWishlist(product.id) ? 'text-rose-500' : 'text-gray-500 dark:text-gray-400 hover:text-rose-600'}`}
+                            className={`flex justify-end items-center text-xs md:text-sm h-8 mt-2 cursor-pointer transition-colors ${isInWishlist(product.id) ? 'text-amber-600' : 'text-gray-500 dark:text-gray-400 hover:text-amber-600'}`}
                             onClick={() => toggleWishlist(product.id)}
                         >
                             <i className={`bx ${isInWishlist(product.id) ? 'bxs-heart' : 'bx-heart'} text-base md:text-lg mr-1`}></i>
@@ -509,21 +525,19 @@ export default function ProductDetailPage() {
                         <h1 className='text-base md:text-xl font-medium leading-relaxed mb-2 dark:text-gray-100'>{product.name}</h1>
                         <div className='flex flex-wrap justify-start items-center text-xs md:text-sm gap-2 md:gap-3 py-1 text-gray-500 dark:text-gray-400'>
                             <div className='flex items-center gap-1'>
-                                <span className='text-rose-600 font-medium'>4.8</span>
-                                {[...Array(5)].map((_, i) => (
-                                    <i key={i} className='bx bxs-star text-orange-400 text-xs'></i>
-                                ))}
+                                <span className='text-amber-600 font-medium'>{reviewStats.average.toFixed(1)}</span>
+                                {renderRatingStars(reviewStats.average)}
                             </div>
                             <span className='text-gray-300 dark:text-gray-600'>|</span>
-                            <div>{product.reviewCount || 0} Đánh giá</div>
+                            <div>{reviewStats.count} Đánh giá</div>
                             <span className='text-gray-300 dark:text-gray-600'>|</span>
-                            <div>{product.sellCount || 0} Đã bán</div>
+                            <div>{soldCount} Đã bán</div>
                         </div>
 
                         {/* Flash Sale Banner */}
                         {flashSaleItem && (
                             <div className='my-3 md:my-4 rounded-lg overflow-hidden'>
-                                <div className='flex items-center justify-between bg-gradient-to-r from-[#ff3b30] to-[#ff6b35] px-4 py-2'>
+                                <div className='flex items-center justify-between bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-2'>
                                     <div className='flex items-center gap-2'>
                                         <span className='text-white text-base'>⚡</span>
                                         <span className='text-white font-bold text-sm tracking-wide'>FLASH SALE</span>
@@ -537,10 +551,10 @@ export default function ProductDetailPage() {
                                         <span className='bg-white/20 rounded px-1.5 py-0.5 font-mono font-bold'>{String(fsCountdown.s).padStart(2, '0')}</span>
                                     </div>
                                 </div>
-                                <div className='flex flex-wrap items-center gap-2 md:gap-3 py-3 md:py-4 px-4 md:px-6 bg-red-50 dark:bg-red-900/20'>
-                                    <div className='text-xl md:text-2xl font-bold text-rose-600'>₫{formatPrice(flashSaleItem.flashSalePrice)}</div>
+                                <div className='flex flex-wrap items-center gap-2 md:gap-3 py-3 md:py-4 px-4 md:px-6 bg-amber-50 dark:bg-amber-900/20'>
+                                    <div className='text-xl md:text-2xl font-bold text-amber-600'>₫{formatPrice(flashSaleItem.flashSalePrice)}</div>
                                     <div className='text-xs md:text-sm text-gray-400 dark:text-gray-500 line-through'>₫{formatPrice(flashSaleItem.productOriginalPrice || price)}</div>
-                                    <div className='bg-rose-600 text-white text-xs px-2 py-0.5 rounded font-medium'>-{flashSaleItem.discountPercent}%</div>
+                                    <div className='bg-orange-500 text-white text-xs px-2 py-0.5 rounded font-medium'>-{flashSaleItem.discountPercent}%</div>
                                     {flashSaleItem.stock > 0 && (
                                         <div className='ml-auto text-xs text-gray-500'>Còn {flashSaleItem.stock - flashSaleItem.soldCount} sản phẩm</div>
                                     )}
@@ -549,12 +563,12 @@ export default function ProductDetailPage() {
                         )}
 
                         {/* Price */}
-                        <div className={`flex flex-wrap items-center bg-gradient-to-r from-rose-50 to-slate-50 dark:from-rose-900/20 dark:to-gray-800 gap-2 md:gap-3 py-3 md:py-4 px-4 md:px-6 my-3 md:my-4 rounded-lg ${flashSaleItem ? 'hidden' : ''}`}>
-                            <div className='text-xl md:text-2xl font-bold text-rose-600'>₫{formatPrice(price)}</div>
+                        <div className={`flex flex-wrap items-center bg-gradient-to-r from-amber-50 to-slate-50 dark:from-amber-900/20 dark:to-gray-800 gap-2 md:gap-3 py-3 md:py-4 px-4 md:px-6 my-3 md:my-4 rounded-lg ${flashSaleItem ? 'hidden' : ''}`}>
+                            <div className='text-xl md:text-2xl font-bold text-amber-600'>₫{formatPrice(price)}</div>
                             {hasDiscount && (
                                 <>
                                     <div className='text-xs md:text-sm text-gray-400 dark:text-gray-500 line-through'>₫{formatPrice(originalPrice)}</div>
-                                    <div className='bg-rose-600 text-white text-xs px-2 py-0.5 rounded font-medium'>-{discountPercent}%</div>
+                                    <div className='bg-orange-500 text-white text-xs px-2 py-0.5 rounded font-medium'>-{discountPercent}%</div>
                                 </>
                             )}
                         </div>
@@ -580,10 +594,10 @@ export default function ProductDetailPage() {
                                                             key={val.id}
                                                             onClick={() => handleSelectOption(vt.name, val)}
                                                             className={`cursor-pointer border rounded transition ${isSelected
-                                                                ? 'border-rose-600 ring-1 ring-rose-300 bg-rose-50 dark:bg-rose-900/30'
+                                                                ? 'border-amber-500 ring-1 ring-amber-300 bg-amber-50 dark:bg-amber-900/30'
                                                                 : isRequired
-                                                                    ? 'border-red-300 hover:border-rose-300 dark:text-gray-400'
-                                                                    : 'border-gray-300 dark:border-gray-600 hover:border-rose-300 dark:text-gray-400'
+                                                                    ? 'border-red-300 hover:border-amber-300 dark:text-gray-400'
+                                                                    : 'border-gray-300 dark:border-gray-600 hover:border-amber-300 dark:text-gray-400'
                                                                 } ${hasImage ? 'flex flex-col items-center p-1.5 w-[72px]' : 'py-1.5 px-3 md:px-4'}`}
                                                         >
                                                             {hasImage && (
@@ -594,11 +608,11 @@ export default function ProductDetailPage() {
                                                                     onError={(e) => { e.target.style.display = 'none'; }}
                                                                 />
                                                             )}
-                                                            <span className={`text-xs md:text-sm ${isSelected ? 'text-rose-600 font-medium' : ''} ${hasImage ? 'text-center leading-tight' : ''}`}>
+                                                            <span className={`text-xs md:text-sm ${isSelected ? 'text-amber-600 font-medium' : ''} ${hasImage ? 'text-center leading-tight' : ''}`}>
                                                                 {val.value}
                                                             </span>
                                                             {val.additionalPrice > 0 && (
-                                                                <span className='ml-1 text-xs text-rose-500'>+₫{formatPrice(val.additionalPrice)}</span>
+                                                                <span className='ml-1 text-xs text-amber-600'>+₫{formatPrice(val.additionalPrice)}</span>
                                                             )}
                                                         </div>
                                                     );
@@ -615,9 +629,11 @@ export default function ProductDetailPage() {
                             <div className='w-full sm:w-[10%] font-medium text-sm dark:text-gray-300'>Số lượng</div>
                             <div className='flex items-center gap-3'>
                                 <div className='flex items-center border border-gray-300 dark:border-gray-600 rounded overflow-hidden'>
-                                    <button onClick={handleDecrease} aria-label="Giảm số lượng" className='w-9 h-9 flex items-center justify-center bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-rose-600 hover:text-white active:scale-95 transition text-lg font-medium cursor-pointer'>-</button>
-                                    <input type="number" value={quantity} min="1" max="999" readOnly aria-label="Số lượng sản phẩm" className="w-12 md:w-14 h-9 text-center text-sm outline-none border-x border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200" />
-                                    <button onClick={handleIncrease} aria-label="Tăng số lượng" className='w-9 h-9 flex items-center justify-center bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-rose-600 hover:text-white active:scale-95 transition text-lg font-medium cursor-pointer'>+</button>
+                                    <button onClick={handleDecrease} aria-label="Giảm số lượng" className='w-9 h-9 flex items-center justify-center bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-amber-500 hover:text-white active:scale-95 transition text-lg font-medium cursor-pointer'>-</button>
+                                    <span aria-label="Số lượng sản phẩm" className="w-12 md:w-14 h-9 flex items-center justify-center text-sm border-x border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 select-none">
+                                        {quantity}
+                                    </span>
+                                    <button onClick={handleIncrease} aria-label="Tăng số lượng" className='w-9 h-9 flex items-center justify-center bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-amber-500 hover:text-white active:scale-95 transition text-lg font-medium cursor-pointer'>+</button>
                                 </div>
                                 <div className='text-xs md:text-sm text-gray-400 dark:text-gray-500'>{stock} sản phẩm có sẵn</div>
                             </div>
@@ -652,7 +668,7 @@ export default function ProductDetailPage() {
                                                         <div className='flex-1 min-w-0'>
                                                             <a href={`/product/${addon.slug}`} className='text-sm font-medium text-gray-800 dark:text-gray-200 hover:text-amber-600 transition-colors line-clamp-1'>{addon.name}</a>
                                                             <div className='flex items-center gap-2 mt-0.5'>
-                                                                <span className='text-sm font-bold text-rose-600'>₫{formatPrice(addonBasePrice)}</span>
+                                                                <span className='text-sm font-bold text-amber-600'>₫{formatPrice(addonBasePrice)}</span>
                                                                 {addonHasDiscount && <span className='text-xs text-gray-400 line-through'>₫{formatPrice(addonOriginal)}</span>}
                                                             </div>
                                                         </div>
@@ -727,7 +743,7 @@ export default function ProductDetailPage() {
                                                                         <div className='flex-1 min-w-0 text-xs text-gray-600 dark:text-gray-400 truncate'>
                                                                             {optLabels || 'Mặc định'}
                                                                         </div>
-                                                                        <span className='text-xs font-medium text-rose-600 whitespace-nowrap'>₫{formatPrice(itemPrice)}</span>
+                                                                        <span className='text-xs font-medium text-amber-600 whitespace-nowrap'>₫{formatPrice(itemPrice)}</span>
                                                                         <div className='flex items-center border border-gray-200 dark:border-gray-600 rounded overflow-hidden'>
                                                                             <button onClick={() => handleAddonQty(addon.id, idx, -1)} className='w-6 h-6 flex items-center justify-center text-xs text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer'>-</button>
                                                                             <span className='w-6 h-6 flex items-center justify-center text-xs bg-white dark:bg-gray-800 border-x border-gray-200 dark:border-gray-600'>{item.qty}</span>
@@ -757,10 +773,10 @@ export default function ProductDetailPage() {
 
                         {/* Actions */}
                         <div className='flex flex-col sm:flex-row gap-3 md:gap-4 mb-4 md:mb-6'>
-                            <button onClick={handleAddToCart} className='flex items-center justify-center gap-2 border border-rose-600 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 py-2.5 px-4 md:px-6 rounded hover:bg-rose-100 dark:hover:bg-rose-900/50 transition text-sm md:text-base w-full sm:w-auto cursor-pointer'>
+                            <button onClick={handleAddToCart} className='flex items-center justify-center gap-2 border border-amber-500 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 py-2.5 px-4 md:px-6 rounded hover:bg-amber-100 dark:hover:bg-amber-900/50 transition text-sm md:text-base w-full sm:w-auto cursor-pointer'>
                                 <i className='bx bxs-cart-add text-lg md:text-xl'></i> Thêm vào giỏ hàng
                             </button>
-                            <button onClick={handleBuyNow} className='bg-rose-600 text-white py-2.5 px-6 md:px-8 rounded hover:bg-rose-700 transition font-medium text-sm md:text-base w-full sm:w-auto cursor-pointer'>
+                            <button onClick={handleBuyNow} className='bg-amber-500 text-white py-2.5 px-6 md:px-8 rounded hover:bg-amber-600 transition font-medium text-sm md:text-base w-full sm:w-auto cursor-pointer'>
                                 Mua ngay
                             </button>
                         </div>
@@ -768,15 +784,15 @@ export default function ProductDetailPage() {
                         {/* Trust Badges */}
                         <div className='flex flex-col sm:flex-row gap-3 md:gap-6 pt-4 border-t border-gray-100 dark:border-gray-700 text-xs md:text-sm text-gray-600 dark:text-gray-400'>
                             <div className='flex items-center gap-1.5'>
-                                <i className='bx bxs-analyse text-base md:text-lg text-rose-600'></i>
+                                <i className='bx bxs-analyse text-base md:text-lg text-amber-600'></i>
                                 Đổi ý miễn phí 15 ngày
                             </div>
                             <div className='flex items-center gap-1.5'>
-                                <i className='bx bxs-check-shield text-base md:text-lg text-rose-600'></i>
+                                <i className='bx bxs-check-shield text-base md:text-lg text-amber-600'></i>
                                 Hàng chính hãng 100%
                             </div>
                             <div className='flex items-center gap-1.5'>
-                                <i className='bx bxs-truck text-base md:text-lg text-rose-600'></i>
+                                <i className='bx bxs-truck text-base md:text-lg text-amber-600'></i>
                                 Miễn phí vận chuyển
                             </div>
                         </div>
@@ -970,7 +986,7 @@ export default function ProductDetailPage() {
                                                 onError={(e) => { e.target.src = '/images/cameras-2.jpg'; }}
                                             />
                                             {rpHasDiscount && (
-                                                <div className='absolute top-2 left-2 bg-gradient-to-r from-red-500 to-rose-400 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm shadow'>-{rpDiscountPercent}%</div>
+                                                <div className='absolute top-2 left-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm shadow'>-{rpDiscountPercent}%</div>
                                             )}
                                         </div>
                                         <div className='p-3'>
@@ -1010,7 +1026,7 @@ export default function ProductDetailPage() {
                         <div className='mt-2 text-center'>
                             <div className='text-sm font-medium text-gray-800 dark:text-gray-200'>{previewImg.name}</div>
                             {previewImg.price > 0 && (
-                                <div className='text-base font-bold text-rose-600 mt-0.5'>₫{formatPrice(previewImg.price)}</div>
+                                <div className='text-base font-bold text-amber-600 mt-0.5'>₫{formatPrice(previewImg.price)}</div>
                             )}
                         </div>
                     </div>

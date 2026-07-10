@@ -347,121 +347,43 @@ const ChatWindow = ({ onClose }) =>
 
   return (
     <div
-      style={{
-        position: 'fixed',
-        bottom: '0',
-        right: '30px',
-        width: '22rem',
-        height: '32rem',
-        background: 'white',
-        borderRadius: '1rem',
-        boxShadow: '0 6px 18px 0 rgba(60,60,180,0.13), 0 0 0 2.5px rgba(37,99,235,0.08)',
-        zIndex: 1001,
-        display: 'flex',
-        flexDirection: 'column',
-        overflow: 'hidden',
-        animation: 'chatWindowSlideIn 0.38s cubic-bezier(.4,2,.6,1)',
-      }}
+      className="flex h-[32rem] w-[22rem] flex-col overflow-hidden rounded-2xl bg-white shadow-[0_6px_18px_rgba(60,60,180,0.13),0_0_0_2.5px_rgba(245,158,11,0.12)]"
       onWheel={e => e.stopPropagation()}
       tabIndex={0}
     >
-      <style>{`
-        @keyframes chatWindowSlideIn {
-          0% { opacity: 0; transform: translateY(60px) scale(0.95); }
-          100% { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        .chat-send-btn {
-          background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
-          color: white;
-          border-radius: 12px;
-          padding: 0.35rem 0.8rem;
-          font-weight: 600;
-          font-size: 0.95rem;
-          border: none;
-          box-shadow: 0 1.5px 5px rgba(37,99,235,0.10);
-          transition: all 0.18s cubic-bezier(.4,2,.6,1);
-          cursor: pointer;
-        }
-        .chat-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .chat-send-btn:hover:not(:disabled) {
-          background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
-          box-shadow: 0 2.5px 8px rgba(124,58,237,0.13);
-          transform: scale(1.06);
-        }
-        .chat-input {
-          border-radius: 12px;
-          border: 1.2px solid #e0e7ef;
-          padding: 0.38rem 0.8rem;
-          font-size: 0.97rem;
-          outline: none;
-          transition: border 0.2s;
-        }
-        .chat-input:focus {
-          border: 1.2px solid #7c3aed;
-          box-shadow: 0 0 0 1.5px #e0e7ef;
-        }
-        .chat-scrollable {
-          overflow-y: auto !important;
-          overscroll-behavior: contain !important;
-        }
-      `}</style>
-
       {/* Header */}
-      <div style={{
-        background: 'linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)',
-        color: 'white',
-        padding: '0.85rem 1.1rem',
-        borderTopLeftRadius: '1rem',
-        borderTopRightRadius: '1rem',
-        boxShadow: '0 2px 8px 0 rgba(60,60,180,0.10)',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        minHeight: '3.1rem',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+      <div className="flex min-h-[3.1rem] items-center justify-between bg-gradient-to-br from-amber-500 to-orange-500 px-[1.1rem] py-[0.85rem] text-white shadow-[0_2px_8px_rgba(245,158,11,0.18)]">
+        <div className="flex items-center gap-2">
           <MessageSquare size={20} />
           <div>
-            <h3 style={{ margin: 0, fontWeight: 600, fontSize: '1.05rem', letterSpacing: '0.3px', color: 'white' }}>
+            <h3 className="m-0 text-[1.05rem] font-semibold tracking-[0.3px] text-white">
               Chat với CapyLumine
             </h3>
-            <p style={{ fontSize: '0.75rem', opacity: 0.8, margin: 0 }}>
+            <p className="m-0 text-xs opacity-80">
               {loading ? 'Đang kết nối...' : 'Trực tuyến'}
             </p>
           </div>
         </div>
         <button
           onClick={onClose}
-          style={{
-            background: 'rgba(255,255,255,0.13)',
-            border: 'none',
-            borderRadius: '50%',
-            width: '2.1rem', height: '2.1rem',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: 'white',
-            cursor: 'pointer',
-            transition: 'background 0.18s',
-          }}
-          onMouseOver={e => e.currentTarget.style.background = 'rgba(255,255,255,0.22)'}
-          onMouseOut={e => e.currentTarget.style.background = 'rgba(255,255,255,0.13)'}
+          className="flex h-[2.1rem] w-[2.1rem] cursor-pointer items-center justify-center rounded-full border-none bg-white/15 text-white transition-colors hover:bg-white/25"
         >
           <Minimize2 size={18} />
         </button>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 chat-scrollable" style={{ padding: '1rem', flex: 1, display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+      <div className="flex flex-1 flex-col gap-[0.6rem] overflow-y-auto overscroll-contain p-4">
         {loading ? (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, color: '#9ca3af' }}>
-            <div style={{ width: 32, height: 32, border: '3px solid #e5e7eb', borderTopColor: '#6366f1', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} />
-            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-            <p style={{ marginTop: 12, fontSize: '0.9rem' }}>Đang tải...</p>
+          <div className="flex flex-1 flex-col items-center justify-center text-gray-400">
+            <div className="h-8 w-8 animate-spin rounded-full border-[3px] border-gray-200 border-t-amber-500" />
+            <p className="mt-3 text-sm">Đang tải...</p>
           </div>
         ) : messages.length === 0 ? (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, color: '#9ca3af', textAlign: 'center' }}>
-            <MessageSquare size={40} style={{ color: '#d1d5db', marginBottom: 8 }} />
-            <p style={{ fontSize: '0.95rem', fontWeight: 500 }}>Xin chào! 👋</p>
-            <p style={{ fontSize: '0.82rem' }}>Hãy gửi tin nhắn, chúng tôi sẽ phản hồi sớm nhất!</p>
+          <div className="flex flex-1 flex-col items-center justify-center text-center text-gray-400">
+            <MessageSquare size={40} className="mb-2 text-gray-300" />
+            <p className="text-[0.95rem] font-medium">Xin chào! 👋</p>
+            <p className="text-[0.82rem]">Hãy gửi tin nhắn, chúng tôi sẽ phản hồi sớm nhất!</p>
           </div>
         ) : (
           messages.map((message) =>
@@ -469,41 +391,28 @@ const ChatWindow = ({ onClose }) =>
             // If senderId is null/undefined and we're in guest mode, it's the guest's own message
             const isFromCurrentUser = message.senderId === currentUserId || (isGuestMode() && !message.senderId);
             return (
-              <div key={message.id} style={{ display: 'flex', justifyContent: isFromCurrentUser ? 'flex-end' : 'flex-start' }}>
-                <div style={{ display: 'flex', alignItems: 'flex-end', gap: '0.4rem', maxWidth: '80%' }}>
+              <div key={message.id} className={`flex ${isFromCurrentUser ? 'justify-end' : 'justify-start'}`}>
+                <div className="flex max-w-[80%] items-end gap-[0.4rem]">
                   {!isFromCurrentUser && (
-                    <div style={{
-                      width: 28, height: 28, borderRadius: '50%',
-                      background: 'linear-gradient(135deg, #10b981, #059669)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      color: 'white', fontSize: '0.7rem', fontWeight: 700, flexShrink: 0,
-                    }}>A</div>
+                    <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-[0.7rem] font-bold text-white">A</div>
                   )}
-                  <div style={{
-                    padding: '0.5rem 0.75rem',
-                    borderRadius: isFromCurrentUser ? '0.8rem 0.8rem 0.2rem 0.8rem' : '0.8rem 0.8rem 0.8rem 0.2rem',
-                    background: isFromCurrentUser
-                      ? 'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)'
-                      : '#f3f4f6',
-                    color: isFromCurrentUser ? 'white' : '#1f2937',
-                    fontSize: '0.9rem',
-                    lineHeight: '1.4',
-                    boxShadow: isFromCurrentUser
-                      ? '0 1px 4px rgba(37,99,235,0.15)'
-                      : '0 1px 2px rgba(0,0,0,0.05)',
-                  }}>
+                  <div className={`px-3 py-2 text-[0.9rem] leading-[1.4] shadow-sm ${
+                    isFromCurrentUser
+                      ? 'rounded-[0.8rem_0.8rem_0.2rem_0.8rem] bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-amber-500/15'
+                      : 'rounded-[0.8rem_0.8rem_0.8rem_0.2rem] bg-gray-100 text-gray-800'
+                  }`}>
                     {!isFromCurrentUser && (
-                      <p style={{ fontSize: '0.72rem', fontWeight: 600, color: '#059669', marginBottom: 2, margin: 0 }}>
+                      <p className="m-0 mb-0.5 text-[0.72rem] font-semibold text-emerald-600">
                         🛡️ Admin
                       </p>
                     )}
-                    <p style={{ margin: 0 }}>{message.content || message.Content}</p>
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 4, marginTop: 3 }}>
-                      <span style={{ fontSize: '0.68rem', opacity: 0.7 }}>
+                    <p className="m-0">{message.content || message.Content}</p>
+                    <div className="mt-[3px] flex items-center justify-end gap-1">
+                      <span className="text-[0.68rem] opacity-70">
                         {new Date(message.createdAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
                       </span>
                       {isFromCurrentUser && (
-                        <span style={{ fontSize: '0.68rem', opacity: 0.7 }}>
+                        <span className="text-[0.68rem] opacity-70">
                           {message.isRead ? '✓✓' : '✓'}
                         </span>
                       )}
@@ -515,8 +424,8 @@ const ChatWindow = ({ onClose }) =>
           })
         )}
         {typingUsers.length > 0 && (
-          <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-            <div style={{ background: '#f3f4f6', padding: '0.4rem 0.7rem', borderRadius: '0.8rem', fontSize: '0.8rem', color: '#6b7280' }}>
+          <div className="flex justify-start">
+            <div className="rounded-[0.8rem] bg-gray-100 px-[0.7rem] py-[0.4rem] text-[0.8rem] text-gray-500">
               {typingUsers.join(', ')} đang gõ...
             </div>
           </div>
@@ -525,23 +434,21 @@ const ChatWindow = ({ onClose }) =>
       </div>
 
       {/* Input */}
-      <div style={{ padding: '0.7rem 1rem', borderTop: '1px solid #f3f4f6', background: '#fafbfc' }}>
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+      <div className="border-t border-gray-100 bg-gray-50 px-4 py-[0.7rem]">
+        <div className="flex items-center gap-2">
           <input
             type="text"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Nhập tin nhắn..."
-            className="chat-input"
-            style={{ flex: 1, minWidth: 0 }}
+            className="min-w-0 flex-1 rounded-xl border border-gray-200 px-3 py-1.5 text-[0.97rem] outline-none transition-colors focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
             disabled={loading || !currentChat}
           />
           <button
             onClick={sendMessage}
             disabled={!newMessage.trim() || loading || !currentChat}
-            className="chat-send-btn"
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            className="flex items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 px-3 py-1.5 text-[0.95rem] font-semibold text-white shadow-md shadow-amber-500/10 transition-all hover:scale-105 hover:from-amber-600 hover:to-orange-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Send size={18} />
           </button>

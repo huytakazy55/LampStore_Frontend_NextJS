@@ -10,10 +10,10 @@ import Footer from '@/components/user/MainPage/Footer/Footer';
 import { useCategories } from '@/hooks/useCategories';
 import { useProducts } from '@/hooks/useProducts';
 import AddToCartModal from '@/components/user/MainPage/AddToCartModal';
-import defaultImg from '@/assets/images/cameras-2.jpg';
 import PageLoader from '@/components/common/PageLoader';
+import { resolveImagePath } from '@/lib/imageUtils';
 
-const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
+const DEFAULT_IMAGE = '/images/cameras-2.jpg';
 
 const formatPrice = (price) => {
     if (!price) return '0';
@@ -23,17 +23,16 @@ const formatPrice = (price) => {
 const getProductImageSrc = (product) => {
     const imgs = product.images?.$values || product.images || product.Images || [];
     if (imgs.length > 0) {
-        const path = imgs[0].imagePath || imgs[0].ImagePath;
-        if (path) return path.startsWith('http') ? path : `${API_ENDPOINT}${path}`;
+        const path = imgs[0].imagePath || imgs[0].ImagePath || imgs[0].imageUrl || imgs[0].ImageUrl;
+        if (path) return resolveImagePath(path, DEFAULT_IMAGE);
     }
-    return defaultImg;
+    const fallbackPath = product.imageUrl || product.ImageUrl || product.productImage || product.thumbnail;
+    return resolveImagePath(fallbackPath, DEFAULT_IMAGE);
 };
 
 const getCategoryImageSrc = (category) => {
-    if (category.imageUrl) {
-        return category.imageUrl.startsWith('http') ? category.imageUrl : `${API_ENDPOINT}${category.imageUrl}`;
-    }
-    return defaultImg;
+    const path = category.imageUrl || category.ImageUrl || category.thumbnail;
+    return resolveImagePath(path, DEFAULT_IMAGE);
 };
 
 export default function CategoryPage() {
@@ -174,7 +173,7 @@ export default function CategoryPage() {
                                                     className="relative group cursor-pointer bg-white rounded-sm overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:-translate-y-1.5 border border-gray-100"
                                                     onClick={() => router.push(`/product/${product.slug || product.id}`)}>
                                                     {hasDiscount && (
-                                                        <div className="absolute top-3 left-3 z-10 bg-gradient-to-r from-red-500 to-rose-400 text-white text-[10px] font-bold px-2.5 py-1 rounded-sm shadow-lg">
+                                                        <div className="absolute top-3 left-3 z-10 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-sm shadow-lg">
                                                             -{discountPercent}%
                                                         </div>
                                                     )}

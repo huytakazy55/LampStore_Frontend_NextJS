@@ -23,14 +23,14 @@ const FormCart = ({ toggleCart, popupRef, setToggleCart }) => {
         <div
             ref={popupRef}
             onClick={(e) => e.stopPropagation()}
-            className={`cart-modal w-[28rem] max-h-[32rem] absolute shadow-2xl -right-[4rem] top-14 z-[1000] border-t-4 bg-white dark:bg-gray-900 border-rose-600 rounded-b-lg flex flex-col transition-all duration-300 ease-out origin-top-right ${toggleCart ? 'visible opacity-100 scale-100 translate-y-0' : 'invisible opacity-0 scale-95 translate-y-2'
+            className={`cart-modal w-[28rem] max-h-[32rem] absolute shadow-2xl -right-[4rem] top-14 z-[1000] border-t-4 bg-white dark:bg-gray-900 border-amber-500 rounded-b-lg flex flex-col transition-all duration-300 ease-out origin-top-right ${toggleCart ? 'visible opacity-100 scale-100 translate-y-0' : 'invisible opacity-0 scale-95 translate-y-2'
                 }`}
             id='FormCart'
         >
             <div className='p-4 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center'>
                 <h3 className='text-lg font-semibold text-gray-800 dark:text-gray-100'>Giỏ hàng của bạn ({cartItems.length})</h3>
                 {cartItems.length > 0 && (
-                    <span className='text-sm text-rose-600 cursor-pointer hover:underline' onClick={() => navigate('/cart')}>Xem tất cả</span>
+                    <span className='text-sm text-amber-600 cursor-pointer hover:underline' onClick={() => navigate('/cart')}>Xem tất cả</span>
                 )}
             </div>
 
@@ -63,7 +63,7 @@ const FormCart = ({ toggleCart, popupRef, setToggleCart }) => {
                                 <div className='flex-1 ml-4'>
                                     <span
                                         onClick={() => handleViewProduct(item.productSlug || item.productId)}
-                                        className='leading-snug text-sm font-medium text-gray-800 dark:text-gray-100 hover:text-rose-600 line-clamp-2 mb-1 transition-colors cursor-pointer block'
+                                        className='leading-snug text-sm font-medium text-gray-800 dark:text-gray-100 hover:text-amber-600 line-clamp-2 mb-1 transition-colors cursor-pointer block'
                                     >
                                         {item.name}
                                     </span>
@@ -72,7 +72,7 @@ const FormCart = ({ toggleCart, popupRef, setToggleCart }) => {
                                     )}
                                     <div className='flex justify-between items-center'>
                                         <div className='flex items-center gap-3'>
-                                            <span className="font-semibold text-rose-600">{formatPrice(item.finalPrice)} ₫</span>
+                                            <span className="font-semibold text-amber-600">{formatPrice(item.finalPrice)} ₫</span>
                                         </div>
                                         <div className='flex items-center border border-gray-200 dark:border-gray-700 rounded overflow-hidden'>
                                             <button
@@ -104,18 +104,18 @@ const FormCart = ({ toggleCart, popupRef, setToggleCart }) => {
                 <div className='p-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 rounded-b-lg'>
                     <div className='flex justify-between items-center mb-4'>
                         <span className='text-gray-500 dark:text-gray-400 font-medium'>Tổng tạm tính:</span>
-                        <span className='text-xl font-bold text-rose-600'>{formatPrice(cartTotal)} ₫</span>
+                        <span className='text-xl font-bold text-amber-600'>{formatPrice(cartTotal)} ₫</span>
                     </div>
                     <div className='flex justify-between gap-3'>
                         <button
                             onClick={() => { setToggleCart(false); navigate('/checkout'); }}
-                            className='flex-1 py-2.5 px-4 rounded-md text-sm font-medium border border-rose-600 text-rose-600 bg-white dark:bg-transparent hover:bg-rose-50 dark:hover:bg-rose-900/30 transition-colors cursor-pointer'
+                            className='flex-1 py-2.5 px-4 rounded-md text-sm font-medium border border-amber-500 text-amber-600 bg-white dark:bg-transparent hover:bg-amber-50 dark:hover:bg-amber-900/30 transition-colors cursor-pointer'
                         >
                             Xem giỏ hàng
                         </button>
                         <button
                             onClick={() => { setToggleCart(false); navigate('/checkout'); }}
-                            className='flex-1 py-2.5 px-4 rounded-md text-sm font-medium bg-rose-600 text-white hover:bg-rose-700 transition-colors shadow-sm cursor-pointer'
+                            className='flex-1 py-2.5 px-4 rounded-md text-sm font-medium bg-amber-500 text-white hover:bg-amber-600 transition-colors shadow-sm cursor-pointer'
                         >
                             Thanh toán
                         </button>

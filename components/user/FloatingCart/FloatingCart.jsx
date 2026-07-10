@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { createPortal } from 'react-dom';
 import { useCart } from '@/contexts/CartContext';
 import { useNavigate } from '@/lib/router-compat';
 
@@ -19,11 +18,9 @@ const FloatingCart = () =>
     const [isVisible, setIsVisible] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
     const [bounce, setBounce] = useState(false);
-    const [flyingItems, setFlyingItems] = useState([]);
     const cartBtnRef = useRef(null);
     const expandedRef = useRef(null);
     const prevCountRef = useRef(cartCount);
-    const flyIdRef = useRef(0);
 
     // Show floating cart when user scrolls down past the header area
     // Supports both smooth-scrollbar (homepage) and native scroll (other pages)
@@ -104,37 +101,6 @@ const FloatingCart = () =>
         prevCountRef.current = cartCount;
     }, [cartCount, isVisible]);
 
-    // Listen for fly-to-cart events
-    useEffect(() =>
-    {
-        const handleFlyToCart = (e) =>
-        {
-            const { x, y, image } = e.detail;
-            if (!cartBtnRef.current) return;
-
-            const cartRect = cartBtnRef.current.getBoundingClientRect();
-            const id = ++flyIdRef.current;
-
-            setFlyingItems(prev => [...prev, {
-                id,
-                startX: x,
-                startY: y,
-                endX: cartRect.left + cartRect.width / 2,
-                endY: cartRect.top + cartRect.height / 2,
-                image
-            }]);
-
-            // Remove after animation completes
-            setTimeout(() =>
-            {
-                setFlyingItems(prev => prev.filter(item => item.id !== id));
-            }, 800);
-        };
-
-        window.addEventListener('flyToCart', handleFlyToCart);
-        return () => window.removeEventListener('flyToCart', handleFlyToCart);
-    }, []);
-
     // Close expanded panel when clicking outside
     useEffect(() =>
     {
@@ -175,29 +141,6 @@ const FloatingCart = () =>
 
     return (
         <>
-            {/* Flying items animation */}
-            {flyingItems.map(item => (
-                createPortal(
-                    <div
-                        key={item.id}
-                        className="flying-cart-item"
-                        style={{
-                            '--start-x': `${item.startX}px`,
-                            '--start-y': `${item.startY}px`,
-                            '--end-x': `${item.endX}px`,
-                            '--end-y': `${item.endY}px`,
-                        }}
-                    >
-                        <img
-                            src={item.image}
-                            alt=""
-                            className="w-12 h-12 object-cover rounded-lg shadow-lg border-2 border-white"
-                        />
-                    </div>,
-                    document.body
-                )
-            ))}
-
             {/* Floating Cart Button */}
             <div
                 className={`fixed bottom-24 right-6 z-[9990] transition-all duration-500 ${isVisible
@@ -215,7 +158,7 @@ const FloatingCart = () =>
                         }`}
                 >
                     {/* Header */}
-                    <div className="bg-gradient-to-r from-rose-500 to-rose-600 px-4 py-3 flex justify-between items-center">
+                    <div className="bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-3 flex justify-between items-center">
                         <span className="text-white text-sm font-semibold flex items-center gap-2">
                             <i className="bx bx-shopping-bag text-lg"></i>
                             Giỏ hàng ({cartCount})
@@ -244,7 +187,7 @@ const FloatingCart = () =>
                                 <div className="flex-1 min-w-0">
                                     <p className="text-xs text-gray-800 dark:text-gray-200 font-medium line-clamp-1">{item.name}</p>
                                     <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-                                        x{item.quantity} · <span className="text-rose-500 font-medium">{formatPrice(item.finalPrice)}₫</span>
+                                        x{item.quantity} · <span className="text-amber-600 font-medium">{formatPrice(item.finalPrice)}₫</span>
                                     </p>
                                 </div>
                                 <button
@@ -267,11 +210,11 @@ const FloatingCart = () =>
                     <div className="px-4 py-3 bg-gray-50 dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
                         <div className="flex justify-between items-center mb-3">
                             <span className="text-xs text-gray-500 dark:text-gray-400">Tổng cộng:</span>
-                            <span className="text-base font-bold text-rose-600">{formatPrice(cartTotal)}₫</span>
+                            <span className="text-base font-bold text-amber-600">{formatPrice(cartTotal)}₫</span>
                         </div>
                         <button
                             onClick={handleCheckout}
-                            className="w-full py-2.5 rounded-xl bg-gradient-to-r from-rose-500 to-rose-600 text-white text-sm font-semibold hover:from-rose-600 hover:to-rose-700 transition-all shadow-lg shadow-rose-600/20 active:scale-[0.98] cursor-pointer"
+                            className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-semibold hover:from-amber-600 hover:to-orange-600 transition-all shadow-lg shadow-amber-500/20 active:scale-[0.98] cursor-pointer"
                         >
                             Thanh toán ngay
                         </button>
@@ -282,16 +225,16 @@ const FloatingCart = () =>
                 <button
                     ref={cartBtnRef}
                     onClick={handleCartClick}
-                    className={`relative w-14 h-14 rounded-full bg-gradient-to-br from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-600/30 flex items-center justify-center cursor-pointer hover:shadow-xl hover:shadow-rose-600/40 hover:scale-110 active:scale-95 transition-all duration-300 group ${bounce ? 'animate-cartBounce' : ''
+                    className={`relative w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/30 flex items-center justify-center cursor-pointer hover:shadow-xl hover:shadow-amber-500/40 hover:scale-110 active:scale-95 transition-all duration-300 group ${bounce ? 'animate-bounce' : ''
                         }`}
                     aria-label="Giỏ hàng"
                     id="floating-cart-btn"
                 >
-                    <i className="bx bx-shopping-bag text-2xl transition-transform group-hover:rotate-[-8deg]"></i>
+                    <i className="bx bx-shopping-bag text-xl transition-transform group-hover:rotate-[-8deg]"></i>
 
                     {/* Badge */}
                     {cartCount > 0 && (
-                        <div className={`absolute -top-1.5 -right-1.5 min-w-[22px] h-[22px] px-1 rounded-full bg-yellow-400 text-gray-800 text-xs font-bold flex items-center justify-center shadow-md transition-transform ${bounce ? 'animate-badgePop' : ''
+                        <div className={`absolute -top-1.5 -right-1.5 min-w-[22px] h-[22px] px-1 rounded-full bg-yellow-400 text-gray-800 text-xs font-bold flex items-center justify-center shadow-md transition-transform ${bounce ? 'scale-125' : 'scale-100'
                             }`}>
                             {cartCount > 99 ? '99+' : cartCount}
                         </div>
@@ -299,7 +242,7 @@ const FloatingCart = () =>
 
                     {/* Pulse ring */}
                     {cartCount > 0 && (
-                        <div className="absolute inset-0 rounded-full bg-rose-400 animate-ping opacity-20 pointer-events-none"></div>
+                        <div className="absolute inset-0 rounded-full bg-amber-400 animate-ping opacity-20 pointer-events-none"></div>
                     )}
                 </button>
             </div>

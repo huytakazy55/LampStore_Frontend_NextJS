@@ -13,15 +13,7 @@ const NotificationBadge = () =>
   if (!mounted || unreadCount === 0) return null;
 
   return (
-    <div
-      className="absolute -top-1 -right-1 min-w-[16px] h-[16px] rounded-full flex items-center justify-center text-white text-xs font-bold animate-pulse"
-      style={{
-        background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
-        boxShadow: '0 2px 6px rgba(239,68,68,0.4)',
-        fontSize: '10px',
-        zIndex: 10
-      }}
-    >
+    <div className="absolute -top-1 -right-1 z-10 flex h-4 min-w-4 animate-pulse items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-amber-500 px-1 text-[10px] font-bold text-white shadow-md shadow-orange-500/30">
       {unreadCount > 99 ? '99+' : unreadCount}
     </div>
   );

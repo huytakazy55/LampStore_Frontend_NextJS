@@ -82,7 +82,7 @@ const WishlistPage = () => {
                     <p className='text-sm text-gray-400 mb-6'>Bạn cần đăng nhập để xem danh sách yêu thích</p>
                     <button
                         onClick={() => navigate('/')}
-                        className='bg-rose-600 text-white px-6 py-2.5 rounded-sm hover:bg-rose-700 transition font-medium cursor-pointer'
+                        className='bg-amber-500 text-white px-6 py-2.5 rounded-sm hover:bg-amber-600 transition font-medium cursor-pointer'
                     >
                         <i className='bx bx-home mr-1'></i> Về trang chủ
                     </button>
@@ -100,7 +100,7 @@ const WishlistPage = () => {
                 <Header />
                 <div className='w-full h-[60vh] flex justify-center items-center'>
                     <div className="text-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-rose-600 mx-auto"></div>
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500 mx-auto"></div>
                         <p className="mt-4 text-gray-500">Đang tải danh sách yêu thích...</p>
                     </div>
                 </div>
@@ -120,7 +120,7 @@ const WishlistPage = () => {
             <main className='w-full mb-8 xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0'>
                 {/* Breadcrumb */}
                 <nav className='flex items-center py-3 text-xs md:text-sm'>
-                    <a href="/" className='font-medium text-gray-600 hover:text-rose-600 transition'>Trang chủ</a>
+                    <a href="/" className='font-medium text-gray-600 hover:text-amber-600 transition'>Trang chủ</a>
                     <i className='bx bx-chevron-right text-base md:text-lg px-1 text-gray-400'></i>
                     <span className='text-gray-500'>Danh sách yêu thích</span>
                 </nav>
@@ -128,10 +128,10 @@ const WishlistPage = () => {
                 {/* Title */}
                 <div className='flex items-center gap-3 mb-6'>
                     <h1 className='text-xl md:text-2xl font-medium text-gray-800'>
-                        <i className='bx bxs-heart text-rose-500 mr-2'></i>
+                        <i className='bx bxs-heart text-amber-500 mr-2'></i>
                         Danh sách yêu thích
                     </h1>
-                    <span className='bg-rose-100 text-rose-600 text-sm px-3 py-0.5 rounded-sm font-medium'>
+                    <span className='bg-amber-100 text-amber-700 text-sm px-3 py-0.5 rounded-sm font-medium'>
                         {wishlistItems.length} sản phẩm
                     </span>
                 </div>
@@ -144,7 +144,7 @@ const WishlistPage = () => {
                         <p className='text-sm text-gray-400 mb-6'>Hãy khám phá và thêm sản phẩm bạn yêu thích!</p>
                         <button
                             onClick={() => navigate('/')}
-                            className='bg-rose-600 text-white px-6 py-2.5 rounded-sm hover:bg-rose-700 transition font-medium cursor-pointer'
+                            className='bg-amber-500 text-white px-6 py-2.5 rounded-sm hover:bg-amber-600 transition font-medium cursor-pointer'
                         >
                             <i className='bx bx-store mr-1'></i> Khám phá sản phẩm
                         </button>
@@ -175,7 +175,7 @@ const WishlistPage = () => {
                                             onError={(e) => { e.target.src = defaultImg; }}
                                         />
                                         {hasDiscount && (
-                                            <div className='absolute top-2 left-2 bg-rose-500 text-white text-xs px-2 py-0.5 rounded font-medium'>
+                                            <div className='absolute top-2 left-2 bg-orange-500 text-white text-xs px-2 py-0.5 rounded font-medium'>
                                                 -{discountPercent}%
                                             </div>
                                         )}
@@ -185,10 +185,10 @@ const WishlistPage = () => {
                                                 e.stopPropagation();
                                                 handleRemove(item.productId);
                                             }}
-                                            className='absolute top-2 right-2 w-8 h-8 bg-white/90 hover:bg-rose-50 rounded-sm flex items-center justify-center shadow-sm transition-colors cursor-pointer'
+                                            className='absolute top-2 right-2 w-8 h-8 bg-white/90 hover:bg-amber-50 rounded-sm flex items-center justify-center shadow-sm transition-colors cursor-pointer'
                                             title="Xóa khỏi yêu thích"
                                         >
-                                            <i className='bx bxs-heart text-rose-500 text-lg'></i>
+                                            <i className='bx bxs-heart text-amber-500 text-lg'></i>
                                         </button>
                                     </div>
 
@@ -198,7 +198,7 @@ const WishlistPage = () => {
                                             <p className='text-xs text-gray-400 mb-1'>{item.categoryName}</p>
                                         )}
                                         <h3
-                                            className='text-sm font-medium text-gray-800 line-clamp-2 mb-2 cursor-pointer hover:text-blue-600 transition-colors leading-snug h-10'
+                                            className='text-sm font-medium text-gray-800 line-clamp-2 mb-2 cursor-pointer hover:text-amber-600 transition-colors leading-snug h-10'
                                             onClick={() => navigate(`/product/${item.productSlug || item.productId}`)}
                                         >
                                             {item.productName}
@@ -206,7 +206,7 @@ const WishlistPage = () => {
 
                                         {/* Price */}
                                         <div className='flex items-center gap-2 mb-3'>
-                                            <span className='text-base font-bold text-rose-600'>
+                                            <span className='text-base font-bold text-amber-600'>
                                                 {formatPrice(displayPrice)}₫
                                             </span>
                                             {hasDiscount && (
@@ -226,14 +226,14 @@ const WishlistPage = () => {
                                         <div className='flex gap-2'>
                                             <button
                                                 onClick={() => handleAddToCart(item)}
-                                                className='flex-1 flex items-center justify-center gap-1 bg-rose-50 border border-rose-600 text-rose-600 py-2 rounded-sm hover:bg-rose-100 transition-colors text-sm font-medium cursor-pointer'
+                                                className='flex-1 flex items-center justify-center gap-1 bg-amber-50 border border-amber-500 text-amber-600 py-2 rounded-sm hover:bg-amber-100 transition-colors text-sm font-medium cursor-pointer'
                                             >
                                                 <i className='bx bx-cart-add text-lg'></i>
                                                 Thêm vào giỏ
                                             </button>
                                             <button
                                                 onClick={() => navigate(`/product/${item.productSlug || item.productId}`)}
-                                                className='flex-1 bg-rose-600 text-white py-2 rounded-sm hover:bg-rose-700 transition-colors text-sm font-medium cursor-pointer'
+                                                className='flex-1 bg-amber-500 text-white py-2 rounded-sm hover:bg-amber-600 transition-colors text-sm font-medium cursor-pointer'
                                             >
                                                 Mua ngay
                                             </button>
