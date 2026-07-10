@@ -39,7 +39,7 @@ const ProductCard = ({ product, isLast, navigate, onAddToCartClick, isInWishlist
     >
       {/* Discount Badge */}
       {hasDiscount && (
-        <div className="absolute top-2.5 left-2.5 z-10 bg-gradient-to-r from-primary-500 to-secondary-500 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(245,158,11,0.25)]">
+        <div className="absolute top-2.5 left-2.5 z-10 bg-gradient-to-r from-primary-600 via-tertiary-500 to-accent-500 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(245,158,11,0.25)]">
           -{discountPercent}%
         </div>
       )}
@@ -92,7 +92,7 @@ const ProductCard = ({ product, isLast, navigate, onAddToCartClick, isInWishlist
             )}
           </div>
           <button
-            className="w-8 h-8 md:w-9 md:h-9 rounded-sm bg-gradient-to-br from-primary-100 to-primary-200 dark:from-[#3d2e00] dark:to-[#4a3200] text-primary-600 dark:text-primary-400 flex items-center justify-center transition-all duration-300 hover:from-primary-500 hover:to-secondary-500 hover:text-white hover:shadow-[0_2px_8px_rgba(245,158,11,0.3)] active:scale-95"
+            className="w-8 h-8 md:w-9 md:h-9 rounded-sm bg-gradient-to-br from-primary-100 to-primary-200 dark:from-[#3d2e00] dark:to-[#4a3200] text-primary-600 dark:text-primary-400 flex items-center justify-center transition-all duration-300 hover:from-primary-500 hover:to-accent-500 hover:text-white hover:shadow-[0_2px_8px_rgba(245,158,11,0.3)] active:scale-95"
             onClick={(e) => {
               e.stopPropagation();
               onAddToCartClick(product);

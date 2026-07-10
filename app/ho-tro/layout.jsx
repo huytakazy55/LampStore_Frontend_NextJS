@@ -28,7 +28,7 @@ export default function HoTroLayout({ children }) {
             <NavbarPrimary />
 
             {/* Hero */}
-            <div className="relative bg-gradient-to-br from-primary-50 via-secondary-50 to-orange-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 overflow-hidden border-b border-primary-100 dark:border-gray-800">
+            <div className="relative bg-gradient-to-br from-primary-50 via-accent-50 to-orange-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 overflow-hidden border-b border-primary-100 dark:border-gray-800">
                 <div className="absolute top-0 right-0 w-72 h-72 bg-primary-200/20 dark:bg-primary-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
                 <div className="absolute bottom-0 left-0 w-56 h-56 bg-secondary-200/20 dark:bg-secondary-500/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3" />
                 <div className="w-full xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0 py-10 md:py-14 relative z-10">
@@ -53,7 +53,7 @@ export default function HoTroLayout({ children }) {
                         {/* Sidebar */}
                         <aside className="lg:w-72 shrink-0">
                             <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden sticky top-24">
-                                <div className="bg-gradient-to-r from-primary-500 to-orange-500 px-5 py-4">
+                                <div className="bg-gradient-to-r from-primary-600 via-tertiary-500 to-accent-500 px-5 py-4">
                                     <h3 className="text-white font-bold text-sm flex items-center gap-2">
                                         <i className='bx bx-support text-lg' /> Danh mục hỗ trợ
                                     </h3>

@@ -15,7 +15,7 @@ const LazyMap = () => {
                     className='absolute inset-0 w-full h-full bg-primary-600/80 dark:bg-gray-800 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-primary-600 dark:hover:bg-gray-700 transition-colors group z-10'
                     aria-label="Nhấn để xem bản đồ Google Maps"
                 >
-                    <i className='bx bx-map text-3xl text-white dark:text-secondary-400 group-hover:scale-110 transition-transform' />
+                    <i className='bx bx-map text-3xl text-white dark:text-primary-500 group-hover:scale-110 transition-transform' />
                     <span className='text-xs text-white dark:text-gray-300 font-medium'>Xem bản đồ</span>
                 </button>
             )}
@@ -41,23 +41,23 @@ const Footer = () => {
     return (
         <footer style={{ contain: 'layout style', contentVisibility: 'auto', containIntrinsicSize: 'auto 500px' }}>
             {/* Main Footer */}
-            <div className='relative overflow-hidden bg-primary-500 dark:bg-black' style={{ minHeight: '380px' }}>
+            <div className='relative overflow-hidden bg-gradient-to-br from-primary-900 via-tertiary-900 to-quaternary-900 dark:from-black dark:via-primary-950 dark:to-tertiary-950' style={{ minHeight: '380px' }}>
                 {/* === Top S-curve — Light mode (amber) === */}
                 <svg className='absolute top-0 left-0 w-full h-full pointer-events-none dark:hidden' viewBox="0 0 1440 500" preserveAspectRatio="none" fill="none">
-                    <path d="M0,0 L0,120 C0,200 80,320 200,380 C300,430 380,500 380,500 L0,500 Z" fill="#92400e" />
-                    <path d="M0,0 L0,80 C20,160 100,260 200,320 C280,370 340,440 400,500 L0,500 Z" fill="#f59e0b" />
+                    <path d="M0,0 L0,120 C0,200 80,320 200,380 C300,430 380,500 380,500 L0,500 Z" className="fill-primary-800" />
+                    <path d="M0,0 L0,80 C20,160 100,260 200,320 C280,370 340,440 400,500 L0,500 Z" className="fill-primary-500" />
                 </svg>
-                {/* === Top S-curve — Dark mode === */}
+
                 <svg className='absolute top-0 left-0 w-full h-full pointer-events-none hidden dark:block' viewBox="0 0 1440 500" preserveAspectRatio="none" fill="none">
-                    <path d="M0,0 L0,120 C0,200 80,320 200,380 C300,430 380,500 380,500 L0,500 Z" fill="#facc15" />
-                    <path d="M0,0 L0,80 C20,160 100,260 200,320 C280,370 340,440 400,500 L0,500 Z" fill="black" />
+                    <path d="M0,0 L0,120 C0,200 80,320 200,380 C300,430 380,500 380,500 L0,500 Z" className="fill-tertiary-400" />
+                    <path d="M0,0 L0,80 C20,160 100,260 200,320 C280,370 340,440 400,500 L0,500 Z" className="fill-black" />
                 </svg>
 
                 <div className='w-full flex flex-col lg:flex-row items-center gap-8 lg:gap-0 py-10 md:py-14 xl:mx-auto xl:max-w-[1440px] px-6 xl:px-0 relative z-10'>
 
                     {/* === Cột trái: Bản đồ trong khung tròn === */}
                     <div className='w-full lg:w-[30%] flex justify-center lg:justify-start items-center'>
-                        <div className='w-52 h-52 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-white dark:border-secondary-400 shadow-xl shadow-black/10 dark:shadow-secondary-400/10 flex-shrink-0'>
+                        <div className='w-52 h-52 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-white dark:border-primary-500 shadow-xl shadow-black/10 dark:shadow-secondary-400/10 flex-shrink-0'>
                             <LazyMap />
                         </div>
                     </div>
@@ -66,7 +66,7 @@ const Footer = () => {
                     <div className='w-full lg:w-[40%]'>
                         <div className='mb-5 md:mb-6'>
                             <h3 className='text-lg md:text-xl font-bold text-white dark:text-white uppercase tracking-wide'>
-                                Tranh Đèn Ngủ <span className='text-primary-900 dark:text-secondary-400'>3D Tráng Gương</span>
+                                Tranh Đèn Ngủ <span className='text-primary-900 dark:text-primary-500'>3D Tráng Gương</span>
                             </h3>
                             <p className='text-primary-100/70 dark:text-gray-400 text-sm mt-1'>Đèn ngủ cao cấp — Nâng tầm giấc ngủ Việt</p>
                         </div>
@@ -74,26 +74,26 @@ const Footer = () => {
                         {/* Contact grid 2 cột */}
                         <div className='grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3'>
                             <div className='flex items-start gap-3'>
-                                <span className='w-2 h-2 rounded-full bg-white dark:bg-secondary-400 mt-[7px] flex-shrink-0'></span>
+                                <span className='w-2 h-2 rounded-full bg-white dark:bg-primary-500 mt-[7px] flex-shrink-0'></span>
                                 <div className='text-sm text-white/90 dark:text-gray-300'>
                                     <p>(+84)969 608 810</p>
                                 </div>
                             </div>
                             <div className='flex items-start gap-3'>
-                                <span className='w-2 h-2 rounded-full bg-white dark:bg-secondary-400 mt-[7px] flex-shrink-0'></span>
+                                <span className='w-2 h-2 rounded-full bg-white dark:bg-primary-500 mt-[7px] flex-shrink-0'></span>
                                 <div className='text-sm text-white/90 dark:text-gray-300'>
                                     <p>Khongthaydoi124@gmail.com</p>
                                 </div>
                             </div>
                             <div className='flex items-start gap-3'>
-                                <span className='w-2 h-2 rounded-full bg-white dark:bg-secondary-400 mt-[7px] flex-shrink-0'></span>
+                                <span className='w-2 h-2 rounded-full bg-white dark:bg-primary-500 mt-[7px] flex-shrink-0'></span>
                                 <div className='text-sm text-white/90 dark:text-gray-300'>
                                     <p>A2 Vĩnh Hồ, Thịnh Quang,</p>
                                     <p>Đống Đa, Hà Nội</p>
                                 </div>
                             </div>
                             <div className='flex items-start gap-3'>
-                                <span className='w-2 h-2 rounded-full bg-white dark:bg-secondary-400 mt-[7px] flex-shrink-0'></span>
+                                <span className='w-2 h-2 rounded-full bg-white dark:bg-primary-500 mt-[7px] flex-shrink-0'></span>
                                 <div className='text-sm text-white/90 dark:text-gray-300'>
                                     <p>CapyLumine.com</p>
                                 </div>
@@ -102,7 +102,7 @@ const Footer = () => {
 
                         {/* Links hỗ trợ */}
                         <div className='mt-6 pt-5 border-t border-primary-400/30 dark:border-gray-800'>
-                            <h4 className='text-sm font-semibold text-primary-900 dark:text-secondary-400 mb-3 uppercase tracking-wider'>Hỗ trợ khách hàng</h4>
+                            <h4 className='text-sm font-semibold text-primary-900 dark:text-primary-500 mb-3 uppercase tracking-wider'>Hỗ trợ khách hàng</h4>
                             <div className='grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2'>
                                 {[
                                     { text: 'Giới thiệu', href: '/ho-tro/gioi-thieu' },
@@ -113,7 +113,7 @@ const Footer = () => {
                                     { text: 'Chính sách đổi trả', href: '/ho-tro/chinh-sach-doi-tra' },
                                 ].map((item, i) => (
                                     <a key={i} href={item.href} className='text-xs text-white/70 dark:text-gray-400 hover:text-white dark:hover:text-gray-200 transition-colors duration-300 flex items-center gap-2'>
-                                        <i className='bx bx-chevron-right text-primary-800/50 dark:text-secondary-400/50'></i>
+                                        <i className='bx bx-chevron-right text-primary-800/50 dark:text-primary-500/50'></i>
                                         {item.text}
                                     </a>
                                 ))}
@@ -126,7 +126,7 @@ const Footer = () => {
                         {/* Logo text */}
                         <div className='text-right mb-6'>
                             <div className='text-2xl md:text-3xl font-extrabold text-white dark:text-white tracking-tight'>
-                                Capy<span className='text-primary-900 dark:text-secondary-400'>Lumine</span><span className='text-primary-200/60 dark:text-gray-500 text-lg'>.com</span>
+                                Capy<span className='text-primary-900 dark:text-primary-500'>Lumine</span><span className='text-primary-200/60 dark:text-gray-500 text-lg'>.com</span>
                             </div>
                             <p className='text-primary-200/50 dark:text-gray-500 text-xs mt-1 tracking-widest uppercase'>Premium CapyLumine</p>
                         </div>
@@ -143,7 +143,7 @@ const Footer = () => {
                                     key={social.icon}
                                     href='#'
                                     aria-label={social.label}
-                                    className='w-10 h-10 rounded-full border border-white/30 dark:border-gray-700 flex items-center justify-center text-white/60 dark:text-gray-400 transition-all duration-300 hover:text-white hover:border-white dark:hover:text-secondary-400 dark:hover:border-secondary-400 hover:-translate-y-1'
+                                    className='w-10 h-10 rounded-full border border-white/30 dark:border-gray-700 flex items-center justify-center text-white/60 dark:text-gray-400 transition-all duration-300 hover:text-white hover:border-white dark:hover:text-primary-500 dark:hover:border-primary-500 hover:-translate-y-1'
                                 >
                                     <i className={`bx ${social.icon} text-lg`}></i>
                                 </a>
@@ -154,20 +154,20 @@ const Footer = () => {
                         <div className='flex items-center gap-2'>
                             <span className='w-4 h-4 rounded-full bg-primary-400/40 dark:bg-gray-800 border border-primary-400/30 dark:border-gray-700'></span>
                             <span className='w-4 h-4 rounded-full bg-primary-400/40 dark:bg-gray-800 border border-primary-400/30 dark:border-gray-700'></span>
-                            <span className='w-4 h-4 rounded-full bg-white dark:bg-secondary-400'></span>
+                            <span className='w-4 h-4 rounded-full bg-white dark:bg-primary-500'></span>
                         </div>
                     </div>
                 </div>
 
                 {/* === Bottom S-curve wave — Light mode === */}
                 <svg className='absolute bottom-0 left-0 w-full pointer-events-none dark:hidden' style={{ height: '80px' }} viewBox="0 0 1440 80" preserveAspectRatio="none">
-                    <path d="M800,80 C850,80 900,70 950,55 C1050,25 1150,5 1250,15 C1350,25 1400,50 1440,60 L1440,80 Z" fill="#92400e" />
-                    <path d="M850,80 C900,80 950,72 1000,60 C1100,35 1200,18 1300,25 C1380,30 1420,45 1440,55 L1440,80 Z" fill="#d97706" />
+                    <path d="M800,80 C850,80 900,70 950,55 C1050,25 1150,5 1250,15 C1350,25 1400,50 1440,60 L1440,80 Z" className="fill-primary-800" />
+                    <path d="M850,80 C900,80 950,72 1000,60 C1100,35 1200,18 1300,25 C1380,30 1420,45 1440,55 L1440,80 Z" className="fill-primary-500" />
                 </svg>
-                {/* === Bottom S-curve wave — Dark mode === */}
+
                 <svg className='absolute bottom-0 left-0 w-full pointer-events-none hidden dark:block' style={{ height: '80px' }} viewBox="0 0 1440 80" preserveAspectRatio="none">
-                    <path d="M800,80 C850,80 900,70 950,55 C1050,25 1150,5 1250,15 C1350,25 1400,50 1440,60 L1440,80 Z" fill="#facc15" />
-                    <path d="M850,80 C900,80 950,72 1000,60 C1100,35 1200,18 1300,25 C1380,30 1420,45 1440,55 L1440,80 Z" fill="#111" />
+                    <path d="M800,80 C850,80 900,70 950,55 C1050,25 1150,5 1250,15 C1350,25 1400,50 1440,60 L1440,80 Z" className="fill-tertiary-400" />
+                    <path d="M850,80 C900,80 950,72 1000,60 C1100,35 1200,18 1300,25 C1380,30 1420,45 1440,55 L1440,80 Z" className="fill-[#111]" />
                 </svg>
             </div>
 
@@ -175,7 +175,7 @@ const Footer = () => {
             <div className='w-full py-4 bg-primary-900 dark:bg-[#111]'>
                 <div className='flex flex-col sm:flex-row justify-between items-center gap-2 xl:mx-auto xl:max-w-[1440px] px-6 xl:px-0'>
                     <div className='text-xs md:text-sm text-primary-100 dark:text-gray-400 text-center'>
-                        © 2024 | Bản quyền thuộc về <span className='text-white dark:text-secondary-400 font-semibold'>CapyLumine.com</span>
+                        © 2024 | Bản quyền thuộc về <span className='text-white dark:text-primary-500 font-semibold'>CapyLumine.com</span>
                     </div>
                     <div className='flex items-center gap-4 text-primary-200 dark:text-gray-400 text-xs'>
                         <a href='/ho-tro/dieu-khoan-su-dung' className='hover:text-white dark:hover:text-gray-200 transition-colors'>Điều khoản</a>

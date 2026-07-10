@@ -196,13 +196,11 @@ const ScrollTimeline = () => {
             {/* Progress line - filled (updated via ref, no transition) */}
             <div
                 ref={progressLineRef}
-                className="absolute left-1/2 -translate-x-1/2 w-[2px] rounded-full"
+                className="absolute left-1/2 -translate-x-1/2 w-[2px] rounded-full bg-gradient-to-b from-primary-500 to-primary-600 shadow-md shadow-primary-500/40"
                 style={{
                     top: `${TIMELINE_TOP}vh`,
                     height: `${TIMELINE_RANGE}vh`,
-                    background: 'linear-gradient(to bottom, #f59e0b, #d97706)',
                     clipPath: 'inset(0 0 100% 0)',
-                    boxShadow: '0 0 6px rgba(245, 158, 11, 0.4)',
                 }}
             />
 

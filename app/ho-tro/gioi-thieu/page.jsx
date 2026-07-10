@@ -14,7 +14,7 @@ export default function GioiThieuPage() {
             </h2>
             <p className="text-gray-400 text-sm mb-8">Cập nhật lần cuối: 29/04/2025</p>
 
-            <div className="bg-gradient-to-r from-primary-50 to-secondary-50 dark:from-primary-950/30 dark:to-secondary-950/30 rounded-2xl p-6 mb-8 border border-primary-100 dark:border-primary-800/40">
+            <div className="bg-gradient-to-r from-primary-50 to-accent-50 dark:from-primary-950/30 dark:to-accent-950/30 rounded-2xl p-6 mb-8 border border-primary-100 dark:border-primary-800/40">
                 <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-base m-0">
                     <strong className="text-primary-700 dark:text-primary-400">CapyLumine</strong> là thương hiệu đèn trang trí cao cấp hàng đầu Việt Nam,
                     chuyên cung cấp các sản phẩm đèn ngủ dễ thương, đèn bàn học, đèn LED nghệ thuật và đèn anime với thiết kế độc đáo,

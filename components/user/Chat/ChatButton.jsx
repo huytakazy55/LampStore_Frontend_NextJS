@@ -115,8 +115,8 @@ const ChatButton = () => {
           onClick={toggleChat}
           className={`group relative flex h-12 w-12 items-center justify-center rounded-full border-none text-white shadow-lg transition-all duration-300 ease-out hover:scale-110 hover:shadow-xl hover:ring-4 hover:ring-primary-400/20 active:scale-95 cursor-pointer ${
             isChatOpen
-              ? 'bg-gradient-to-br from-primary-500 to-secondary-500 shadow-primary-500/25'
-              : 'bg-gradient-to-br from-primary-500 to-secondary-500 shadow-primary-500/25'
+              ? 'bg-gradient-to-br from-primary-600 via-tertiary-500 to-accent-500 shadow-primary-500/25'
+              : 'bg-gradient-to-br from-primary-600 via-tertiary-500 to-accent-500 shadow-primary-500/25'
           }`}
           title="Chat hỗ trợ"
         >

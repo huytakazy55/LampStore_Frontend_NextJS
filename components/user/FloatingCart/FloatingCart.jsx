@@ -158,7 +158,7 @@ const FloatingCart = () =>
                         }`}
                 >
                     {/* Header */}
-                    <div className="bg-gradient-to-r from-primary-500 to-secondary-500 px-4 py-3 flex justify-between items-center">
+                    <div className="bg-gradient-to-r from-primary-600 via-tertiary-500 to-accent-500 px-4 py-3 flex justify-between items-center">
                         <span className="text-white text-sm font-semibold flex items-center gap-2">
                             <i className="bx bx-shopping-bag text-lg"></i>
                             Giỏ hàng ({cartCount})
@@ -214,7 +214,7 @@ const FloatingCart = () =>
                         </div>
                         <button
                             onClick={handleCheckout}
-                            className="w-full py-2.5 rounded-xl bg-gradient-to-r from-primary-500 to-secondary-500 text-white text-sm font-semibold hover:from-primary-600 hover:to-secondary-600 transition-all shadow-lg shadow-primary-500/20 active:scale-[0.98] cursor-pointer"
+                            className="w-full py-2.5 rounded-xl bg-gradient-to-r from-primary-600 via-tertiary-500 to-accent-500 text-white text-sm font-semibold hover:from-primary-600 hover:to-accent-600 transition-all shadow-lg shadow-primary-500/20 active:scale-[0.98] cursor-pointer"
                         >
                             Thanh toán ngay
                         </button>
@@ -225,7 +225,7 @@ const FloatingCart = () =>
                 <button
                     ref={cartBtnRef}
                     onClick={handleCartClick}
-                    className={`relative w-12 h-12 rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 text-white shadow-lg shadow-primary-500/30 flex items-center justify-center cursor-pointer hover:shadow-xl hover:shadow-primary-500/40 hover:scale-110 active:scale-95 transition-all duration-300 group ${bounce ? 'animate-bounce' : ''
+                    className={`relative w-12 h-12 rounded-full bg-gradient-to-br from-primary-600 via-tertiary-500 to-accent-500 text-white shadow-lg shadow-primary-500/30 flex items-center justify-center cursor-pointer hover:shadow-xl hover:shadow-primary-500/40 hover:scale-110 active:scale-95 transition-all duration-300 group ${bounce ? 'animate-bounce' : ''
                         }`}
                     aria-label="Giỏ hàng"
                     id="floating-cart-btn"

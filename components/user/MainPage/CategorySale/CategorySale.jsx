@@ -77,7 +77,7 @@ const CategorySale = () =>
     return (
       <div className='w-full h-36 flex justify-center items-center mb-6 xl:mx-auto xl:max-w-[1440px]'>
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-secondary-400 mx-auto"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500 mx-auto"></div>
           <p className="mt-2 text-gray-600">Đang tải danh mục... (React Query Cache)</p>
         </div>
       </div>
@@ -165,7 +165,7 @@ const CategorySale = () =>
                         className='inline-flex items-center text-primary-700 group-hover:text-primary-800 font-semibold text-sm transition-colors duration-200 whitespace-nowrap'
                       >
                         Xem ngay
-                        <i className='bx bx-chevron-right ml-1 text-lg bg-secondary-400 group-hover:bg-secondary-500 rounded-full text-white transition-colors duration-200 w-6 h-6 grid place-items-center pl-[3px] pt-[2px]'></i>
+                        <i className='bx bx-chevron-right ml-1 text-lg bg-primary-500 group-hover:bg-primary-600 rounded-full text-white transition-colors duration-200 w-6 h-6 grid place-items-center pl-[3px] pt-[2px]'></i>
                       </span>
                     </div>
                   </div>

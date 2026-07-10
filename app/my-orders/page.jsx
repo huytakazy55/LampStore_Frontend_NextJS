@@ -354,7 +354,7 @@ export default function OrderHistoryPage()
                 </nav>
 
                 {/* Page Header */}
-                <div className='bg-gradient-to-r from-primary-600 to-primary-500 rounded-xl p-5 md:p-6 mb-6 text-white relative overflow-hidden'>
+                <div className='bg-gradient-to-br from-primary-900 via-tertiary-900 to-quaternary-900 dark:from-black dark:via-primary-950 dark:to-tertiary-950 rounded-xl p-5 md:p-6 mb-6 text-white relative overflow-hidden'>
                     <div className='absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2'></div>
                     <div className='absolute bottom-0 left-20 w-24 h-24 bg-white/5 rounded-full translate-y-1/2'></div>
                     <div className='relative z-10'>

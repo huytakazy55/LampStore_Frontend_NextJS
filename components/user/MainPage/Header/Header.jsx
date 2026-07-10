@@ -404,7 +404,7 @@ const Header = () =>
                   <i id='header-cart-icon' className='bx bx-shopping-bag text-xl text-primary-600 dark:text-primary-400 transition-all duration-300 group-hover:text-primary-700'></i>
                 </div>
                 <FormCart popupRef={popupRef} toggleCart={toggleCart} setToggleCart={setToggleCart} />
-                <div className='absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-gradient-to-br from-primary-400 to-secondary-500 rounded-full text-center text-[10px] leading-[18px] text-white font-bold shadow-lg shadow-primary-400/30'>{cartCount}</div>
+                <div className='absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-gradient-to-br from-primary-400 to-accent-500 rounded-full text-center text-[10px] leading-[18px] text-white font-bold shadow-lg shadow-primary-400/30'>{cartCount}</div>
               </div>
               <div className='hidden lg:flex flex-col text-xs ml-0.5'>
                 <span className='text-[10px] text-gray-500 dark:text-gray-400 font-medium leading-tight'>Giỏ hàng</span>

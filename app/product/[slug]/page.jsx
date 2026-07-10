@@ -537,7 +537,7 @@ export default function ProductDetailPage() {
                         {/* Flash Sale Banner */}
                         {flashSaleItem && (
                             <div className='my-3 md:my-4 rounded-lg overflow-hidden'>
-                                <div className='flex items-center justify-between bg-gradient-to-r from-primary-500 to-orange-500 px-4 py-2'>
+                                <div className='flex items-center justify-between bg-gradient-to-r from-primary-600 via-tertiary-500 to-accent-500 px-4 py-2'>
                                     <div className='flex items-center gap-2'>
                                         <span className='text-white text-base'>⚡</span>
                                         <span className='text-white font-bold text-sm tracking-wide'>FLASH SALE</span>
@@ -986,7 +986,7 @@ export default function ProductDetailPage() {
                                                 onError={(e) => { e.target.src = '/images/cameras-2.jpg'; }}
                                             />
                                             {rpHasDiscount && (
-                                                <div className='absolute top-2 left-2 bg-gradient-to-r from-primary-500 to-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm shadow'>-{rpDiscountPercent}%</div>
+                                                <div className='absolute top-2 left-2 bg-gradient-to-r from-primary-600 via-tertiary-500 to-accent-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm shadow'>-{rpDiscountPercent}%</div>
                                             )}
                                         </div>
                                         <div className='p-3'>

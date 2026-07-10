@@ -6,8 +6,7 @@ import { useCategories } from '../../../../hooks/useCategories'
 import { useProducts } from '../../../../hooks/useProducts'
 import ProductManage from '@/services/ProductManage'
 import { resolveImagePath } from '@/lib/imageUtils'
-const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () =>
-{
+const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () => {
   const navigate = useNavigate()
   const { data: categories = [], isLoading: loading } = useCategories()
   const { data: allProducts = [] } = useProducts()
@@ -17,26 +16,21 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () =>
   const hoverTimeoutRef = useRef(null)
   const animTimeoutRef = useRef(null)
 
-  const fetchProductsByCategory = async (categoryId) =>
-  {
+  const fetchProductsByCategory = async (categoryId) => {
     if (categoryProducts[categoryId]) return
 
-    try
-    {
+    try {
       const filteredProducts = allProducts.filter(product =>
         product.categoryId === categoryId
       ).slice(0, 6)
 
       const productsWithImages = await Promise.all(
-        filteredProducts.map(async (product) =>
-        {
-          try
-          {
+        filteredProducts.map(async (product) => {
+          try {
             const imageResponse = await ProductManage.GetProductImageById(product.id)
             const images = imageResponse.data.$values || imageResponse.data || []
             return { ...product, Images: images }
-          } catch (error)
-          {
+          } catch (error) {
             return { ...product, Images: [] }
           }
         })
@@ -46,89 +40,71 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () =>
         ...prev,
         [categoryId]: productsWithImages
       }))
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error fetching products:', error)
     }
   }
 
-  const handleCategoryHover = (category) =>
-  {
-    if (hoverTimeoutRef.current)
-    {
+  const handleCategoryHover = (category) => {
+    if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current)
       hoverTimeoutRef.current = null
     }
-    if (animTimeoutRef.current)
-    {
+    if (animTimeoutRef.current) {
       clearTimeout(animTimeoutRef.current)
       animTimeoutRef.current = null
     }
 
-    if (category)
-    {
+    if (category) {
       setHoveredCategory(category)
       setShowDropdown(true)
       fetchProductsByCategory(category.id)
-    } else
-    {
-      hoverTimeoutRef.current = setTimeout(() =>
-      {
+    } else {
+      hoverTimeoutRef.current = setTimeout(() => {
         setShowDropdown(false)
-        animTimeoutRef.current = setTimeout(() =>
-        {
+        animTimeoutRef.current = setTimeout(() => {
           setHoveredCategory(null)
         }, 300)
       }, 120)
     }
   }
 
-  const getImageSrc = (category) =>
-  {
-    if (category.imageUrl)
-    {
+  const getImageSrc = (category) => {
+    if (category.imageUrl) {
       return resolveImagePath(category.imageUrl, Product1)
     }
     return Product1
   }
 
-  const getProductImageSrc = (product) =>
-  {
+  const getProductImageSrc = (product) => {
     const imgs = product.Images || product.images || []
-    if (imgs.length > 0)
-    {
+    if (imgs.length > 0) {
       const path = imgs[0].imagePath || imgs[0].ImagePath
       if (path) return resolveImagePath(path, Product1)
     }
     return Product1
   }
 
-  const formatPrice = (price) =>
-  {
+  const formatPrice = (price) => {
     if (!price) return 'Liên hệ'
     return `${price.toLocaleString('vi-VN')}₫`
   }
 
-  const stripHtml = (html) =>
-  {
+  const stripHtml = (html) => {
     if (!html) return ''
-    try
-    {
+    try {
       const div = document.createElement('div')
       div.innerHTML = html
       return div.textContent || div.innerText || ''
-    } catch (e)
-    {
+    } catch (e) {
       return ''
     }
   }
 
   // Inject keyframe CSS into head instead of inline <style> to avoid React DOM errors
-  useEffect(() =>
-  {
+  useEffect(() => {
     const styleId = 'navbar-dropdown-keyframes'
-    if (!document.getElementById(styleId))
-    {
+    if (!document.getElementById(styleId)) {
       const style = document.createElement('style')
       style.id = styleId
       style.textContent = `
@@ -150,17 +126,15 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () =>
       `
       document.head.appendChild(style)
     }
-    return () =>
-    {
+    return () => {
       const el = document.getElementById(styleId)
       if (el) el.remove()
     }
   }, [])
 
-  if (loading)
-  {
+  if (loading) {
     return (
-      <div className='hidden md:block bg-secondary-400 w-full h-12'>
+      <div className='hidden md:block bg-primary-600 w-full h-12'>
         <nav className='relative xl:mx-auto xl:max-w-[1440px] flex justify-center items-center h-full px-4 xl:px-0'>
           <div className="text-black font-medium text-sm">Đang tải danh mục...</div>
         </nav>
@@ -171,23 +145,23 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () =>
   const products = hoveredCategory ? (categoryProducts[hoveredCategory.id] || []) : []
 
   return (
-    <div className='hidden md:block bg-secondary-400 dark:bg-gray-900 dark:border-b dark:border-primary-500/30 w-full h-12'>
+    <div className='hidden md:block bg-primary-600 dark:bg-gray-900 dark:border-b dark:border-primary-500/30 w-full h-12'>
       <nav className='relative xl:mx-auto xl:max-w-[1440px] flex justify-between items-center h-full px-4 xl:px-0'>
         <ul className='flex justify-start h-full relative overflow-x-auto overflow-y-hidden scrollbar-hide w-full'>
           {categories.map((category) => (
             <li
               key={category.id}
-              className={`flex items-center px-3 md:px-5 h-full border-r border-secondary-300/60 dark:border-primary-500/20 transition-colors duration-200 flex-shrink-0 cursor-pointer ${hoveredCategory?.id === category.id ? 'bg-secondary-500 dark:bg-primary-500/20' : 'hover:bg-secondary-500/70 dark:hover:bg-primary-500/10'
+              className={`flex items-center px-3 md:px-5 h-full border-r border-primary-500/60 dark:border-primary-500/20 transition-colors duration-200 flex-shrink-0 cursor-pointer ${hoveredCategory?.id === category.id ? 'bg-primary-700 dark:bg-primary-500/20' : 'hover:bg-primary-700/70 dark:hover:bg-primary-500/10'
                 }`}
               onMouseEnter={() => handleCategoryHover(category)}
               onMouseLeave={() => handleCategoryHover(null)}
             >
-              <a className='text-black dark:text-primary-400 font-medium text-xs md:text-sm whitespace-nowrap' href={`/categories/${category.slug || category.id}`}
+              <a className='text-white font-medium text-xs md:text-sm whitespace-nowrap' href={`/categories/${category.slug || category.id}`}
                 onClick={(e) => { e.preventDefault(); navigate(`/categories/${category.slug || category.id}`) }}
               >
                 {category.name}
               </a>
-              <i className={`bx bx-chevron-down text-sm md:text-base ml-1 hidden sm:inline transition-transform duration-300 ${hoveredCategory?.id === category.id ? 'rotate-180' : ''
+              <i className={`bx bx-chevron-down text-white text-sm md:text-base ml-1 hidden sm:inline transition-transform duration-300 ${hoveredCategory?.id === category.id ? 'rotate-180' : ''
                 }`}></i>
             </li>
           ))}
@@ -205,7 +179,7 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () =>
             onMouseLeave={() => handleCategoryHover(null)}
           >
             <div
-              className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border border-gray-200/40 dark:border-gray-700/40 shadow-2xl rounded-b-sm overflow-hidden"
+              className="bg-gray-900/95 backdrop-blur-xl border border-gray-700/50 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] rounded-b-sm overflow-hidden"
               style={{ boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.2)' }}
             >
               <div className="flex h-[350px]">
@@ -230,8 +204,7 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () =>
                         : `Khám phá bộ sưu tập ${hoveredCategory.name.toLowerCase()}`}
                     </p>
                     <button
-                      onClick={() =>
-                      {
+                      onClick={() => {
                         setShowDropdown(false)
                         navigate(`/categories/${hoveredCategory.slug || hoveredCategory.id}`)
                       }}
@@ -246,11 +219,11 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () =>
                 {/* Right — Products Grid */}
                 <div className="w-full lg:w-[70%] p-5">
                   <div className="flex items-center justify-between mb-4">
-                    <h4 className="text-gray-800 dark:text-gray-100 text-base font-bold flex items-center gap-2">
+                    <h4 className="text-gray-100 text-base font-bold flex items-center gap-2">
                       <i className='bx bx-grid-alt text-primary-500' />
                       Sản phẩm nổi bật
                     </h4>
-                    <span className="text-gray-400 dark:text-gray-500 text-xs">{products.length} sản phẩm</span>
+                    <span className="text-gray-400 text-xs">{products.length} sản phẩm</span>
                   </div>
 
                   {products.length > 0 ? (
@@ -258,16 +231,15 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () =>
                       {products.map((product, idx) => (
                         <div
                           key={product.id || idx}
-                          className="flex items-center gap-3 p-2.5 rounded-sm bg-gray-50/80 dark:bg-gray-800/80 hover:bg-primary-50 dark:hover:bg-primary-900/30 border border-transparent hover:border-primary-200 dark:hover:border-primary-700 cursor-pointer group transition-all duration-200 hover:shadow-sm"
-                          onClick={() =>
-                          {
+                          className="flex items-center gap-3 p-2.5 rounded-sm bg-gray-800/80 hover:bg-primary-900/40 border border-transparent hover:border-primary-500/50 cursor-pointer group transition-all duration-200 hover:shadow-sm"
+                          onClick={() => {
                             setShowDropdown(false)
                             setHoveredCategory(null)
                             navigate(`/product/${product.slug || product.id}`)
                           }}
                           style={{ animationDelay: `${idx * 50}ms` }}
                         >
-                          <div className="w-14 h-14 flex-shrink-0 rounded-sm overflow-hidden bg-white dark:bg-gray-700 border border-gray-100 dark:border-gray-600">
+                          <div className="w-14 h-14 flex-shrink-0 rounded-sm overflow-hidden bg-gray-800 border border-gray-700">
                             <img
                               src={getProductImageSrc(product)}
                               alt={product.name}
@@ -276,20 +248,20 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () =>
                             />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h5 className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate group-hover:text-primary-700 dark:group-hover:text-primary-400 transition-colors duration-200">
+                            <h5 className="text-sm font-medium text-gray-200 truncate group-hover:text-primary-300 transition-colors duration-200">
                               {product.name}
                             </h5>
-                            <p className="text-xs font-bold text-primary-600 mt-0.5">
+                            <p className="text-xs font-bold text-primary-400 mt-0.5">
                               {formatPrice(product.minPrice || product.price)}
                             </p>
                           </div>
-                          <i className='bx bx-chevron-right text-gray-300 dark:text-gray-600 group-hover:text-primary-500 transition-colors text-lg' />
+                          <i className='bx bx-chevron-right text-gray-500 group-hover:text-primary-400 transition-colors text-lg' />
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <div className="flex flex-col items-center justify-center h-[200px] text-gray-400 dark:text-gray-500">
-                      <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-3">
+                    <div className="flex flex-col items-center justify-center h-[200px] text-gray-400">
+                      <div className="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center mb-3">
                         <i className='bx bx-loader-alt bx-spin text-xl text-gray-400' />
                       </div>
                       <p className="text-sm font-medium">Đang tải sản phẩm...</p>

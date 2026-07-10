@@ -247,7 +247,7 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
 
                         {/* OVERLAY PANEL - slides left/right */}
                         <div className={`absolute top-0 bottom-0 w-1/2 z-20 transition-all duration-700 ease-in-out hidden sm:block ${changeForm ? 'left-0 rounded-r-[60px]' : 'left-1/2 rounded-l-[60px]'}`}>
-                            <div className="absolute inset-0 bg-gradient-to-br from-primary-400 via-secondary-500 to-primary-500 overflow-hidden">
+                            <div className="absolute inset-0 bg-gradient-to-br from-primary-400 via-accent-500 to-primary-500 overflow-hidden">
                                 <div className="absolute -top-12 -right-12 w-40 h-40 bg-white/5 rounded-full" />
                                 <div className="absolute -bottom-16 -left-10 w-48 h-48 bg-white/5 rounded-full" />
                                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-white/5 rounded-full" />
@@ -268,7 +268,7 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                         </div>
 
                         {/* Mobile header */}
-                        <div className="sm:hidden relative h-36 bg-gradient-to-br from-primary-400 via-secondary-500 to-primary-500 overflow-hidden">
+                        <div className="sm:hidden relative h-36 bg-gradient-to-br from-primary-400 via-accent-500 to-primary-500 overflow-hidden">
                             <div className="absolute -top-8 -right-8 w-32 h-32 bg-white/5 rounded-full" />
                             <div className="absolute -bottom-12 -left-6 w-40 h-40 bg-white/5 rounded-full" />
                             <button onClick={handleModalClose} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white/15 hover:bg-white/30 text-white transition-all cursor-pointer">
@@ -329,7 +329,7 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                                             </label>
                                             <button type="button" onClick={e => { e.preventDefault(); setShowForgotPassword(true); }} className="text-xs text-primary-600 hover:text-primary-700 font-medium cursor-pointer">Quên mật khẩu?</button>
                                         </div>
-                                        <button type="submit" disabled={isLoading} className="w-full py-3 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 dark:shadow-primary-900/30 transition-all duration-300 disabled:opacity-70 cursor-pointer active:scale-[0.97] hover:-translate-y-0.5">
+                                        <button type="submit" disabled={isLoading} className="w-full py-3 rounded-full bg-gradient-to-r from-primary-600 via-tertiary-500 to-accent-500 hover:from-primary-600 hover:to-accent-600 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 dark:shadow-primary-900/30 transition-all duration-300 disabled:opacity-70 cursor-pointer active:scale-[0.97] hover:-translate-y-0.5">
                                             {isLoading ? <span className="flex items-center justify-center gap-2"><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>Đang xử lý...</span> : 'ĐĂNG NHẬP'}
                                         </button>
                                         <div className="flex items-center gap-3 my-4 sm:my-5">
@@ -392,7 +392,7 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                                             </label>
                                             {formErrors.acceptTerms && <p className="mt-1 ml-6 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.acceptTerms}</p>}
                                         </div>
-                                        <button type="submit" disabled={isLoading || !acceptTerms} className={`w-full py-3 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 dark:shadow-primary-900/30 transition-all duration-300 ${isLoading || !acceptTerms ? 'opacity-50 cursor-not-allowed' : 'hover:from-primary-600 hover:to-secondary-600 cursor-pointer active:scale-[0.97] hover:-translate-y-0.5'}`}>
+                                        <button type="submit" disabled={isLoading || !acceptTerms} className={`w-full py-3 rounded-full bg-gradient-to-r from-primary-600 via-tertiary-500 to-accent-500 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 dark:shadow-primary-900/30 transition-all duration-300 ${isLoading || !acceptTerms ? 'opacity-50 cursor-not-allowed' : 'hover:from-primary-600 hover:to-accent-600 cursor-pointer active:scale-[0.97] hover:-translate-y-0.5'}`}>
                                             {isLoading ? <span className="flex items-center justify-center gap-2"><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>Đang xử lý...</span> : 'ĐĂNG KÝ TÀI KHOẢN'}
                                         </button>
                                         <p className="text-center text-sm text-gray-500 mt-4 sm:mt-5 sm:hidden">Đã có tài khoản?{' '}<button type="button" onClick={ChangeFormLogin} className="text-primary-600 font-semibold cursor-pointer">Đăng nhập</button></p>

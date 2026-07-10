@@ -28,7 +28,7 @@ const getImageSrc = (product) => {
 
 const CustomPrevArrow = ({ onClick }) => (
   <button
-    className='absolute -top-[52px] md:-top-[56px] right-[44px] md:right-[50px] z-10 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-sm bg-gradient-to-br from-primary-500 to-secondary-500 text-white cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(245,158,11,0.25)] hover:from-primary-600 hover:to-secondary-600 hover:shadow-[0_4px_14px_rgba(245,158,11,0.4)] hover:scale-105 active:scale-95'
+    className='absolute -top-[52px] md:-top-[56px] right-[44px] md:right-[50px] z-10 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-sm bg-gradient-to-br from-primary-600 via-tertiary-500 to-accent-500 text-white cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(245,158,11,0.25)] hover:from-primary-600 hover:to-accent-600 hover:shadow-[0_4px_14px_rgba(245,158,11,0.4)] hover:scale-105 active:scale-95'
     onClick={onClick}
     aria-label="Sản phẩm trước"
   >
@@ -38,7 +38,7 @@ const CustomPrevArrow = ({ onClick }) => (
 
 const CustomNextArrow = ({ onClick }) => (
   <button
-    className='absolute -top-[52px] md:-top-[56px] right-1 z-10 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-sm bg-gradient-to-br from-primary-500 to-secondary-500 text-white cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(245,158,11,0.25)] hover:from-primary-600 hover:to-secondary-600 hover:shadow-[0_4px_14px_rgba(245,158,11,0.4)] hover:scale-105 active:scale-95'
+    className='absolute -top-[52px] md:-top-[56px] right-1 z-10 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-sm bg-gradient-to-br from-primary-600 via-tertiary-500 to-accent-500 text-white cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(245,158,11,0.25)] hover:from-primary-600 hover:to-accent-600 hover:shadow-[0_4px_14px_rgba(245,158,11,0.4)] hover:scale-105 active:scale-95'
     onClick={onClick}
     aria-label="Sản phẩm tiếp theo"
   >
@@ -120,9 +120,9 @@ const TrendingProduct = () => {
   return (
     <div className='w-full xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0 mb-8'>
       {/* Section Header — matching best-seller style */}
-      <div className='flex items-center justify-between mb-6 md:mb-8 pb-3 border-b border-gray-300 dark:border-[#333] relative after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-40 after:h-0.5 after:bg-gradient-to-r after:from-primary-500 after:to-secondary-500 after:rounded-sm'>
+      <div className='flex items-center justify-between mb-6 md:mb-8 pb-3 border-b border-gray-300 dark:border-[#333] relative after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-40 after:h-0.5 after:bg-gradient-to-r after:from-primary-500 after:to-accent-500 after:rounded-sm'>
         <div className='flex items-center gap-3'>
-          <div className='w-9 h-9 md:w-[42px] md:h-[42px] flex items-center justify-center bg-gradient-to-br from-primary-100 to-secondary-100 dark:from-[#3d2e00] dark:to-[#4a3200] rounded-md flex-shrink-0'>
+          <div className='w-9 h-9 md:w-[42px] md:h-[42px] flex items-center justify-center bg-gradient-to-br from-primary-100 to-accent-100 dark:from-[#3d2e00] dark:to-[#4a3200] rounded-md flex-shrink-0'>
             <i className='bx bx-line-chart text-xl md:text-[1.4rem] text-primary-600 dark:text-primary-400'></i>
           </div>
           <div>
@@ -151,7 +151,7 @@ const TrendingProduct = () => {
                   {/* Image */}
                   <div className='relative w-[38%] md:w-[40%] flex-shrink-0 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-[#111] dark:to-[#1a1a1a] flex items-center justify-center p-3 overflow-hidden'>
                     {hasDiscount && (
-                      <div className="absolute top-2 left-2 z-10 bg-gradient-to-r from-primary-500 to-secondary-500 text-white text-[0.6rem] font-bold px-1.5 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(245,158,11,0.25)]">
+                      <div className="absolute top-2 left-2 z-10 bg-gradient-to-r from-primary-600 via-tertiary-500 to-accent-500 text-white text-[0.6rem] font-bold px-1.5 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(245,158,11,0.25)]">
                         -{discountPercent}%
                       </div>
                     )}
@@ -189,7 +189,7 @@ const TrendingProduct = () => {
                         )}
                       </div>
                       <button
-                        className='w-7 h-7 md:w-8 md:h-8 rounded-sm bg-gradient-to-br from-primary-100 to-primary-200 dark:from-[#3d2e00] dark:to-[#4a3200] text-primary-600 dark:text-primary-400 flex items-center justify-center cursor-pointer transition-all duration-300 hover:from-primary-500 hover:to-secondary-500 hover:text-white hover:shadow-[0_2px_8px_rgba(245,158,11,0.3)] active:scale-95'
+                        className='w-7 h-7 md:w-8 md:h-8 rounded-sm bg-gradient-to-br from-primary-100 to-primary-200 dark:from-[#3d2e00] dark:to-[#4a3200] text-primary-600 dark:text-primary-400 flex items-center justify-center cursor-pointer transition-all duration-300 hover:from-primary-500 hover:to-accent-500 hover:text-white hover:shadow-[0_2px_8px_rgba(245,158,11,0.3)] active:scale-95'
                         onClick={(e) => {
                           e.stopPropagation();
                           setCartModalProduct(product);

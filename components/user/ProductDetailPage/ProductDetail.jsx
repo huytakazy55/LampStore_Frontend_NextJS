@@ -813,7 +813,7 @@ const ProductDetail = () =>
                                                     onError={(e) => { e.target.src = defaultImg; }}
                                                 />
                                                 {rpHasDiscount && (
-                                                    <div className='absolute top-2 left-2 bg-gradient-to-r from-primary-500 to-secondary-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm shadow'>-{rpDiscountPercent}%</div>
+                                                    <div className='absolute top-2 left-2 bg-gradient-to-r from-primary-600 via-tertiary-500 to-accent-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm shadow'>-{rpDiscountPercent}%</div>
                                                 )}
                                             </div>
                                             <div className='p-3'>
