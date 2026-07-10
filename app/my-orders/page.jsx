@@ -26,7 +26,7 @@ const getImgSrc = (path) =>
 };
 
 const STATUS_CONFIG = {
-    Pending: { label: 'Chờ xử lý', bg: 'bg-amber-50', border: 'border-amber-200', text: 'text-amber-700', icon: 'bx-time-five', dot: 'bg-amber-400' },
+    Pending: { label: 'Chờ xử lý', bg: 'bg-primary-50', border: 'border-primary-200', text: 'text-primary-700', icon: 'bx-time-five', dot: 'bg-primary-400' },
     Confirmed: { label: 'Đã xác nhận', bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-700', icon: 'bx-check-circle', dot: 'bg-blue-400' },
     Shipping: { label: 'Đang giao hàng', bg: 'bg-indigo-50', border: 'border-indigo-200', text: 'text-indigo-700', icon: 'bx-package', dot: 'bg-indigo-400' },
     Completed: { label: 'Hoàn thành', bg: 'bg-emerald-50', border: 'border-emerald-200', text: 'text-emerald-700', icon: 'bx-check-double', dot: 'bg-emerald-400' },
@@ -126,11 +126,11 @@ export default function OrderHistoryPage()
                 <div className='bg-white dark:bg-gray-900 w-full max-w-3xl max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden'
                     onClick={e => e.stopPropagation()}>
                     {/* Modal Header */}
-                    <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-rose-50 to-amber-50 dark:from-gray-800 dark:to-gray-800'>
+                    <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-primary-50 to-primary-50 dark:from-gray-800 dark:to-gray-800'>
                         <div>
                             <h2 className='text-lg font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2'>
                                 Chi tiết đơn hàng
-                                <span className='text-xs font-mono bg-gray-800 text-amber-400 px-2 py-0.5 rounded'>
+                                <span className='text-xs font-mono bg-gray-800 text-primary-400 px-2 py-0.5 rounded'>
                                     #{order.id?.substring(0, 8).toUpperCase()}
                                 </span>
                             </h2>
@@ -218,7 +218,7 @@ export default function OrderHistoryPage()
                         {/* Customer Info */}
                         <div>
                             <h3 className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2.5 flex items-center gap-2'>
-                                <i className='bx bx-user text-rose-500'></i>
+                                <i className='bx bx-user text-primary-500'></i>
                                 Thông tin khách hàng
                             </h3>
                             <div className='border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden text-sm'>
@@ -246,7 +246,7 @@ export default function OrderHistoryPage()
                         {/* Order Items */}
                         <div>
                             <h3 className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2.5 flex items-center gap-2'>
-                                <i className='bx bx-cart text-rose-500'></i>
+                                <i className='bx bx-cart text-primary-500'></i>
                                 Danh sách sản phẩm ({items.length})
                             </h3>
                             <div className='border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden'>
@@ -274,7 +274,7 @@ export default function OrderHistoryPage()
                                                         onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/images/placeholder.png'; }} />
                                                 </div>
                                                 <div className='min-w-0'>
-                                                    <p className='text-sm font-medium text-gray-800 dark:text-gray-200 line-clamp-1 cursor-pointer hover:text-rose-600 transition-colors'
+                                                    <p className='text-sm font-medium text-gray-800 dark:text-gray-200 line-clamp-1 cursor-pointer hover:text-primary-600 transition-colors'
                                                         onClick={() => { setSelectedOrder(null); if (item.productId) router.push(`/product/${item.productId}`); }}>
                                                         {item.productName}
                                                     </p>
@@ -285,7 +285,7 @@ export default function OrderHistoryPage()
                                                     )}
                                                 </div>
                                             </div>
-                                            <div className='px-3 py-3 text-center text-sm text-rose-600 font-medium'>
+                                            <div className='px-3 py-3 text-center text-sm text-primary-600 font-medium'>
                                                 {formatPrice(item.price)}đ
                                             </div>
                                             <div className='px-3 py-3 text-center text-sm text-gray-700 dark:text-gray-300'>
@@ -314,13 +314,13 @@ export default function OrderHistoryPage()
                             </div>
                             <div className='flex justify-between text-gray-500 dark:text-gray-400'>
                                 <span>Phương thức thanh toán:</span>
-                                <span className='inline-flex items-center gap-1 px-2 py-0.5 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded text-amber-700 dark:text-amber-400 text-xs font-medium'>
+                                <span className='inline-flex items-center gap-1 px-2 py-0.5 bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-700 rounded text-primary-700 dark:text-primary-400 text-xs font-medium'>
                                     {order.paymentMethod === 'cod' ? 'Thanh toán khi nhận hàng' : order.paymentMethod === 'bank' ? 'Chuyển khoản ngân hàng' : order.paymentMethod}
                                 </span>
                             </div>
                             <div className='flex justify-between items-center pt-2 border-t border-gray-200 dark:border-gray-700'>
                                 <span className='font-bold text-gray-800 dark:text-gray-100'>Tổng cộng:</span>
-                                <span className='text-lg font-bold text-rose-600'>
+                                <span className='text-lg font-bold text-primary-600'>
                                     {formatPrice(order.totalAmount)}đ
                                 </span>
                             </div>
@@ -328,8 +328,8 @@ export default function OrderHistoryPage()
 
                         {/* Note */}
                         {order.note && (
-                            <div className='flex items-start gap-2 text-sm text-gray-500 dark:text-gray-400 bg-amber-50/50 dark:bg-amber-900/10 rounded-lg px-4 py-3'>
-                                <i className='bx bx-note text-amber-500 mt-0.5'></i>
+                            <div className='flex items-start gap-2 text-sm text-gray-500 dark:text-gray-400 bg-primary-50/50 dark:bg-primary-900/10 rounded-lg px-4 py-3'>
+                                <i className='bx bx-note text-primary-500 mt-0.5'></i>
                                 <span><strong>Ghi chú:</strong> {order.note}</span>
                             </div>
                         )}
@@ -348,13 +348,13 @@ export default function OrderHistoryPage()
             <main className='w-full mb-8 xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0 min-h-[60vh]'>
                 {/* Breadcrumb */}
                 <nav aria-label="Breadcrumb" className='flex items-center py-3 text-xs md:text-sm'>
-                    <a href="/" className='font-medium text-gray-600 dark:text-gray-400 hover:text-rose-600 transition'>Trang chủ</a>
+                    <a href="/" className='font-medium text-gray-600 dark:text-gray-400 hover:text-primary-600 transition'>Trang chủ</a>
                     <i className='bx bx-chevron-right text-base md:text-lg px-1 text-gray-400 dark:text-gray-600'></i>
                     <span className='text-gray-500 dark:text-gray-400'>Đơn hàng của tôi</span>
                 </nav>
 
                 {/* Page Header */}
-                <div className='bg-gradient-to-r from-rose-600 to-amber-500 rounded-xl p-5 md:p-6 mb-6 text-white relative overflow-hidden'>
+                <div className='bg-gradient-to-r from-primary-600 to-primary-500 rounded-xl p-5 md:p-6 mb-6 text-white relative overflow-hidden'>
                     <div className='absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2'></div>
                     <div className='absolute bottom-0 left-20 w-24 h-24 bg-white/5 rounded-full translate-y-1/2'></div>
                     <div className='relative z-10'>
@@ -378,8 +378,8 @@ export default function OrderHistoryPage()
                                 key={tab.key}
                                 onClick={() => setFilterStatus(tab.key)}
                                 className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs md:text-sm font-medium whitespace-nowrap transition-all duration-200 cursor-pointer border ${filterStatus === tab.key
-                                    ? 'bg-rose-600 text-white border-rose-600 shadow-md shadow-rose-200 dark:shadow-rose-900/30'
-                                    : 'bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-rose-300 hover:text-rose-600'
+                                    ? 'bg-primary-600 text-white border-primary-600 shadow-md shadow-primary-200 dark:shadow-primary-900/30'
+                                    : 'bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-primary-300 hover:text-primary-600'
                                     }`}
                             >
                                 <i className={`bx ${tab.icon}`}></i>
@@ -409,7 +409,7 @@ export default function OrderHistoryPage()
                         <p className='text-gray-400 dark:text-gray-500 text-sm mb-5'>Hãy khám phá các sản phẩm tuyệt vời của chúng tôi</p>
                         <button
                             onClick={() => router.push('/')}
-                            className='px-6 py-2.5 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition text-sm font-medium cursor-pointer flex items-center gap-2'
+                            className='px-6 py-2.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition text-sm font-medium cursor-pointer flex items-center gap-2'
                         >
                             <i className='bx bx-shopping-bag'></i> Mua sắm ngay
                         </button>
@@ -466,11 +466,11 @@ export default function OrderHistoryPage()
                                                             onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/images/placeholder.png'; }} />
                                                     </div>
                                                     <div className='flex-1 min-w-0'>
-                                                        <p className='text-sm text-gray-800 dark:text-gray-200 line-clamp-1 group-hover:text-rose-600 transition-colors'>{item.productName}</p>
+                                                        <p className='text-sm text-gray-800 dark:text-gray-200 line-clamp-1 group-hover:text-primary-600 transition-colors'>{item.productName}</p>
                                                         {optionText && <p className='text-[11px] text-gray-400 mt-0.5'>Phân loại: {optionText}</p>}
                                                     </div>
                                                     <div className='text-right flex-shrink-0'>
-                                                        <p className='text-sm font-medium text-rose-600'>{formatPrice(item.price)}đ</p>
+                                                        <p className='text-sm font-medium text-primary-600'>{formatPrice(item.price)}đ</p>
                                                         <p className='text-[11px] text-gray-400'>x{item.quantity}</p>
                                                     </div>
                                                 </div>
@@ -500,7 +500,7 @@ export default function OrderHistoryPage()
                                                     </button>
                                                     <button
                                                         onClick={(e) => { e.stopPropagation(); setReviewOrder(order); }}
-                                                        className='flex items-center gap-1 px-3 py-1.5 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 text-amber-700 dark:text-amber-400 text-xs font-semibold rounded-lg hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors cursor-pointer'
+                                                        className='flex items-center gap-1 px-3 py-1.5 bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-700 text-primary-700 dark:text-primary-400 text-xs font-semibold rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/40 transition-colors cursor-pointer'
                                                     >
                                                         <i className='bx bx-star'></i>
                                                         Đánh giá
@@ -509,11 +509,11 @@ export default function OrderHistoryPage()
                                             )}
                                             <div className='text-right'>
                                                 <span className='text-[10px] text-gray-400 block leading-tight'>Tổng cộng</span>
-                                                <span className='text-base font-bold text-rose-600'>
+                                                <span className='text-base font-bold text-primary-600'>
                                                     {formatPrice(order.totalAmount)}đ
                                                 </span>
                                             </div>
-                                            <i className='bx bx-chevron-right text-gray-300 group-hover:text-rose-400 transition-colors text-lg'></i>
+                                            <i className='bx bx-chevron-right text-gray-300 group-hover:text-primary-400 transition-colors text-lg'></i>
                                         </div>
                                     </div>
                                 </div>

@@ -74,10 +74,10 @@ const getDensityLevel = (visitCount, maxVisits) => {
     if (ratio >= 0.18) {
         return {
             label: "Vừa",
-            color: "bg-yellow-400/90",
-            border: "border-yellow-50",
+            color: "bg-secondary-400/90",
+            border: "border-secondary-50",
             glow: "shadow-[0_0_26px_rgba(234,179,8,0.52)]",
-            ping: "bg-yellow-200/40",
+            ping: "bg-secondary-200/40",
         };
     }
 
@@ -515,7 +515,7 @@ export default function VisitorMapPage() {
                                     <div className="admin-visitor-legend-title">Mật độ truy cập</div>
                                     {[
                                         ["Ít", "bg-blue-500", "Nhỏ"],
-                                        ["Vừa", "bg-yellow-400", "Trung bình"],
+                                        ["Vừa", "bg-secondary-400", "Trung bình"],
                                         ["Nhiều", "bg-orange-500", "Lớn"],
                                         ["Rất nhiều", "bg-red-500", "Rất lớn"],
                                     ].map(([label, color, sizeLabel], idx) => (

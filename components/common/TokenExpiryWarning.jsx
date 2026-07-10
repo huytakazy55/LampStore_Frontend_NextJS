@@ -51,7 +51,7 @@ const TokenExpiryWarning = () => {
   if (!showWarning) return null;
 
   return (
-    <div className="fixed top-4 right-4 z-[9999] bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded shadow-lg">
+    <div className="fixed top-4 right-4 z-[9999] bg-secondary-100 border border-secondary-400 text-secondary-700 px-4 py-3 rounded shadow-lg">
       <div className="flex items-center">
         <div className="flex-shrink-0">
           <i className="bx bx-time text-xl"></i>
@@ -66,7 +66,7 @@ const TokenExpiryWarning = () => {
         </div>
         <button
           onClick={() => setShowWarning(false)}
-          className="ml-4 text-yellow-500 hover:text-yellow-700"
+          className="ml-4 text-secondary-500 hover:text-secondary-700"
         >
           <i className="bx bx-x text-lg"></i>
         </button>

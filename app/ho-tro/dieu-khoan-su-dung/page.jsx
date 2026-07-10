@@ -73,19 +73,19 @@ export default function DieuKhoanSuDungPage() {
     return (
         <article className="prose prose-gray dark:prose-invert max-w-none prose-headings:text-gray-800 dark:prose-headings:text-gray-100">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2 flex items-center gap-3">
-                <span className="w-10 h-10 bg-amber-100 dark:bg-amber-900/40 rounded-xl flex items-center justify-center shrink-0">
-                    <i className='bx bx-file text-amber-600 dark:text-amber-400 text-xl' />
+                <span className="w-10 h-10 bg-primary-100 dark:bg-primary-900/40 rounded-xl flex items-center justify-center shrink-0">
+                    <i className='bx bx-file text-primary-600 dark:text-primary-400 text-xl' />
                 </span>
                 Điều khoản sử dụng
             </h2>
             <p className="text-gray-400 text-sm mb-8">Cập nhật lần cuối: 01/05/2025</p>
 
-            <div className="bg-amber-50 dark:bg-amber-950/30 rounded-2xl p-6 mb-8 border border-amber-100 dark:border-amber-800/40 not-prose">
+            <div className="bg-primary-50 dark:bg-primary-950/30 rounded-2xl p-6 mb-8 border border-primary-100 dark:border-primary-800/40 not-prose">
                 <div className="flex items-start gap-3">
-                    <i className='bx bx-info-circle text-amber-600 dark:text-amber-400 text-2xl mt-0.5' />
+                    <i className='bx bx-info-circle text-primary-600 dark:text-primary-400 text-2xl mt-0.5' />
                     <div>
-                        <h4 className="font-bold text-amber-800 dark:text-amber-300 mb-1">Lưu ý quan trọng</h4>
-                        <p className="text-amber-700 dark:text-amber-400 text-sm leading-relaxed">Bằng việc truy cập và sử dụng website <strong>CapyLumine.com</strong>, bạn đồng ý tuân thủ và chịu ràng buộc bởi các điều khoản và điều kiện dưới đây. Vui lòng đọc kỹ trước khi sử dụng dịch vụ.</p>
+                        <h4 className="font-bold text-primary-800 dark:text-primary-300 mb-1">Lưu ý quan trọng</h4>
+                        <p className="text-primary-700 dark:text-primary-400 text-sm leading-relaxed">Bằng việc truy cập và sử dụng website <strong>CapyLumine.com</strong>, bạn đồng ý tuân thủ và chịu ràng buộc bởi các điều khoản và điều kiện dưới đây. Vui lòng đọc kỹ trước khi sử dụng dịch vụ.</p>
                     </div>
                 </div>
             </div>
@@ -114,8 +114,8 @@ export default function DieuKhoanSuDungPage() {
                     'CapyLumine không đảm bảo Website sẽ hoạt động liên tục, không có lỗi hoặc không bị gián đoạn.',
                     'Trách nhiệm bồi thường của CapyLumine không vượt quá giá trị đơn hàng gây ra tranh chấp.',
                 ].map((text, i) => (
-                    <div key={i} className="flex items-start gap-3 p-3 bg-yellow-50 dark:bg-yellow-950/30 rounded-lg border border-yellow-100 dark:border-yellow-800/40">
-                        <i className='bx bx-shield text-yellow-600 dark:text-yellow-400 text-lg shrink-0 mt-0.5' />
+                    <div key={i} className="flex items-start gap-3 p-3 bg-secondary-50 dark:bg-secondary-950/30 rounded-lg border border-secondary-100 dark:border-secondary-800/40">
+                        <i className='bx bx-shield text-secondary-600 dark:text-secondary-400 text-lg shrink-0 mt-0.5' />
                         <span className="text-gray-700 dark:text-gray-300 text-sm">{text}</span>
                     </div>
                 ))}
@@ -129,7 +129,7 @@ export default function DieuKhoanSuDungPage() {
             </div>
 
             <h3 className="text-xl font-bold mt-8 mb-4">📞 8. Liên hệ</h3>
-            <div className="not-prose bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 rounded-2xl p-6 border border-amber-100 dark:border-amber-800/40">
+            <div className="not-prose bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-primary-950/30 dark:to-secondary-950/30 rounded-2xl p-6 border border-primary-100 dark:border-primary-800/40">
                 <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed mb-4">
                     Nếu bạn có bất kỳ câu hỏi nào về Điều khoản sử dụng, vui lòng liên hệ:
                 </p>
@@ -141,7 +141,7 @@ export default function DieuKhoanSuDungPage() {
                         { icon: 'bx-map', text: 'A2 Vĩnh Hồ, Thịnh Quang, Đống Đa, Hà Nội' },
                     ].map((c, i) => (
                         <div key={i} className="flex items-center gap-3">
-                            <i className={`bx ${c.icon} text-amber-600 dark:text-amber-400 text-lg`} />
+                            <i className={`bx ${c.icon} text-primary-600 dark:text-primary-400 text-lg`} />
                             <span className="text-gray-700 dark:text-gray-300 text-sm">{c.text}</span>
                         </div>
                     ))}

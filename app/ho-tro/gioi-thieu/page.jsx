@@ -5,18 +5,18 @@ export const metadata = {
 
 export default function GioiThieuPage() {
     return (
-        <article className="prose prose-gray dark:prose-invert max-w-none prose-headings:text-gray-800 dark:prose-headings:text-gray-100 prose-a:text-amber-600 dark:prose-a:text-amber-400">
+        <article className="prose prose-gray dark:prose-invert max-w-none prose-headings:text-gray-800 dark:prose-headings:text-gray-100 prose-a:text-primary-600 dark:prose-a:text-primary-400">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2 flex items-center gap-3">
-                <span className="w-10 h-10 bg-amber-100 dark:bg-amber-900/40 rounded-xl flex items-center justify-center shrink-0">
-                    <i className='bx bx-info-circle text-amber-600 dark:text-amber-400 text-xl' />
+                <span className="w-10 h-10 bg-primary-100 dark:bg-primary-900/40 rounded-xl flex items-center justify-center shrink-0">
+                    <i className='bx bx-info-circle text-primary-600 dark:text-primary-400 text-xl' />
                 </span>
                 Giới thiệu về CapyLumine
             </h2>
             <p className="text-gray-400 text-sm mb-8">Cập nhật lần cuối: 29/04/2025</p>
 
-            <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 rounded-2xl p-6 mb-8 border border-amber-100 dark:border-amber-800/40">
+            <div className="bg-gradient-to-r from-primary-50 to-secondary-50 dark:from-primary-950/30 dark:to-secondary-950/30 rounded-2xl p-6 mb-8 border border-primary-100 dark:border-primary-800/40">
                 <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-base m-0">
-                    <strong className="text-amber-700 dark:text-amber-400">CapyLumine</strong> là thương hiệu đèn trang trí cao cấp hàng đầu Việt Nam,
+                    <strong className="text-primary-700 dark:text-primary-400">CapyLumine</strong> là thương hiệu đèn trang trí cao cấp hàng đầu Việt Nam,
                     chuyên cung cấp các sản phẩm đèn ngủ dễ thương, đèn bàn học, đèn LED nghệ thuật và đèn anime với thiết kế độc đáo,
                     chất lượng vượt trội.
                 </p>
@@ -32,15 +32,15 @@ export default function GioiThieuPage() {
             <h3 className="text-xl font-bold mt-8 mb-4">🎯 Tầm nhìn & sứ mệnh</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-6">
                 <div className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl p-5 shadow-sm">
-                    <div className="w-10 h-10 bg-amber-100 dark:bg-amber-900/40 rounded-lg flex items-center justify-center mb-3">
-                        <i className='bx bx-target-lock text-amber-600 dark:text-amber-400 text-xl' />
+                    <div className="w-10 h-10 bg-primary-100 dark:bg-primary-900/40 rounded-lg flex items-center justify-center mb-3">
+                        <i className='bx bx-target-lock text-primary-600 dark:text-primary-400 text-xl' />
                     </div>
                     <h4 className="font-bold text-gray-800 dark:text-gray-100 mb-2">Tầm nhìn</h4>
                     <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Trở thành thương hiệu đèn trang trí được yêu thích nhất tại Việt Nam, mang ánh sáng nghệ thuật đến mọi gia đình.</p>
                 </div>
                 <div className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl p-5 shadow-sm">
-                    <div className="w-10 h-10 bg-amber-100 dark:bg-amber-900/40 rounded-lg flex items-center justify-center mb-3">
-                        <i className='bx bx-heart text-amber-600 dark:text-amber-400 text-xl' />
+                    <div className="w-10 h-10 bg-primary-100 dark:bg-primary-900/40 rounded-lg flex items-center justify-center mb-3">
+                        <i className='bx bx-heart text-primary-600 dark:text-primary-400 text-xl' />
                     </div>
                     <h4 className="font-bold text-gray-800 dark:text-gray-100 mb-2">Sứ mệnh</h4>
                     <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Kiến tạo không gian sống đẹp hơn thông qua những sản phẩm đèn sáng tạo, chất lượng cao với giá cả hợp lý.</p>
@@ -56,8 +56,8 @@ export default function GioiThieuPage() {
                     { icon: 'bx-support', title: 'Hỗ trợ tận tâm', desc: 'Đội ngũ CSKH nhiệt tình, sẵn sàng tư vấn 24/7' },
                 ].map((item, i) => (
                     <div key={i} className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
-                        <div className="w-8 h-8 bg-amber-100 dark:bg-amber-900/40 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
-                            <i className={`bx ${item.icon} text-amber-600 dark:text-amber-400`} />
+                        <div className="w-8 h-8 bg-primary-100 dark:bg-primary-900/40 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+                            <i className={`bx ${item.icon} text-primary-600 dark:text-primary-400`} />
                         </div>
                         <div>
                             <h4 className="font-semibold text-gray-800 dark:text-gray-100 text-sm mb-1">{item.title}</h4>
@@ -71,19 +71,19 @@ export default function GioiThieuPage() {
             <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-5 not-prose">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="flex items-center gap-3">
-                        <i className='bx bx-phone text-amber-600 dark:text-amber-400 text-lg' />
+                        <i className='bx bx-phone text-primary-600 dark:text-primary-400 text-lg' />
                         <span className="text-gray-700 dark:text-gray-300 text-sm">(+84) 969 608 810</span>
                     </div>
                     <div className="flex items-center gap-3">
-                        <i className='bx bx-envelope text-amber-600 dark:text-amber-400 text-lg' />
+                        <i className='bx bx-envelope text-primary-600 dark:text-primary-400 text-lg' />
                         <span className="text-gray-700 dark:text-gray-300 text-sm">Khongthaydoi124@gmail.com</span>
                     </div>
                     <div className="flex items-center gap-3">
-                        <i className='bx bx-map text-amber-600 dark:text-amber-400 text-lg' />
+                        <i className='bx bx-map text-primary-600 dark:text-primary-400 text-lg' />
                         <span className="text-gray-700 dark:text-gray-300 text-sm">A2 Vĩnh Hồ, Thịnh Quang, Đống Đa, Hà Nội</span>
                     </div>
                     <div className="flex items-center gap-3">
-                        <i className='bx bx-globe text-amber-600 dark:text-amber-400 text-lg' />
+                        <i className='bx bx-globe text-primary-600 dark:text-primary-400 text-lg' />
                         <span className="text-gray-700 dark:text-gray-300 text-sm">CapyLumine.com</span>
                     </div>
                 </div>

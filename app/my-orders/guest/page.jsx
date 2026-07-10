@@ -25,7 +25,7 @@ const formatDate = (dateStr) =>
 };
 
 const statusMap = {
-    'Pending': { label: 'Chờ xác nhận', color: 'bg-yellow-100 text-yellow-700', icon: 'bx-time-five' },
+    'Pending': { label: 'Chờ xác nhận', color: 'bg-secondary-100 text-secondary-700', icon: 'bx-time-five' },
     'Confirmed': { label: 'Đã xác nhận', color: 'bg-blue-100 text-blue-700', icon: 'bx-check' },
     'Shipping': { label: 'Đang giao', color: 'bg-indigo-100 text-indigo-700', icon: 'bx-package' },
     'Completed': { label: 'Hoàn thành', color: 'bg-green-100 text-green-700', icon: 'bx-check-double' },
@@ -110,12 +110,12 @@ export default function GuestOrdersPage()
                     <div className='flex items-center justify-between mb-6'>
                         <div>
                             <h1 className='text-2xl font-bold text-gray-800 flex items-center gap-2'>
-                                <i className='bx bx-package text-amber-500'></i>
+                                <i className='bx bx-package text-primary-500'></i>
                                 Đơn hàng của tôi
                             </h1>
                             {guestProfile && (
                                 <p className='text-sm text-gray-500 mt-1'>
-                                    Mã khách: <span className='font-semibold text-amber-600'>{guestProfile.guestCode}</span>
+                                    Mã khách: <span className='font-semibold text-primary-600'>{guestProfile.guestCode}</span>
                                 </p>
                             )}
                         </div>
@@ -129,11 +129,11 @@ export default function GuestOrdersPage()
                     </div>
 
                     {/* Info banner */}
-                    <div className='bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 flex items-start gap-3'>
-                        <i className='bx bx-info-circle text-xl text-amber-500 mt-0.5'></i>
+                    <div className='bg-primary-50 border border-primary-200 rounded-xl p-4 mb-6 flex items-start gap-3'>
+                        <i className='bx bx-info-circle text-xl text-primary-500 mt-0.5'></i>
                         <div>
-                            <p className='text-sm text-amber-800 font-medium'>Bạn đang xem với tư cách khách vãng lai</p>
-                            <p className='text-xs text-amber-600 mt-1'>
+                            <p className='text-sm text-primary-800 font-medium'>Bạn đang xem với tư cách khách vãng lai</p>
+                            <p className='text-xs text-primary-600 mt-1'>
                                 Đăng ký tài khoản để quản lý đơn hàng tốt hơn. Đơn hàng sẽ được tự động chuyển vào tài khoản mới.
                             </p>
                         </div>
@@ -142,7 +142,7 @@ export default function GuestOrdersPage()
                     {/* Loading */}
                     {loading && (
                         <div className='flex items-center justify-center py-20'>
-                            <i className='bx bx-loader-alt bx-spin text-4xl text-amber-500'></i>
+                            <i className='bx bx-loader-alt bx-spin text-4xl text-primary-500'></i>
                         </div>
                     )}
 
@@ -154,7 +154,7 @@ export default function GuestOrdersPage()
                             <p className='text-sm text-gray-500 mb-6'>Hãy khám phá và đặt hàng tại CapyLumine!</p>
                             <button
                                 onClick={() => router.push('/')}
-                                className='px-6 py-2.5 bg-amber-500 text-white rounded-lg font-medium hover:bg-amber-600 transition-colors cursor-pointer'
+                                className='px-6 py-2.5 bg-primary-500 text-white rounded-lg font-medium hover:bg-primary-600 transition-colors cursor-pointer'
                             >
                                 Bắt đầu mua sắm
                             </button>
@@ -193,7 +193,7 @@ export default function GuestOrdersPage()
                                                 </div>
                                             </div>
                                             <div className='flex items-center gap-3'>
-                                                <span className='font-bold text-amber-600'>{formatPrice(orderTotal)}₫</span>
+                                                <span className='font-bold text-primary-600'>{formatPrice(orderTotal)}₫</span>
                                                 <i className={`bx ${isExpanded ? 'bx-chevron-up' : 'bx-chevron-down'} text-xl text-gray-400`}></i>
                                             </div>
                                         </div>
@@ -228,7 +228,7 @@ export default function GuestOrdersPage()
                                                                     <p className='text-sm font-medium text-gray-800 line-clamp-1'>{item.productName}</p>
                                                                     {options && <p className='text-xs text-gray-400'>Phân loại: {options}</p>}
                                                                     <div className='flex justify-between items-center mt-1'>
-                                                                        <span className='text-sm text-amber-600 font-medium'>{formatPrice(item.price)}₫</span>
+                                                                        <span className='text-sm text-primary-600 font-medium'>{formatPrice(item.price)}₫</span>
                                                                         <span className='text-xs text-gray-400'>x{item.quantity}</span>
                                                                     </div>
                                                                 </div>
@@ -267,7 +267,7 @@ export default function GuestOrdersPage()
                                                     </div>
                                                     <div className='flex justify-between text-sm font-bold pt-1 border-t border-dashed border-gray-200'>
                                                         <span>Tổng cộng:</span>
-                                                        <span className='text-amber-600'>{formatPrice(orderTotal)}₫</span>
+                                                        <span className='text-primary-600'>{formatPrice(orderTotal)}₫</span>
                                                     </div>
                                                     <div className='flex justify-between text-xs text-gray-400'>
                                                         <span>Thanh toán:</span>

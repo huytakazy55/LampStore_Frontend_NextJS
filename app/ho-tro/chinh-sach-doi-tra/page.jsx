@@ -7,19 +7,19 @@ export default function ChinhSachDoiTraPage() {
     return (
         <article className="prose prose-gray dark:prose-invert max-w-none prose-headings:text-gray-800 dark:prose-headings:text-gray-100">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2 flex items-center gap-3">
-                <span className="w-10 h-10 bg-amber-100 dark:bg-amber-900/40 rounded-xl flex items-center justify-center shrink-0">
-                    <i className='bx bx-transfer text-amber-600 dark:text-amber-400 text-xl' />
+                <span className="w-10 h-10 bg-primary-100 dark:bg-primary-900/40 rounded-xl flex items-center justify-center shrink-0">
+                    <i className='bx bx-transfer text-primary-600 dark:text-primary-400 text-xl' />
                 </span>
                 Chính sách đổi trả
             </h2>
             <p className="text-gray-400 text-sm mb-8">Cập nhật lần cuối: 29/04/2025</p>
 
-            <div className="bg-amber-50 dark:bg-amber-950/30 rounded-2xl p-6 mb-8 border border-amber-100 dark:border-amber-800/40 not-prose">
+            <div className="bg-primary-50 dark:bg-primary-950/30 rounded-2xl p-6 mb-8 border border-primary-100 dark:border-primary-800/40 not-prose">
                 <div className="flex items-start gap-3">
-                    <i className='bx bx-badge-check text-amber-600 dark:text-amber-400 text-2xl mt-0.5' />
+                    <i className='bx bx-badge-check text-primary-600 dark:text-primary-400 text-2xl mt-0.5' />
                     <div>
-                        <h4 className="font-bold text-amber-800 dark:text-amber-300 mb-1">Đổi trả miễn phí 15 ngày</h4>
-                        <p className="text-amber-700 dark:text-amber-400 text-sm leading-relaxed">CapyLumine cam kết đổi trả <strong>miễn phí trong 15 ngày</strong> kể từ ngày nhận hàng nếu sản phẩm gặp lỗi từ nhà sản xuất. Hoàn tiền 100% hoặc đổi sản phẩm mới.</p>
+                        <h4 className="font-bold text-primary-800 dark:text-primary-300 mb-1">Đổi trả miễn phí 15 ngày</h4>
+                        <p className="text-primary-700 dark:text-primary-400 text-sm leading-relaxed">CapyLumine cam kết đổi trả <strong>miễn phí trong 15 ngày</strong> kể từ ngày nhận hàng nếu sản phẩm gặp lỗi từ nhà sản xuất. Hoàn tiền 100% hoặc đổi sản phẩm mới.</p>
                     </div>
                 </div>
             </div>
@@ -65,7 +65,7 @@ export default function ChinhSachDoiTraPage() {
                     { title: 'Nhận hàng mới / hoàn tiền', desc: 'Sản phẩm mới được gửi lại trong 2-3 ngày làm việc, hoặc hoàn tiền vào tài khoản trong vòng 5-7 ngày.' },
                 ].map((step, i) => (
                     <div key={i} className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
-                        <span className="w-7 h-7 bg-amber-500 text-white rounded-lg flex items-center justify-center text-xs font-bold shrink-0">{i + 1}</span>
+                        <span className="w-7 h-7 bg-primary-500 text-white rounded-lg flex items-center justify-center text-xs font-bold shrink-0">{i + 1}</span>
                         <div>
                             <h4 className="font-semibold text-gray-800 dark:text-gray-100 text-sm">{step.title}</h4>
                             <p className="text-gray-500 dark:text-gray-400 text-xs leading-relaxed mt-0.5">{step.desc}</p>
@@ -78,10 +78,10 @@ export default function ChinhSachDoiTraPage() {
             <div className="overflow-x-auto not-prose">
                 <table className="w-full text-sm border-collapse">
                     <thead>
-                        <tr className="bg-amber-50 dark:bg-amber-950/30">
-                            <th className="text-left p-3 font-semibold text-gray-800 dark:text-gray-100 border-b border-amber-100 dark:border-amber-800/40">Phương thức thanh toán</th>
-                            <th className="text-left p-3 font-semibold text-gray-800 dark:text-gray-100 border-b border-amber-100 dark:border-amber-800/40">Hình thức hoàn tiền</th>
-                            <th className="text-left p-3 font-semibold text-gray-800 dark:text-gray-100 border-b border-amber-100 dark:border-amber-800/40">Thời gian</th>
+                        <tr className="bg-primary-50 dark:bg-primary-950/30">
+                            <th className="text-left p-3 font-semibold text-gray-800 dark:text-gray-100 border-b border-primary-100 dark:border-primary-800/40">Phương thức thanh toán</th>
+                            <th className="text-left p-3 font-semibold text-gray-800 dark:text-gray-100 border-b border-primary-100 dark:border-primary-800/40">Hình thức hoàn tiền</th>
+                            <th className="text-left p-3 font-semibold text-gray-800 dark:text-gray-100 border-b border-primary-100 dark:border-primary-800/40">Thời gian</th>
                         </tr>
                     </thead>
                     <tbody className="text-gray-600 dark:text-gray-400">

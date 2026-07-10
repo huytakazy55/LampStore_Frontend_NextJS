@@ -364,7 +364,7 @@ const OrdersManage = () =>
                         },
                         {
                             icon: (
-                                <div className="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-500 text-2xl">
+                                <div className="w-12 h-12 rounded-full bg-secondary-100 flex items-center justify-center text-secondary-500 text-2xl">
                                     <i className="bx bx-time-five"></i>
                                 </div>
                             ),
@@ -411,7 +411,7 @@ const OrdersManage = () =>
                         const percentColor = {
                             green: "bg-green-100 text-green-500",
                             blue: "bg-blue-100 text-blue-500",
-                            yellow: "bg-yellow-100 text-yellow-500",
+                            yellow: "bg-secondary-100 text-secondary-500",
                             cyan: "bg-cyan-100 text-cyan-500",
                             red: "bg-red-100 text-red-500",
                         };
@@ -424,7 +424,7 @@ const OrdersManage = () =>
                                   border-l-8 border-[1px] cursor-pointer
                                   ${item.percentType === "green" ? "border-green-400" : ""}
                                   ${item.percentType === "blue" ? "border-blue-400" : ""}
-                                  ${item.percentType === "yellow" ? "border-yellow-400" : ""}
+                                  ${item.percentType === "yellow" ? "border-secondary-400" : ""}
                                   ${item.percentType === "cyan" ? "border-cyan-400" : ""}
                                   ${item.percentType === "red" ? "border-red-400" : ""}
                                   hover:scale-[1.03] hover:shadow-2xl transition-all duration-200

@@ -16,7 +16,7 @@ const imgBlock = '/images/TVbanner.jpg';const consal = '/images/consalGame.jpg';
             <p className='text-sm md:text-h3'>1.000.000<span>đ</span></p>
             <p className='text-xs md:text-small line-through'>1.000.000<span>đ</span></p>
           </div>
-          <div className='group-hover:bg-yellow-400 w-7 h-7 md:w-8 md:h-8 bg-gray-300 rounded-[50%] leading-[1.5] text-white cursor-pointer mr-2 md:mr-4 mt-2 md:mt-3 flex items-center justify-center'>
+          <div className='group-hover:bg-secondary-400 w-7 h-7 md:w-8 md:h-8 bg-gray-300 rounded-[50%] leading-[1.5] text-white cursor-pointer mr-2 md:mr-4 mt-2 md:mt-3 flex items-center justify-center'>
             <i className='bx bxs-cart-add align-middle text-sm md:text-h3'></i>
           </div>
         </div>
@@ -58,7 +58,7 @@ const BannerProductCarousel = () => {
                 <img className='w-full h-full object-cover rounded-lg md:rounded-none' src={imgBlock} alt="" />
             </div>
             <div className='w-full md:w-1/2 text-sm md:text-h3'>
-                <div className='relative font-medium text-black border-b border-gray-300 pb-1 mb-4 md:mb-6 after:absolute after:w-[39%] after:h-[1px] after:bg-yellow-400 after:bottom-0 after:left-0 text-sm md:text-base'>Television Entertainment</div>
+                <div className='relative font-medium text-black border-b border-gray-300 pb-1 mb-4 md:mb-6 after:absolute after:w-[39%] after:h-[1px] after:bg-secondary-400 after:bottom-0 after:left-0 text-sm md:text-base'>Television Entertainment</div>
                 <div className='relative'>
                     <Slider {...settings}>
                         <ProductSlideCard image={speaker} />

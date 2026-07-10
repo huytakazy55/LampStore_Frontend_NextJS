@@ -52,7 +52,7 @@ const ForgotPassword = ({ visible, onCancel }) => {
         <div className="relative overflow-hidden rounded-lg bg-white dark:bg-gray-900 shadow-[0_25px_60px_rgba(0,0,0,0.3)]">
 
           {/* Header */}
-          <div className="relative h-28 overflow-hidden bg-gradient-to-br from-amber-400 via-orange-400 to-rose-400">
+          <div className="relative h-28 overflow-hidden bg-gradient-to-br from-primary-400 via-secondary-400 to-primary-400">
             <div className="absolute -top-6 -right-6 w-24 h-24 bg-white/10 rounded-full" />
             <div className="absolute -bottom-8 -left-4 w-28 h-28 bg-white/10 rounded-full" />
 
@@ -79,7 +79,7 @@ const ForgotPassword = ({ visible, onCancel }) => {
 
             <form onSubmit={handleSubmit}>
               <div className="mb-5">
-                <div className={`relative flex items-center border-2 rounded-xl transition-all duration-200 ${error ? 'border-red-300 bg-red-50/50' : 'border-gray-200 dark:border-gray-700 focus-within:border-amber-400 focus-within:ring-4 focus-within:ring-amber-50 dark:focus-within:ring-amber-900/20'} bg-gray-50/80 dark:bg-gray-800/50`}>
+                <div className={`relative flex items-center border-2 rounded-xl transition-all duration-200 ${error ? 'border-red-300 bg-red-50/50' : 'border-gray-200 dark:border-gray-700 focus-within:border-primary-400 focus-within:ring-4 focus-within:ring-primary-50 dark:focus-within:ring-primary-900/20'} bg-gray-50/80 dark:bg-gray-800/50`}>
                   <span className="pl-4 text-gray-400"><i className='bx bx-user text-lg'></i></span>
                   <input
                     className="w-full px-3 py-3 bg-transparent text-sm text-gray-800 dark:text-gray-200 outline-none placeholder-gray-400"
@@ -98,7 +98,7 @@ const ForgotPassword = ({ visible, onCancel }) => {
                   Hủy
                 </button>
                 <button type="submit" disabled={loading}
-                  className="flex-1 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold text-sm shadow-lg shadow-amber-200/50 transition-all disabled:opacity-70 cursor-pointer">
+                  className="flex-1 py-3 rounded-xl bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 transition-all disabled:opacity-70 cursor-pointer">
                   {loading ? (
                     <span className="flex items-center justify-center gap-2">
                       <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>

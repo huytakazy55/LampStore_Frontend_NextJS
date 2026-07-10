@@ -82,15 +82,15 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
         {/* ===== MOBILE: Minimal compact hero ===== */}
         <div className="md:hidden">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-2.5 h-2.5 bg-amber-600 rounded-sm" />
-            <span className="text-amber-700 text-[10px] font-semibold tracking-[0.15em] uppercase">
+            <div className="w-2.5 h-2.5 bg-primary-600 rounded-sm" />
+            <span className="text-primary-700 text-[10px] font-semibold tracking-[0.15em] uppercase">
               CapyLumine
             </span>
           </div>
           <h1 className="text-gray-900 dark:text-white text-lg font-bold leading-snug mb-2 min-h-[5rem]">
-            Đèn Ngủ Cao Cấp — <span className="text-amber-700" ref={mobileTextRef}></span>
+            Đèn Ngủ Cao Cấp — <span className="text-primary-700" ref={mobileTextRef}></span>
             <span
-              className="inline-block w-[2px] h-[0.9em] bg-amber-600 ml-0.5 align-baseline"
+              className="inline-block w-[2px] h-[0.9em] bg-primary-600 ml-0.5 align-baseline"
               style={{ animation: 'blink 0.7s step-end infinite' }}
             />
           </h1>
@@ -100,7 +100,7 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate('/#products')}
-              className="bg-amber-700 hover:bg-amber-800 text-white text-xs font-semibold px-5 py-2 rounded-sm transition-all duration-300 cursor-pointer flex items-center gap-1.5"
+              className="bg-primary-700 hover:bg-primary-800 text-white text-xs font-semibold px-5 py-2 rounded-sm transition-all duration-300 cursor-pointer flex items-center gap-1.5"
             >
               Khám Phá
               <i className='bx bx-right-arrow-alt text-base' />
@@ -141,8 +141,8 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
                 />
               </div>
               {/* Decorative accent */}
-              <div className="absolute -bottom-3 -left-3 w-24 h-24 md:w-32 md:h-32 border-2 border-amber-400/30 rounded-sm -z-10" />
-              <div className="absolute -top-3 -right-3 w-20 h-20 md:w-28 md:h-28 border-2 border-amber-400/20 rounded-sm -z-10" />
+              <div className="absolute -bottom-3 -left-3 w-24 h-24 md:w-32 md:h-32 border-2 border-primary-400/30 rounded-sm -z-10" />
+              <div className="absolute -top-3 -right-3 w-20 h-20 md:w-28 md:h-28 border-2 border-primary-400/20 rounded-sm -z-10" />
             </div>
           </div>
 
@@ -150,17 +150,17 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
           <div className="w-full lg:w-[55%]">
             {/* Tagline */}
             <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-3 h-3 bg-amber-600 rounded-sm" />
-              <span className="text-amber-700 text-xs md:text-sm font-semibold tracking-[0.15em] uppercase">
+              <div className="w-3 h-3 bg-primary-600 rounded-sm" />
+              <span className="text-primary-700 text-xs md:text-sm font-semibold tracking-[0.15em] uppercase">
                 Về Lumina Home
               </span>
             </div>
 
             {/* Heading */}
             <h1 className="text-gray-900 text-2xl md:text-3xl lg:text-[2rem] font-bold leading-tight mb-4 md:mb-5 min-h-[4.5rem] md:min-h-[5.5rem] lg:min-h-[6rem]">
-              Đèn Ngủ Cao Cấp — <span className="text-amber-700" ref={desktopTextRef}></span>
+              Đèn Ngủ Cao Cấp — <span className="text-primary-700" ref={desktopTextRef}></span>
               <span
-                className="inline-block w-[2px] md:w-[3px] h-[1em] bg-amber-600 ml-0.5 align-baseline"
+                className="inline-block w-[2px] md:w-[3px] h-[1em] bg-primary-600 ml-0.5 align-baseline"
                 style={{ animation: 'blink 0.7s step-end infinite' }}
               />
             </h1>
@@ -173,8 +173,8 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
             {/* Feature badges */}
             <div className="grid grid-cols-2 gap-4 mb-6 md:mb-8">
               <div className="flex items-start gap-3">
-                <div className="w-10 h-10 md:w-11 md:h-11 bg-amber-50 border border-amber-200 rounded-sm flex items-center justify-center flex-shrink-0">
-                  <i className='bx bxs-check-shield text-amber-600 text-lg md:text-xl' />
+                <div className="w-10 h-10 md:w-11 md:h-11 bg-primary-50 border border-primary-200 rounded-sm flex items-center justify-center flex-shrink-0">
+                  <i className='bx bxs-check-shield text-primary-600 text-lg md:text-xl' />
                 </div>
                 <div>
                   <h2 className="text-gray-800 text-xs md:text-sm font-semibold mb-0.5">Bảo Hành 12 Tháng</h2>
@@ -182,8 +182,8 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className="w-10 h-10 md:w-11 md:h-11 bg-amber-50 border border-amber-200 rounded-sm flex items-center justify-center flex-shrink-0">
-                  <i className='bx bxs-truck text-amber-600 text-lg md:text-xl' />
+                <div className="w-10 h-10 md:w-11 md:h-11 bg-primary-50 border border-primary-200 rounded-sm flex items-center justify-center flex-shrink-0">
+                  <i className='bx bxs-truck text-primary-600 text-lg md:text-xl' />
                 </div>
                 <div>
                   <h2 className="text-gray-800 text-xs md:text-sm font-semibold mb-0.5">Giao Hàng Toàn Quốc</h2>
@@ -196,7 +196,7 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
             <div className="flex flex-wrap items-center gap-4 md:gap-6">
               <button
                 onClick={() => navigate('/#products')}
-                className="bg-amber-700 hover:bg-amber-800 text-white text-xs md:text-sm font-semibold px-6 md:px-8 py-2.5 md:py-3 rounded-sm transition-all duration-300 hover:shadow-lg hover:shadow-amber-700/25 active:scale-95 cursor-pointer flex items-center gap-2"
+                className="bg-primary-700 hover:bg-primary-800 text-white text-xs md:text-sm font-semibold px-6 md:px-8 py-2.5 md:py-3 rounded-sm transition-all duration-300 hover:shadow-lg hover:shadow-primary-700/25 active:scale-95 cursor-pointer flex items-center gap-2"
               >
                 Khám Phá Ngay
                 <i className='bx bx-right-arrow-alt text-lg' />

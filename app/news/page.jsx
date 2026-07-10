@@ -51,17 +51,17 @@ export default function NewsListPage() {
             <NavbarPrimary />
 
             {/* Hero Banner */}
-            <div className="relative bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 overflow-hidden border-b border-amber-100">
-                <div className="absolute top-0 right-0 w-72 h-72 bg-amber-200/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
-                <div className="absolute bottom-0 left-0 w-56 h-56 bg-yellow-200/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3"></div>
+            <div className="relative bg-gradient-to-br from-primary-50 via-secondary-50 to-secondary-50 overflow-hidden border-b border-primary-100">
+                <div className="absolute top-0 right-0 w-72 h-72 bg-primary-200/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
+                <div className="absolute bottom-0 left-0 w-56 h-56 bg-secondary-200/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3"></div>
                 <div className="w-full xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0 py-10 md:py-14 relative z-10">
                     <nav className="flex items-center gap-2 text-sm text-gray-500 mb-5">
-                        <a href="/" className="hover:text-amber-600 transition-colors font-medium">Trang chủ</a>
+                        <a href="/" className="hover:text-primary-600 transition-colors font-medium">Trang chủ</a>
                         <i className='bx bx-chevron-right text-xs'></i>
-                        <span className="text-amber-600 font-semibold">Tin tức</span>
+                        <span className="text-primary-600 font-semibold">Tin tức</span>
                     </nav>
                     <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3">
-                        Tin tức & <span className="text-amber-600">Góc nội thất</span>
+                        Tin tức & <span className="text-primary-600">Góc nội thất</span>
                     </h1>
                     <p className="text-gray-500 max-w-xl text-sm md:text-base leading-relaxed">
                         Khám phá những xu hướng thiết kế chiếu sáng mới nhất, tips bố trí đèn trang trí và kiến thức hữu ích cho ngôi nhà hoàn hảo.
@@ -78,8 +78,8 @@ export default function NewsListPage() {
                             <button key={cat} onClick={() => setSelectedCategory(cat)}
                                 className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 border
                                 ${selectedCategory === cat
-                                        ? 'bg-yellow-400 text-white border-yellow-400 shadow-md shadow-yellow-400/25'
-                                        : 'bg-white text-gray-600 border-gray-200 hover:border-yellow-400 hover:text-yellow-600'
+                                        ? 'bg-secondary-400 text-white border-secondary-400 shadow-md shadow-secondary-400/25'
+                                        : 'bg-white text-gray-600 border-gray-200 hover:border-secondary-400 hover:text-secondary-600'
                                     }`}>
                                 {cat === 'all' ? 'Tất cả' : cat}
                             </button>
@@ -113,10 +113,10 @@ export default function NewsListPage() {
                                             <Image src={getImageSrc(featured.imageUrl)} alt={featured.title}
                                                 className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out" fill sizes="(max-width: 1024px) 100vw, 60vw" quality={65} priority />
                                             <div className="absolute top-4 left-4">
-                                                <span className="bg-yellow-400 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">{featured.category}</span>
+                                                <span className="bg-secondary-400 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">{featured.category}</span>
                                             </div>
                                             <div className="absolute top-4 right-4">
-                                                <span className="bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
+                                                <span className="bg-primary-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
                                                     <i className='bx bxs-star text-xs'></i> Nổi bật
                                                 </span>
                                             </div>
@@ -131,11 +131,11 @@ export default function NewsListPage() {
                                                     <i className='bx bx-show'></i> {featured.viewCount || 0} lượt xem
                                                 </span>
                                             </div>
-                                            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-4 leading-tight group-hover:text-yellow-600 transition-colors duration-300">
+                                            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-4 leading-tight group-hover:text-secondary-600 transition-colors duration-300">
                                                 {featured.title}
                                             </h2>
                                             <p className="text-gray-500 text-sm md:text-base leading-relaxed mb-6 line-clamp-4">{featured.excerpt}</p>
-                                            <div className="flex items-center gap-2 text-yellow-600 font-semibold text-sm group-hover:gap-3 transition-all duration-300">
+                                            <div className="flex items-center gap-2 text-secondary-600 font-semibold text-sm group-hover:gap-3 transition-all duration-300">
                                                 Đọc bài viết <i className='bx bx-right-arrow-alt text-xl'></i>
                                             </div>
                                         </div>
@@ -154,7 +154,7 @@ export default function NewsListPage() {
                                                 <Image src={getImageSrc(news.imageUrl)} alt={news.title}
                                                     className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-out" fill sizes="(max-width: 768px) 100vw, 33vw" quality={50} />
                                                 <div className="absolute top-3 left-3">
-                                                    <span className="bg-yellow-400/90 backdrop-blur-sm text-white text-xs font-bold px-2.5 py-1 rounded-full">{news.category}</span>
+                                                    <span className="bg-secondary-400/90 backdrop-blur-sm text-white text-xs font-bold px-2.5 py-1 rounded-full">{news.category}</span>
                                                 </div>
                                             </div>
                                             <div className="p-5 flex flex-col flex-grow">
@@ -166,9 +166,9 @@ export default function NewsListPage() {
                                                         <i className='bx bx-show'></i> {news.viewCount || 0}
                                                     </span>
                                                 </div>
-                                                <h3 className="text-base font-bold text-gray-800 mb-2 line-clamp-2 group-hover:text-yellow-600 transition-colors duration-200 leading-snug">{news.title}</h3>
+                                                <h3 className="text-base font-bold text-gray-800 mb-2 line-clamp-2 group-hover:text-secondary-600 transition-colors duration-200 leading-snug">{news.title}</h3>
                                                 <p className="text-sm text-gray-500 line-clamp-3 mb-4 flex-grow leading-relaxed">{news.excerpt}</p>
-                                                <div className="mt-auto flex items-center gap-1.5 text-xs font-bold text-yellow-600 group-hover:gap-2.5 transition-all duration-300">
+                                                <div className="mt-auto flex items-center gap-1.5 text-xs font-bold text-secondary-600 group-hover:gap-2.5 transition-all duration-300">
                                                     Đọc tiếp <i className='bx bx-right-arrow-alt text-base'></i>
                                                 </div>
                                             </div>

@@ -376,7 +376,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
         className={`relative w-[95%] max-w-[820px] bg-white dark:bg-gray-900 rounded-lg shadow-[0_20px_60px_rgba(0,0,0,0.2)] overflow-hidden transition-all duration-300 ${toggleProfile ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'}`}>
 
         {/* Header */}
-        <div className='relative bg-gradient-to-r from-rose-600 to-amber-500 px-6 py-5 overflow-hidden'>
+        <div className='relative bg-gradient-to-r from-primary-600 to-primary-500 px-6 py-5 overflow-hidden'>
           <div className='absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2'></div>
           <div className='absolute bottom-0 left-16 w-20 h-20 bg-white/5 rounded-full translate-y-1/2'></div>
           <div className='relative z-10'>
@@ -415,7 +415,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
             {/* Upload button */}
             <input type="file" id="fileInput" className='hidden' onChange={handleFileChange} accept="image/*" />
             <button type="button" onClick={() => document.getElementById('fileInput').click()}
-              className='w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-700 hover:to-rose-600 text-white text-sm font-medium rounded-lg shadow-md shadow-rose-200 dark:shadow-rose-900/30 transition-all cursor-pointer'>
+              className='w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white text-sm font-medium rounded-lg shadow-md shadow-primary-200 dark:shadow-primary-900/30 transition-all cursor-pointer'>
               <i className='bx bx-upload text-base'></i>
               Tải ảnh mới
             </button>
@@ -431,14 +431,14 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
             <div className='flex border-b border-gray-100 dark:border-gray-800 px-6 pt-1'>
               <button onClick={() => setInfoSideActive('info')}
                 className={`relative px-1 py-3 mr-6 text-sm font-medium transition-colors cursor-pointer ${infoSideActive === 'info'
-                  ? 'text-rose-600 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-rose-600 after:rounded-full'
+                  ? 'text-primary-600 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-primary-600 after:rounded-full'
                   : 'text-gray-400 hover:text-gray-600'}`}>
                 <i className='bx bx-user mr-1.5 align-middle'></i>
                 Thông tin người dùng
               </button>
               <button onClick={() => setInfoSideActive('bill')}
                 className={`relative px-1 py-3 text-sm font-medium transition-colors cursor-pointer ${infoSideActive === 'bill'
-                  ? 'text-rose-600 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-rose-600 after:rounded-full'
+                  ? 'text-primary-600 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-primary-600 after:rounded-full'
                   : 'text-gray-400 hover:text-gray-600'}`}>
                 <i className='bx bx-receipt mr-1.5 align-middle'></i>
                 Thông tin hóa đơn
@@ -455,7 +455,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
                         Tên người dùng
                       </label>
                       <input
-                        className='w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-800 dark:text-gray-200 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all placeholder-gray-300'
+                        className='w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-800 dark:text-gray-200 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900/30 transition-all placeholder-gray-300'
                         type="text" id='FullName' name='FullName' value={profileData.FullName || ''} onChange={handleInputChange}
                         placeholder='Nhập tên của bạn' />
                     </div>
@@ -464,7 +464,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
                         Email
                       </label>
                       <input
-                        className='w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-800 dark:text-gray-200 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all placeholder-gray-300'
+                        className='w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-800 dark:text-gray-200 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900/30 transition-all placeholder-gray-300'
                         type="email" id='Email' name='Email' value={profileData.Email || ''} onChange={handleInputChange}
                         placeholder='email@example.com' />
                     </div>
@@ -475,7 +475,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
                         Số điện thoại
                       </label>
                       <input
-                        className='w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-800 dark:text-gray-200 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all placeholder-gray-300'
+                        className='w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-800 dark:text-gray-200 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900/30 transition-all placeholder-gray-300'
                         type="text" id='PhoneNumber' name='PhoneNumber' value={profileData.PhoneNumber || ''} onChange={handleInputChange}
                         placeholder='0xxx xxx xxx' />
                     </div>
@@ -487,12 +487,12 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
                         type='button'
                         id='AddressSummary'
                         onClick={openAddressPopup}
-                        className='w-full min-h-[42px] px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-left text-gray-800 dark:text-gray-200 outline-none hover:border-rose-300 focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all cursor-pointer flex items-start justify-between gap-3'
+                        className='w-full min-h-[42px] px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-left text-gray-800 dark:text-gray-200 outline-none hover:border-primary-300 focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900/30 transition-all cursor-pointer flex items-start justify-between gap-3'
                       >
                         <span className={`leading-relaxed break-words ${formatFullAddress(profileData) ? '' : 'text-gray-300'}`}>
                           {formatFullAddress(profileData) || 'Bấm để thêm địa chỉ'}
                         </span>
-                        <i className='bx bx-map text-rose-500 text-lg flex-shrink-0' />
+                        <i className='bx bx-map text-primary-500 text-lg flex-shrink-0' />
                       </button>
                     </div>
                   </div>
@@ -500,7 +500,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
                   {/* Submit */}
                   <div className='flex justify-end'>
                     <button
-                      className='flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-rose-600 to-amber-500 hover:from-rose-700 hover:to-amber-600 text-white text-sm font-semibold rounded-lg shadow-md shadow-rose-200 dark:shadow-rose-900/30 transition-all cursor-pointer'
+                      className='flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white text-sm font-semibold rounded-lg shadow-md shadow-primary-200 dark:shadow-primary-900/30 transition-all cursor-pointer'
                       type='submit'>
                       <i className='bx bx-check-circle text-base'></i>
                       Lưu thay đổi
@@ -531,13 +531,13 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
           >
             <div className='flex items-start justify-between gap-4 mb-9'>
               <h3 className='text-2xl md:text-[32px] font-bold text-gray-900 dark:text-gray-100 flex items-center gap-4 leading-tight'>
-                <i className='bx bx-map-pin text-rose-600 text-[34px]'></i>
+                <i className='bx bx-map-pin text-primary-600 text-[34px]'></i>
                 Địa chỉ giao hàng
               </h3>
               <button
                 type='button'
                 onClick={closeAddressPopup}
-                className='w-9 h-9 rounded-full border border-gray-200 dark:border-gray-700 text-gray-400 hover:text-rose-600 hover:border-rose-200 dark:hover:border-rose-900 transition-colors flex items-center justify-center'
+                className='w-9 h-9 rounded-full border border-gray-200 dark:border-gray-700 text-gray-400 hover:text-primary-600 hover:border-primary-200 dark:hover:border-primary-900 transition-colors flex items-center justify-center'
                 aria-label='Đóng popup địa chỉ'
               >
                 <i className='bx bx-x text-2xl'></i>
@@ -547,14 +547,14 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
             <div className='grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8'>
               <div>
                 <label className='block text-xl md:text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-4' htmlFor='ProfileCity'>
-                  Tỉnh / Thành phố <span className='text-rose-500'>*</span>
+                  Tỉnh / Thành phố <span className='text-primary-500'>*</span>
                 </label>
                 <select
                   id='ProfileCity'
                   value={addressDraft.City || ''}
                   onChange={handleProvinceChange}
                   disabled={loadingProvinces}
-                  className='w-full h-[82px] px-8 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl text-xl md:text-2xl text-gray-900 dark:text-gray-100 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all'
+                  className='w-full h-[82px] px-8 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl text-xl md:text-2xl text-gray-900 dark:text-gray-100 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900/30 transition-all'
                 >
                   <option value=''>{loadingProvinces ? 'Đang tải...' : '-- Chọn Tỉnh/Thành phố --'}</option>
                   {provinces.map((province) => (
@@ -567,14 +567,14 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
 
               <div>
                 <label className='block text-xl md:text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-4' htmlFor='ProfileDistrict'>
-                  Quận / Huyện <span className='text-rose-500'>*</span>
+                  Quận / Huyện <span className='text-primary-500'>*</span>
                 </label>
                 <select
                   id='ProfileDistrict'
                   value={addressDraft.District || ''}
                   onChange={handleDistrictChange}
                   disabled={!addressDraft.City || loadingDistricts}
-                  className='w-full h-[82px] px-8 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl text-xl md:text-2xl text-gray-900 dark:text-gray-100 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all disabled:bg-gray-50 disabled:text-gray-400 dark:disabled:bg-gray-800/50'
+                  className='w-full h-[82px] px-8 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl text-xl md:text-2xl text-gray-900 dark:text-gray-100 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900/30 transition-all disabled:bg-gray-50 disabled:text-gray-400 dark:disabled:bg-gray-800/50'
                 >
                   <option value=''>
                     {!addressDraft.City ? 'Chọn tỉnh trước' : loadingDistricts ? 'Đang tải...' : '-- Chọn Quận/Huyện --'}
@@ -596,7 +596,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
                   value={addressDraft.Ward || ''}
                   onChange={handleWardChange}
                   disabled={!addressDraft.District || loadingWards}
-                  className='w-full h-[82px] px-8 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl text-xl md:text-2xl text-gray-900 dark:text-gray-100 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all disabled:bg-gray-50 disabled:text-gray-400 dark:disabled:bg-gray-800/50'
+                  className='w-full h-[82px] px-8 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl text-xl md:text-2xl text-gray-900 dark:text-gray-100 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900/30 transition-all disabled:bg-gray-50 disabled:text-gray-400 dark:disabled:bg-gray-800/50'
                 >
                   <option value=''>
                     {!addressDraft.District ? 'Chọn quận/huyện trước' : loadingWards ? 'Đang tải...' : '-- Chọn Phường/Xã --'}
@@ -611,14 +611,14 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
 
               <div className='md:col-span-2'>
                 <label className='block text-xl md:text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-4' htmlFor='ProfileAddressDetail'>
-                  Địa chỉ cụ thể <span className='text-rose-500'>*</span>
+                  Địa chỉ cụ thể <span className='text-primary-500'>*</span>
                 </label>
                 <input
                   id='ProfileAddressDetail'
                   type='text'
                   value={addressDraft.Address || ''}
                   onChange={(e) => setAddressDraft(prev => ({ ...prev, Address: e.target.value }))}
-                  className='w-full h-[82px] px-8 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl text-xl md:text-2xl text-gray-900 dark:text-gray-100 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-900/30 transition-all placeholder-gray-400'
+                  className='w-full h-[82px] px-8 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl text-xl md:text-2xl text-gray-900 dark:text-gray-100 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900/30 transition-all placeholder-gray-400'
                   placeholder='Ví dụ: A2 Vĩnh Hồ'
                 />
               </div>
@@ -635,7 +635,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
               <button
                 type='button'
                 onClick={saveAddressDraft}
-                className='px-6 py-3 rounded-lg bg-gradient-to-r from-rose-600 to-amber-500 text-sm font-semibold text-white hover:from-rose-700 hover:to-amber-600 shadow-md shadow-rose-200 dark:shadow-rose-900/30 transition-all flex items-center justify-center gap-2'
+                className='px-6 py-3 rounded-lg bg-gradient-to-r from-primary-600 to-primary-500 text-sm font-semibold text-white hover:from-primary-700 hover:to-primary-600 shadow-md shadow-primary-200 dark:shadow-primary-900/30 transition-all flex items-center justify-center gap-2'
               >
                 <i className='bx bx-check-circle text-base'></i>
                 Lưu địa chỉ

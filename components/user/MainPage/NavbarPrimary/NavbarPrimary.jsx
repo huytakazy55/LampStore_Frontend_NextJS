@@ -160,7 +160,7 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () =>
   if (loading)
   {
     return (
-      <div className='hidden md:block bg-yellow-400 w-full h-12'>
+      <div className='hidden md:block bg-secondary-400 w-full h-12'>
         <nav className='relative xl:mx-auto xl:max-w-[1440px] flex justify-center items-center h-full px-4 xl:px-0'>
           <div className="text-black font-medium text-sm">Đang tải danh mục...</div>
         </nav>
@@ -171,18 +171,18 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () =>
   const products = hoveredCategory ? (categoryProducts[hoveredCategory.id] || []) : []
 
   return (
-    <div className='hidden md:block bg-yellow-400 dark:bg-gray-900 dark:border-b dark:border-amber-500/30 w-full h-12'>
+    <div className='hidden md:block bg-secondary-400 dark:bg-gray-900 dark:border-b dark:border-primary-500/30 w-full h-12'>
       <nav className='relative xl:mx-auto xl:max-w-[1440px] flex justify-between items-center h-full px-4 xl:px-0'>
         <ul className='flex justify-start h-full relative overflow-x-auto overflow-y-hidden scrollbar-hide w-full'>
           {categories.map((category) => (
             <li
               key={category.id}
-              className={`flex items-center px-3 md:px-5 h-full border-r border-yellow-300/60 dark:border-amber-500/20 transition-colors duration-200 flex-shrink-0 cursor-pointer ${hoveredCategory?.id === category.id ? 'bg-yellow-500 dark:bg-amber-500/20' : 'hover:bg-yellow-500/70 dark:hover:bg-amber-500/10'
+              className={`flex items-center px-3 md:px-5 h-full border-r border-secondary-300/60 dark:border-primary-500/20 transition-colors duration-200 flex-shrink-0 cursor-pointer ${hoveredCategory?.id === category.id ? 'bg-secondary-500 dark:bg-primary-500/20' : 'hover:bg-secondary-500/70 dark:hover:bg-primary-500/10'
                 }`}
               onMouseEnter={() => handleCategoryHover(category)}
               onMouseLeave={() => handleCategoryHover(null)}
             >
-              <a className='text-black dark:text-amber-400 font-medium text-xs md:text-sm whitespace-nowrap' href={`/categories/${category.slug || category.id}`}
+              <a className='text-black dark:text-primary-400 font-medium text-xs md:text-sm whitespace-nowrap' href={`/categories/${category.slug || category.id}`}
                 onClick={(e) => { e.preventDefault(); navigate(`/categories/${category.slug || category.id}`) }}
               >
                 {category.name}
@@ -220,8 +220,8 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () =>
                   <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent" />
                   <div className="relative mt-auto z-10">
                     <div className="flex items-center gap-2 mb-2">
-                      <div className="w-1 h-6 bg-amber-400 rounded-full" />
-                      <span className="text-amber-400 text-[10px] font-semibold tracking-[0.2em] uppercase">Bộ sưu tập</span>
+                      <div className="w-1 h-6 bg-primary-400 rounded-full" />
+                      <span className="text-primary-400 text-[10px] font-semibold tracking-[0.2em] uppercase">Bộ sưu tập</span>
                     </div>
                     <h3 className="text-white text-xl font-bold leading-tight mb-2">{hoveredCategory.name}</h3>
                     <p className="text-gray-400 text-xs leading-relaxed mb-4 line-clamp-2">
@@ -235,7 +235,7 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () =>
                         setShowDropdown(false)
                         navigate(`/categories/${hoveredCategory.slug || hoveredCategory.id}`)
                       }}
-                      className="inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold px-4 py-2 rounded-sm transition-all duration-200 cursor-pointer"
+                      className="inline-flex items-center gap-1.5 bg-primary-500 hover:bg-primary-600 text-white text-xs font-semibold px-4 py-2 rounded-sm transition-all duration-200 cursor-pointer"
                     >
                       Xem tất cả
                       <i className='bx bx-right-arrow-alt text-sm' />
@@ -247,7 +247,7 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () =>
                 <div className="w-full lg:w-[70%] p-5">
                   <div className="flex items-center justify-between mb-4">
                     <h4 className="text-gray-800 dark:text-gray-100 text-base font-bold flex items-center gap-2">
-                      <i className='bx bx-grid-alt text-amber-500' />
+                      <i className='bx bx-grid-alt text-primary-500' />
                       Sản phẩm nổi bật
                     </h4>
                     <span className="text-gray-400 dark:text-gray-500 text-xs">{products.length} sản phẩm</span>
@@ -258,7 +258,7 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () =>
                       {products.map((product, idx) => (
                         <div
                           key={product.id || idx}
-                          className="flex items-center gap-3 p-2.5 rounded-sm bg-gray-50/80 dark:bg-gray-800/80 hover:bg-amber-50 dark:hover:bg-amber-900/30 border border-transparent hover:border-amber-200 dark:hover:border-amber-700 cursor-pointer group transition-all duration-200 hover:shadow-sm"
+                          className="flex items-center gap-3 p-2.5 rounded-sm bg-gray-50/80 dark:bg-gray-800/80 hover:bg-primary-50 dark:hover:bg-primary-900/30 border border-transparent hover:border-primary-200 dark:hover:border-primary-700 cursor-pointer group transition-all duration-200 hover:shadow-sm"
                           onClick={() =>
                           {
                             setShowDropdown(false)
@@ -276,14 +276,14 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () =>
                             />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h5 className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors duration-200">
+                            <h5 className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate group-hover:text-primary-700 dark:group-hover:text-primary-400 transition-colors duration-200">
                               {product.name}
                             </h5>
-                            <p className="text-xs font-bold text-amber-600 mt-0.5">
+                            <p className="text-xs font-bold text-primary-600 mt-0.5">
                               {formatPrice(product.minPrice || product.price)}
                             </p>
                           </div>
-                          <i className='bx bx-chevron-right text-gray-300 dark:text-gray-600 group-hover:text-amber-500 transition-colors text-lg' />
+                          <i className='bx bx-chevron-right text-gray-300 dark:text-gray-600 group-hover:text-primary-500 transition-colors text-lg' />
                         </div>
                       ))}
                     </div>

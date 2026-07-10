@@ -84,9 +84,9 @@ const ScrollTimeline = () => {
 
             if (dot) {
                 if (isActive || isLastActive) {
-                    dot.className = 'timeline-dot w-7 h-7 rounded-full flex items-center justify-center border-2 bg-amber-500 border-amber-400 scale-110 shadow-lg shadow-amber-300/50';
+                    dot.className = 'timeline-dot w-7 h-7 rounded-full flex items-center justify-center border-2 bg-primary-500 border-primary-400 scale-110 shadow-lg shadow-primary-300/50';
                 } else if (isReached) {
-                    dot.className = 'timeline-dot w-7 h-7 rounded-full flex items-center justify-center border-2 bg-amber-500 border-amber-400';
+                    dot.className = 'timeline-dot w-7 h-7 rounded-full flex items-center justify-center border-2 bg-primary-500 border-primary-400';
                 } else {
                     dot.className = 'timeline-dot w-7 h-7 rounded-full flex items-center justify-center border-2 bg-white border-gray-300';
                 }
@@ -235,7 +235,7 @@ const ScrollTimeline = () => {
                         </div>
 
                         {/* Active pulse */}
-                        <div className="timeline-pulse absolute inset-0 rounded-full bg-amber-400 animate-ping opacity-20" style={{ display: 'none' }} />
+                        <div className="timeline-pulse absolute inset-0 rounded-full bg-primary-400 animate-ping opacity-20" style={{ display: 'none' }} />
                     </div>
                 );
             })}

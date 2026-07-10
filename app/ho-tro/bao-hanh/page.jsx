@@ -7,8 +7,8 @@ export default function BaoHanhPage() {
     return (
         <article className="prose prose-gray dark:prose-invert max-w-none prose-headings:text-gray-800 dark:prose-headings:text-gray-100">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2 flex items-center gap-3">
-                <span className="w-10 h-10 bg-amber-100 dark:bg-amber-900/40 rounded-xl flex items-center justify-center shrink-0">
-                    <i className='bx bx-shield-quarter text-amber-600 dark:text-amber-400 text-xl' />
+                <span className="w-10 h-10 bg-primary-100 dark:bg-primary-900/40 rounded-xl flex items-center justify-center shrink-0">
+                    <i className='bx bx-shield-quarter text-primary-600 dark:text-primary-400 text-xl' />
                 </span>
                 Bảo hành sản phẩm
             </h2>
@@ -28,17 +28,17 @@ export default function BaoHanhPage() {
             <div className="overflow-x-auto not-prose mb-6">
                 <table className="w-full text-sm border-collapse">
                     <thead>
-                        <tr className="bg-amber-50 dark:bg-amber-950/30">
-                            <th className="text-left p-3 font-semibold text-gray-800 dark:text-gray-100 border-b border-amber-100 dark:border-amber-800/40">Loại sản phẩm</th>
-                            <th className="text-left p-3 font-semibold text-gray-800 dark:text-gray-100 border-b border-amber-100 dark:border-amber-800/40">Thời gian bảo hành</th>
-                            <th className="text-left p-3 font-semibold text-gray-800 dark:text-gray-100 border-b border-amber-100 dark:border-amber-800/40">Ghi chú</th>
+                        <tr className="bg-primary-50 dark:bg-primary-950/30">
+                            <th className="text-left p-3 font-semibold text-gray-800 dark:text-gray-100 border-b border-primary-100 dark:border-primary-800/40">Loại sản phẩm</th>
+                            <th className="text-left p-3 font-semibold text-gray-800 dark:text-gray-100 border-b border-primary-100 dark:border-primary-800/40">Thời gian bảo hành</th>
+                            <th className="text-left p-3 font-semibold text-gray-800 dark:text-gray-100 border-b border-primary-100 dark:border-primary-800/40">Ghi chú</th>
                         </tr>
                     </thead>
                     <tbody className="text-gray-600 dark:text-gray-400">
-                        <tr className="border-b border-gray-100 dark:border-gray-800"><td className="p-3">Đèn ngủ thú, đèn 3D</td><td className="p-3 font-medium text-amber-600 dark:text-amber-400">6 tháng</td><td className="p-3">Bảo hành bóng LED và mạch điện</td></tr>
-                        <tr className="border-b border-gray-100 dark:border-gray-800"><td className="p-3">Đèn khung gỗ, đèn thủy tinh</td><td className="p-3 font-medium text-amber-600 dark:text-amber-400">12 tháng</td><td className="p-3">Bảo hành mạch điện, không bảo hành vỡ</td></tr>
-                        <tr className="border-b border-gray-100 dark:border-gray-800"><td className="p-3">Đèn LED dây, đèn neon</td><td className="p-3 font-medium text-amber-600 dark:text-amber-400">3 tháng</td><td className="p-3">Bảo hành lỗi LED, adapter</td></tr>
-                        <tr><td className="p-3">Phụ kiện (adapter, remote)</td><td className="p-3 font-medium text-amber-600 dark:text-amber-400">1 tháng</td><td className="p-3">Đổi mới nếu lỗi từ NSX</td></tr>
+                        <tr className="border-b border-gray-100 dark:border-gray-800"><td className="p-3">Đèn ngủ thú, đèn 3D</td><td className="p-3 font-medium text-primary-600 dark:text-primary-400">6 tháng</td><td className="p-3">Bảo hành bóng LED và mạch điện</td></tr>
+                        <tr className="border-b border-gray-100 dark:border-gray-800"><td className="p-3">Đèn khung gỗ, đèn thủy tinh</td><td className="p-3 font-medium text-primary-600 dark:text-primary-400">12 tháng</td><td className="p-3">Bảo hành mạch điện, không bảo hành vỡ</td></tr>
+                        <tr className="border-b border-gray-100 dark:border-gray-800"><td className="p-3">Đèn LED dây, đèn neon</td><td className="p-3 font-medium text-primary-600 dark:text-primary-400">3 tháng</td><td className="p-3">Bảo hành lỗi LED, adapter</td></tr>
+                        <tr><td className="p-3">Phụ kiện (adapter, remote)</td><td className="p-3 font-medium text-primary-600 dark:text-primary-400">1 tháng</td><td className="p-3">Đổi mới nếu lỗi từ NSX</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -83,7 +83,7 @@ export default function BaoHanhPage() {
                     { title: 'Xử lý', desc: 'Sản phẩm sẽ được sửa chữa hoặc đổi mới trong vòng 3-7 ngày làm việc kể từ khi nhận được hàng.' },
                 ].map((step, i) => (
                     <div key={i} className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
-                        <span className="w-7 h-7 bg-amber-500 text-white rounded-lg flex items-center justify-center text-xs font-bold shrink-0">{i + 1}</span>
+                        <span className="w-7 h-7 bg-primary-500 text-white rounded-lg flex items-center justify-center text-xs font-bold shrink-0">{i + 1}</span>
                         <div>
                             <h4 className="font-semibold text-gray-800 dark:text-gray-100 text-sm">{step.title}</h4>
                             <p className="text-gray-500 dark:text-gray-400 text-xs leading-relaxed mt-0.5">{step.desc}</p>

@@ -7,8 +7,8 @@ export default function HuongDanSuDungPage() {
     return (
         <article className="prose prose-gray dark:prose-invert max-w-none prose-headings:text-gray-800 dark:prose-headings:text-gray-100">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2 flex items-center gap-3">
-                <span className="w-10 h-10 bg-amber-100 dark:bg-amber-900/40 rounded-xl flex items-center justify-center shrink-0">
-                    <i className='bx bx-book-open text-amber-600 dark:text-amber-400 text-xl' />
+                <span className="w-10 h-10 bg-primary-100 dark:bg-primary-900/40 rounded-xl flex items-center justify-center shrink-0">
+                    <i className='bx bx-book-open text-primary-600 dark:text-primary-400 text-xl' />
                 </span>
                 Hướng dẫn sử dụng
             </h2>
@@ -33,7 +33,7 @@ export default function HuongDanSuDungPage() {
                     'Bật đèn bằng nút nguồn hoặc cảm ứng (tùy loại đèn).',
                 ].map((step, i) => (
                     <div key={i} className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
-                        <span className="w-7 h-7 bg-amber-500 text-white rounded-lg flex items-center justify-center text-xs font-bold shrink-0">{i + 1}</span>
+                        <span className="w-7 h-7 bg-primary-500 text-white rounded-lg flex items-center justify-center text-xs font-bold shrink-0">{i + 1}</span>
                         <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">{step}</p>
                     </div>
                 ))}
@@ -43,10 +43,10 @@ export default function HuongDanSuDungPage() {
             <div className="overflow-x-auto not-prose mb-6">
                 <table className="w-full text-sm border-collapse">
                     <thead>
-                        <tr className="bg-amber-50 dark:bg-amber-950/30">
-                            <th className="text-left p-3 font-semibold text-gray-800 dark:text-gray-100 border-b border-amber-100 dark:border-amber-800/40">Chế độ</th>
-                            <th className="text-left p-3 font-semibold text-gray-800 dark:text-gray-100 border-b border-amber-100 dark:border-amber-800/40">Mô tả</th>
-                            <th className="text-left p-3 font-semibold text-gray-800 dark:text-gray-100 border-b border-amber-100 dark:border-amber-800/40">Phù hợp</th>
+                        <tr className="bg-primary-50 dark:bg-primary-950/30">
+                            <th className="text-left p-3 font-semibold text-gray-800 dark:text-gray-100 border-b border-primary-100 dark:border-primary-800/40">Chế độ</th>
+                            <th className="text-left p-3 font-semibold text-gray-800 dark:text-gray-100 border-b border-primary-100 dark:border-primary-800/40">Mô tả</th>
+                            <th className="text-left p-3 font-semibold text-gray-800 dark:text-gray-100 border-b border-primary-100 dark:border-primary-800/40">Phù hợp</th>
                         </tr>
                     </thead>
                     <tbody className="text-gray-600 dark:text-gray-400">
@@ -67,8 +67,8 @@ export default function HuongDanSuDungPage() {
                     { icon: 'bx-plug', title: 'Nguồn điện ổn định', desc: 'Sử dụng adapter chính hãng, tránh cắm nguồn không ổn định' },
                 ].map((item, i) => (
                     <div key={i} className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
-                        <div className="w-8 h-8 bg-amber-100 dark:bg-amber-900/40 rounded-lg flex items-center justify-center shrink-0">
-                            <i className={`bx ${item.icon} text-amber-600 dark:text-amber-400`} />
+                        <div className="w-8 h-8 bg-primary-100 dark:bg-primary-900/40 rounded-lg flex items-center justify-center shrink-0">
+                            <i className={`bx ${item.icon} text-primary-600 dark:text-primary-400`} />
                         </div>
                         <div>
                             <h4 className="font-semibold text-gray-800 dark:text-gray-100 text-sm mb-1">{item.title}</h4>
@@ -86,7 +86,7 @@ export default function HuongDanSuDungPage() {
                     { q: 'Bóng LED có thay được không?', a: 'Đèn LED CapyLumine có tuổi thọ lên đến 50.000 giờ nên hiếm khi cần thay thế. Nếu cần, vui lòng liên hệ CSKH.' },
                 ].map((faq, i) => (
                     <details key={i} className="bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 group">
-                        <summary className="p-4 cursor-pointer text-sm font-semibold text-gray-800 dark:text-gray-100 flex items-center justify-between hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
+                        <summary className="p-4 cursor-pointer text-sm font-semibold text-gray-800 dark:text-gray-100 flex items-center justify-between hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
                             {faq.q}
                             <i className='bx bx-chevron-down text-lg transition-transform group-open:rotate-180' />
                         </summary>

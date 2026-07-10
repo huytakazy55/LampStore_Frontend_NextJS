@@ -158,7 +158,7 @@ const FloatingCart = () =>
                         }`}
                 >
                     {/* Header */}
-                    <div className="bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-3 flex justify-between items-center">
+                    <div className="bg-gradient-to-r from-primary-500 to-secondary-500 px-4 py-3 flex justify-between items-center">
                         <span className="text-white text-sm font-semibold flex items-center gap-2">
                             <i className="bx bx-shopping-bag text-lg"></i>
                             Giỏ hàng ({cartCount})
@@ -187,7 +187,7 @@ const FloatingCart = () =>
                                 <div className="flex-1 min-w-0">
                                     <p className="text-xs text-gray-800 dark:text-gray-200 font-medium line-clamp-1">{item.name}</p>
                                     <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-                                        x{item.quantity} · <span className="text-amber-600 font-medium">{formatPrice(item.finalPrice)}₫</span>
+                                        x{item.quantity} · <span className="text-primary-600 font-medium">{formatPrice(item.finalPrice)}₫</span>
                                     </p>
                                 </div>
                                 <button
@@ -210,11 +210,11 @@ const FloatingCart = () =>
                     <div className="px-4 py-3 bg-gray-50 dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
                         <div className="flex justify-between items-center mb-3">
                             <span className="text-xs text-gray-500 dark:text-gray-400">Tổng cộng:</span>
-                            <span className="text-base font-bold text-amber-600">{formatPrice(cartTotal)}₫</span>
+                            <span className="text-base font-bold text-primary-600">{formatPrice(cartTotal)}₫</span>
                         </div>
                         <button
                             onClick={handleCheckout}
-                            className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-semibold hover:from-amber-600 hover:to-orange-600 transition-all shadow-lg shadow-amber-500/20 active:scale-[0.98] cursor-pointer"
+                            className="w-full py-2.5 rounded-xl bg-gradient-to-r from-primary-500 to-secondary-500 text-white text-sm font-semibold hover:from-primary-600 hover:to-secondary-600 transition-all shadow-lg shadow-primary-500/20 active:scale-[0.98] cursor-pointer"
                         >
                             Thanh toán ngay
                         </button>
@@ -225,7 +225,7 @@ const FloatingCart = () =>
                 <button
                     ref={cartBtnRef}
                     onClick={handleCartClick}
-                    className={`relative w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/30 flex items-center justify-center cursor-pointer hover:shadow-xl hover:shadow-amber-500/40 hover:scale-110 active:scale-95 transition-all duration-300 group ${bounce ? 'animate-bounce' : ''
+                    className={`relative w-12 h-12 rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 text-white shadow-lg shadow-primary-500/30 flex items-center justify-center cursor-pointer hover:shadow-xl hover:shadow-primary-500/40 hover:scale-110 active:scale-95 transition-all duration-300 group ${bounce ? 'animate-bounce' : ''
                         }`}
                     aria-label="Giỏ hàng"
                     id="floating-cart-btn"
@@ -234,7 +234,7 @@ const FloatingCart = () =>
 
                     {/* Badge */}
                     {cartCount > 0 && (
-                        <div className={`absolute -top-1.5 -right-1.5 min-w-[22px] h-[22px] px-1 rounded-full bg-yellow-400 text-gray-800 text-xs font-bold flex items-center justify-center shadow-md transition-transform ${bounce ? 'scale-125' : 'scale-100'
+                        <div className={`absolute -top-1.5 -right-1.5 min-w-[22px] h-[22px] px-1 rounded-full bg-secondary-400 text-gray-800 text-xs font-bold flex items-center justify-center shadow-md transition-transform ${bounce ? 'scale-125' : 'scale-100'
                             }`}>
                             {cartCount > 99 ? '99+' : cartCount}
                         </div>
@@ -242,7 +242,7 @@ const FloatingCart = () =>
 
                     {/* Pulse ring */}
                     {cartCount > 0 && (
-                        <div className="absolute inset-0 rounded-full bg-amber-400 animate-ping opacity-20 pointer-events-none"></div>
+                        <div className="absolute inset-0 rounded-full bg-primary-400 animate-ping opacity-20 pointer-events-none"></div>
                     )}
                 </button>
             </div>

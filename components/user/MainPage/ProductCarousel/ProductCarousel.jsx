@@ -34,12 +34,12 @@ const ProductCard = ({ product, isLast, navigate, onAddToCartClick, isInWishlist
 
   return (
     <div
-      className="relative group cursor-pointer bg-white dark:bg-[#1a1a1a] rounded-sm overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08),0_0_0_1px_rgba(245,158,11,0.1)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:-translate-y-1 border border-gray-100 dark:border-[#2a2a2a] hover:border-amber-200 dark:hover:border-[#4a3800]"
+      className="relative group cursor-pointer bg-white dark:bg-[#1a1a1a] rounded-sm overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08),0_0_0_1px_rgba(245,158,11,0.1)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:-translate-y-1 border border-gray-100 dark:border-[#2a2a2a] hover:border-primary-200 dark:hover:border-[#4a3800]"
       onClick={() => navigate(`/product/${product.slug || product.id}`)}
     >
       {/* Discount Badge */}
       {hasDiscount && (
-        <div className="absolute top-2.5 left-2.5 z-10 bg-gradient-to-r from-red-500 to-orange-500 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(239,68,68,0.25)]">
+        <div className="absolute top-2.5 left-2.5 z-10 bg-gradient-to-r from-primary-500 to-secondary-500 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(245,158,11,0.25)]">
           -{discountPercent}%
         </div>
       )}
@@ -47,8 +47,8 @@ const ProductCard = ({ product, isLast, navigate, onAddToCartClick, isInWishlist
       {/* Wishlist Button */}
       <button
         className={`absolute top-2.5 right-2.5 z-10 w-7 h-7 md:w-8 md:h-8 rounded-sm flex items-center justify-center transition-all duration-300 shadow-sm backdrop-blur-sm ${isInWishlist
-          ? 'bg-rose-500 text-white scale-105'
-          : 'bg-white/80 dark:bg-[#1a1a1a]/80 text-gray-400 dark:text-gray-500 hover:bg-rose-50 dark:hover:bg-rose-900/30 hover:text-rose-500 hover:scale-105'
+          ? 'bg-primary-500 text-white scale-105'
+          : 'bg-white/80 dark:bg-[#1a1a1a]/80 text-gray-400 dark:text-gray-500 hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:text-primary-500 hover:scale-105'
           }`}
         onClick={(e) => { e.stopPropagation(); onToggleWishlist(product.id); }}
         aria-label={isInWishlist ? 'Bỏ yêu thích' : 'Thêm yêu thích'}
@@ -75,14 +75,14 @@ const ProductCard = ({ product, isLast, navigate, onAddToCartClick, isInWishlist
         </p>
 
         {/* Title */}
-        <h3 className="text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300 line-clamp-2 leading-snug min-h-[2.4em] group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors duration-200">
+        <h3 className="text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300 line-clamp-2 leading-snug min-h-[2.4em] group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-200">
           {product.name}
         </h3>
 
         {/* Price + Cart Row */}
         <div className="flex items-end justify-between mt-2.5 pt-2.5 border-t border-gray-100 dark:border-[#2a2a2a]">
           <div>
-            <div className="text-sm md:text-base font-bold text-orange-600 dark:text-orange-400">
+            <div className="text-sm md:text-base font-bold text-secondary-600 dark:text-secondary-400">
               {formatPrice(price)}<span className="text-[10px] font-normal ml-0.5">₫</span>
             </div>
             {hasDiscount && (
@@ -92,7 +92,7 @@ const ProductCard = ({ product, isLast, navigate, onAddToCartClick, isInWishlist
             )}
           </div>
           <button
-            className="w-8 h-8 md:w-9 md:h-9 rounded-sm bg-gradient-to-br from-amber-100 to-amber-200 dark:from-[#3d2e00] dark:to-[#4a3200] text-amber-600 dark:text-amber-400 flex items-center justify-center transition-all duration-300 hover:from-amber-500 hover:to-orange-500 hover:text-white hover:shadow-[0_2px_8px_rgba(245,158,11,0.3)] active:scale-95"
+            className="w-8 h-8 md:w-9 md:h-9 rounded-sm bg-gradient-to-br from-primary-100 to-primary-200 dark:from-[#3d2e00] dark:to-[#4a3200] text-primary-600 dark:text-primary-400 flex items-center justify-center transition-all duration-300 hover:from-primary-500 hover:to-secondary-500 hover:text-white hover:shadow-[0_2px_8px_rgba(245,158,11,0.3)] active:scale-95"
             onClick={(e) => {
               e.stopPropagation();
               onAddToCartClick(product);
@@ -169,7 +169,7 @@ const ProductCarousel = () => {
     return (
       <div className='w-full py-8 md:py-16 mb-4 xl:mx-auto xl:max-w-[1440px] flex justify-center items-center px-4 xl:px-0'>
         <div className="text-center">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-yellow-400 mx-auto"></div>
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-secondary-400 mx-auto"></div>
           <p className="mt-3 text-gray-500 text-sm">Đang tải sản phẩm...</p>
         </div>
       </div>
@@ -185,7 +185,7 @@ const ProductCarousel = () => {
             <button
               key={tab.key}
               className={`relative flex items-center gap-1.5 md:gap-2 px-5 md:px-7 py-2 md:py-2.5 rounded-sm text-xs md:text-sm font-semibold transition-all duration-300 ${activeTab === tab.key
-                ? 'bg-white dark:bg-gray-700 text-amber-600 dark:text-amber-400 shadow-md'
+                ? 'bg-white dark:bg-gray-700 text-primary-600 dark:text-primary-400 shadow-md'
                 : 'text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
                 }`}
               onClick={() => setActiveTab(tab.key)}

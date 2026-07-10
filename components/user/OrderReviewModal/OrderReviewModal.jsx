@@ -22,7 +22,7 @@ const StarRating = ({ rating, onRate, disabled }) =>
                     key={star}
                     type='button'
                     disabled={disabled}
-                    className={`text-xl transition-colors ${disabled ? 'cursor-default' : 'cursor-pointer hover:scale-110'} ${(hover || rating) >= star ? 'text-amber-400' : 'text-gray-300 dark:text-gray-600'
+                    className={`text-xl transition-colors ${disabled ? 'cursor-default' : 'cursor-pointer hover:scale-110'} ${(hover || rating) >= star ? 'text-primary-400' : 'text-gray-300 dark:text-gray-600'
                         }`}
                     onMouseEnter={() => !disabled && setHover(star)}
                     onMouseLeave={() => !disabled && setHover(0)}
@@ -130,10 +130,10 @@ const OrderReviewModal = ({ isOpen, onClose, order }) =>
             <div className='bg-white dark:bg-gray-900 w-full max-w-2xl max-h-[90vh] rounded-lg shadow-2xl overflow-hidden'
                 onClick={e => e.stopPropagation()}>
                 {/* Header */}
-                <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-amber-50 to-rose-50 dark:from-gray-800 dark:to-gray-800'>
+                <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-primary-50 to-primary-50 dark:from-gray-800 dark:to-gray-800'>
                     <div>
                         <h2 className='text-lg font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2'>
-                            <i className='bx bx-star text-amber-500'></i>
+                            <i className='bx bx-star text-primary-500'></i>
                             Đánh giá sản phẩm
                         </h2>
                         <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
@@ -150,7 +150,7 @@ const OrderReviewModal = ({ isOpen, onClose, order }) =>
                 <div className='overflow-y-auto max-h-[calc(90vh-130px)] p-6 space-y-4'>
                     {loading ? (
                         <div className='flex flex-col items-center justify-center py-12'>
-                            <div className="animate-spin rounded-full h-8 w-8 border-2 border-amber-200 border-t-amber-500 mb-3"></div>
+                            <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary-200 border-t-primary-500 mb-3"></div>
                             <p className='text-sm text-gray-400'>Đang tải...</p>
                         </div>
                     ) : (
@@ -199,10 +199,10 @@ const OrderReviewModal = ({ isOpen, onClose, order }) =>
                                                     }))}
                                                     disabled={state.submitting}
                                                 />
-                                                <span className='text-xs text-amber-500 font-medium'>{state.rating || 5}/5</span>
+                                                <span className='text-xs text-primary-500 font-medium'>{state.rating || 5}/5</span>
                                             </div>
                                             <textarea
-                                                className='w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 resize-none focus:border-amber-400 focus:ring-1 focus:ring-amber-200 transition placeholder:text-gray-400'
+                                                className='w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 resize-none focus:border-primary-400 focus:ring-1 focus:ring-primary-200 transition placeholder:text-gray-400'
                                                 rows={2}
                                                 placeholder='Chia sẻ trải nghiệm của bạn về sản phẩm này...'
                                                 value={state.comment || ''}
@@ -216,7 +216,7 @@ const OrderReviewModal = ({ isOpen, onClose, order }) =>
                                                 <button
                                                     onClick={() => handleSubmit(item.productId)}
                                                     disabled={state.submitting}
-                                                    className='px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 cursor-pointer flex items-center gap-1.5'
+                                                    className='px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 cursor-pointer flex items-center gap-1.5'
                                                 >
                                                     {state.submitting
                                                         ? <><i className='bx bx-loader-alt animate-spin'></i> Đang gửi...</>

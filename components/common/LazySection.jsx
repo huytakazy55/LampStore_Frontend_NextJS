@@ -47,7 +47,7 @@ const LazySection = memo(({
       ) : (
         <div className={skeletonClass} style={skeletonStyle}>
           <div className="flex flex-col items-center gap-2">
-            <div className="w-8 h-8 border-2 border-gray-200 border-t-yellow-400 rounded-full animate-spin"></div>
+            <div className="w-8 h-8 border-2 border-gray-200 border-t-secondary-400 rounded-full animate-spin"></div>
           </div>
         </div>
       )}

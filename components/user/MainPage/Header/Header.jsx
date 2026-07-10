@@ -243,12 +243,12 @@ const Header = () =>
         {/* Logo */}
         <div className='flex-shrink-0'>
           <a href="/" className='flex items-center gap-2 no-underline group'>
-            <div className='w-10 h-10 md:w-14 md:h-14 rounded-lg overflow-hidden shadow-md group-hover:shadow-amber-300/50 transition-all duration-300 group-hover:scale-105'>
+            <div className='w-10 h-10 md:w-14 md:h-14 rounded-lg overflow-hidden shadow-md group-hover:shadow-primary-300/50 transition-all duration-300 group-hover:scale-105'>
               <img src={Logo} alt="CapyLumine" className='w-full h-full object-cover' width={56} height={56} />
             </div>
             <div className='hidden sm:block'>
               <div className='text-lg md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white transition-colors duration-300'>
-                Capy<span className='text-amber-700'>Lumine</span>
+                Capy<span className='text-primary-700'>Lumine</span>
               </div>
               <div className='text-[9px] md:text-[10px] text-gray-500 dark:text-gray-400 font-medium tracking-[0.15em] uppercase -mt-1 transition-colors duration-300'>
                 Premium Lighting
@@ -268,11 +268,11 @@ const Header = () =>
         </button>
 
         {/* Search bar - hidden on mobile, shown on md+ */}
-        <div className='hidden md:flex items-center bg-gray-50 dark:bg-gray-800 rounded-full w-2/5 lg:w-1/2 h-11 relative border-2 border-amber-400 dark:border-amber-500 focus-within:ring-2 focus-within:ring-amber-400/20 focus-within:bg-white dark:focus-within:bg-gray-900 transition-all duration-300 shadow-sm hover:shadow-md' ref={searchRef}>
+        <div className='hidden md:flex items-center bg-gray-50 dark:bg-gray-800 rounded-full w-2/5 lg:w-1/2 h-11 relative border-2 border-primary-400 dark:border-primary-500 focus-within:ring-2 focus-within:ring-primary-400/20 focus-within:bg-white dark:focus-within:bg-gray-900 transition-all duration-300 shadow-sm hover:shadow-md' ref={searchRef}>
           {/* Search icon */}
           <div className='flex items-center justify-center pl-4 pr-1'>
             {isSearching ? (
-              <i className='bx bx-loader-alt bx-spin text-amber-500 text-lg'></i>
+              <i className='bx bx-loader-alt bx-spin text-primary-500 text-lg'></i>
             ) : (
               <i className='bx bx-search text-gray-400 dark:text-gray-500 text-lg'></i>
             )}
@@ -304,7 +304,7 @@ const Header = () =>
           {/* Nút tìm kiếm */}
           <button
             aria-label="Tìm kiếm"
-            className='flex items-center justify-center w-9 h-9 mr-[2px] bg-amber-500 hover:bg-amber-600 text-white rounded-full transition-all duration-200 active:scale-90 cursor-pointer shrink-0'
+            className='flex items-center justify-center w-9 h-9 mr-[2px] bg-primary-500 hover:bg-primary-600 text-white rounded-full transition-all duration-200 active:scale-90 cursor-pointer shrink-0'
             onClick={handleSearch}
           >
             <i className='bx bx-search text-lg'></i>
@@ -322,14 +322,14 @@ const Header = () =>
                   {suggestions.categories.map((cat) => (
                     <div
                       key={`cat-${cat.id}`}
-                      className='flex items-center gap-3 px-4 py-2.5 cursor-pointer hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors duration-150 group'
+                      className='flex items-center gap-3 px-4 py-2.5 cursor-pointer hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors duration-150 group'
                       onClick={() => handleCategorySuggestionClick(cat)}
                     >
-                      <div className='w-7 h-7 rounded-lg bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center flex-shrink-0 group-hover:bg-amber-200 dark:group-hover:bg-amber-800/50 transition-colors'>
-                        <i className='bx bx-category text-amber-600 dark:text-amber-400 text-sm'></i>
+                      <div className='w-7 h-7 rounded-lg bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center flex-shrink-0 group-hover:bg-primary-200 dark:group-hover:bg-primary-800/50 transition-colors'>
+                        <i className='bx bx-category text-primary-600 dark:text-primary-400 text-sm'></i>
                       </div>
                       <span className='text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white'>
-                        Tìm trong danh mục <strong className='text-amber-600 dark:text-amber-400'>"{cat.name}"</strong>
+                        Tìm trong danh mục <strong className='text-primary-600 dark:text-primary-400'>"{cat.name}"</strong>
                       </span>
                       <i className='bx bx-chevron-right text-gray-400 ml-auto text-lg'></i>
                     </div>
@@ -347,7 +347,7 @@ const Header = () =>
                       className='flex items-center gap-3 px-4 py-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-150 group'
                       onClick={() => handleProductSuggestionClick(product)}
                     >
-                      <i className='bx bx-search text-gray-400 text-base group-hover:text-amber-500 transition-colors'></i>
+                      <i className='bx bx-search text-gray-400 text-base group-hover:text-primary-500 transition-colors'></i>
                       <span className='text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white truncate'>{product.name}</span>
                     </div>
                   ))}
@@ -357,11 +357,11 @@ const Header = () =>
               {/* Xem tất cả kết quả */}
               {searchKeyword.trim() && (
                 <div
-                  className='border-t border-gray-100 dark:border-gray-800 px-4 py-3 cursor-pointer hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors group flex items-center justify-center gap-2'
+                  className='border-t border-gray-100 dark:border-gray-800 px-4 py-3 cursor-pointer hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors group flex items-center justify-center gap-2'
                   onClick={handleSearch}
                 >
-                  <i className='bx bx-right-arrow-alt text-amber-500 group-hover:translate-x-1 transition-transform'></i>
-                  <span className='text-sm font-medium text-amber-600 dark:text-amber-400'>Xem tất cả kết quả cho "{searchKeyword}"</span>
+                  <i className='bx bx-right-arrow-alt text-primary-500 group-hover:translate-x-1 transition-transform'></i>
+                  <span className='text-sm font-medium text-primary-600 dark:text-primary-400'>Xem tất cả kết quả cho "{searchKeyword}"</span>
                 </div>
               )}
             </div>
@@ -373,8 +373,8 @@ const Header = () =>
           <ul className='flex justify-end lg:justify-between items-center gap-2 lg:gap-1'>
             {/* Dark mode toggle */}
             <li className='relative cursor-pointer' aria-label={isDark ? 'Chuyển sang chế độ sáng' : 'Chuyển sang chế độ tối'} onClick={toggleDarkMode}>
-              <div className='w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm transition-all duration-500 hover:bg-amber-50 dark:hover:bg-gray-700 hover:scale-110 hover:shadow-md hover:shadow-amber-200/30 dark:hover:shadow-amber-900/20 active:scale-95'>
-                <i className={`bx ${isDark ? 'bx-sun text-amber-400' : 'bx-moon text-indigo-500'} text-xl transition-all duration-500`}
+              <div className='w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm transition-all duration-500 hover:bg-primary-50 dark:hover:bg-gray-700 hover:scale-110 hover:shadow-md hover:shadow-primary-200/30 dark:hover:shadow-primary-900/20 active:scale-95'>
+                <i className={`bx ${isDark ? 'bx-sun text-primary-400' : 'bx-moon text-indigo-500'} text-xl transition-all duration-500`}
                   style={{ transform: isDark ? 'rotate(360deg)' : 'rotate(0deg)' }}></i>
               </div>
             </li>
@@ -389,22 +389,22 @@ const Header = () =>
               }
               navigate('/wishlist');
             }}>
-              <div className='w-10 h-10 flex items-center justify-center rounded-xl bg-rose-50/80 dark:bg-rose-950/30 backdrop-blur-sm transition-all duration-300 hover:bg-rose-100 dark:hover:bg-rose-900/40 hover:scale-110 hover:shadow-md hover:shadow-rose-200/40 active:scale-95'>
-                <i className='bx bx-heart text-xl text-rose-500 dark:text-rose-400 transition-all duration-300 group-hover:text-rose-600'></i>
+              <div className='w-10 h-10 flex items-center justify-center rounded-xl bg-primary-50/80 dark:bg-primary-950/30 backdrop-blur-sm transition-all duration-300 hover:bg-primary-100 dark:hover:bg-primary-900/40 hover:scale-110 hover:shadow-md hover:shadow-primary-200/40 active:scale-95'>
+                <i className='bx bx-heart text-xl text-primary-500 dark:text-primary-400 transition-all duration-300 group-hover:text-primary-600'></i>
               </div>
               {wishlistCount > 0 && (
-                <div className='absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-gradient-to-br from-rose-500 to-pink-600 rounded-full text-center text-[10px] leading-[18px] text-white font-bold shadow-lg shadow-rose-500/30 animate-pulse'>{wishlistCount}</div>
+                <div className='absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-gradient-to-br from-primary-500 to-pink-600 rounded-full text-center text-[10px] leading-[18px] text-white font-bold shadow-lg shadow-primary-500/30 animate-pulse'>{wishlistCount}</div>
               )}
             </li>
 
             {/* Cart */}
             <li className='flex justify-center items-center gap-2 cursor-pointer group' aria-label="Giỏ hàng" onClick={toggleFormcart} ref={buttonRef}>
               <div className='relative'>
-                <div className='w-10 h-10 flex items-center justify-center rounded-xl bg-amber-50/80 dark:bg-amber-950/30 backdrop-blur-sm transition-all duration-300 hover:bg-amber-100 dark:hover:bg-amber-900/40 hover:scale-110 hover:shadow-md hover:shadow-amber-200/40 active:scale-95'>
-                  <i id='header-cart-icon' className='bx bx-shopping-bag text-xl text-amber-600 dark:text-amber-400 transition-all duration-300 group-hover:text-amber-700'></i>
+                <div className='w-10 h-10 flex items-center justify-center rounded-xl bg-primary-50/80 dark:bg-primary-950/30 backdrop-blur-sm transition-all duration-300 hover:bg-primary-100 dark:hover:bg-primary-900/40 hover:scale-110 hover:shadow-md hover:shadow-primary-200/40 active:scale-95'>
+                  <i id='header-cart-icon' className='bx bx-shopping-bag text-xl text-primary-600 dark:text-primary-400 transition-all duration-300 group-hover:text-primary-700'></i>
                 </div>
                 <FormCart popupRef={popupRef} toggleCart={toggleCart} setToggleCart={setToggleCart} />
-                <div className='absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-gradient-to-br from-amber-400 to-orange-500 rounded-full text-center text-[10px] leading-[18px] text-white font-bold shadow-lg shadow-amber-400/30'>{cartCount}</div>
+                <div className='absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-gradient-to-br from-primary-400 to-secondary-500 rounded-full text-center text-[10px] leading-[18px] text-white font-bold shadow-lg shadow-primary-400/30'>{cartCount}</div>
               </div>
               <div className='hidden lg:flex flex-col text-xs ml-0.5'>
                 <span className='text-[10px] text-gray-500 dark:text-gray-400 font-medium leading-tight'>Giỏ hàng</span>
@@ -417,7 +417,7 @@ const Header = () =>
               mounted && isAuthenticated ?
                 <>
                   <li onClick={toggleActionLoginForm} ref={buttonActionRef} className='relative cursor-pointer group'>
-                    <div className='w-10 h-10 rounded-xl overflow-hidden ring-2 ring-amber-400/60 dark:ring-amber-500/40 transition-all duration-300 hover:ring-amber-500 hover:scale-110 hover:shadow-lg hover:shadow-amber-300/30 active:scale-95'>
+                    <div className='w-10 h-10 rounded-xl overflow-hidden ring-2 ring-primary-400/60 dark:ring-primary-500/40 transition-all duration-300 hover:ring-primary-500 hover:scale-110 hover:shadow-lg hover:shadow-primary-300/30 active:scale-95'>
                       <img className='h-full w-full object-cover' src={avatarURL ? avatarURL : (avatar.ProfileAvatar ? (avatar.ProfileAvatar.startsWith('http') ? avatar.ProfileAvatar : `${API_ENDPOINT}${avatar.ProfileAvatar}`) : avatarimg)} alt="Ảnh đại diện người dùng" />
                     </div>
                     <div className='absolute bottom-0 right-0 w-3 h-3 bg-gradient-to-br from-emerald-400 to-green-500 rounded-full border-2 border-white dark:border-gray-900'></div>
@@ -439,10 +439,10 @@ const Header = () =>
 
       {/* Mobile search bar - shown below header on mobile */}
       <div className='md:hidden px-4 pb-3' ref={searchRef}>
-        <div className='flex items-center bg-gray-50 dark:bg-gray-800 rounded-full h-10 relative border-2 border-amber-400 dark:border-amber-500 focus-within:ring-2 focus-within:ring-amber-400/20 focus-within:bg-white dark:focus-within:bg-gray-900 transition-all duration-300 shadow-sm'>
+        <div className='flex items-center bg-gray-50 dark:bg-gray-800 rounded-full h-10 relative border-2 border-primary-400 dark:border-primary-500 focus-within:ring-2 focus-within:ring-primary-400/20 focus-within:bg-white dark:focus-within:bg-gray-900 transition-all duration-300 shadow-sm'>
           <div className='flex items-center justify-center pl-3.5 pr-1'>
             {isSearching ? (
-              <i className='bx bx-loader-alt bx-spin text-amber-500 text-base'></i>
+              <i className='bx bx-loader-alt bx-spin text-primary-500 text-base'></i>
             ) : (
               <i className='bx bx-search text-gray-400 dark:text-gray-500 text-base'></i>
             )}
@@ -469,7 +469,7 @@ const Header = () =>
           {/* Nút tìm kiếm mobile */}
           <button
             aria-label="Tìm kiếm"
-            className='flex items-center justify-center w-8 h-8 mr-1 bg-amber-500 hover:bg-amber-600 text-white rounded-full transition-all duration-200 active:scale-90 cursor-pointer shrink-0'
+            className='flex items-center justify-center w-8 h-8 mr-1 bg-primary-500 hover:bg-primary-600 text-white rounded-full transition-all duration-200 active:scale-90 cursor-pointer shrink-0'
             onClick={handleSearch}
           >
             <i className='bx bx-search text-base'></i>
@@ -485,9 +485,9 @@ const Header = () =>
               {suggestions.categories.length > 0 && (
                 <div className='border-b border-gray-100 dark:border-gray-800'>
                   {suggestions.categories.map((cat) => (
-                    <div key={`mcat-${cat.id}`} className='flex items-center gap-3 px-4 py-2.5 cursor-pointer hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors' onClick={() => handleCategorySuggestionClick(cat)}>
-                      <div className='w-6 h-6 rounded-lg bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center flex-shrink-0'><i className='bx bx-category text-amber-600 dark:text-amber-400 text-xs'></i></div>
-                      <span className='text-sm text-gray-700 dark:text-gray-300 truncate'>Danh mục <strong className='text-amber-600 dark:text-amber-400'>"{cat.name}"</strong></span>
+                    <div key={`mcat-${cat.id}`} className='flex items-center gap-3 px-4 py-2.5 cursor-pointer hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors' onClick={() => handleCategorySuggestionClick(cat)}>
+                      <div className='w-6 h-6 rounded-lg bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center flex-shrink-0'><i className='bx bx-category text-primary-600 dark:text-primary-400 text-xs'></i></div>
+                      <span className='text-sm text-gray-700 dark:text-gray-300 truncate'>Danh mục <strong className='text-primary-600 dark:text-primary-400'>"{cat.name}"</strong></span>
                     </div>
                   ))}
                 </div>
@@ -525,7 +525,7 @@ const Header = () =>
                   {mounted && isAuthenticated ? (
                     <>
                       <div className='flex items-center gap-3 p-2 rounded-lg bg-gray-50'>
-                        <img className='w-10 h-10 rounded-full border-2 border-yellow-400' src={avatarURL ? avatarURL : (avatar.ProfileAvatar ? (avatar.ProfileAvatar.startsWith('http') ? avatar.ProfileAvatar : `${API_ENDPOINT}${avatar.ProfileAvatar}`) : avatarimg)} alt="Ảnh đại diện" />
+                        <img className='w-10 h-10 rounded-full border-2 border-secondary-400' src={avatarURL ? avatarURL : (avatar.ProfileAvatar ? (avatar.ProfileAvatar.startsWith('http') ? avatar.ProfileAvatar : `${API_ENDPOINT}${avatar.ProfileAvatar}`) : avatarimg)} alt="Ảnh đại diện" />
                         <span className='font-medium text-sm'>Tài khoản</span>
                       </div>
                       <div onClick={() => { toggleFormProfile(); setMobileMenuOpen(false); }} className='flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer'>
@@ -536,13 +536,13 @@ const Header = () =>
                   ) : (
                     <>
                       {GuestProfileService.getGuestCode() && (
-                        <div className='flex items-center gap-3 p-2 rounded-lg bg-amber-50 border border-amber-200'>
-                          <div className='w-10 h-10 flex items-center justify-center rounded-full bg-amber-100'>
-                            <i className='bx bx-user-circle text-2xl text-amber-600'></i>
+                        <div className='flex items-center gap-3 p-2 rounded-lg bg-primary-50 border border-primary-200'>
+                          <div className='w-10 h-10 flex items-center justify-center rounded-full bg-primary-100'>
+                            <i className='bx bx-user-circle text-2xl text-primary-600'></i>
                           </div>
                           <div>
                             <span className='font-medium text-xs text-gray-500'>Khách vãng lai</span>
-                            <p className='font-bold text-sm text-amber-700'>{GuestProfileService.getGuestCode()}</p>
+                            <p className='font-bold text-sm text-primary-700'>{GuestProfileService.getGuestCode()}</p>
                           </div>
                         </div>
                       )}
@@ -564,7 +564,7 @@ const Header = () =>
                     <i className='bx bx-heart text-xl text-red-500'></i>
                     <span className='text-sm'>Yêu thích</span>
                     {wishlistCount > 0 && (
-                      <span className='ml-auto bg-rose-100 text-rose-600 text-xs px-2 py-0.5 rounded-full font-medium'>{wishlistCount}</span>
+                      <span className='ml-auto bg-primary-100 text-primary-600 text-xs px-2 py-0.5 rounded-full font-medium'>{wishlistCount}</span>
                     )}
                   </div>
                 </div>
@@ -573,8 +573,8 @@ const Header = () =>
                   <h3 className='text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3'>Danh mục</h3>
                   <div className='space-y-1'>
                     {categories.map((category) => (
-                      <a key={category.id} href={`#category-${category.id}`} className='flex items-center gap-3 p-3 hover:bg-yellow-50 rounded-lg text-sm text-gray-700' onClick={() => setMobileMenuOpen(false)}>
-                        <i className='bx bx-lamp text-yellow-500'></i>
+                      <a key={category.id} href={`#category-${category.id}`} className='flex items-center gap-3 p-3 hover:bg-secondary-50 rounded-lg text-sm text-gray-700' onClick={() => setMobileMenuOpen(false)}>
+                        <i className='bx bx-lamp text-secondary-500'></i>
                         {category.name}
                       </a>
                     ))}

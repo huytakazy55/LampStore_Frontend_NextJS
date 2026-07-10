@@ -40,9 +40,9 @@ const stripHtml = (html) =>
 const renderRatingStars = (rating) => [1, 2, 3, 4, 5].map((star) =>
 {
     const starClass = rating >= star - 0.25
-        ? 'bxs-star text-orange-400'
+        ? 'bxs-star text-secondary-400'
         : rating >= star - 0.75
-            ? 'bxs-star-half text-orange-400'
+            ? 'bxs-star-half text-secondary-400'
             : 'bx-star text-gray-300 dark:text-gray-600';
 
     return <i key={star} className={`bx ${starClass} text-xs`}></i>;
@@ -367,7 +367,7 @@ const ProductDetail = () =>
                 <Header />
                 <div className='w-full h-[60vh] flex justify-center items-center'>
                     <div className="text-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500 mx-auto"></div>
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto"></div>
                         <p className="mt-4 text-gray-500">Đang tải sản phẩm...</p>
                     </div>
                 </div>
@@ -390,7 +390,7 @@ const ProductDetail = () =>
                     <div className="text-center text-gray-500">
                         <i className='bx bx-error-circle text-5xl mb-2'></i>
                         <p className="text-lg">Không tìm thấy sản phẩm</p>
-                        <a href="/" className="text-amber-600 hover:underline mt-2 inline-block">← Về trang chủ</a>
+                        <a href="/" className="text-primary-600 hover:underline mt-2 inline-block">← Về trang chủ</a>
                     </div>
                 </div>
                 <Footer />
@@ -440,7 +440,7 @@ const ProductDetail = () =>
                 {/* Breadcrumb - Schema.org */}
                 <nav aria-label="Breadcrumb" className='flex items-center py-3 text-xs md:text-sm' itemScope itemType="https://schema.org/BreadcrumbList">
                     <span itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-                        <a itemProp="item" href="/" className='font-medium text-gray-600 dark:text-gray-400 hover:text-amber-600 transition'>
+                        <a itemProp="item" href="/" className='font-medium text-gray-600 dark:text-gray-400 hover:text-primary-600 transition'>
                             <span itemProp="name">Trang chủ</span>
                         </a>
                         <meta itemProp="position" content="1" />
@@ -478,7 +478,7 @@ const ProductDetail = () =>
                             {images.map((img, i) => (
                                 <img
                                     key={img.id || i}
-                                    className={`w-14 h-14 md:w-16 md:h-16 border-2 rounded cursor-pointer object-cover transition flex-shrink-0 ${selectedImage === i ? 'border-amber-500' : 'border-gray-200 dark:border-gray-700 hover:border-amber-300'
+                                    className={`w-14 h-14 md:w-16 md:h-16 border-2 rounded cursor-pointer object-cover transition flex-shrink-0 ${selectedImage === i ? 'border-primary-500' : 'border-gray-200 dark:border-gray-700 hover:border-primary-300'
                                         }`}
                                     src={getImgSrc(img.imagePath)}
                                     alt={`${product.name} - Ảnh ${i + 1}`}
@@ -488,7 +488,7 @@ const ProductDetail = () =>
                             ))}
                         </div>
                         <div
-                            className={`flex justify-end items-center text-xs md:text-sm h-8 mt-2 cursor-pointer transition-colors ${isInWishlist(product.id) ? 'text-amber-600' : 'text-gray-500 dark:text-gray-400 hover:text-amber-600'
+                            className={`flex justify-end items-center text-xs md:text-sm h-8 mt-2 cursor-pointer transition-colors ${isInWishlist(product.id) ? 'text-primary-600' : 'text-gray-500 dark:text-gray-400 hover:text-primary-600'
                                 }`}
                             onClick={() => toggleWishlist(product.id)}
                         >
@@ -502,7 +502,7 @@ const ProductDetail = () =>
                         <h1 className='text-base md:text-xl font-medium leading-relaxed mb-2 dark:text-gray-100' itemProp="name">{product.name}</h1>
                         <div className='flex flex-wrap justify-start items-center text-xs md:text-sm gap-2 md:gap-3 py-1 text-gray-500 dark:text-gray-400'>
                             <div className='flex items-center gap-1'>
-                                <span className='text-amber-600 font-medium'>{reviewStats.average.toFixed(1)}</span>
+                                <span className='text-primary-600 font-medium'>{reviewStats.average.toFixed(1)}</span>
                                 {renderRatingStars(reviewStats.average)}
                             </div>
                             <span className='text-gray-300 dark:text-gray-600'>|</span>
@@ -512,15 +512,15 @@ const ProductDetail = () =>
                         </div>
 
                         {/* Price - with Schema.org Offer */}
-                        <div className='flex flex-wrap items-center bg-gradient-to-r from-amber-50 to-slate-50 dark:from-amber-900/20 dark:to-gray-800 gap-2 md:gap-3 py-3 md:py-4 px-4 md:px-6 my-3 md:my-4 rounded-lg' itemProp="offers" itemScope itemType="https://schema.org/Offer">
+                        <div className='flex flex-wrap items-center bg-gradient-to-r from-primary-50 to-slate-50 dark:from-primary-900/20 dark:to-gray-800 gap-2 md:gap-3 py-3 md:py-4 px-4 md:px-6 my-3 md:my-4 rounded-lg' itemProp="offers" itemScope itemType="https://schema.org/Offer">
                             <meta itemProp="priceCurrency" content="VND" />
                             <meta itemProp="price" content={price} />
                             <link itemProp="availability" href={stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"} />
-                            <div className='text-xl md:text-2xl font-bold text-amber-600'>₫{formatPrice(price)}</div>
+                            <div className='text-xl md:text-2xl font-bold text-primary-600'>₫{formatPrice(price)}</div>
                             {hasDiscount && (
                                 <>
                                     <div className='text-xs md:text-sm text-gray-400 dark:text-gray-500 line-through'>₫{formatPrice(originalPrice)}</div>
-                                    <div className='bg-orange-500 text-white text-xs px-2 py-0.5 rounded font-medium'>-{discountPercent}%</div>
+                                    <div className='bg-secondary-500 text-white text-xs px-2 py-0.5 rounded font-medium'>-{discountPercent}%</div>
                                 </>
                             )}
                         </div>
@@ -547,15 +547,15 @@ const ProductDetail = () =>
                                                             key={val.id}
                                                             onClick={() => handleSelectOption(vt.name, val)}
                                                             className={`py-1.5 px-3 md:px-4 cursor-pointer text-xs md:text-sm border rounded transition ${isSelected
-                                                                ? 'border-amber-500 text-amber-600 bg-amber-50 dark:bg-amber-900/30 font-medium'
+                                                                ? 'border-primary-500 text-primary-600 bg-primary-50 dark:bg-primary-900/30 font-medium'
                                                                 : isRequired
-                                                                    ? 'border-red-300 hover:border-amber-300 dark:text-gray-400'
-                                                                    : 'border-gray-300 dark:border-gray-600 hover:border-amber-300 dark:text-gray-400'
+                                                                    ? 'border-red-300 hover:border-primary-300 dark:text-gray-400'
+                                                                    : 'border-gray-300 dark:border-gray-600 hover:border-primary-300 dark:text-gray-400'
                                                                 }`}
                                                         >
                                                             {val.value}
                                                             {val.additionalPrice > 0 && (
-                                                                <span className='ml-1 text-xs text-amber-600'>+₫{formatPrice(val.additionalPrice)}</span>
+                                                                <span className='ml-1 text-xs text-primary-600'>+₫{formatPrice(val.additionalPrice)}</span>
                                                             )}
                                                         </div>
                                                     );
@@ -574,11 +574,11 @@ const ProductDetail = () =>
                             <div className='w-full sm:w-[10%] font-medium text-sm dark:text-gray-300'>Số lượng</div>
                             <div className='flex items-center gap-3'>
                                 <div className='flex items-center border border-gray-300 dark:border-gray-600 rounded overflow-hidden'>
-                                    <button onClick={handleDecrease} aria-label="Giảm số lượng" className='w-9 h-9 flex items-center justify-center bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-amber-500 hover:text-white active:scale-95 transition text-lg font-medium'>-</button>
+                                    <button onClick={handleDecrease} aria-label="Giảm số lượng" className='w-9 h-9 flex items-center justify-center bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-primary-500 hover:text-white active:scale-95 transition text-lg font-medium'>-</button>
                                     <span aria-label="Số lượng sản phẩm" className="w-12 md:w-14 h-9 flex items-center justify-center text-sm border-x border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 select-none">
                                         {quantity}
                                     </span>
-                                    <button onClick={handleIncrease} aria-label="Tăng số lượng" className='w-9 h-9 flex items-center justify-center bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-amber-500 hover:text-white active:scale-95 transition text-lg font-medium'>+</button>
+                                    <button onClick={handleIncrease} aria-label="Tăng số lượng" className='w-9 h-9 flex items-center justify-center bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-primary-500 hover:text-white active:scale-95 transition text-lg font-medium'>+</button>
                                 </div>
                                 <div className='text-xs md:text-sm text-gray-400 dark:text-gray-500'>{stock} sản phẩm có sẵn</div>
                             </div>
@@ -594,10 +594,10 @@ const ProductDetail = () =>
 
                         {/* Actions */}
                         <div className='flex flex-col sm:flex-row gap-3 md:gap-4 mb-4 md:mb-6'>
-                            <button onClick={handleAddToCart} id="add-to-cart-btn" className='flex items-center justify-center gap-2 border border-amber-500 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 py-2.5 px-4 md:px-6 rounded hover:bg-amber-100 dark:hover:bg-amber-900/50 transition text-sm md:text-base w-full sm:w-auto cursor-pointer'>
+                            <button onClick={handleAddToCart} id="add-to-cart-btn" className='flex items-center justify-center gap-2 border border-primary-500 bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 py-2.5 px-4 md:px-6 rounded hover:bg-primary-100 dark:hover:bg-primary-900/50 transition text-sm md:text-base w-full sm:w-auto cursor-pointer'>
                                 <i className='bx bxs-cart-add text-lg md:text-xl'></i> Thêm vào giỏ hàng
                             </button>
-                            <button onClick={handleBuyNow} id="buy-now-btn" className='bg-amber-500 text-white py-2.5 px-6 md:px-8 rounded hover:bg-amber-600 transition font-medium text-sm md:text-base w-full sm:w-auto cursor-pointer'>
+                            <button onClick={handleBuyNow} id="buy-now-btn" className='bg-primary-500 text-white py-2.5 px-6 md:px-8 rounded hover:bg-primary-600 transition font-medium text-sm md:text-base w-full sm:w-auto cursor-pointer'>
                                 Mua ngay
                             </button>
                         </div>
@@ -605,15 +605,15 @@ const ProductDetail = () =>
                         {/* Trust Badges */}
                         <div className='flex flex-col sm:flex-row gap-3 md:gap-6 pt-4 border-t border-gray-100 dark:border-gray-700 text-xs md:text-sm text-gray-600 dark:text-gray-400'>
                             <div className='flex items-center gap-1.5'>
-                                <i className='bx bxs-analyse text-base md:text-lg text-amber-600'></i>
+                                <i className='bx bxs-analyse text-base md:text-lg text-primary-600'></i>
                                 Đổi ý miễn phí 15 ngày
                             </div>
                             <div className='flex items-center gap-1.5'>
-                                <i className='bx bxs-check-shield text-base md:text-lg text-amber-600'></i>
+                                <i className='bx bxs-check-shield text-base md:text-lg text-primary-600'></i>
                                 Hàng chính hãng 100%
                             </div>
                             <div className='flex items-center gap-1.5'>
-                                <i className='bx bxs-truck text-base md:text-lg text-amber-600'></i>
+                                <i className='bx bxs-truck text-base md:text-lg text-primary-600'></i>
                                 Miễn phí vận chuyển
                             </div>
                         </div>
@@ -623,7 +623,7 @@ const ProductDetail = () =>
                 {/* Product Details & Description */}
                 <section className='w-full py-4 md:py-6 bg-white dark:bg-gray-900 mb-4 rounded-lg shadow-sm px-4 md:px-6'>
                     <div className='mb-6 md:mb-8'>
-                        <h2 className='text-base md:text-lg font-semibold text-gray-800 dark:text-gray-100 py-2.5 px-4 border-l-4 border-amber-500 bg-gradient-to-r from-amber-100 to-transparent dark:from-amber-900/20 dark:to-transparent rounded-r-md flex items-center gap-2'><i className='bx bx-list-ul text-amber-500'></i> Chi tiết sản phẩm</h2>
+                        <h2 className='text-base md:text-lg font-semibold text-gray-800 dark:text-gray-100 py-2.5 px-4 border-l-4 border-primary-500 bg-gradient-to-r from-primary-100 to-transparent dark:from-primary-900/20 dark:to-transparent rounded-r-md flex items-center gap-2'><i className='bx bx-list-ul text-primary-500'></i> Chi tiết sản phẩm</h2>
                         <div className='grid grid-cols-[100px_1fr] md:grid-cols-[120px_1fr] gap-y-2 gap-x-3 md:gap-x-4 mt-4 text-xs md:text-sm dark:text-gray-300'>
                             <span className='font-medium text-gray-600 dark:text-gray-400'>Tên sản phẩm</span>
                             <span>{product.name}</span>
@@ -648,7 +648,7 @@ const ProductDetail = () =>
                         </div>
                     </div>
                     <div className='mb-6 md:mb-8'>
-                        <h2 className='text-base md:text-lg font-semibold text-gray-800 dark:text-gray-100 py-2.5 px-4 border-l-4 border-amber-500 bg-gradient-to-r from-amber-100 to-transparent dark:from-amber-900/20 dark:to-transparent rounded-r-md flex items-center gap-2'><i className='bx bx-detail text-amber-500'></i> Mô tả sản phẩm</h2>
+                        <h2 className='text-base md:text-lg font-semibold text-gray-800 dark:text-gray-100 py-2.5 px-4 border-l-4 border-primary-500 bg-gradient-to-r from-primary-100 to-transparent dark:from-primary-900/20 dark:to-transparent rounded-r-md flex items-center gap-2'><i className='bx bx-detail text-primary-500'></i> Mô tả sản phẩm</h2>
                         <div
                             className='py-4 text-xs md:text-sm leading-relaxed text-gray-700 dark:text-gray-300 overflow-x-auto'
                             itemProp="description"
@@ -656,7 +656,7 @@ const ProductDetail = () =>
                         />
                     </div>
                     <div>
-                        <h2 className='text-base md:text-lg font-semibold text-gray-800 dark:text-gray-100 py-2.5 px-4 border-l-4 border-amber-500 bg-gradient-to-r from-amber-100 to-transparent dark:from-amber-900/20 dark:to-transparent rounded-r-md flex items-center gap-2'><i className='bx bx-star text-amber-500'></i> Đánh giá sản phẩm ({reviews.length})</h2>
+                        <h2 className='text-base md:text-lg font-semibold text-gray-800 dark:text-gray-100 py-2.5 px-4 border-l-4 border-primary-500 bg-gradient-to-r from-primary-100 to-transparent dark:from-primary-900/20 dark:to-transparent rounded-r-md flex items-center gap-2'><i className='bx bx-star text-primary-500'></i> Đánh giá sản phẩm ({reviews.length})</h2>
 
                         {/* Review Summary */}
                         {reviews.length > 0 && (() =>
@@ -670,9 +670,9 @@ const ProductDetail = () =>
                             return (
                                 <div className='flex flex-col sm:flex-row gap-6 py-5 px-4 border-b border-gray-100 dark:border-gray-700'>
                                     <div className='flex flex-col items-center justify-center min-w-[120px]'>
-                                        <div className='text-4xl font-bold text-amber-500'>{avg}</div>
+                                        <div className='text-4xl font-bold text-primary-500'>{avg}</div>
                                         <div className='flex items-center gap-0.5 mt-1'>
-                                            {[1, 2, 3, 4, 5].map(s => <i key={s} className={`bx bxs-star text-sm ${s <= Math.round(avg) ? 'text-amber-400' : 'text-gray-200 dark:text-gray-600'}`}></i>)}
+                                            {[1, 2, 3, 4, 5].map(s => <i key={s} className={`bx bxs-star text-sm ${s <= Math.round(avg) ? 'text-primary-400' : 'text-gray-200 dark:text-gray-600'}`}></i>)}
                                         </div>
                                         <div className='text-xs text-gray-400 mt-1'>{reviews.length} đánh giá</div>
                                     </div>
@@ -680,9 +680,9 @@ const ProductDetail = () =>
                                         {dist.map(d => (
                                             <div key={d.star} className='flex items-center gap-2 text-xs'>
                                                 <span className='w-4 text-gray-500 dark:text-gray-400 text-right'>{d.star}</span>
-                                                <i className='bx bxs-star text-amber-400 text-xs'></i>
+                                                <i className='bx bxs-star text-primary-400 text-xs'></i>
                                                 <div className='flex-1 h-2.5 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden'>
-                                                    <div className='h-full bg-amber-400 rounded-full transition-all duration-500' style={{ width: `${d.pct}%` }}></div>
+                                                    <div className='h-full bg-primary-400 rounded-full transition-all duration-500' style={{ width: `${d.pct}%` }}></div>
                                                 </div>
                                                 <span className='w-7 text-gray-400 text-right'>{d.count}</span>
                                             </div>
@@ -699,7 +699,7 @@ const ProductDetail = () =>
                                 <div className='flex items-center gap-1 mb-3'>
                                     {[1, 2, 3, 4, 5].map(s => (
                                         <i key={s}
-                                            className={`bx bxs-star text-2xl cursor-pointer transition-colors ${s <= (reviewHover || reviewRating) ? 'text-amber-400' : 'text-gray-200 dark:text-gray-600'}`}
+                                            className={`bx bxs-star text-2xl cursor-pointer transition-colors ${s <= (reviewHover || reviewRating) ? 'text-primary-400' : 'text-gray-200 dark:text-gray-600'}`}
                                             onMouseEnter={() => setReviewHover(s)}
                                             onMouseLeave={() => setReviewHover(0)}
                                             onClick={() => setReviewRating(s)}
@@ -708,7 +708,7 @@ const ProductDetail = () =>
                                     <span className='ml-2 text-sm text-gray-500 dark:text-gray-400'>{reviewRating}/5</span>
                                 </div>
                                 <textarea
-                                    className='w-full border border-gray-200 dark:border-gray-600 rounded-lg p-3 text-sm text-gray-700 dark:text-gray-200 dark:bg-gray-800 resize-none focus:outline-none focus:border-amber-400 transition-colors'
+                                    className='w-full border border-gray-200 dark:border-gray-600 rounded-lg p-3 text-sm text-gray-700 dark:text-gray-200 dark:bg-gray-800 resize-none focus:outline-none focus:border-primary-400 transition-colors'
                                     rows={3}
                                     placeholder='Chia sẻ cảm nhận của bạn về sản phẩm...'
                                     value={reviewComment}
@@ -720,7 +720,7 @@ const ProductDetail = () =>
                                     <button
                                         onClick={handleSubmitReview}
                                         disabled={submittingReview}
-                                        className='bg-amber-500 hover:bg-amber-600 text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 cursor-pointer flex items-center gap-1.5'
+                                        className='bg-primary-500 hover:bg-primary-600 text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 cursor-pointer flex items-center gap-1.5'
                                     >
                                         {submittingReview ? <><i className='bx bx-loader-alt animate-spin'></i> Đang gửi...</> : <><i className='bx bx-send'></i> Gửi đánh giá</>}
                                     </button>
@@ -735,7 +735,7 @@ const ProductDetail = () =>
                         )}
 
                         {isAuthenticated && !reviewStatus.hasPurchased && !reviewStatus.hasReviewed && (
-                            <div className='py-3 px-4 text-sm text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border-b border-gray-100 dark:border-gray-700 flex items-center gap-2'>
+                            <div className='py-3 px-4 text-sm text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 border-b border-gray-100 dark:border-gray-700 flex items-center gap-2'>
                                 <i className='bx bx-shopping-bag text-lg'></i> Bạn cần mua sản phẩm này để có thể đánh giá
                             </div>
                         )}
@@ -757,14 +757,14 @@ const ProductDetail = () =>
                                 <div className='space-y-0'>
                                     {reviews.map((rv, idx) => (
                                         <div key={rv.id || idx} className='flex gap-3 py-4 px-4 border-b border-gray-50 dark:border-gray-800 last:border-0 hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors'>
-                                            <div className='w-9 h-9 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center flex-shrink-0 text-amber-600 font-bold text-sm'>
+                                            <div className='w-9 h-9 rounded-full bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center flex-shrink-0 text-primary-600 font-bold text-sm'>
                                                 {(rv.userName || 'A').charAt(0).toUpperCase()}
                                             </div>
                                             <div className='flex-1 min-w-0'>
                                                 <div className='flex items-center gap-2 mb-1'>
                                                     <span className='text-sm font-medium text-gray-800 dark:text-gray-200'>{rv.userName || 'Ẩn danh'}</span>
                                                     <div className='flex items-center gap-0.5'>
-                                                        {[1, 2, 3, 4, 5].map(s => <i key={s} className={`bx bxs-star text-xs ${s <= Math.round(Number(rv.rating)) ? 'text-amber-400' : 'text-gray-200 dark:text-gray-600'}`}></i>)}
+                                                        {[1, 2, 3, 4, 5].map(s => <i key={s} className={`bx bxs-star text-xs ${s <= Math.round(Number(rv.rating)) ? 'text-primary-400' : 'text-gray-200 dark:text-gray-600'}`}></i>)}
                                                     </div>
                                                 </div>
                                                 <p className='text-sm text-gray-600 dark:text-gray-300 leading-relaxed'>{rv.comment}</p>
@@ -787,7 +787,7 @@ const ProductDetail = () =>
                     if (relatedProducts.length === 0) return null;
                     return (
                         <section className='w-full py-4 md:py-6 bg-white dark:bg-gray-900 mb-4 rounded-lg shadow-sm px-4 md:px-6'>
-                            <h2 className='text-base md:text-lg font-semibold text-gray-800 dark:text-gray-100 py-2.5 px-4 border-l-4 border-amber-500 bg-gradient-to-r from-amber-100 to-transparent dark:from-amber-900/20 dark:to-transparent rounded-r-md flex items-center gap-2 mb-5'><i className='bx bx-bulb text-amber-500'></i> Sản phẩm gợi ý</h2>
+                            <h2 className='text-base md:text-lg font-semibold text-gray-800 dark:text-gray-100 py-2.5 px-4 border-l-4 border-primary-500 bg-gradient-to-r from-primary-100 to-transparent dark:from-primary-900/20 dark:to-transparent rounded-r-md flex items-center gap-2 mb-5'><i className='bx bx-bulb text-primary-500'></i> Sản phẩm gợi ý</h2>
                             <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4'>
                                 {relatedProducts.map((rp) =>
                                 {
@@ -813,14 +813,14 @@ const ProductDetail = () =>
                                                     onError={(e) => { e.target.src = defaultImg; }}
                                                 />
                                                 {rpHasDiscount && (
-                                                    <div className='absolute top-2 left-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm shadow'>-{rpDiscountPercent}%</div>
+                                                    <div className='absolute top-2 left-2 bg-gradient-to-r from-primary-500 to-secondary-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm shadow'>-{rpDiscountPercent}%</div>
                                                 )}
                                             </div>
                                             <div className='p-3'>
                                                 <p className='text-[10px] text-gray-400 uppercase tracking-wider mb-1'>{rp.category?.name || ''}</p>
-                                                <h3 className='text-xs md:text-sm font-medium text-gray-800 dark:text-gray-200 line-clamp-2 leading-snug min-h-[2.4em] group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors'>{rp.name}</h3>
+                                                <h3 className='text-xs md:text-sm font-medium text-gray-800 dark:text-gray-200 line-clamp-2 leading-snug min-h-[2.4em] group-hover:text-primary-700 dark:group-hover:text-primary-400 transition-colors'>{rp.name}</h3>
                                                 <div className='flex items-center gap-2 mt-2'>
-                                                    <span className='text-sm font-bold text-amber-600'>₫{formatPrice(rpPrice)}</span>
+                                                    <span className='text-sm font-bold text-primary-600'>₫{formatPrice(rpPrice)}</span>
                                                     {rpHasDiscount && (
                                                         <span className='text-[10px] text-gray-400 line-through'>₫{formatPrice(rpOriginal)}</span>
                                                     )}

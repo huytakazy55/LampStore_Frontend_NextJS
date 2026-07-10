@@ -99,13 +99,13 @@ export default function CategoryPage() {
                 <div className="xl:max-w-[1440px] mx-auto px-4 xl:px-0 py-6 md:py-8">
                     {/* Breadcrumb */}
                     <div className="flex items-center gap-2 text-sm text-gray-500 mb-6">
-                        <span className="hover:text-amber-600 cursor-pointer" onClick={() => router.push('/')}>Trang chủ</span>
+                        <span className="hover:text-primary-600 cursor-pointer" onClick={() => router.push('/')}>Trang chủ</span>
                         <i className='bx bx-chevron-right text-xs'></i>
                         <span className="text-gray-800 font-medium">Danh mục sản phẩm</span>
                     </div>
 
                     <div className="mb-8">
-                        <h1 className="text-2xl md:text-3xl font-bold text-gray-700">Danh Mục <span className="text-amber-600">Sản Phẩm</span></h1>
+                        <h1 className="text-2xl md:text-3xl font-bold text-gray-700">Danh Mục <span className="text-primary-600">Sản Phẩm</span></h1>
                         <p className="text-gray-500 text-sm mt-1">Khám phá các bộ sưu tập đèn ngủ cao cấp của chúng tôi</p>
                     </div>
 
@@ -116,7 +116,7 @@ export default function CategoryPage() {
                             {/* Sidebar */}
                             <div className="w-full lg:w-[260px] flex-shrink-0">
                                 <div className="bg-white rounded-sm border border-gray-200 overflow-hidden sticky top-4">
-                                    <div className="p-4 bg-gradient-to-r from-amber-500 to-amber-400 text-white rounded-t-sm">
+                                    <div className="p-4 bg-gradient-to-r from-primary-500 to-primary-400 text-white rounded-t-sm">
                                         <h3 className="text-sm font-semibold flex items-center gap-2">
                                             <i className='bx bx-category'></i>
                                             Danh mục ({categories.length})
@@ -126,7 +126,7 @@ export default function CategoryPage() {
                                         {categories.map((cat) => (
                                             <div key={cat.id}
                                                 className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition-all duration-200 ${String(activeCategory) === String(cat.id) || activeCategory === cat.slug
-                                                    ? 'bg-amber-50 border-l-[3px] border-amber-500 text-amber-700 font-semibold'
+                                                    ? 'bg-primary-50 border-l-[3px] border-primary-500 text-primary-700 font-semibold'
                                                     : 'border-l-[3px] border-transparent hover:bg-gray-50 text-gray-700 hover:text-gray-900'
                                                     }`}
                                                 onClick={() => handleCategorySwitch(cat.slug || String(cat.id))}>
@@ -173,7 +173,7 @@ export default function CategoryPage() {
                                                     className="relative group cursor-pointer bg-white rounded-sm overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:-translate-y-1.5 border border-gray-100"
                                                     onClick={() => router.push(`/product/${product.slug || product.id}`)}>
                                                     {hasDiscount && (
-                                                        <div className="absolute top-3 left-3 z-10 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-sm shadow-lg">
+                                                        <div className="absolute top-3 left-3 z-10 bg-gradient-to-r from-primary-500 to-secondary-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-sm shadow-lg">
                                                             -{discountPercent}%
                                                         </div>
                                                     )}
@@ -186,12 +186,12 @@ export default function CategoryPage() {
                                                         <p className="text-[10px] md:text-xs text-gray-400 font-medium uppercase tracking-wider mb-1">
                                                             {product.category?.name || activeCategoryData?.name || 'Đèn ngủ'}
                                                         </p>
-                                                        <h3 className="text-xs md:text-sm font-semibold text-gray-800 line-clamp-2 leading-snug min-h-[2.4em] group-hover:text-amber-700 transition-colors duration-200">
+                                                        <h3 className="text-xs md:text-sm font-semibold text-gray-800 line-clamp-2 leading-snug min-h-[2.4em] group-hover:text-primary-700 transition-colors duration-200">
                                                             {product.name}
                                                         </h3>
                                                         <div className="flex items-end justify-between mt-2.5 pt-2.5 border-t border-gray-100">
                                                             <div>
-                                                                <div className="text-sm md:text-base font-bold text-amber-600">
+                                                                <div className="text-sm md:text-base font-bold text-primary-600">
                                                                     {formatPrice(price)}<span className="text-[10px] font-normal ml-0.5">₫</span>
                                                                 </div>
                                                                 {hasDiscount && (
@@ -201,7 +201,7 @@ export default function CategoryPage() {
                                                                 )}
                                                             </div>
                                                             <button
-                                                                className="w-8 h-8 md:w-9 md:h-9 rounded-sm bg-amber-50 text-amber-600 flex items-center justify-center transition-all duration-300 group-hover:bg-amber-500 group-hover:text-white"
+                                                                className="w-8 h-8 md:w-9 md:h-9 rounded-sm bg-primary-50 text-primary-600 flex items-center justify-center transition-all duration-300 group-hover:bg-primary-500 group-hover:text-white"
                                                                 onClick={(e) => { e.stopPropagation(); setCartModalProduct(product); }}>
                                                                 <i className='bx bxs-cart-add text-base md:text-lg'></i>
                                                             </button>

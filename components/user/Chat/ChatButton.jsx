@@ -113,10 +113,10 @@ const ChatButton = () => {
       <div className="fixed bottom-6 right-6 z-[1000] flex flex-col items-end">
         <button
           onClick={toggleChat}
-          className={`group relative flex h-12 w-12 items-center justify-center rounded-full border-none text-white shadow-lg transition-all duration-300 ease-out hover:scale-110 hover:shadow-xl hover:ring-4 hover:ring-amber-400/20 active:scale-95 cursor-pointer ${
+          className={`group relative flex h-12 w-12 items-center justify-center rounded-full border-none text-white shadow-lg transition-all duration-300 ease-out hover:scale-110 hover:shadow-xl hover:ring-4 hover:ring-primary-400/20 active:scale-95 cursor-pointer ${
             isChatOpen
-              ? 'bg-gradient-to-br from-amber-500 to-orange-500 shadow-amber-500/25'
-              : 'bg-gradient-to-br from-amber-500 to-orange-500 shadow-amber-500/25'
+              ? 'bg-gradient-to-br from-primary-500 to-secondary-500 shadow-primary-500/25'
+              : 'bg-gradient-to-br from-primary-500 to-secondary-500 shadow-primary-500/25'
           }`}
           title="Chat hỗ trợ"
         >
@@ -127,14 +127,14 @@ const ChatButton = () => {
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
           )}
           {/* Label xuất hiện khi hover */}
-          <span className="pointer-events-none absolute right-14 top-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-amber-600 px-3 py-1 text-[13px] font-medium text-white opacity-0 shadow-lg shadow-amber-600/20 transition-all duration-300 group-hover:opacity-100">
+          <span className="pointer-events-none absolute right-14 top-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-primary-600 px-3 py-1 text-[13px] font-medium text-white opacity-0 shadow-lg shadow-primary-600/20 transition-all duration-300 group-hover:opacity-100">
             Hỗ trợ
           </span>
         </button>
       </div>
 
       {/* Real Chat Window với animation */}
-      <div className={`fixed bottom-[88px] right-10 z-[999] transition-all duration-300 ease-out ${
+      <div className={`fixed bottom-[88px] right-24 z-[999] transition-all duration-300 ease-out ${
         isChatOpen
           ? 'translate-y-0 scale-100 opacity-100 pointer-events-auto'
           : 'translate-y-10 scale-95 opacity-0 pointer-events-none'

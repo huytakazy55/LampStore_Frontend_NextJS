@@ -54,19 +54,19 @@ export default function ChinhSachBaoMatPage() {
     return (
         <article className="prose prose-gray dark:prose-invert max-w-none prose-headings:text-gray-800 dark:prose-headings:text-gray-100">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2 flex items-center gap-3">
-                <span className="w-10 h-10 bg-amber-100 dark:bg-amber-900/40 rounded-xl flex items-center justify-center shrink-0">
-                    <i className='bx bx-shield text-amber-600 dark:text-amber-400 text-xl' />
+                <span className="w-10 h-10 bg-primary-100 dark:bg-primary-900/40 rounded-xl flex items-center justify-center shrink-0">
+                    <i className='bx bx-shield text-primary-600 dark:text-primary-400 text-xl' />
                 </span>
                 Chính sách bảo mật
             </h2>
             <p className="text-gray-400 text-sm mb-8">Cập nhật lần cuối: 01/05/2025</p>
 
-            <div className="bg-amber-50 dark:bg-amber-950/30 rounded-2xl p-6 mb-8 border border-amber-100 dark:border-amber-800/40 not-prose">
+            <div className="bg-primary-50 dark:bg-primary-950/30 rounded-2xl p-6 mb-8 border border-primary-100 dark:border-primary-800/40 not-prose">
                 <div className="flex items-start gap-3">
-                    <i className='bx bx-lock-alt text-amber-600 dark:text-amber-400 text-2xl mt-0.5' />
+                    <i className='bx bx-lock-alt text-primary-600 dark:text-primary-400 text-2xl mt-0.5' />
                     <div>
-                        <h4 className="font-bold text-amber-800 dark:text-amber-300 mb-1">Cam kết bảo mật</h4>
-                        <p className="text-amber-700 dark:text-amber-400 text-sm leading-relaxed"><strong>CapyLumine</strong> cam kết bảo vệ quyền riêng tư và thông tin cá nhân của khách hàng. Chính sách này giải thích cách chúng tôi thu thập, sử dụng, bảo vệ và chia sẻ thông tin của bạn.</p>
+                        <h4 className="font-bold text-primary-800 dark:text-primary-300 mb-1">Cam kết bảo mật</h4>
+                        <p className="text-primary-700 dark:text-primary-400 text-sm leading-relaxed"><strong>CapyLumine</strong> cam kết bảo vệ quyền riêng tư và thông tin cá nhân của khách hàng. Chính sách này giải thích cách chúng tôi thu thập, sử dụng, bảo vệ và chia sẻ thông tin của bạn.</p>
                     </div>
                 </div>
             </div>
@@ -102,7 +102,7 @@ export default function ChinhSachBaoMatPage() {
                         'Bảo vệ quyền lợi — khi cần thiết để bảo vệ quyền, tài sản hoặc an toàn.',
                     ].map((text, i) => (
                         <div key={i} className="flex items-start gap-2">
-                            <i className='bx bx-chevron-right text-amber-500 shrink-0 mt-0.5' />
+                            <i className='bx bx-chevron-right text-primary-500 shrink-0 mt-0.5' />
                             <span className="text-gray-600 dark:text-gray-400 text-sm">{text}</span>
                         </div>
                     ))}
@@ -113,10 +113,10 @@ export default function ChinhSachBaoMatPage() {
             <div className="overflow-x-auto not-prose mb-6">
                 <table className="w-full text-sm border-collapse">
                     <thead>
-                        <tr className="bg-amber-50 dark:bg-amber-950/30">
-                            <th className="text-left p-3 font-semibold text-gray-800 dark:text-gray-100 border-b border-amber-100 dark:border-amber-800/40">Loại Cookie</th>
-                            <th className="text-left p-3 font-semibold text-gray-800 dark:text-gray-100 border-b border-amber-100 dark:border-amber-800/40">Mục đích</th>
-                            <th className="text-left p-3 font-semibold text-gray-800 dark:text-gray-100 border-b border-amber-100 dark:border-amber-800/40">Thời hạn</th>
+                        <tr className="bg-primary-50 dark:bg-primary-950/30">
+                            <th className="text-left p-3 font-semibold text-gray-800 dark:text-gray-100 border-b border-primary-100 dark:border-primary-800/40">Loại Cookie</th>
+                            <th className="text-left p-3 font-semibold text-gray-800 dark:text-gray-100 border-b border-primary-100 dark:border-primary-800/40">Mục đích</th>
+                            <th className="text-left p-3 font-semibold text-gray-800 dark:text-gray-100 border-b border-primary-100 dark:border-primary-800/40">Thời hạn</th>
                         </tr>
                     </thead>
                     <tbody className="text-gray-600 dark:text-gray-400">
@@ -152,7 +152,7 @@ export default function ChinhSachBaoMatPage() {
             </div>
 
             <h3 className="text-xl font-bold mt-8 mb-4">📞 8. Liên hệ</h3>
-            <div className="not-prose bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 rounded-2xl p-6 border border-amber-100 dark:border-amber-800/40">
+            <div className="not-prose bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-primary-950/30 dark:to-secondary-950/30 rounded-2xl p-6 border border-primary-100 dark:border-primary-800/40">
                 <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed mb-4">
                     Nếu bạn có câu hỏi về Chính sách bảo mật hoặc muốn thực hiện quyền liên quan đến dữ liệu cá nhân:
                 </p>
@@ -164,7 +164,7 @@ export default function ChinhSachBaoMatPage() {
                         { icon: 'bx-map', text: 'A2 Vĩnh Hồ, Thịnh Quang, Đống Đa, Hà Nội' },
                     ].map((c, i) => (
                         <div key={i} className="flex items-center gap-3">
-                            <i className={`bx ${c.icon} text-amber-600 dark:text-amber-400 text-lg`} />
+                            <i className={`bx ${c.icon} text-primary-600 dark:text-primary-400 text-lg`} />
                             <span className="text-gray-700 dark:text-gray-300 text-sm">{c.text}</span>
                         </div>
                     ))}

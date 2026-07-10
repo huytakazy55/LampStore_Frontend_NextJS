@@ -109,7 +109,7 @@ function SearchResults() {
 
                     {/* Breadcrumb */}
                     <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-6">
-                        <a href="/" className="hover:text-amber-600 transition-colors">Trang chủ</a>
+                        <a href="/" className="hover:text-primary-600 transition-colors">Trang chủ</a>
                         <i className='bx bx-chevron-right text-xs'></i>
                         <span className="text-gray-800 dark:text-gray-200 font-medium">Tìm kiếm</span>
                     </nav>
@@ -121,7 +121,7 @@ function SearchResults() {
                         </h1>
                         {!loading && (
                             <p className="text-gray-500 dark:text-gray-400">
-                                Tìm thấy <span className="font-semibold text-amber-600">{totalResults}</span> sản phẩm
+                                Tìm thấy <span className="font-semibold text-primary-600">{totalResults}</span> sản phẩm
                                 {matchedCategories.length > 0 && ` và ${matchedCategories.length} danh mục`}
                             </p>
                         )}
@@ -135,27 +135,27 @@ function SearchResults() {
                             {matchedCategories.length > 0 && (
                                 <div className="mb-8">
                                     <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center gap-2">
-                                        <i className='bx bx-category text-amber-500'></i>
+                                        <i className='bx bx-category text-primary-500'></i>
                                         Danh mục liên quan
                                     </h2>
                                     <div className="flex flex-wrap gap-3">
                                         {matchedCategories.map(cat => (
                                             <button
                                                 key={cat.id}
-                                                className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-amber-400 dark:hover:border-amber-500 hover:shadow-md transition-all duration-200 group cursor-pointer"
+                                                className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-primary-400 dark:hover:border-primary-500 hover:shadow-md transition-all duration-200 group cursor-pointer"
                                                 onClick={() => navigate(`/categories/${cat.slug || cat.id}`)}
                                             >
                                                 <div className="w-8 h-8 rounded-md overflow-hidden relative flex-shrink-0 border border-gray-200 dark:border-gray-700">
                                                     {cat.imageUrl ? (
                                                         <Image src={resolveImagePath(cat.imageUrl)} alt={cat.name} fill className="object-cover group-hover:scale-110 transition-transform duration-300" sizes="32px" />
                                                     ) : (
-                                                        <div className="w-full h-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center">
-                                                            <i className='bx bx-category text-amber-600 dark:text-amber-400 text-sm'></i>
+                                                        <div className="w-full h-full bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center">
+                                                            <i className='bx bx-category text-primary-600 dark:text-primary-400 text-sm'></i>
                                                         </div>
                                                     )}
                                                 </div>
-                                                <span className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">{cat.name}</span>
-                                                <i className='bx bx-right-arrow-alt text-gray-400 group-hover:text-amber-500 group-hover:translate-x-0.5 transition-all ml-auto'></i>
+                                                <span className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">{cat.name}</span>
+                                                <i className='bx bx-right-arrow-alt text-gray-400 group-hover:text-primary-500 group-hover:translate-x-0.5 transition-all ml-auto'></i>
                                             </button>
                                         ))}
                                     </div>
@@ -171,7 +171,7 @@ function SearchResults() {
                                     <div className="flex items-center gap-2">
                                         <span className="text-sm text-gray-500 dark:text-gray-400 hidden sm:inline">Sắp xếp:</span>
                                         <select
-                                            className="text-sm bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-1.5 text-gray-700 dark:text-gray-200 cursor-pointer focus:ring-2 focus:ring-amber-400/30"
+                                            className="text-sm bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-1.5 text-gray-700 dark:text-gray-200 cursor-pointer focus:ring-2 focus:ring-primary-400/30"
                                             value={`${sortBy}-${sortOrder}`}
                                             onChange={(e) => {
                                                 const [sb, so] = e.target.value.split('-');
@@ -196,7 +196,7 @@ function SearchResults() {
                                         return (
                                             <div
                                                 key={product.id}
-                                                className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700 hover:shadow-lg hover:shadow-amber-100/30 dark:hover:shadow-amber-900/10 hover:border-amber-200 dark:hover:border-amber-700 transition-all duration-300 cursor-pointer flex flex-col"
+                                                className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700 hover:shadow-lg hover:shadow-primary-100/30 dark:hover:shadow-primary-900/10 hover:border-primary-200 dark:hover:border-primary-700 transition-all duration-300 cursor-pointer flex flex-col"
                                                 onClick={() => navigate(`/product/${product.slug || product.id}`)}
                                             >
                                                 {/* Image */}
@@ -210,7 +210,7 @@ function SearchResults() {
                                                         quality={75}
                                                     />
                                                     {discount > 0 && (
-                                                        <div className="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                                                        <div className="absolute top-2 left-2 bg-primary-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
                                                             -{discount}%
                                                         </div>
                                                     )}
@@ -218,12 +218,12 @@ function SearchResults() {
 
                                                 {/* Info */}
                                                 <div className="p-3 flex-1 flex flex-col">
-                                                    <h3 className="text-sm font-medium text-gray-800 dark:text-gray-200 line-clamp-2 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors mb-2 leading-snug">
+                                                    <h3 className="text-sm font-medium text-gray-800 dark:text-gray-200 line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors mb-2 leading-snug">
                                                         {product.name}
                                                     </h3>
                                                     <div className="mt-auto">
                                                         <div className="flex items-center gap-2 flex-wrap">
-                                                            <span className="text-amber-600 dark:text-amber-400 font-bold text-sm">{formatPrice(getPrice(product))}</span>
+                                                            <span className="text-primary-600 dark:text-primary-400 font-bold text-sm">{formatPrice(getPrice(product))}</span>
                                                             {getOriginalPrice(product) > getPrice(product) && (
                                                                 <span className="text-gray-400 line-through text-xs">{formatPrice(getOriginalPrice(product))}</span>
                                                             )}
@@ -245,7 +245,7 @@ function SearchResults() {
                                         Không có sản phẩm nào phù hợp với từ khóa <strong>"{keyword}"</strong>. Hãy thử tìm kiếm với từ khóa khác.
                                     </p>
                                     <button
-                                        className="px-6 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-full font-medium transition-colors duration-200 cursor-pointer"
+                                        className="px-6 py-2.5 bg-primary-500 hover:bg-primary-600 text-white rounded-full font-medium transition-colors duration-200 cursor-pointer"
                                         onClick={() => navigate('/')}
                                     >
                                         Về trang chủ

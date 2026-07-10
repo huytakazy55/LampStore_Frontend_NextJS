@@ -194,9 +194,9 @@ const DeliveryManage = () =>
                             <div className="text-gray-500 text-sm">Đơn đang giao hàng</div>
                         </div>
                     </div>
-                    <div className="bg-white rounded-xl shadow-lg p-5 flex items-center min-w-[200px] flex-1 border-l-8 border-amber-400 hover:scale-[1.03] hover:shadow-2xl transition-all duration-200"
+                    <div className="bg-white rounded-xl shadow-lg p-5 flex items-center min-w-[200px] flex-1 border-l-8 border-primary-400 hover:scale-[1.03] hover:shadow-2xl transition-all duration-200"
                         style={{ background: "linear-gradient(135deg, #f8fafc 60%, #f1f5f9 100%)" }}>
-                        <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center text-amber-500 text-2xl">
+                        <div className="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center text-primary-500 text-2xl">
                             <i className='bx bx-money'></i>
                         </div>
                         <div className="ml-4">

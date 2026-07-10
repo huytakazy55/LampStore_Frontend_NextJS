@@ -4,7 +4,7 @@ import React from 'react'
 
 const Newsletter = () => {
   return (
-    <div className='mt-8 md:mt-16 bg-yellow-400'>
+    <div className='mt-8 md:mt-16 bg-secondary-400'>
         <div className='flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0 py-5 md:py-0 md:h-20 xl:mx-auto xl:max-w-[1440px] px-6 xl:px-0'>
             <div className='text-sm md:text-lg font-bold flex justify-center items-center gap-3 md:gap-4 text-gray-900'>
                 <div className='w-10 h-10 rounded-full bg-black/10 flex items-center justify-center'>

@@ -472,7 +472,7 @@ export default function CheckoutPage()
     };
 
     const selectClassName = (hasError) =>
-        `w-full px-4 py-2.5 border rounded-lg text-sm outline-none transition-colors appearance-none bg-white cursor-pointer ${hasError ? 'border-red-400 bg-red-50' : 'border-gray-300 focus:border-amber-400'
+        `w-full px-4 py-2.5 border rounded-lg text-sm outline-none transition-colors appearance-none bg-white cursor-pointer ${hasError ? 'border-red-400 bg-red-50' : 'border-gray-300 focus:border-primary-400'
         }`;
 
     // ── Order Success View ──
@@ -498,7 +498,7 @@ export default function CheckoutPage()
                             <div className='bg-gray-50 rounded-lg p-4 mb-6 text-left'>
                                 <div className='flex justify-between items-center mb-2'>
                                     <span className='text-sm text-gray-500'>Mã đơn hàng:</span>
-                                    <span className='font-semibold text-amber-600'>{orderId}</span>
+                                    <span className='font-semibold text-primary-600'>{orderId}</span>
                                 </div>
                                 <div className='flex justify-between items-center mb-2'>
                                     <span className='text-sm text-gray-500'>Tổng thanh toán:</span>
@@ -522,7 +522,7 @@ export default function CheckoutPage()
                                 {typeof window !== 'undefined' && localStorage.getItem('token') && (
                                     <button
                                         onClick={() => router.push('/my-orders')}
-                                        className='flex-1 py-3 bg-amber-500 text-white rounded-lg font-medium hover:bg-amber-600 transition-colors cursor-pointer'
+                                        className='flex-1 py-3 bg-primary-500 text-white rounded-lg font-medium hover:bg-primary-600 transition-colors cursor-pointer'
                                     >
                                         Xem đơn hàng
                                     </button>
@@ -547,7 +547,7 @@ export default function CheckoutPage()
                 <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center gap-4">
                     <i className='bx bx-cart text-6xl text-gray-300'></i>
                     <p className="text-gray-500 text-lg">Giỏ hàng trống</p>
-                    <button onClick={() => router.push('/')} className="px-6 py-2 bg-amber-500 text-white rounded-lg cursor-pointer hover:bg-amber-600 transition-colors">Tiếp tục mua sắm</button>
+                    <button onClick={() => router.push('/')} className="px-6 py-2 bg-primary-500 text-white rounded-lg cursor-pointer hover:bg-primary-600 transition-colors">Tiếp tục mua sắm</button>
                 </div>
                 <Footer />
             </>
@@ -565,15 +565,15 @@ export default function CheckoutPage()
                 <div className='max-w-6xl mx-auto px-4'>
                     {/* Breadcrumb */}
                     <div className='flex items-center gap-2 text-sm text-gray-500 mb-6'>
-                        <span className='cursor-pointer hover:text-amber-600 transition-colors' onClick={() => router.push('/')}>Trang chủ</span>
+                        <span className='cursor-pointer hover:text-primary-600 transition-colors' onClick={() => router.push('/')}>Trang chủ</span>
                         <i className='bx bx-chevron-right'></i>
-                        <span className='cursor-pointer hover:text-amber-600 transition-colors' onClick={() => router.back()}>Giỏ hàng</span>
+                        <span className='cursor-pointer hover:text-primary-600 transition-colors' onClick={() => router.back()}>Giỏ hàng</span>
                         <i className='bx bx-chevron-right'></i>
                         <span className='text-gray-800 font-medium'>Thanh toán</span>
                     </div>
 
                     <h1 className='text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2'>
-                        <i className='bx bx-receipt text-amber-600'></i>
+                        <i className='bx bx-receipt text-primary-600'></i>
                         Thanh toán đơn hàng
                     </h1>
 
@@ -584,7 +584,7 @@ export default function CheckoutPage()
                                 {/* Thông tin người nhận */}
                                 <div className='bg-white rounded-lg shadow-sm p-6'>
                                     <h2 className='text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2'>
-                                        <i className='bx bx-user text-amber-600'></i>
+                                        <i className='bx bx-user text-primary-600'></i>
                                         Thông tin người nhận
                                     </h2>
                                     <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -598,7 +598,7 @@ export default function CheckoutPage()
                                                 value={formData.fullName}
                                                 onChange={handleChange}
                                                 placeholder='Nguyễn Văn A'
-                                                className={`w-full px-4 py-2.5 border rounded-lg text-sm outline-none transition-colors ${errors.fullName ? 'border-red-400 bg-red-50' : 'border-gray-300 focus:border-amber-400'}`}
+                                                className={`w-full px-4 py-2.5 border rounded-lg text-sm outline-none transition-colors ${errors.fullName ? 'border-red-400 bg-red-50' : 'border-gray-300 focus:border-primary-400'}`}
                                             />
                                             {errors.fullName && <p className='text-xs text-red-500 mt-1'>{errors.fullName}</p>}
                                         </div>
@@ -612,7 +612,7 @@ export default function CheckoutPage()
                                                 value={formData.phone}
                                                 onChange={handleChange}
                                                 placeholder='0912 345 678'
-                                                className={`w-full px-4 py-2.5 border rounded-lg text-sm outline-none transition-colors ${errors.phone ? 'border-red-400 bg-red-50' : 'border-gray-300 focus:border-amber-400'}`}
+                                                className={`w-full px-4 py-2.5 border rounded-lg text-sm outline-none transition-colors ${errors.phone ? 'border-red-400 bg-red-50' : 'border-gray-300 focus:border-primary-400'}`}
                                             />
                                             {errors.phone && <p className='text-xs text-red-500 mt-1'>{errors.phone}</p>}
                                         </div>
@@ -626,7 +626,7 @@ export default function CheckoutPage()
                                                 value={formData.email}
                                                 onChange={handleChange}
                                                 placeholder='email@example.com'
-                                                className='w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:border-amber-400 transition-colors'
+                                                className='w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-400 transition-colors'
                                             />
                                         </div>
                                     </div>
@@ -635,7 +635,7 @@ export default function CheckoutPage()
                                 {/* Địa chỉ giao hàng */}
                                 <div className='bg-white rounded-lg shadow-sm p-6'>
                                     <h2 className='text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2'>
-                                        <i className='bx bx-map text-amber-600'></i>
+                                        <i className='bx bx-map text-primary-600'></i>
                                         Địa chỉ giao hàng
                                     </h2>
                                     <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -721,7 +721,7 @@ export default function CheckoutPage()
                                                 value={formData.address}
                                                 onChange={handleChange}
                                                 placeholder='Số nhà, tên đường...'
-                                                className={`w-full px-4 py-2.5 border rounded-lg text-sm outline-none transition-colors ${errors.address ? 'border-red-400 bg-red-50' : 'border-gray-300 focus:border-amber-400'}`}
+                                                className={`w-full px-4 py-2.5 border rounded-lg text-sm outline-none transition-colors ${errors.address ? 'border-red-400 bg-red-50' : 'border-gray-300 focus:border-primary-400'}`}
                                             />
                                             {errors.address && <p className='text-xs text-red-500 mt-1'>{errors.address}</p>}
                                         </div>
@@ -731,18 +731,18 @@ export default function CheckoutPage()
                                 {/* Phương thức thanh toán */}
                                 <div className='bg-white rounded-lg shadow-sm p-6'>
                                     <h2 className='text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2'>
-                                        <i className='bx bx-credit-card text-amber-600'></i>
+                                        <i className='bx bx-credit-card text-primary-600'></i>
                                         Phương thức thanh toán
                                     </h2>
                                     <div className='space-y-3'>
-                                        <label className={`flex items-center gap-3 p-4 border rounded-lg cursor-pointer transition-all ${formData.paymentMethod === 'cod' ? 'border-amber-400 bg-amber-50/50' : 'border-gray-200 hover:border-gray-300'}`}>
+                                        <label className={`flex items-center gap-3 p-4 border rounded-lg cursor-pointer transition-all ${formData.paymentMethod === 'cod' ? 'border-primary-400 bg-primary-50/50' : 'border-gray-200 hover:border-gray-300'}`}>
                                             <input
                                                 type='radio'
                                                 name='paymentMethod'
                                                 value='cod'
                                                 checked={formData.paymentMethod === 'cod'}
                                                 onChange={handleChange}
-                                                className='accent-amber-500'
+                                                className='accent-primary-500'
                                             />
                                             <i className='bx bx-money text-2xl text-green-600'></i>
                                             <div>
@@ -750,14 +750,14 @@ export default function CheckoutPage()
                                                 <p className='text-xs text-gray-500'>Thanh toán bằng tiền mặt khi nhận hàng</p>
                                             </div>
                                         </label>
-                                        <label className={`flex items-center gap-3 p-4 border rounded-lg cursor-pointer transition-all ${formData.paymentMethod === 'bank' ? 'border-amber-400 bg-amber-50/50' : 'border-gray-200 hover:border-gray-300'}`}>
+                                        <label className={`flex items-center gap-3 p-4 border rounded-lg cursor-pointer transition-all ${formData.paymentMethod === 'bank' ? 'border-primary-400 bg-primary-50/50' : 'border-gray-200 hover:border-gray-300'}`}>
                                             <input
                                                 type='radio'
                                                 name='paymentMethod'
                                                 value='bank'
                                                 checked={formData.paymentMethod === 'bank'}
                                                 onChange={handleChange}
-                                                className='accent-amber-500'
+                                                className='accent-primary-500'
                                             />
                                             <i className='bx bx-building-house text-2xl text-blue-600'></i>
                                             <div>
@@ -771,7 +771,7 @@ export default function CheckoutPage()
                                 {/* Ghi chú */}
                                 <div className='bg-white rounded-lg shadow-sm p-6'>
                                     <h2 className='text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2'>
-                                        <i className='bx bx-notepad text-amber-600'></i>
+                                        <i className='bx bx-notepad text-primary-600'></i>
                                         Ghi chú đơn hàng
                                     </h2>
                                     <textarea
@@ -780,7 +780,7 @@ export default function CheckoutPage()
                                         onChange={handleChange}
                                         rows={3}
                                         placeholder='Ghi chú về đơn hàng, ví dụ: thời gian hay chỉ dẫn giao hàng...'
-                                        className='w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:border-amber-400 transition-colors resize-none'
+                                        className='w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-400 transition-colors resize-none'
                                     />
                                 </div>
                             </div>
@@ -789,7 +789,7 @@ export default function CheckoutPage()
                             <div className='lg:col-span-1'>
                                 <div className='bg-white rounded-lg shadow-sm p-6 sticky top-6'>
                                     <h2 className='text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2'>
-                                        <i className='bx bx-cart text-amber-600'></i>
+                                        <i className='bx bx-cart text-primary-600'></i>
                                         Đơn hàng ({checkoutItems.reduce((s, i) => s + i.quantity, 0)} sản phẩm)
                                     </h2>
 
@@ -816,7 +816,7 @@ export default function CheckoutPage()
                                                             <p className='text-xs text-gray-400 mt-0.5'>Phân loại: {optionText}</p>
                                                         )}
                                                         <div className='flex justify-between items-center mt-1'>
-                                                            <span className='text-sm font-semibold text-amber-600'>{formatPrice(item.finalPrice)}₫</span>
+                                                            <span className='text-sm font-semibold text-primary-600'>{formatPrice(item.finalPrice)}₫</span>
                                                             <span className='text-xs text-gray-400'>x{item.quantity}</span>
                                                         </div>
                                                     </div>
@@ -851,7 +851,7 @@ export default function CheckoutPage()
                                         )}
                                         <div className='border-t border-gray-100 pt-3 flex justify-between items-center'>
                                             <span className='font-semibold text-gray-800'>Tổng cộng:</span>
-                                            <span className='text-xl font-bold text-amber-600'>{formatPrice(total)}₫</span>
+                                            <span className='text-xl font-bold text-primary-600'>{formatPrice(total)}₫</span>
                                         </div>
                                     </div>
 
@@ -859,7 +859,7 @@ export default function CheckoutPage()
                                     <button
                                         type='submit'
                                         disabled={isSubmitting}
-                                        className='w-full mt-6 py-3.5 bg-amber-500 text-white rounded-lg font-semibold text-base hover:bg-amber-600 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer'
+                                        className='w-full mt-6 py-3.5 bg-primary-500 text-white rounded-lg font-semibold text-base hover:bg-primary-600 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer'
                                     >
                                         {isSubmitting ? (
                                             <>
