@@ -22,8 +22,6 @@ const BannerImage = dynamic(() => import('@/components/user/MainPage/BannerImage
 const Newsletter = dynamic(() => import('@/components/user/MainPage/Newsletter/Newsletter'), { ssr: false });
 const FlashSale = dynamic(() => import('@/components/user/MainPage/FlashSale/FlashSale'), { ssr: false });
 const CustomerReviews = dynamic(() => import('@/components/user/MainPage/SocialProof/CustomerReviews'), { ssr: false });
-const CustomerGallery = dynamic(() => import('@/components/user/MainPage/SocialProof/CustomerGallery'), { ssr: false });
-const WhyChooseUs = dynamic(() => import('@/components/user/MainPage/WhyChooseUs/WhyChooseUs'), { ssr: false });
 
 import PageLoader from '@/components/common/PageLoader';
 
@@ -91,24 +89,6 @@ export default function HomePage() {
                         <BannerImage />
                     </Suspense>
                 </LazySection>
-
-                {/* 4. Tại sao chọn CapyLumine */}
-                <div data-section="whychooseus" data-label="Tại sao chọn" data-aos="fade-up">
-                    <LazySection minHeightClass="min-h-[300px]">
-                        <Suspense fallback={<SectionSpinner minHeightClass="min-h-[300px]" />}>
-                            <WhyChooseUs />
-                        </Suspense>
-                    </LazySection>
-                </div>
-
-                {/* 5. Không gian / Video thực tế */}
-                <div data-section="gallery" data-label="Feedback" data-aos="fade-up">
-                    <LazySection minHeightClass="min-h-[300px]">
-                        <Suspense fallback={<SectionSpinner minHeightClass="min-h-[300px]" />}>
-                            <CustomerGallery />
-                        </Suspense>
-                    </LazySection>
-                </div>
 
                 {/* 6. Sản phẩm mới / Tất cả SP */}
                 <div data-section="products" data-label="Sản phẩm" data-aos="fade-up" data-aos-delay="100" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 500px' }}>
