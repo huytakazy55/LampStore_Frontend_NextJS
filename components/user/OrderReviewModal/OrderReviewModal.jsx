@@ -130,7 +130,7 @@ const OrderReviewModal = ({ isOpen, onClose, order }) =>
             <div className='bg-white dark:bg-gray-900 w-full max-w-2xl max-h-[90vh] rounded-lg shadow-2xl overflow-hidden'
                 onClick={e => e.stopPropagation()}>
                 {/* Header */}
-                <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-primary-500 to-rose-400 dark:bg-gray-800'>
+                <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-primary-600 dark:bg-gray-800'>
                     <div>
                         <h2 className='text-lg font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2'>
                             <i className='bx bx-star text-primary-500'></i>
@@ -216,7 +216,7 @@ const OrderReviewModal = ({ isOpen, onClose, order }) =>
                                                 <button
                                                     onClick={() => handleSubmit(item.productId)}
                                                     disabled={state.submitting}
-                                                    className='px-4 py-2 bg-gradient-to-r from-primary-500 to-rose-400 hover:from-primary-600 hover:to-rose-500 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 cursor-pointer flex items-center gap-1.5'
+                                                    className='px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 cursor-pointer flex items-center gap-1.5'
                                                 >
                                                     {state.submitting
                                                         ? <><i className='bx bx-loader-alt animate-spin'></i> Đang gửi...</>

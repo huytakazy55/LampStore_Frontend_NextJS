@@ -572,7 +572,7 @@ export default function ProductDetailPage() {
                         )}
 
                         {/* Price */}
-                        <div className={`flex flex-wrap items-center bg-gradient-to-r from-primary-50 to-slate-50 dark:from-primary-900/20 dark:to-gray-800 gap-2 md:gap-3 py-3 md:py-4 px-4 md:px-6 my-3 md:my-4 rounded-lg ${flashSaleItem ? 'hidden' : ''}`}>
+                        <div className={`flex flex-wrap items-center bg-primary-600 dark:from-primary-900/20 dark:to-gray-800 gap-2 md:gap-3 py-3 md:py-4 px-4 md:px-6 my-3 md:my-4 rounded-lg ${flashSaleItem ? 'hidden' : ''}`}>
                             <div className='text-xl md:text-2xl font-bold text-primary-600'>₫{formatPrice(price)}</div>
                             {hasDiscount && (
                                 <>

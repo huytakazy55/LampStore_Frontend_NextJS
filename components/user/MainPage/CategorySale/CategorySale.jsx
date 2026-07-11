@@ -165,7 +165,7 @@ const CategorySale = () =>
                         className='inline-flex items-center text-primary-700 group-hover:text-primary-800 font-semibold text-sm transition-colors duration-200 whitespace-nowrap'
                       >
                         Xem ngay
-                        <i className='bx bx-chevron-right ml-1 text-lg bg-gradient-to-r from-primary-500 to-rose-400 group-hover:from-primary-600 hover:to-rose-500 rounded-full text-white transition-colors duration-200 w-6 h-6 grid place-items-center pl-[3px] pt-[2px]'></i>
+                        <i className='bx bx-chevron-right ml-1 text-lg bg-primary-600 group-hover:bg-primary-700 rounded-full text-white transition-colors duration-200 w-6 h-6 grid place-items-center pl-[3px] pt-[2px]'></i>
                       </span>
                     </div>
                   </div>

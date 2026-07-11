@@ -151,7 +151,7 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () => {
           {categories.map((category) => (
             <li
               key={category.id}
-              className={`flex items-center px-3 md:px-5 h-full border-r border-primary-500/60 dark:border-primary-500/20 transition-colors duration-200 flex-shrink-0 cursor-pointer ${hoveredCategory?.id === category.id ? 'bg-primary-700 dark:bg-gradient-to-r from-primary-500 to-rose-400/20' : 'hover:bg-primary-700/70 dark:hover:bg-gradient-to-r from-primary-500 to-rose-400/10'
+              className={`flex items-center px-3 md:px-5 h-full border-r border-primary-500/60 dark:border-primary-500/20 transition-colors duration-200 flex-shrink-0 cursor-pointer ${hoveredCategory?.id === category.id ? 'bg-primary-700 dark:bg-primary-600/20' : 'hover:bg-primary-700/70 dark:hover:bg-primary-600/10'
                 }`}
               onMouseEnter={() => handleCategoryHover(category)}
               onMouseLeave={() => handleCategoryHover(null)}
@@ -208,7 +208,7 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () => {
                         setShowDropdown(false)
                         navigate(`/categories/${hoveredCategory.slug || hoveredCategory.id}`)
                       }}
-                      className="inline-flex items-center gap-1.5 bg-gradient-to-r from-primary-500 to-rose-400 hover:from-primary-600 hover:to-rose-500 text-white text-xs font-semibold px-4 py-2 rounded-sm transition-all duration-200 cursor-pointer"
+                      className="inline-flex items-center gap-1.5 bg-primary-600 hover:bg-primary-700 text-white text-xs font-semibold px-4 py-2 rounded-sm transition-all duration-200 cursor-pointer"
                     >
                       Xem tất cả
                       <i className='bx bx-right-arrow-alt text-sm' />

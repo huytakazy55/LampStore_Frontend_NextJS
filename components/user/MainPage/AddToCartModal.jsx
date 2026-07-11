@@ -218,7 +218,7 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
                                         }}
                                         className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
                                             (!displayImage && currentImageIndex === idx)
-                                                ? 'bg-gradient-to-r from-primary-500 to-rose-400 scale-125'
+                                                ? 'bg-primary-600 scale-125'
                                                 : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
                                         }`}
                                         aria-label={`View image ${idx + 1}`}
@@ -242,7 +242,7 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
                                     <span className="text-sm line-through text-gray-400 dark:text-gray-500 mb-1">
                                         ₫{formatPrice(originalPrice)}
                                     </span>
-                                    <span className="bg-gradient-to-r from-primary-500 to-rose-400 text-white text-xs px-1.5 py-0.5 rounded font-medium mb-1">
+                                    <span className="bg-primary-600 text-white text-xs px-1.5 py-0.5 rounded font-medium mb-1">
                                         -{discountPercent}%
                                     </span>
                                 </>
@@ -333,7 +333,7 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
                         <div className="mt-auto flex gap-3 sm:gap-4 pt-3 sm:pt-4 border-t border-gray-100 dark:border-gray-800">
                             <button
                                 onClick={handleAddToCart}
-                                className="flex-1 bg-primary-50 dark:bg-primary-900/30 border border-primary-500 bg-gradient-to-r from-primary-600 to-rose-500 dark:from-primary-400 dark:to-rose-300 text-transparent bg-clip-text inline-block py-2.5 sm:py-3 rounded-md font-medium hover:bg-primary-100 dark:hover:bg-primary-900/50 transition-colors flex justify-center items-center gap-2 cursor-pointer text-sm sm:text-base"
+                                className="flex-1 bg-primary-600 text-white py-2.5 sm:py-3 rounded-md font-medium hover:bg-primary-700 transition-colors flex justify-center items-center gap-2 cursor-pointer text-sm sm:text-base"
                             >
                                 <i className="bx bx-cart-add text-xl"></i>
                                 Thêm vào giỏ
@@ -362,7 +362,7 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
                                     sessionStorage.setItem('buyNowItems', JSON.stringify([buyItem]));
                                     navigate('/checkout');
                                 }}
-                                className="flex-1 bg-gradient-to-r from-primary-500 to-rose-400 text-white py-2.5 sm:py-3 rounded-md font-medium hover:from-primary-600 hover:to-rose-500 transition-colors shadow-sm cursor-pointer text-sm sm:text-base"
+                                className="flex-1 bg-primary-600 text-white py-2.5 sm:py-3 rounded-md font-medium hover:bg-primary-700 transition-colors shadow-sm cursor-pointer text-sm sm:text-base"
                             >
                                 Mua ngay
                             </button>

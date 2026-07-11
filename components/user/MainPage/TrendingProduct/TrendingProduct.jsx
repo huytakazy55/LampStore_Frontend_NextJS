@@ -28,7 +28,7 @@ const getImageSrc = (product) => {
 
 const CustomPrevArrow = ({ onClick }) => (
   <button
-    className='absolute -top-[52px] md:-top-[56px] right-[44px] md:right-[50px] z-10 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-sm bg-gradient-to-r from-primary-500 to-rose-400 text-white cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(139,92,246,0.25)] hover:from-primary-600 hover:to-rose-500 hover:shadow-[0_4px_14px_rgba(139,92,246,0.4)] hover:scale-105 active:scale-95'
+    className='absolute -top-[52px] md:-top-[56px] right-[44px] md:right-[50px] z-10 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-sm bg-primary-600 text-white cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(139,92,246,0.25)] hover:bg-primary-700 hover:shadow-[0_4px_14px_rgba(139,92,246,0.4)] hover:scale-105 active:scale-95'
     onClick={onClick}
     aria-label="Sản phẩm trước"
   >
@@ -38,7 +38,7 @@ const CustomPrevArrow = ({ onClick }) => (
 
 const CustomNextArrow = ({ onClick }) => (
   <button
-    className='absolute -top-[52px] md:-top-[56px] right-1 z-10 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-sm bg-gradient-to-r from-primary-500 to-rose-400 text-white cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(139,92,246,0.25)] hover:from-primary-600 hover:to-rose-500 hover:shadow-[0_4px_14px_rgba(139,92,246,0.4)] hover:scale-105 active:scale-95'
+    className='absolute -top-[52px] md:-top-[56px] right-1 z-10 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-sm bg-primary-600 text-white cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(139,92,246,0.25)] hover:bg-primary-700 hover:shadow-[0_4px_14px_rgba(139,92,246,0.4)] hover:scale-105 active:scale-95'
     onClick={onClick}
     aria-label="Sản phẩm tiếp theo"
   >
@@ -120,10 +120,10 @@ const TrendingProduct = () => {
   return (
     <div className='w-full xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0 mb-8'>
       {/* Section Header — matching best-seller style */}
-      <div className='flex items-center justify-between mb-6 md:mb-8 pb-3 border-b border-gray-300 dark:border-[#333] relative after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-40 after:h-0.5 after:bg-gradient-to-r from-primary-500 to-rose-400 after:rounded-sm'>
+      <div className='flex items-center justify-between mb-6 md:mb-8 pb-3 border-b border-gray-300 dark:border-[#333] relative after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-40 after:h-0.5 after:bg-primary-600 after:rounded-sm'>
         <div className='flex items-center gap-3'>
-          <div className='w-9 h-9 md:w-[42px] md:h-[42px] flex items-center justify-center bg-gradient-to-r from-primary-500 to-rose-400 dark:bg-primary-900 rounded-md flex-shrink-0'>
-            <i className='bx bx-line-chart text-xl md:text-[1.4rem] bg-gradient-to-r from-primary-600 to-rose-500 dark:from-primary-400 dark:to-rose-300 text-transparent bg-clip-text inline-block'></i>
+          <div className='w-9 h-9 md:w-[42px] md:h-[42px] flex items-center justify-center bg-primary-600 dark:bg-primary-900 rounded-md flex-shrink-0'>
+            <i className='bx bx-line-chart text-xl md:text-[1.4rem] text-white'></i>
           </div>
           <div>
             <h3 className='text-sm md:text-h3 font-bold text-gray-800 dark:text-gray-200 m-0 leading-tight'>Sản phẩm thịnh hành</h3>
@@ -151,7 +151,7 @@ const TrendingProduct = () => {
                   {/* Image */}
                   <div className='relative w-[38%] md:w-[40%] flex-shrink-0 bg-gray-50 dark:bg-[#111] flex items-center justify-center p-3 overflow-hidden'>
                     {hasDiscount && (
-                      <div className="absolute top-2 left-2 z-10 bg-gradient-to-r from-primary-500 to-rose-400 text-white text-[0.6rem] font-bold px-1.5 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)]">
+                      <div className="absolute top-2 left-2 z-10 bg-primary-600 text-white text-[0.6rem] font-bold px-1.5 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)]">
                         -{discountPercent}%
                       </div>
                     )}
@@ -179,7 +179,7 @@ const TrendingProduct = () => {
                     {/* Price + Cart */}
                     <div className='mt-auto flex items-end justify-between gap-2'>
                       <div className='flex flex-col gap-px'>
-                        <span className='text-[0.9rem] md:text-[1rem] font-bold bg-gradient-to-r from-primary-600 to-rose-500 dark:from-primary-400 dark:to-rose-300 text-transparent bg-clip-text inline-block leading-tight'>
+                        <span className='text-[0.9rem] md:text-[1rem] font-bold bg-primary-600 dark:bg-primary-400 text-transparent bg-clip-text inline-block leading-tight'>
                           {formatPrice(price)}<span className='text-[0.65rem] font-medium ml-px'>₫</span>
                         </span>
                         {hasDiscount && (
@@ -189,7 +189,7 @@ const TrendingProduct = () => {
                         )}
                       </div>
                       <button
-                        className='w-7 h-7 md:w-8 md:h-8 rounded-sm bg-gradient-to-r from-primary-500 to-rose-400 dark:bg-primary-900 text-primary-600 dark:text-primary-300 flex items-center justify-center cursor-pointer transition-all duration-300 hover:from-primary-600 hover:to-rose-500 hover:text-white hover:shadow-[0_2px_8px_rgba(139,92,246,0.3)] active:scale-95'
+                        className='w-7 h-7 md:w-8 md:h-8 rounded-sm bg-primary-600 dark:bg-primary-900 text-white dark:text-primary-300 flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-primary-700 hover:text-white hover:shadow-[0_2px_8px_rgba(139,92,246,0.3)] active:scale-95'
                         onClick={(e) => {
                           e.stopPropagation();
                           setCartModalProduct(product);

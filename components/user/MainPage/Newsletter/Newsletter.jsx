@@ -5,7 +5,7 @@ import React from 'react'
 const Newsletter = () =>
 {
     return (
-        <div className='mt-8 md:mt-16 bg-gray-900 dark:bg-gray-900 shadow-xl relative overflow-hidden'>
+        <div className='mt-8 md:mt-16 bg-gray-900 dark:bg-[#131313] border-y border-transparent dark:border-[#222] shadow-xl relative overflow-hidden'>
             {/* Subtle decorative gradient overlay */}
             <div className='absolute top-0 right-0 w-64 h-64 bg-primary-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3'></div>
             

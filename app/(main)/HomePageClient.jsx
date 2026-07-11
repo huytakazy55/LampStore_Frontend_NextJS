@@ -71,7 +71,7 @@ export default function HomePage() {
                     </LazySection>
                 </div>
 
-                <div data-section="trending" data-label="Xu hướng" data-aos="fade-up">
+                <div data-section="bestseller" data-label="Xu hướng" data-aos="fade-up">
                     <LazySection height="400px">
                         <Suspense fallback={<SectionSpinner height="400px" />}>
                             <SectionProductCardCarousel />

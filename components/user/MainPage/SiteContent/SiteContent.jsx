@@ -83,7 +83,7 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
         <div className="md:hidden">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-2.5 h-2.5 bg-primary-600 rounded-sm" />
-            <span className="text-primary-700 text-[10px] font-semibold tracking-[0.15em] uppercase">
+            <span className="text-white text-[10px] font-semibold tracking-[0.15em] uppercase">
               CapyLumine
             </span>
           </div>
@@ -151,7 +151,7 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
             {/* Tagline */}
             <div className="flex items-center gap-2.5 mb-4">
               <div className="w-3 h-3 bg-primary-600 rounded-sm" />
-              <span className="text-primary-700 text-xs md:text-sm font-semibold tracking-[0.15em] uppercase">
+              <span className="text-white text-xs md:text-sm font-semibold tracking-[0.15em] uppercase">
                 Về CapyLumine
               </span>
             </div>

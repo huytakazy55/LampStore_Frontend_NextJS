@@ -152,7 +152,7 @@ export default function ChinhSachBaoMatPage() {
             </div>
 
             <h3 className="text-xl font-bold mt-8 mb-4">📞 8. Liên hệ</h3>
-            <div className="not-prose bg-gradient-to-br from-primary-50 to-accent-50 dark:from-primary-950/30 dark:to-accent-950/30 rounded-2xl p-6 border border-primary-100 dark:border-primary-800/40">
+            <div className="not-prose bg-primary-600 dark:from-primary-950/30 dark:to-accent-950/30 rounded-2xl p-6 border border-primary-100 dark:border-primary-800/40">
                 <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed mb-4">
                     Nếu bạn có câu hỏi về Chính sách bảo mật hoặc muốn thực hiện quyền liên quan đến dữ liệu cá nhân:
                 </p>

@@ -126,7 +126,7 @@ export default function OrderHistoryPage()
                 <div className='bg-white dark:bg-gray-900 w-full max-w-3xl max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden'
                     onClick={e => e.stopPropagation()}>
                     {/* Modal Header */}
-                    <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-primary-50 to-primary-50 dark:from-gray-800 dark:to-gray-800'>
+                    <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-primary-600 dark:from-gray-800 dark:to-gray-800'>
                         <div>
                             <h2 className='text-lg font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2'>
                                 Chi tiết đơn hàng
@@ -354,7 +354,7 @@ export default function OrderHistoryPage()
                 </nav>
 
                 {/* Page Header */}
-                <div className='bg-gradient-to-r from-primary-500 to-primary-600 dark:from-primary-600 dark:to-primary-700 rounded-xl p-5 md:p-6 mb-6 text-white relative overflow-hidden shadow-lg shadow-primary-500/30'>
+                <div className='bg-primary-600 dark:bg-primary-400 rounded-xl p-5 md:p-6 mb-6 text-white relative overflow-hidden shadow-lg shadow-primary-500/30'>
                     <div className='absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2'></div>
                     <div className='absolute bottom-0 left-20 w-24 h-24 bg-white/5 rounded-full translate-y-1/2'></div>
                     <div className='relative z-10'>

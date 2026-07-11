@@ -82,7 +82,7 @@ const WishlistPage = () => {
                     <p className='text-sm text-gray-400 mb-6'>Bạn cần đăng nhập để xem danh sách yêu thích</p>
                     <button
                         onClick={() => navigate('/')}
-                        className='bg-gradient-to-r from-primary-500 to-rose-400 text-white px-6 py-2.5 rounded-sm hover:from-primary-600 hover:to-rose-500 transition font-medium cursor-pointer'
+                        className='bg-primary-600 text-white px-6 py-2.5 rounded-sm hover:bg-primary-700 transition font-medium cursor-pointer'
                     >
                         <i className='bx bx-home mr-1'></i> Về trang chủ
                     </button>
@@ -144,7 +144,7 @@ const WishlistPage = () => {
                         <p className='text-sm text-gray-400 mb-6'>Hãy khám phá và thêm sản phẩm bạn yêu thích!</p>
                         <button
                             onClick={() => navigate('/')}
-                            className='bg-gradient-to-r from-primary-500 to-rose-400 text-white px-6 py-2.5 rounded-sm hover:from-primary-600 hover:to-rose-500 transition font-medium cursor-pointer'
+                            className='bg-primary-600 text-white px-6 py-2.5 rounded-sm hover:bg-primary-700 transition font-medium cursor-pointer'
                         >
                             <i className='bx bx-store mr-1'></i> Khám phá sản phẩm
                         </button>
@@ -175,7 +175,7 @@ const WishlistPage = () => {
                                             onError={(e) => { e.target.src = defaultImg; }}
                                         />
                                         {hasDiscount && (
-                                            <div className='absolute top-2 left-2 bg-gradient-to-r from-primary-500 to-rose-400 text-white text-xs px-2 py-0.5 rounded font-medium'>
+                                            <div className='absolute top-2 left-2 bg-primary-600 text-white text-xs px-2 py-0.5 rounded font-medium'>
                                                 -{discountPercent}%
                                             </div>
                                         )}
@@ -233,7 +233,7 @@ const WishlistPage = () => {
                                             </button>
                                             <button
                                                 onClick={() => { if (item.productSlug || item.productId) navigate(`/product/${item.productSlug || item.productId}`); }}
-                                                className='flex-1 bg-gradient-to-r from-primary-500 to-rose-400 text-white py-2 rounded-sm hover:from-primary-600 hover:to-rose-500 transition-colors text-sm font-medium cursor-pointer'
+                                                className='flex-1 bg-primary-600 text-white py-2 rounded-sm hover:bg-primary-700 transition-colors text-sm font-medium cursor-pointer'
                                             >
                                                 Mua ngay
                                             </button>

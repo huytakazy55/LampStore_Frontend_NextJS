@@ -73,7 +73,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) =>
 
     if (!isOpen) return null;
 
-    const inputClass = 'w-full border border-gray-200 dark:border-gray-700 rounded-lg pl-10 pr-10 py-2.5 text-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 focus:border-rose-400 focus:ring-1 focus:ring-rose-200 transition placeholder:text-gray-400';
+    const inputClass = 'w-full border border-gray-200 dark:border-gray-700 rounded-lg pl-10 pr-10 py-2.5 text-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 focus:border-primary-400 focus:ring-1 focus:ring-primary-200 transition placeholder:text-gray-400';
 
     return (
         <div className='fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4'
@@ -84,7 +84,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) =>
                 {/* Header */}
                 <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-rose-50 to-primary-50 dark:bg-gray-800'>
                     <h2 className='text-lg font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2'>
-                        <i className='bx bx-lock-alt text-rose-500'></i>
+                        <i className='bx bx-lock-alt text-primary-500'></i>
                         Đổi mật khẩu
                     </h2>
                     <button onClick={handleClose}
@@ -168,7 +168,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) =>
                             Huỷ
                         </button>
                         <button type='submit' disabled={submitting}
-                            className='px-5 py-2 bg-rose-600 hover:bg-rose-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 cursor-pointer flex items-center gap-1.5'>
+                            className='px-5 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 cursor-pointer flex items-center gap-1.5'>
                             {submitting
                                 ? <><i className='bx bx-loader-alt animate-spin'></i> Đang xử lý...</>
                                 : <><i className='bx bx-check'></i> Đổi mật khẩu</>

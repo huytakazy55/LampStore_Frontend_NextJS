@@ -42,7 +42,7 @@ const PageLoader = ({ height, minHeightClass = '' }) => {
                     }}
                 />
                 {/* Orbiting dot 2 */}
-                <div className="absolute w-1.5 h-1.5 rounded-full bg-rose-400 shadow-lg shadow-rose-400/50"
+                <div className="absolute w-1.5 h-1.5 rounded-full bg-primary-400 shadow-lg shadow-primary-400/50"
                     style={{
                         bottom: '-3px', left: '50%', marginLeft: '-3px',
                         animation: 'loaderOrbit 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite reverse',

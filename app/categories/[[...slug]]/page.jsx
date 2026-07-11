@@ -116,7 +116,7 @@ export default function CategoryPage() {
                             {/* Sidebar */}
                             <div className="w-full lg:w-[260px] flex-shrink-0">
                                 <div className="bg-white rounded-sm border border-gray-200 overflow-hidden sticky top-4">
-                                    <div className="p-4 bg-gradient-to-r from-primary-500 to-primary-400 text-white rounded-t-sm">
+                                    <div className="p-4 bg-primary-600 text-white rounded-t-sm">
                                         <h3 className="text-sm font-semibold flex items-center gap-2">
                                             <i className='bx bx-category'></i>
                                             Danh mục ({categories.length})

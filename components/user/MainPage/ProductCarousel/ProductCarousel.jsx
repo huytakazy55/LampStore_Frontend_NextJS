@@ -39,7 +39,7 @@ const ProductCard = ({ product, isLast, navigate, onAddToCartClick, isInWishlist
     >
       {/* Discount Badge */}
       {hasDiscount && (
-        <div className="absolute top-2.5 left-2.5 z-10 bg-gradient-to-r from-primary-500 to-rose-400 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)]">
+        <div className="absolute top-2.5 left-2.5 z-10 bg-primary-600 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)]">
           -{discountPercent}%
         </div>
       )}
@@ -47,7 +47,7 @@ const ProductCard = ({ product, isLast, navigate, onAddToCartClick, isInWishlist
       {/* Wishlist Button */}
       <button
         className={`absolute top-2.5 right-2.5 z-10 w-7 h-7 md:w-8 md:h-8 rounded-sm flex items-center justify-center transition-all duration-300 shadow-sm backdrop-blur-sm ${isInWishlist
-          ? 'bg-gradient-to-r from-primary-500 to-rose-400 text-white scale-105'
+          ? 'bg-primary-600 text-white scale-105'
           : 'bg-white/80 dark:bg-[#1a1a1a]/80 text-gray-400 dark:text-gray-500 hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:text-primary-500 hover:scale-105'
           }`}
         onClick={(e) => { e.stopPropagation(); onToggleWishlist(product.id); }}
@@ -82,7 +82,7 @@ const ProductCard = ({ product, isLast, navigate, onAddToCartClick, isInWishlist
         {/* Price + Cart Row */}
         <div className="flex items-end justify-between mt-2.5 pt-2.5 border-t border-gray-100 dark:border-[#2a2a2a]">
           <div>
-            <div className="text-sm md:text-base font-bold bg-gradient-to-r from-primary-600 to-rose-500 dark:from-primary-400 dark:to-rose-300 text-transparent bg-clip-text inline-block">
+            <div className="text-sm md:text-base font-bold bg-primary-600 dark:bg-primary-400 text-transparent bg-clip-text inline-block">
               {formatPrice(price)}<span className="text-[10px] font-normal ml-0.5">₫</span>
             </div>
             {hasDiscount && (
@@ -92,7 +92,7 @@ const ProductCard = ({ product, isLast, navigate, onAddToCartClick, isInWishlist
             )}
           </div>
           <button
-            className="w-8 h-8 md:w-9 md:h-9 rounded-sm bg-gradient-to-r from-primary-500 to-rose-400 dark:bg-primary-900 text-primary-600 dark:text-primary-300 flex items-center justify-center transition-all duration-300 hover:from-primary-600 hover:to-rose-500 hover:text-white hover:shadow-[0_2px_8px_rgba(139,92,246,0.3)] active:scale-95"
+            className="w-8 h-8 md:w-9 md:h-9 rounded-sm bg-primary-600 dark:bg-primary-900 text-white dark:text-primary-300 flex items-center justify-center transition-all duration-300 hover:bg-primary-700 hover:text-white hover:shadow-[0_2px_8px_rgba(139,92,246,0.3)] active:scale-95"
             onClick={(e) => {
               e.stopPropagation();
               onAddToCartClick(product);
@@ -185,7 +185,7 @@ const ProductCarousel = () => {
             <button
               key={tab.key}
               className={`relative flex items-center gap-1.5 md:gap-2 px-5 md:px-7 py-2 md:py-2.5 rounded-sm text-xs md:text-sm font-semibold transition-all duration-300 ${activeTab === tab.key
-                ? 'bg-white dark:bg-gray-700 bg-gradient-to-r from-primary-600 to-rose-500 dark:from-primary-400 dark:to-rose-300 text-transparent bg-clip-text inline-block shadow-md'
+                ? 'bg-white dark:bg-gray-700 bg-primary-600 dark:bg-primary-400 text-transparent bg-clip-text inline-block shadow-md'
                 : 'text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
                 }`}
               onClick={() => setActiveTab(tab.key)}

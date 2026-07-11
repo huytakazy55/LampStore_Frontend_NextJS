@@ -11,9 +11,9 @@ import { createPortal } from 'react-dom';
 
 const SECTION_ICONS = {
     'hero': 'bx-home',
+    'bestseller': 'bx-trending-up',
     'categories': 'bx-category',
     'products': 'bx-package',
-    'trending': 'bx-trending-up',
     'allproducts': 'bx-crown',
     'news': 'bx-news',
     'footer': 'bx-info-circle',
@@ -21,9 +21,9 @@ const SECTION_ICONS = {
 
 const SECTION_LABELS = {
     'hero': 'Trang chủ',
+    'bestseller': 'Bán chạy',
     'categories': 'Danh mục',
     'products': 'Sản phẩm',
-    'trending': 'Xu hướng',
     'allproducts': 'Tất cả SP',
     'news': 'Tin tức',
     'footer': 'Cuối trang',
@@ -53,29 +53,82 @@ const ScrollTimeline = () => {
 
     // Direct DOM update — no React state, no re-render, instant
     const updateTimeline = useCallback((scrollY, limit, viewportH) => {
-        const contentH = limit + viewportH;
-        const progress = limit > 0 ? Math.min(scrollY / limit, 1) : 0;
+        const count = sectionIds.length;
+        if (count === 0) return;
 
-        // Update progress line immediately via DOM
+        // 1. Calculate the ideal target scrollY for each section where it would be considered 'active'
+        let targets = [];
+        sectionIds.forEach((sectionId, idx) => {
+            const el = document.querySelector(`[data-section="${sectionId}"]`);
+            if (el) {
+                const rect = el.getBoundingClientRect();
+                const absoluteTop = scrollY + rect.top;
+                
+                let targetY;
+                const shouldCenter = ['categories', 'bestseller'].includes(sectionId) || (rect.height > 0 && rect.height < viewportH - 150);
+                
+                if (idx === 0) {
+                    targetY = 0;
+                } else if (idx === count - 1) {
+                    targetY = limit;
+                } else if (shouldCenter) {
+                    targetY = absoluteTop - (viewportH / 2) + (rect.height / 2);
+                } else {
+                    targetY = absoluteTop - 80; // 80px header offset
+                }
+                
+                targets.push(Math.max(0, Math.min(targetY, limit)));
+            } else {
+                targets.push(idx === 0 ? 0 : limit);
+            }
+        });
+
+        // Ensure monotonicity so the line never goes backwards if DOM elements overlap or are misordered
+        for (let i = 1; i < targets.length; i++) {
+            if (targets[i] < targets[i - 1]) targets[i] = targets[i - 1];
+        }
+
+        // 2. Interpolate global progress based on which segment of targets scrollY falls into
+        let progress = 0;
+        if (scrollY <= 0) {
+            progress = 0;
+        } else if (scrollY >= limit) {
+            progress = 1;
+        } else {
+            for (let i = 0; i < count - 1; i++) {
+                const t1 = targets[i];
+                const t2 = targets[i + 1];
+                if (scrollY >= t1 && scrollY <= t2) {
+                    const range = t2 - t1;
+                    const p1 = i / (count - 1);
+                    const p2 = (i + 1) / (count - 1);
+                    if (range === 0) {
+                        progress = p2;
+                    } else {
+                        const localProgress = (scrollY - t1) / range;
+                        progress = p1 + localProgress * (p2 - p1);
+                    }
+                    break;
+                }
+            }
+        }
+
+        // 3. Update DOM using the interpolated progress
         if (progressLineRef.current) {
             progressLineRef.current.style.clipPath = `inset(0 0 ${100 - progress * 100}% 0)`;
         }
 
-        // Update dots based on progress line position (not viewport)
-        const count = sectionIds.length;
         sectionIds.forEach((sectionId, idx) => {
             const dotEl = dotRefs.current[sectionId];
             if (!dotEl) return;
 
-            // Dot position as 0-1 fraction of the timeline
             const dotProgress = count > 1 ? idx / (count - 1) : 0;
-            // Line has reached this dot
-            const isReached = progress >= dotProgress - 0.01;
-            // Currently at this dot (between this and next)
+            const isReached = progress >= dotProgress - 0.005;
+            
+            // Active if we are in this segment
             const nextDotProgress = idx < count - 1 ? (idx + 1) / (count - 1) : 1;
-            const isActive = progress >= dotProgress - 0.01 && progress < nextDotProgress - 0.01;
-            // Last dot active when at the end
-            const isLastActive = idx === count - 1 && progress >= 0.98;
+            const isActive = progress >= dotProgress - 0.005 && progress < nextDotProgress - 0.005;
+            const isLastActive = idx === count - 1 && progress >= 0.99;
 
             const dot = dotEl.querySelector('.timeline-dot');
             const icon = dotEl.querySelector('.timeline-icon');
@@ -84,9 +137,9 @@ const ScrollTimeline = () => {
 
             if (dot) {
                 if (isActive || isLastActive) {
-                    dot.className = 'timeline-dot w-7 h-7 rounded-full flex items-center justify-center border-2 bg-gradient-to-r from-primary-500 to-rose-400 border-primary-400 scale-110 shadow-lg shadow-primary-300/50';
+                    dot.className = 'timeline-dot w-7 h-7 rounded-full flex items-center justify-center border-2 bg-primary-600 border-primary-400 scale-110 shadow-lg shadow-primary-300/50';
                 } else if (isReached) {
-                    dot.className = 'timeline-dot w-7 h-7 rounded-full flex items-center justify-center border-2 bg-gradient-to-r from-primary-500 to-rose-400 border-primary-400';
+                    dot.className = 'timeline-dot w-7 h-7 rounded-full flex items-center justify-center border-2 bg-primary-600 border-primary-400';
                 } else {
                     dot.className = 'timeline-dot w-7 h-7 rounded-full flex items-center justify-center border-2 bg-white border-gray-300';
                 }
@@ -95,7 +148,6 @@ const ScrollTimeline = () => {
                 icon.style.color = isReached ? 'white' : '#9ca3af';
             }
             if (label) {
-                // Only show on hover (handled by CSS group-hover)
                 label.style.opacity = '';
             }
             if (pulse) {
@@ -154,12 +206,21 @@ const ScrollTimeline = () => {
         if (!el) return;
 
         const sb = getScrollbarInstance();
+        const rect = el.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        const headerOffset = 80;
+        
+        // Ưu tiên đưa ra giữa (center) đối với danh mục, bán chạy, hoặc các section có chiều cao vừa phải
+        const shouldCenter = ['categories', 'bestseller'].includes(sectionId) || (rect.height > 0 && rect.height < viewportHeight - 150);
+
         if (sb) {
-            const rect = el.getBoundingClientRect();
-            const targetY = sb.offset.y + rect.top - 80;
-            sb.scrollTo(0, targetY, 600);
+            let targetY = shouldCenter 
+                ? sb.offset.y + rect.top - (viewportHeight / 2) + (rect.height / 2)
+                : sb.offset.y + rect.top - headerOffset;
+                
+            sb.scrollTo(0, Math.max(0, targetY), 600);
         } else {
-            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            el.scrollIntoView({ behavior: 'smooth', block: shouldCenter ? 'center' : 'start' });
         }
     }, [getScrollbarInstance]);
 
@@ -196,7 +257,7 @@ const ScrollTimeline = () => {
             {/* Progress line - filled (updated via ref, no transition) */}
             <div
                 ref={progressLineRef}
-                className="absolute left-1/2 -translate-x-1/2 w-[2px] rounded-full bg-gradient-to-r from-primary-500 to-rose-400 shadow-md shadow-primary-500/40"
+                className="absolute left-1/2 -translate-x-1/2 w-[2px] rounded-full bg-primary-600 shadow-md shadow-primary-500/40"
                 style={{
                     top: `${TIMELINE_TOP}vh`,
                     height: `${TIMELINE_RANGE}vh`,

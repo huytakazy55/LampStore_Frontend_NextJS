@@ -512,7 +512,7 @@ const ProductDetail = () =>
                         </div>
 
                         {/* Price - with Schema.org Offer */}
-                        <div className='flex flex-wrap items-center bg-gradient-to-r from-primary-500 to-rose-400 dark:bg-gray-800 gap-2 md:gap-3 py-3 md:py-4 px-4 md:px-6 my-3 md:my-4 rounded-lg' itemProp="offers" itemScope itemType="https://schema.org/Offer">
+                        <div className='flex flex-wrap items-center bg-primary-600 dark:bg-gray-800 gap-2 md:gap-3 py-3 md:py-4 px-4 md:px-6 my-3 md:my-4 rounded-lg' itemProp="offers" itemScope itemType="https://schema.org/Offer">
                             <meta itemProp="priceCurrency" content="VND" />
                             <meta itemProp="price" content={price} />
                             <link itemProp="availability" href={stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"} />
@@ -520,7 +520,7 @@ const ProductDetail = () =>
                             {hasDiscount && (
                                 <>
                                     <div className='text-xs md:text-sm text-gray-400 dark:text-gray-500 line-through'>₫{formatPrice(originalPrice)}</div>
-                                    <div className='bg-gradient-to-r from-primary-500 to-rose-400 text-white text-xs px-2 py-0.5 rounded font-medium'>-{discountPercent}%</div>
+                                    <div className='bg-primary-600 text-white text-xs px-2 py-0.5 rounded font-medium'>-{discountPercent}%</div>
                                 </>
                             )}
                         </div>
@@ -574,11 +574,11 @@ const ProductDetail = () =>
                             <div className='w-full sm:w-[10%] font-medium text-sm dark:text-gray-300'>Số lượng</div>
                             <div className='flex items-center gap-3'>
                                 <div className='flex items-center border border-gray-300 dark:border-gray-600 rounded overflow-hidden'>
-                                    <button onClick={handleDecrease} aria-label="Giảm số lượng" className='w-9 h-9 flex items-center justify-center bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r from-primary-500 to-rose-400 hover:text-white active:scale-95 transition text-lg font-medium'>-</button>
+                                    <button onClick={handleDecrease} aria-label="Giảm số lượng" className='w-9 h-9 flex items-center justify-center bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-primary-600 hover:text-white active:scale-95 transition text-lg font-medium'>-</button>
                                     <span aria-label="Số lượng sản phẩm" className="w-12 md:w-14 h-9 flex items-center justify-center text-sm border-x border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 select-none">
                                         {quantity}
                                     </span>
-                                    <button onClick={handleIncrease} aria-label="Tăng số lượng" className='w-9 h-9 flex items-center justify-center bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r from-primary-500 to-rose-400 hover:text-white active:scale-95 transition text-lg font-medium'>+</button>
+                                    <button onClick={handleIncrease} aria-label="Tăng số lượng" className='w-9 h-9 flex items-center justify-center bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-primary-600 hover:text-white active:scale-95 transition text-lg font-medium'>+</button>
                                 </div>
                                 <div className='text-xs md:text-sm text-gray-400 dark:text-gray-500'>{stock} sản phẩm có sẵn</div>
                             </div>
@@ -594,10 +594,10 @@ const ProductDetail = () =>
 
                         {/* Actions */}
                         <div className='flex flex-col sm:flex-row gap-3 md:gap-4 mb-4 md:mb-6'>
-                            <button onClick={handleAddToCart} id="add-to-cart-btn" className='flex items-center justify-center gap-2 border border-primary-500 bg-primary-50 dark:bg-primary-900/30 bg-gradient-to-r from-primary-600 to-rose-500 dark:from-primary-400 dark:to-rose-300 text-transparent bg-clip-text inline-block py-2.5 px-4 md:px-6 rounded hover:bg-primary-100 dark:hover:bg-primary-900/50 transition text-sm md:text-base w-full sm:w-auto cursor-pointer'>
+                            <button onClick={handleAddToCart} id="add-to-cart-btn" className='flex items-center justify-center gap-2 bg-primary-600 text-white py-2.5 px-4 md:px-6 rounded hover:bg-primary-700 transition text-sm md:text-base w-full sm:w-auto cursor-pointer'>
                                 <i className='bx bxs-cart-add text-lg md:text-xl'></i> Thêm vào giỏ hàng
                             </button>
-                            <button onClick={handleBuyNow} id="buy-now-btn" className='bg-gradient-to-r from-primary-500 to-rose-400 text-white py-2.5 px-6 md:px-8 rounded hover:from-primary-600 hover:to-rose-500 transition font-medium text-sm md:text-base w-full sm:w-auto cursor-pointer'>
+                            <button onClick={handleBuyNow} id="buy-now-btn" className='bg-primary-600 text-white py-2.5 px-6 md:px-8 rounded hover:bg-primary-700 transition font-medium text-sm md:text-base w-full sm:w-auto cursor-pointer'>
                                 Mua ngay
                             </button>
                         </div>
@@ -720,7 +720,7 @@ const ProductDetail = () =>
                                     <button
                                         onClick={handleSubmitReview}
                                         disabled={submittingReview}
-                                        className='bg-gradient-to-r from-primary-500 to-rose-400 hover:from-primary-600 hover:to-rose-500 text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 cursor-pointer flex items-center gap-1.5'
+                                        className='bg-primary-600 hover:bg-primary-700 text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 cursor-pointer flex items-center gap-1.5'
                                     >
                                         {submittingReview ? <><i className='bx bx-loader-alt animate-spin'></i> Đang gửi...</> : <><i className='bx bx-send'></i> Gửi đánh giá</>}
                                     </button>
@@ -735,7 +735,7 @@ const ProductDetail = () =>
                         )}
 
                         {isAuthenticated && !reviewStatus.hasPurchased && !reviewStatus.hasReviewed && (
-                            <div className='py-3 px-4 text-sm bg-gradient-to-r from-primary-600 to-rose-500 dark:from-primary-400 dark:to-rose-300 text-transparent bg-clip-text inline-block bg-primary-50 dark:bg-primary-900/20 border-b border-gray-100 dark:border-gray-700 flex items-center gap-2'>
+                            <div className='py-3 px-4 text-sm bg-primary-600 dark:bg-primary-400 text-transparent bg-clip-text inline-block bg-primary-50 dark:bg-primary-900/20 border-b border-gray-100 dark:border-gray-700 flex items-center gap-2'>
                                 <i className='bx bx-shopping-bag text-lg'></i> Bạn cần mua sản phẩm này để có thể đánh giá
                             </div>
                         )}
@@ -813,7 +813,7 @@ const ProductDetail = () =>
                                                     onError={(e) => { e.target.src = defaultImg; }}
                                                 />
                                                 {rpHasDiscount && (
-                                                    <div className='absolute top-2 left-2 bg-gradient-to-r from-primary-500 to-rose-400 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm shadow'>-{rpDiscountPercent}%</div>
+                                                    <div className='absolute top-2 left-2 bg-primary-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm shadow'>-{rpDiscountPercent}%</div>
                                                 )}
                                             </div>
                                             <div className='p-3'>

@@ -61,7 +61,7 @@ export default function HomePage() {
                 <ScrollTimeline />
 
                 {/* 1. Sản phẩm bán chạy (Trending) */}
-                <div data-section="trending" data-label="Bán chạy" data-aos="fade-up" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 400px' }}>
+                <div data-section="bestseller" data-label="Bán chạy" data-aos="fade-up" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 400px' }}>
                     <LazySection minHeightClass="min-h-[200px] sm:min-h-[400px]">
                         <Suspense fallback={<SectionSpinner minHeightClass="min-h-[200px] sm:min-h-[400px]" />}>
                             <SectionProductCardCarousel />

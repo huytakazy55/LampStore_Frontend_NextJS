@@ -39,7 +39,7 @@ const SmallProductCard = ({ product, navigate, onAddToCartClick }) => {
     >
       {/* Discount Badge */}
       {hasDiscount && (
-        <div className="absolute top-2.5 left-2.5 z-10 bg-gradient-to-r from-primary-500 to-rose-400 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)]">
+        <div className="absolute top-2.5 left-2.5 z-10 bg-primary-600 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)]">
           -{discountPercent}%
         </div>
       )}
@@ -71,7 +71,7 @@ const SmallProductCard = ({ product, navigate, onAddToCartClick }) => {
         {/* Price + Cart */}
         <div className='flex items-end justify-between mt-2 pt-2 border-t border-gray-100 dark:border-[#2a2a2a]'>
           <div>
-            <div className='text-sm md:text-base font-bold bg-gradient-to-r from-primary-600 to-rose-500 dark:from-primary-400 dark:to-rose-300 text-transparent bg-clip-text inline-block'>
+            <div className='text-sm md:text-base font-bold bg-primary-600 dark:bg-primary-400 text-transparent bg-clip-text inline-block'>
               {formatPrice(price)}<span className='text-[10px] font-normal ml-0.5'>₫</span>
             </div>
             {hasDiscount && (
@@ -81,7 +81,7 @@ const SmallProductCard = ({ product, navigate, onAddToCartClick }) => {
             )}
           </div>
           <button
-            className='w-7 h-7 md:w-8 md:h-8 rounded-sm bg-gradient-to-r from-primary-500 to-rose-400 dark:bg-primary-900 text-primary-600 dark:text-primary-300 flex items-center justify-center transition-all duration-300 hover:from-primary-600 hover:to-rose-500 hover:text-white hover:shadow-[0_2px_8px_rgba(139,92,246,0.3)] active:scale-95'
+            className='w-7 h-7 md:w-8 md:h-8 rounded-sm bg-primary-600 dark:bg-primary-900 text-white dark:text-primary-300 flex items-center justify-center transition-all duration-300 hover:bg-primary-700 hover:text-white hover:shadow-[0_2px_8px_rgba(139,92,246,0.3)] active:scale-95'
             onClick={(e) => {
               e.stopPropagation();
               onAddToCartClick(product);
@@ -153,16 +153,16 @@ const AllProducts = () => {
     <div className='w-full bg-transparent'>
       <div className='xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0'>
         {/* Section Header — matching style */}
-        <div className='flex flex-col sm:flex-row justify-between gap-2 sm:gap-0 mb-6 md:mb-8 pb-3 pt-4 md:pt-6 border-b border-gray-300 dark:border-[#333] relative after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-24 after:h-0.5 after:bg-gradient-to-r from-primary-500 to-rose-400 after:rounded-sm'>
+        <div className='flex flex-col sm:flex-row justify-between gap-2 sm:gap-0 mb-6 md:mb-8 pb-3 pt-4 md:pt-6 border-b border-gray-300 dark:border-[#333] relative after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-24 after:h-0.5 after:bg-primary-600 after:rounded-sm'>
           <div className='flex items-center gap-3'>
-            <div className='w-9 h-9 md:w-[42px] md:h-[42px] flex items-center justify-center bg-gradient-to-r from-primary-500 to-rose-400 dark:bg-primary-900 rounded-md flex-shrink-0'>
-              <i className='bx bx-grid-alt text-xl md:text-[1.4rem] bg-gradient-to-r from-primary-600 to-rose-500 dark:from-primary-400 dark:to-rose-300 text-transparent bg-clip-text inline-block'></i>
+            <div className='w-9 h-9 md:w-[42px] md:h-[42px] flex items-center justify-center bg-primary-600 dark:bg-primary-900 rounded-md flex-shrink-0'>
+              <i className='bx bx-grid-alt text-xl md:text-[1.4rem] text-white'></i>
             </div>
             <h3 className='text-sm md:text-h3 font-bold text-gray-800 dark:text-gray-200 m-0'>Tất cả sản phẩm</h3>
           </div>
           <div className='text-xs md:text-normal flex justify-start sm:justify-end gap-4 md:gap-8 items-center font-medium overflow-x-auto pr-1'>
             <button
-              className={`transition-colors whitespace-nowrap ${!activeCategory ? 'bg-gradient-to-r from-primary-600 to-rose-500 dark:from-primary-400 dark:to-rose-300 text-transparent bg-clip-text inline-block font-bold' : 'text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'}`}
+              className={`transition-colors whitespace-nowrap ${!activeCategory ? 'bg-primary-600 dark:bg-primary-400 text-transparent bg-clip-text inline-block font-bold' : 'text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'}`}
               onClick={() => setActiveCategory(null)}
             >
               Tất cả
@@ -170,7 +170,7 @@ const AllProducts = () => {
             {categories.map((cat) => (
               <button
                 key={cat.id}
-                className={`transition-colors whitespace-nowrap ${activeCategory === cat.id ? 'bg-gradient-to-r from-primary-600 to-rose-500 dark:from-primary-400 dark:to-rose-300 text-transparent bg-clip-text inline-block font-bold' : 'text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'}`}
+                className={`transition-colors whitespace-nowrap ${activeCategory === cat.id ? 'bg-primary-600 dark:bg-primary-400 text-transparent bg-clip-text inline-block font-bold' : 'text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'}`}
                 onClick={() => setActiveCategory(cat.id)}
               >
                 {cat.name}
@@ -211,7 +211,7 @@ const AllProducts = () => {
             <div className="mt-6 flex justify-center">
               <button
                 onClick={() => setVisibleRows(prev => prev + 2)}
-                className="px-8 py-2 border-2 border-primary-400 dark:border-primary-600 bg-gradient-to-r from-primary-600 to-rose-500 dark:from-primary-400 dark:to-rose-300 text-transparent bg-clip-text inline-block font-medium rounded-sm hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors"
+                className="px-8 py-2 border-2 border-primary-400 dark:border-primary-600 bg-primary-600 dark:bg-primary-400 text-transparent bg-clip-text inline-block font-medium rounded-sm hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors"
               >
                 Xem thêm
               </button>
