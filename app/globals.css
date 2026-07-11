@@ -1,3 +1,4 @@
+
 @import '../styles/admin-table.css';
 @import '../styles/best-seller.css';
 @import "tailwindcss";
@@ -40,6 +41,7 @@ html {
 
 /* Tailwind v4 CSS-based configuration */
 @theme {
+
   /* Theme Colors */
   --color-primary-50: #f5f3ff;
   --color-primary-100: #ede9fe;

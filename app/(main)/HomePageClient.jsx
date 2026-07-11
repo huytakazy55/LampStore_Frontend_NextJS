@@ -81,7 +81,6 @@ export default function HomePage() {
 
                 <div data-section="allproducts" data-label="Tất cả SP" data-aos="fade-up" data-aos-delay="100">
                     <Suspense fallback={<SectionSpinner height="160px" />}>
-                        <div className="py-2" />
                         <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 md:p-6 mb-6">
                             <AllProducts />
                         </div>

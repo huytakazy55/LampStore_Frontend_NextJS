@@ -242,16 +242,44 @@ const Header = () =>
       <div className='w-full xl:mx-auto xl:max-w-[1440px] flex justify-between items-center h-16 md:h-28 px-4 xl:px-0 overflow-visible relative z-50 isolate'>
         {/* Logo */}
         <div className='flex-shrink-0'>
-          <a href="/" className='flex items-center gap-2 no-underline group'>
-            <div className='w-10 h-10 md:w-14 md:h-14 rounded-lg overflow-hidden shadow-md group-hover:shadow-primary-300/50 transition-all duration-300 group-hover:scale-105'>
-              <img src={Logo} alt="CapyLumine" className='w-full h-full object-cover' width={56} height={56} />
+          <a href="/" className='flex items-center gap-3 no-underline group'>
+            <div className='w-14 h-14 md:w-[72px] md:h-[72px] rounded-xl md:rounded-2xl overflow-hidden shadow-md group-hover:shadow-primary-300/50 transition-all duration-300 group-hover:scale-105 flex-shrink-0'>
+              <img src={Logo} alt="CapyLumine" className='w-full h-full object-cover' />
             </div>
-            <div className='hidden sm:block'>
-              <div className='text-lg md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white transition-colors duration-300'>
-                Capy<span className='text-primary-700'>Lumine</span>
+            <div className='hidden sm:flex flex-col mt-1 md:mt-2'>
+              <div className={`text-[20px] md:text-[26px] font-extrabold tracking-tight font-sans leading-none mb-1 flex items-center ml-1`}>
+                <span className='text-[#2e1d75] dark:text-[#a89cd9]'>Capy</span>
+                <span className='text-[#9328f5] dark:text-[#b774fa]'>Lum</span>
+                <span className='relative inline-block'>
+                    <span className='text-[#9328f5] dark:text-[#b774fa] relative z-10'>ı</span>
+                    {/* Sparkle as dot */}
+                    <span className="absolute top-[1px] left-1/2 -translate-x-1/2 z-20 pointer-events-none flex items-center justify-center">
+                        <svg className="relative w-1 h-1 md:w-1.5 md:h-1.5 text-[#ffce54]" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0C12 0 12 10 24 12C12 14 12 24 12 24C12 24 12 14 0 12C12 10 12 0 12 0Z" />
+                        </svg>
+                    </span>
+                </span>
+                <span className='text-[#9328f5] dark:text-[#b774fa]'>ne</span>
               </div>
-              <div className='text-[9px] md:text-[10px] text-gray-500 dark:text-gray-400 font-medium tracking-[0.15em] uppercase -mt-1 transition-colors duration-300'>
-                Premium Lighting
+              
+              <div className='flex items-center ml-1'>
+                <div className="relative flex items-center justify-center">
+                    <svg className="w-[16px] h-[16px] md:w-[18px] md:h-[18px] text-[#ffce54] drop-shadow-[0_0_4px_rgba(255,206,84,0.6)]" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M21.996 12.882A10.016 10.016 0 0 1 12 2.004c0-.28.026-.554.07-.822A9.99 9.99 0 0 0 2 11.996 9.99 9.99 0 0 0 12 21.99 9.99 9.99 0 0 0 21.996 12.882z" />
+                    </svg>
+                    <svg className="absolute top-[1px] right-[1px] w-1.5 h-1.5 text-[#fff2a8]" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0C12 0 12 10 24 12C12 14 12 24 12 24C12 24 12 14 0 12C12 10 12 0 12 0Z" />
+                    </svg>
+                    <svg className="absolute -bottom-1 -right-2 w-2 h-2 text-[#ffce54]" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0C12 0 12 10 24 12C12 14 12 24 12 24C12 24 12 14 0 12C12 10 12 0 12 0Z" />
+                    </svg>
+                </div>
+                <div className='text-[10px] md:text-[12px] text-[#ffce54] font-extrabold tracking-tighter uppercase leading-none ml-1.5' style={{ fontFamily: 'sans-serif' }}>
+                  DREAMY NIGHT LIGHTS
+                </div>
+                <svg className="w-2.5 h-2.5 md:w-3 md:h-3 text-[#ffce54] ml-1 mb-0.5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0C12 0 12 10 24 12C12 14 12 24 12 24C12 24 12 14 0 12C12 10 12 0 12 0Z" />
+                </svg>
               </div>
             </div>
           </a>
@@ -372,11 +400,14 @@ const Header = () =>
         <div className='hidden md:block w-auto lg:w-1/5 text-black dark:text-white'>
           <ul className='flex justify-end lg:justify-between items-center gap-2 lg:gap-1'>
             {/* Dark mode toggle */}
-            <li className='relative cursor-pointer' aria-label={isDark ? 'Chuyển sang chế độ sáng' : 'Chuyển sang chế độ tối'} onClick={toggleDarkMode}>
+            <li className='relative group cursor-pointer' aria-label={isDark ? 'Chuyển sang chế độ sáng' : 'Chuyển sang chế độ tối'} onClick={toggleDarkMode}>
               <div className='w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm transition-all duration-500 hover:bg-primary-50 dark:hover:bg-gray-700 hover:scale-110 hover:shadow-md hover:shadow-primary-200/30 dark:hover:shadow-primary-900/20 active:scale-95'>
                 <i className={`bx ${isDark ? 'bx-sun text-primary-400' : 'bx-moon text-indigo-500'} text-xl transition-all duration-500`}
                   style={{ transform: isDark ? 'rotate(360deg)' : 'rotate(0deg)' }}></i>
               </div>
+              <span className="pointer-events-none absolute top-[calc(100%+10px)] left-1/2 -translate-x-1/2 translate-y-2 whitespace-nowrap rounded-lg bg-white/90 backdrop-blur-sm px-3 py-1.5 text-[12px] font-bold text-gray-700 opacity-0 shadow-lg transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 dark:bg-gray-800 dark:text-gray-200 border border-gray-100 dark:border-gray-700 z-[100]">
+                {isDark ? 'Chế độ sáng' : 'Chế độ tối'}
+              </span>
             </li>
 
             {/* Wishlist */}
@@ -395,6 +426,9 @@ const Header = () =>
               {wishlistCount > 0 && (
                 <div className='absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-gradient-to-br from-primary-500 to-pink-600 rounded-full text-center text-[10px] leading-[18px] text-white font-bold shadow-lg shadow-primary-500/30 animate-pulse'>{wishlistCount}</div>
               )}
+              <span className="pointer-events-none absolute top-[calc(100%+10px)] left-1/2 -translate-x-1/2 translate-y-2 whitespace-nowrap rounded-lg bg-white/90 backdrop-blur-sm px-3 py-1.5 text-[12px] font-bold text-gray-700 opacity-0 shadow-lg transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 dark:bg-gray-800 dark:text-gray-200 border border-gray-100 dark:border-gray-700 z-[100]">
+                Danh sách yêu thích
+              </span>
             </li>
 
             {/* Cart */}
@@ -405,6 +439,9 @@ const Header = () =>
                 </div>
                 <FormCart popupRef={popupRef} toggleCart={toggleCart} setToggleCart={setToggleCart} />
                 <div className='absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-gradient-to-br from-primary-400 to-accent-500 rounded-full text-center text-[10px] leading-[18px] text-white font-bold shadow-lg shadow-primary-400/30'>{cartCount}</div>
+                <span className="pointer-events-none absolute top-[calc(100%+10px)] left-1/2 -translate-x-1/2 translate-y-2 whitespace-nowrap rounded-lg bg-white/90 backdrop-blur-sm px-3 py-1.5 text-[12px] font-bold text-gray-700 opacity-0 shadow-lg transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 dark:bg-gray-800 dark:text-gray-200 border border-gray-100 dark:border-gray-700 z-[100]">
+                  Giỏ hàng
+                </span>
               </div>
               <div className='hidden lg:flex flex-col text-xs ml-0.5'>
                 <span className='text-[10px] text-gray-500 dark:text-gray-400 font-medium leading-tight'>Giỏ hàng</span>
@@ -422,13 +459,19 @@ const Header = () =>
                     </div>
                     <div className='absolute bottom-0 right-0 w-3 h-3 bg-gradient-to-br from-emerald-400 to-green-500 rounded-full border-2 border-white dark:border-gray-900'></div>
                     <FormActionLogin toggleProfile={toggleProfile} setToggleProfile={setToggleProfile} buttonProfileRef={buttonProfileRef} popupActionRef={popupActionRef} toggleActionLogin={toggleActionLogin} setToggleActionLogin={setToggleActionLogin} />
+                    <span className="pointer-events-none absolute top-[calc(100%+10px)] left-1/2 -translate-x-1/2 translate-y-2 whitespace-nowrap rounded-lg bg-white/90 backdrop-blur-sm px-3 py-1.5 text-[12px] font-bold text-gray-700 opacity-0 shadow-lg transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 dark:bg-gray-800 dark:text-gray-200 border border-gray-100 dark:border-gray-700 z-[100]">
+                      Tài khoản của tôi
+                    </span>
                   </li>
                 </> :
                 <>
-                  <li className='group cursor-pointer' aria-label="Đăng nhập" onClick={toggleLoginForm}>
+                  <li className='group relative cursor-pointer' aria-label="Đăng nhập" onClick={toggleLoginForm}>
                     <div className='w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm transition-all duration-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 hover:scale-110 hover:shadow-md hover:shadow-indigo-200/30 active:scale-95'>
                       <i className='bx bx-user text-xl text-gray-600 dark:text-gray-400 transition-all duration-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400'></i>
                     </div>
+                    <span className="pointer-events-none absolute top-[calc(100%+10px)] left-1/2 -translate-x-1/2 translate-y-2 whitespace-nowrap rounded-lg bg-white/90 backdrop-blur-sm px-3 py-1.5 text-[12px] font-bold text-gray-700 opacity-0 shadow-lg transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 dark:bg-gray-800 dark:text-gray-200 border border-gray-100 dark:border-gray-700 z-[100]">
+                      Đăng nhập
+                    </span>
                   </li>
                 </>
             }

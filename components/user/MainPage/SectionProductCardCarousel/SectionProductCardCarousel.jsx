@@ -196,7 +196,7 @@ const SectionProductCardCarousel = () =>
   if (!loading && products.length === 0) return null;
 
   return (
-    <div className='w-full overflow-hidden xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0 mb-8'>
+    <div className='w-full overflow-hidden xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0 mb-0'>
       {/* Section Header */}
       <div className='flex items-center justify-between mb-6 pb-3 border-b border-gray-300 dark:border-[#333] relative after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-40 after:h-0.5 after:bg-gradient-to-r after:from-primary-500 after:to-accent-500 after:rounded-sm'>
         <div className='flex items-center gap-3'>
