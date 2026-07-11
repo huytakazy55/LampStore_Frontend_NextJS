@@ -75,7 +75,7 @@ const getDensityLevel = (visitCount, maxVisits) => {
         return {
             label: "Vừa",
             color: "bg-secondary-400/90",
-            border: "border-secondary-50",
+            border: "border-primary-500",
             glow: "shadow-[0_0_26px_rgba(234,179,8,0.52)]",
             ping: "bg-secondary-200/40",
         };

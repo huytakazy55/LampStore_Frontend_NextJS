@@ -122,7 +122,7 @@ export default function AnalyticsPage() {
                     const percentColor = {
                         green: "bg-green-100 text-green-500",
                         blue: "bg-blue-100 text-blue-500",
-                        yellow: "bg-secondary-100 text-secondary-500",
+                        yellow: "bg-primary-50 dark:bg-primary-900/20 text-primary-500",
                         red: "bg-red-100 text-red-500",
                         purple: "bg-purple-100 text-purple-500",
                     };
@@ -135,7 +135,7 @@ export default function AnalyticsPage() {
                               border-l-8 border-[1px] cursor-pointer
                               ${item.percentType === "green" ? "border-green-400" : ""}
                               ${item.percentType === "blue" ? "border-blue-400" : ""}
-                              ${item.percentType === "yellow" ? "border-secondary-400" : ""}
+                              ${item.percentType === "yellow" ? "border-primary-500" : ""}
                               ${item.percentType === "red" ? "border-red-400" : ""}
                               ${item.percentType === "purple" ? "border-purple-400" : ""}
                               hover:scale-[1.03] hover:shadow-2xl transition-all duration-200

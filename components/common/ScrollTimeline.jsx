@@ -84,9 +84,9 @@ const ScrollTimeline = () => {
 
             if (dot) {
                 if (isActive || isLastActive) {
-                    dot.className = 'timeline-dot w-7 h-7 rounded-full flex items-center justify-center border-2 bg-primary-500 border-primary-400 scale-110 shadow-lg shadow-primary-300/50';
+                    dot.className = 'timeline-dot w-7 h-7 rounded-full flex items-center justify-center border-2 bg-gradient-to-r from-primary-500 to-rose-400 border-primary-400 scale-110 shadow-lg shadow-primary-300/50';
                 } else if (isReached) {
-                    dot.className = 'timeline-dot w-7 h-7 rounded-full flex items-center justify-center border-2 bg-primary-500 border-primary-400';
+                    dot.className = 'timeline-dot w-7 h-7 rounded-full flex items-center justify-center border-2 bg-gradient-to-r from-primary-500 to-rose-400 border-primary-400';
                 } else {
                     dot.className = 'timeline-dot w-7 h-7 rounded-full flex items-center justify-center border-2 bg-white border-gray-300';
                 }
@@ -196,7 +196,7 @@ const ScrollTimeline = () => {
             {/* Progress line - filled (updated via ref, no transition) */}
             <div
                 ref={progressLineRef}
-                className="absolute left-1/2 -translate-x-1/2 w-[2px] rounded-full bg-gradient-to-b from-primary-500 to-primary-600 shadow-md shadow-primary-500/40"
+                className="absolute left-1/2 -translate-x-1/2 w-[2px] rounded-full bg-gradient-to-r from-primary-500 to-rose-400 shadow-md shadow-primary-500/40"
                 style={{
                     top: `${TIMELINE_TOP}vh`,
                     height: `${TIMELINE_RANGE}vh`,

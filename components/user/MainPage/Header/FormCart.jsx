@@ -115,7 +115,7 @@ const FormCart = ({ toggleCart, popupRef, setToggleCart }) => {
                         </button>
                         <button
                             onClick={() => { setToggleCart(false); navigate('/checkout'); }}
-                            className='flex-1 py-2.5 px-4 rounded-md text-sm font-medium bg-primary-500 text-white hover:bg-primary-600 transition-colors shadow-sm cursor-pointer'
+                            className='flex-1 py-2.5 px-4 rounded-md text-sm font-medium bg-gradient-to-r from-primary-500 to-rose-400 text-white hover:from-primary-600 hover:to-rose-500 transition-colors shadow-sm cursor-pointer'
                         >
                             Thanh toán
                         </button>

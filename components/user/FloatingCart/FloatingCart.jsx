@@ -159,7 +159,7 @@ const FloatingCart = () =>
                         }`}
                 >
                     {/* Header */}
-                    <div className="bg-gradient-to-r from-primary-600 via-tertiary-500 to-accent-500 px-4 py-3 flex justify-between items-center">
+                    <div className="bg-gradient-to-r from-primary-500 to-rose-400 px-4 py-3 flex justify-between items-center">
                         <span className="text-white text-sm font-semibold flex items-center gap-2">
                             <i className="bx bx-shopping-bag text-lg"></i>
                             Giỏ hàng ({cartCount})
@@ -215,7 +215,7 @@ const FloatingCart = () =>
                         </div>
                         <button
                             onClick={handleCheckout}
-                            className="w-full py-2.5 rounded-xl bg-gradient-to-r from-primary-600 via-tertiary-500 to-accent-500 text-white text-sm font-semibold hover:from-primary-600 hover:to-accent-600 transition-all shadow-lg shadow-primary-500/20 active:scale-[0.98] cursor-pointer"
+                            className="w-full py-2.5 rounded-xl bg-gradient-to-r from-primary-500 to-rose-400 text-white text-sm font-semibold hover:from-primary-600 hover:to-rose-500 transition-all shadow-lg shadow-primary-500/20 active:scale-[0.98] cursor-pointer"
                         >
                             Thanh toán ngay
                         </button>
@@ -226,7 +226,7 @@ const FloatingCart = () =>
                 <button
                     ref={cartBtnRef}
                     onClick={handleCartClick}
-                    className={`relative flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-primary-600 via-tertiary-500 to-accent-500 text-white shadow-[0_8px_20px_rgba(107,33,168,0.3)] transition-all duration-500 ease-out hover:-translate-y-1 hover:scale-110 hover:shadow-[0_12px_25px_rgba(107,33,168,0.5)] active:scale-95 cursor-pointer group ${bounce ? 'animate-bounce' : ''}`}
+                    className={`relative flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-primary-500 to-rose-400 text-white shadow-[0_8px_20px_rgba(107,33,168,0.3)] transition-all duration-500 ease-out hover:-translate-y-1 hover:scale-110 hover:shadow-[0_12px_25px_rgba(107,33,168,0.5)] active:scale-95 cursor-pointer group ${bounce ? 'animate-bounce' : ''}`}
                     aria-label="Giỏ hàng"
                     id="floating-cart-btn"
                 >

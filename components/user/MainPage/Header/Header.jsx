@@ -332,7 +332,7 @@ const Header = () =>
           {/* Nút tìm kiếm */}
           <button
             aria-label="Tìm kiếm"
-            className='flex items-center justify-center w-9 h-9 mr-[2px] bg-primary-500 hover:bg-primary-600 text-white rounded-full transition-all duration-200 active:scale-90 cursor-pointer shrink-0'
+            className='flex items-center justify-center w-9 h-9 mr-[2px] bg-gradient-to-r from-primary-500 to-rose-400 hover:from-primary-600 hover:to-rose-500 text-white rounded-full transition-all duration-200 active:scale-90 cursor-pointer shrink-0'
             onClick={handleSearch}
           >
             <i className='bx bx-search text-lg'></i>
@@ -354,10 +354,10 @@ const Header = () =>
                       onClick={() => handleCategorySuggestionClick(cat)}
                     >
                       <div className='w-7 h-7 rounded-lg bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center flex-shrink-0 group-hover:bg-primary-200 dark:group-hover:bg-primary-800/50 transition-colors'>
-                        <i className='bx bx-category text-primary-600 dark:text-primary-400 text-sm'></i>
+                        <i className='bx bx-category bg-gradient-to-r from-primary-600 to-rose-500 dark:from-primary-400 dark:to-rose-300 text-transparent bg-clip-text inline-block text-sm'></i>
                       </div>
                       <span className='text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white'>
-                        Tìm trong danh mục <strong className='text-primary-600 dark:text-primary-400'>"{cat.name}"</strong>
+                        Tìm trong danh mục <strong className='bg-gradient-to-r from-primary-600 to-rose-500 dark:from-primary-400 dark:to-rose-300 text-transparent bg-clip-text inline-block'>"{cat.name}"</strong>
                       </span>
                       <i className='bx bx-chevron-right text-gray-400 ml-auto text-lg'></i>
                     </div>
@@ -389,7 +389,7 @@ const Header = () =>
                   onClick={handleSearch}
                 >
                   <i className='bx bx-right-arrow-alt text-primary-500 group-hover:translate-x-1 transition-transform'></i>
-                  <span className='text-sm font-medium text-primary-600 dark:text-primary-400'>Xem tất cả kết quả cho "{searchKeyword}"</span>
+                  <span className='text-sm font-medium bg-gradient-to-r from-primary-600 to-rose-500 dark:from-primary-400 dark:to-rose-300 text-transparent bg-clip-text inline-block'>Xem tất cả kết quả cho "{searchKeyword}"</span>
                 </div>
               )}
             </div>
@@ -424,7 +424,7 @@ const Header = () =>
                 <i className='bx bx-heart text-xl text-primary-500 dark:text-primary-400 transition-all duration-300 group-hover:text-primary-600'></i>
               </div>
               {wishlistCount > 0 && (
-                <div className='absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-gradient-to-br from-primary-500 to-pink-600 rounded-full text-center text-[10px] leading-[18px] text-white font-bold shadow-lg shadow-primary-500/30 animate-pulse'>{wishlistCount}</div>
+                <div className='absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-gradient-to-r from-primary-500 to-rose-400 rounded-full text-center text-[10px] leading-[18px] text-white font-bold shadow-lg shadow-primary-500/30 animate-pulse'>{wishlistCount}</div>
               )}
               <span className="pointer-events-none absolute top-[calc(100%+10px)] left-1/2 -translate-x-1/2 translate-y-2 whitespace-nowrap rounded-lg bg-white/90 backdrop-blur-sm px-3 py-1.5 text-[12px] font-bold text-gray-700 opacity-0 shadow-lg transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 dark:bg-gray-800 dark:text-gray-200 border border-gray-100 dark:border-gray-700 z-[100]">
                 Danh sách yêu thích
@@ -435,10 +435,10 @@ const Header = () =>
             <li className='flex justify-center items-center gap-2 cursor-pointer group' aria-label="Giỏ hàng" onClick={toggleFormcart} ref={buttonRef}>
               <div className='relative'>
                 <div className='w-10 h-10 flex items-center justify-center rounded-xl bg-primary-50/80 dark:bg-primary-950/30 backdrop-blur-sm transition-all duration-300 hover:bg-primary-100 dark:hover:bg-primary-900/40 hover:scale-110 hover:shadow-md hover:shadow-primary-200/40 active:scale-95'>
-                  <i id='header-cart-icon' className='bx bx-shopping-bag text-xl text-primary-600 dark:text-primary-400 transition-all duration-300 group-hover:text-primary-700'></i>
+                  <i id='header-cart-icon' className='bx bx-shopping-bag text-xl bg-gradient-to-r from-primary-600 to-rose-500 dark:from-primary-400 dark:to-rose-300 text-transparent bg-clip-text inline-block transition-all duration-300 group-hover:text-primary-700'></i>
                 </div>
                 <FormCart popupRef={popupRef} toggleCart={toggleCart} setToggleCart={setToggleCart} />
-                <div className='absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-gradient-to-br from-primary-400 to-accent-500 rounded-full text-center text-[10px] leading-[18px] text-white font-bold shadow-lg shadow-primary-400/30'>{cartCount}</div>
+                <div className='absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-gradient-to-r from-primary-500 to-rose-400 rounded-full text-center text-[10px] leading-[18px] text-white font-bold shadow-lg shadow-primary-400/30'>{cartCount}</div>
                 <span className="pointer-events-none absolute top-[calc(100%+10px)] left-1/2 -translate-x-1/2 translate-y-2 whitespace-nowrap rounded-lg bg-white/90 backdrop-blur-sm px-3 py-1.5 text-[12px] font-bold text-gray-700 opacity-0 shadow-lg transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 dark:bg-gray-800 dark:text-gray-200 border border-gray-100 dark:border-gray-700 z-[100]">
                   Giỏ hàng
                 </span>
@@ -457,7 +457,7 @@ const Header = () =>
                     <div className='w-10 h-10 rounded-xl overflow-hidden ring-2 ring-primary-400/60 dark:ring-primary-500/40 transition-all duration-300 hover:ring-primary-500 hover:scale-110 hover:shadow-lg hover:shadow-primary-300/30 active:scale-95'>
                       <img className='h-full w-full object-cover' src={avatarURL ? avatarURL : (avatar.ProfileAvatar ? (avatar.ProfileAvatar.startsWith('http') ? avatar.ProfileAvatar : `${API_ENDPOINT}${avatar.ProfileAvatar}`) : avatarimg)} alt="Ảnh đại diện người dùng" />
                     </div>
-                    <div className='absolute bottom-0 right-0 w-3 h-3 bg-gradient-to-br from-emerald-400 to-green-500 rounded-full border-2 border-white dark:border-gray-900'></div>
+                    <div className='absolute bottom-0 right-0 w-3 h-3 bg-gradient-to-r from-primary-500 to-rose-400 rounded-full border-2 border-white dark:border-gray-900'></div>
                     <FormActionLogin toggleProfile={toggleProfile} setToggleProfile={setToggleProfile} buttonProfileRef={buttonProfileRef} popupActionRef={popupActionRef} toggleActionLogin={toggleActionLogin} setToggleActionLogin={setToggleActionLogin} />
                     <span className="pointer-events-none absolute top-[calc(100%+10px)] left-1/2 -translate-x-1/2 translate-y-2 whitespace-nowrap rounded-lg bg-white/90 backdrop-blur-sm px-3 py-1.5 text-[12px] font-bold text-gray-700 opacity-0 shadow-lg transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 dark:bg-gray-800 dark:text-gray-200 border border-gray-100 dark:border-gray-700 z-[100]">
                       Tài khoản của tôi
@@ -512,7 +512,7 @@ const Header = () =>
           {/* Nút tìm kiếm mobile */}
           <button
             aria-label="Tìm kiếm"
-            className='flex items-center justify-center w-8 h-8 mr-1 bg-primary-500 hover:bg-primary-600 text-white rounded-full transition-all duration-200 active:scale-90 cursor-pointer shrink-0'
+            className='flex items-center justify-center w-8 h-8 mr-1 bg-gradient-to-r from-primary-500 to-rose-400 hover:from-primary-600 hover:to-rose-500 text-white rounded-full transition-all duration-200 active:scale-90 cursor-pointer shrink-0'
             onClick={handleSearch}
           >
             <i className='bx bx-search text-base'></i>
@@ -529,8 +529,8 @@ const Header = () =>
                 <div className='border-b border-gray-100 dark:border-gray-800'>
                   {suggestions.categories.map((cat) => (
                     <div key={`mcat-${cat.id}`} className='flex items-center gap-3 px-4 py-2.5 cursor-pointer hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors' onClick={() => handleCategorySuggestionClick(cat)}>
-                      <div className='w-6 h-6 rounded-lg bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center flex-shrink-0'><i className='bx bx-category text-primary-600 dark:text-primary-400 text-xs'></i></div>
-                      <span className='text-sm text-gray-700 dark:text-gray-300 truncate'>Danh mục <strong className='text-primary-600 dark:text-primary-400'>"{cat.name}"</strong></span>
+                      <div className='w-6 h-6 rounded-lg bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center flex-shrink-0'><i className='bx bx-category bg-gradient-to-r from-primary-600 to-rose-500 dark:from-primary-400 dark:to-rose-300 text-transparent bg-clip-text inline-block text-xs'></i></div>
+                      <span className='text-sm text-gray-700 dark:text-gray-300 truncate'>Danh mục <strong className='bg-gradient-to-r from-primary-600 to-rose-500 dark:from-primary-400 dark:to-rose-300 text-transparent bg-clip-text inline-block'>"{cat.name}"</strong></span>
                     </div>
                   ))}
                 </div>
@@ -568,7 +568,7 @@ const Header = () =>
                   {mounted && isAuthenticated ? (
                     <>
                       <div className='flex items-center gap-3 p-2 rounded-lg bg-gray-50'>
-                        <img className='w-10 h-10 rounded-full border-2 border-secondary-400' src={avatarURL ? avatarURL : (avatar.ProfileAvatar ? (avatar.ProfileAvatar.startsWith('http') ? avatar.ProfileAvatar : `${API_ENDPOINT}${avatar.ProfileAvatar}`) : avatarimg)} alt="Ảnh đại diện" />
+                        <img className='w-10 h-10 rounded-full border-2 border-primary-500' src={avatarURL ? avatarURL : (avatar.ProfileAvatar ? (avatar.ProfileAvatar.startsWith('http') ? avatar.ProfileAvatar : `${API_ENDPOINT}${avatar.ProfileAvatar}`) : avatarimg)} alt="Ảnh đại diện" />
                         <span className='font-medium text-sm'>Tài khoản</span>
                       </div>
                       <div onClick={() => { toggleFormProfile(); setMobileMenuOpen(false); }} className='flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer'>
@@ -617,7 +617,7 @@ const Header = () =>
                   <div className='space-y-1'>
                     {categories.map((category) => (
                       <a key={category.id} href={`#category-${category.id}`} className='flex items-center gap-3 p-3 hover:bg-secondary-50 rounded-lg text-sm text-gray-700' onClick={() => setMobileMenuOpen(false)}>
-                        <i className='bx bx-lamp text-secondary-500'></i>
+                        <i className='bx bx-lamp text-primary-500'></i>
                         {category.name}
                       </a>
                     ))}

@@ -23,11 +23,11 @@ const NewsSection = () => {
 
     return (
         <div className='w-full xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0 mb-12 mt-8'>
-            <div className='flex justify-between items-center relative pb-2 border-b border-gray-300 mb-6 md:mb-8 after:w-[30%] md:after:w-[13%] after:h-[1px] after:absolute after:bottom-0 after:bg-primary-500'>
+            <div className='flex justify-between items-center relative pb-2 border-b border-gray-300 mb-6 md:mb-8 after:w-[30%] md:after:w-[13%] after:h-[1px] after:absolute after:bottom-0 after:bg-gradient-to-r from-primary-500 to-rose-400'>
                 <h3 className='text-xl md:text-h3 font-medium text-black'>Tin tức & Góc nội thất</h3>
                 <button
                     onClick={() => navigate('/news')}
-                    className="text-sm font-medium text-gray-500 hover:text-secondary-600 transition-colors flex items-center gap-1"
+                    className="text-sm font-medium text-gray-500 hover:text-primary-600 transition-colors flex items-center gap-1"
                 >
                     Xem tất cả <i className='bx bx-chevron-right'></i>
                 </button>
@@ -65,7 +65,7 @@ const NewsSection = () => {
                                         sizes="(max-width: 768px) 100vw, 33vw"
                                         quality={50}
                                     />
-                                    <div className="absolute top-3 left-3 bg-primary-500 text-white text-xs font-bold px-2 py-1 rounded shadow-sm">
+                                    <div className="absolute top-3 left-3 bg-gradient-to-r from-primary-500 to-rose-400 text-white text-xs font-bold px-2 py-1 rounded shadow-sm">
                                         {news.category}
                                     </div>
                                 </div>
@@ -74,7 +74,7 @@ const NewsSection = () => {
                                     <div className="text-xs text-gray-400 mb-2 flex items-center gap-1">
                                         <i className='bx bx-calendar'></i> {dateStr}
                                     </div>
-                                    <h4 className="text-sm md:text-base font-bold text-gray-800 mb-2 line-clamp-2 group-hover:text-secondary-600 transition-colors" title={news.title}>
+                                    <h4 className="text-sm md:text-base font-bold text-gray-800 mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors" title={news.title}>
                                         {news.title}
                                     </h4>
                                     <p className="text-xs md:text-sm text-gray-500 line-clamp-3 mb-4 flex-grow" title={news.excerpt}>

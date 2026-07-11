@@ -247,7 +247,7 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
 
                         {/* OVERLAY PANEL - slides left/right */}
                         <div className={`absolute top-0 bottom-0 w-1/2 z-20 transition-all duration-700 ease-in-out hidden sm:block ${changeForm ? 'left-0 rounded-r-[60px]' : 'left-1/2 rounded-l-[60px]'}`}>
-                            <div className="absolute inset-0 bg-gradient-to-br from-primary-400 via-accent-500 to-primary-500 overflow-hidden">
+                            <div className="absolute inset-0 bg-gradient-to-r from-primary-500 to-rose-400 overflow-hidden">
                                 <div className="absolute -top-12 -right-12 w-40 h-40 bg-white/5 rounded-full" />
                                 <div className="absolute -bottom-16 -left-10 w-48 h-48 bg-white/5 rounded-full" />
                                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-white/5 rounded-full" />
@@ -261,14 +261,14 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                                     {changeForm ? 'Đăng nhập để tiếp tục mua sắm cùng chúng tôi' : 'Đăng ký tài khoản để trải nghiệm mua sắm tuyệt vời'}
                                 </p>
                                 <button type="button" onClick={ChangeFormLogin}
-                                    className="px-8 py-2.5 rounded-full border-2 border-white/70 text-white text-sm font-semibold hover:bg-white hover:text-secondary-600 transition-all duration-300 cursor-pointer tracking-wide">
+                                    className="px-8 py-2.5 rounded-full border-2 border-white/70 text-white text-sm font-semibold hover:bg-white hover:text-primary-600 transition-all duration-300 cursor-pointer tracking-wide">
                                     {changeForm ? 'ĐĂNG NHẬP' : 'ĐĂNG KÝ'}
                                 </button>
                             </div>
                         </div>
 
                         {/* Mobile header */}
-                        <div className="sm:hidden relative h-36 bg-gradient-to-br from-primary-400 via-accent-500 to-primary-500 overflow-hidden">
+                        <div className="sm:hidden relative h-36 bg-gradient-to-r from-primary-500 to-rose-400 overflow-hidden">
                             <div className="absolute -top-8 -right-8 w-32 h-32 bg-white/5 rounded-full" />
                             <div className="absolute -bottom-12 -left-6 w-40 h-40 bg-white/5 rounded-full" />
                             <button onClick={handleModalClose} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white/15 hover:bg-white/30 text-white transition-all cursor-pointer">
@@ -295,7 +295,7 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                             <div className={`w-full sm:w-1/2 sm:absolute sm:top-0 sm:bottom-0 sm:left-0 transition-opacity duration-500 ${changeForm ? 'hidden sm:block sm:opacity-0 sm:pointer-events-none' : 'block sm:opacity-100'}`}>
                                 <div className="px-6 sm:px-10 py-6 sm:py-10 flex flex-col justify-center h-full">
                                     <div className="mb-4 sm:mb-6">
-                                        <h3 className="text-xl sm:text-2xl font-bold text-primary-600 dark:text-primary-400 mb-1">Đăng nhập</h3>
+                                        <h3 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-primary-600 to-rose-500 dark:from-primary-400 dark:to-rose-300 text-transparent bg-clip-text inline-block mb-1">Đăng nhập</h3>
                                         <p className="text-gray-400 text-xs sm:text-sm">Đăng nhập vào tài khoản của bạn</p>
                                     </div>
                                     <form onSubmit={handleSignin} autoComplete="nope">
@@ -322,14 +322,14 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                                         <div className="flex justify-between items-center mb-4 sm:mb-6">
                                             <label className="flex items-center gap-2 cursor-pointer select-none">
                                                 <input type="checkbox" name="rememberMe" checked={stateSignin.rememberMe} onChange={HandleOnChangeStateSignin} className="sr-only peer" />
-                                                <div className="w-4 h-4 border-2 border-gray-300 rounded peer-checked:bg-primary-500 peer-checked:border-primary-500 transition-all flex items-center justify-center">
+                                                <div className="w-4 h-4 border-2 border-gray-300 rounded peer-checked:bg-gradient-to-r from-primary-500 to-rose-400 peer-checked:border-primary-500 transition-all flex items-center justify-center">
                                                     {stateSignin.rememberMe && <i className='bx bx-check text-white text-xs'></i>}
                                                 </div>
                                                 <span className="text-xs text-gray-500">Ghi nhớ đăng nhập</span>
                                             </label>
                                             <button type="button" onClick={e => { e.preventDefault(); setShowForgotPassword(true); }} className="text-xs text-primary-600 hover:text-primary-700 font-medium cursor-pointer">Quên mật khẩu?</button>
                                         </div>
-                                        <button type="submit" disabled={isLoading} className="w-full py-3 rounded-full bg-gradient-to-r from-primary-600 via-tertiary-500 to-accent-500 hover:from-primary-600 hover:to-accent-600 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 dark:shadow-primary-900/30 transition-all duration-300 disabled:opacity-70 cursor-pointer active:scale-[0.97] hover:-translate-y-0.5">
+                                        <button type="submit" disabled={isLoading} className="w-full py-3 rounded-full bg-gradient-to-r from-primary-500 to-rose-400 hover:from-primary-600 hover:to-rose-500 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 dark:shadow-primary-900/30 transition-all duration-300 disabled:opacity-70 cursor-pointer active:scale-[0.97] hover:-translate-y-0.5">
                                             {isLoading ? <span className="flex items-center justify-center gap-2"><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>Đang xử lý...</span> : 'ĐĂNG NHẬP'}
                                         </button>
                                         <div className="flex items-center gap-3 my-4 sm:my-5">
@@ -350,7 +350,7 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                             <div className={`w-full sm:w-1/2 sm:absolute sm:top-0 sm:bottom-0 sm:right-0 transition-opacity duration-500 ${!changeForm ? 'hidden sm:block sm:opacity-0 sm:pointer-events-none' : 'block sm:opacity-100'}`}>
                                 <div className="px-6 sm:px-10 py-6 sm:py-10 flex flex-col justify-center h-full">
                                     <div className="mb-4 sm:mb-6">
-                                        <h3 className="text-xl sm:text-2xl font-bold text-primary-600 dark:text-primary-400 mb-1">Tạo tài khoản</h3>
+                                        <h3 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-primary-600 to-rose-500 dark:from-primary-400 dark:to-rose-300 text-transparent bg-clip-text inline-block mb-1">Tạo tài khoản</h3>
                                         <p className="text-gray-400 text-xs sm:text-sm">Đăng ký để bắt đầu mua sắm</p>
                                     </div>
                                     <form onSubmit={handleSignup} autoComplete="nope">
@@ -384,7 +384,7 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                                             <label className="flex items-start gap-2 cursor-pointer select-none">
                                                 <div className="relative mt-0.5">
                                                     <input type="checkbox" name="acceptTerms" checked={acceptTerms} onChange={(e) => { setAcceptTerms(e.target.checked); setFormErrors(prev => ({ ...prev, acceptTerms: '' })); }} className="sr-only peer" />
-                                                    <div className={`w-4 h-4 border-2 rounded transition-all flex items-center justify-center ${formErrors.acceptTerms ? 'border-red-400 bg-red-50' : 'border-gray-300 peer-checked:bg-primary-500 peer-checked:border-primary-500'}`}>
+                                                    <div className={`w-4 h-4 border-2 rounded transition-all flex items-center justify-center ${formErrors.acceptTerms ? 'border-red-400 bg-red-50' : 'border-gray-300 peer-checked:bg-gradient-to-r from-primary-500 to-rose-400 peer-checked:border-primary-500'}`}>
                                                         {acceptTerms && <i className='bx bx-check text-white text-xs'></i>}
                                                     </div>
                                                 </div>
@@ -392,7 +392,7 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                                             </label>
                                             {formErrors.acceptTerms && <p className="mt-1 ml-6 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.acceptTerms}</p>}
                                         </div>
-                                        <button type="submit" disabled={isLoading || !acceptTerms} className={`w-full py-3 rounded-full bg-gradient-to-r from-primary-600 via-tertiary-500 to-accent-500 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 dark:shadow-primary-900/30 transition-all duration-300 ${isLoading || !acceptTerms ? 'opacity-50 cursor-not-allowed' : 'hover:from-primary-600 hover:to-accent-600 cursor-pointer active:scale-[0.97] hover:-translate-y-0.5'}`}>
+                                        <button type="submit" disabled={isLoading || !acceptTerms} className={`w-full py-3 rounded-full bg-gradient-to-r from-primary-500 to-rose-400 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 dark:shadow-primary-900/30 transition-all duration-300 ${isLoading || !acceptTerms ? 'opacity-50 cursor-not-allowed' : 'hover:from-primary-600 hover:to-rose-500 cursor-pointer active:scale-[0.97] hover:-translate-y-0.5'}`}>
                                             {isLoading ? <span className="flex items-center justify-center gap-2"><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>Đang xử lý...</span> : 'ĐĂNG KÝ TÀI KHOẢN'}
                                         </button>
                                         <p className="text-center text-sm text-gray-500 mt-4 sm:mt-5 sm:hidden">Đã có tài khoản?{' '}<button type="button" onClick={ChangeFormLogin} className="text-primary-600 font-semibold cursor-pointer">Đăng nhập</button></p>

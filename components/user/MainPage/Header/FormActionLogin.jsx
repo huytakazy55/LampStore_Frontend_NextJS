@@ -77,7 +77,7 @@ const FormActionLogin = ({ toggleActionLogin, popupActionRef, setToggleActionLog
                 id='FormActionLogin'>
 
                 {/* Profile Header */}
-                <div className='relative px-5 pt-5 pb-4 bg-gradient-to-br from-primary-100 to-primary-100 dark:from-gray-800 dark:to-gray-800'>
+                <div className='relative px-5 pt-5 pb-4 bg-gradient-to-r from-primary-500 to-rose-400 dark:bg-gray-800'>
                     {/* Decorative circle */}
                     <div className='absolute -top-6 -right-6 w-20 h-20 bg-primary-100/50 dark:bg-primary-900/10 rounded-full'></div>
                     <div className='relative flex items-center gap-3'>

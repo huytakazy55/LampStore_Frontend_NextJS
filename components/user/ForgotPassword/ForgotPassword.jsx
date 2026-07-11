@@ -52,7 +52,7 @@ const ForgotPassword = ({ visible, onCancel }) => {
         <div className="relative overflow-hidden rounded-lg bg-white dark:bg-gray-900 shadow-[0_25px_60px_rgba(0,0,0,0.3)]">
 
           {/* Header */}
-          <div className="relative h-28 overflow-hidden bg-gradient-to-br from-primary-400 via-accent-400 to-primary-400">
+          <div className="relative h-28 overflow-hidden bg-gradient-to-r from-primary-500 to-rose-400">
             <div className="absolute -top-6 -right-6 w-24 h-24 bg-white/10 rounded-full" />
             <div className="absolute -bottom-8 -left-4 w-28 h-28 bg-white/10 rounded-full" />
 
@@ -98,7 +98,7 @@ const ForgotPassword = ({ visible, onCancel }) => {
                   Hủy
                 </button>
                 <button type="submit" disabled={loading}
-                  className="flex-1 py-3 rounded-xl bg-gradient-to-r from-primary-600 via-tertiary-500 to-accent-500 hover:from-primary-600 hover:to-accent-600 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 transition-all disabled:opacity-70 cursor-pointer">
+                  className="flex-1 py-3 rounded-xl bg-gradient-to-r from-primary-500 to-rose-400 hover:from-primary-600 hover:to-rose-500 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 transition-all disabled:opacity-70 cursor-pointer">
                   {loading ? (
                     <span className="flex items-center justify-center gap-2">
                       <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>

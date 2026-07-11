@@ -14,7 +14,7 @@ const LazyMap = () =>
             {!loaded && (
                 <button
                     onClick={() => setLoaded(true)}
-                    className='absolute inset-0 w-full h-full bg-primary-600/80 dark:bg-gray-800 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-primary-600 dark:hover:bg-gray-700 transition-colors group z-10'
+                    className='absolute inset-0 w-full h-full bg-primary-600/80 dark:bg-gray-800 flex flex-col items-center justify-center gap-2 cursor-pointer hover:from-primary-600 hover:to-rose-500 dark:hover:bg-gray-700 transition-colors group z-10'
                     aria-label="Nhấn để xem bản đồ Google Maps"
                 >
                     <i className='bx bx-map text-3xl text-white dark:text-primary-500 group-hover:scale-110 transition-transform' />
@@ -44,7 +44,7 @@ const Footer = () =>
     return (
         <footer style={{ contain: 'layout style', contentVisibility: 'auto', containIntrinsicSize: 'auto 500px' }}>
             {/* Main Footer */}
-            <div className='relative overflow-hidden bg-gradient-to-br from-primary-900 via-tertiary-900 to-quaternary-900 dark:from-black dark:via-primary-950 dark:to-tertiary-950' style={{ minHeight: '380px' }}>
+            <div className='relative overflow-hidden bg-gradient-to-r from-primary-500 to-rose-400 dark:bg-black' style={{ minHeight: '380px' }}>
                 {/* === Left Wave (Swoops under the map) — Light mode === */}
                 <svg className='absolute top-0 left-0 w-full h-full pointer-events-none dark:hidden' viewBox="0 0 1440 500" preserveAspectRatio="none" fill="none">
                     {/* Outer wave */}

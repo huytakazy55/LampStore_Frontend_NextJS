@@ -78,7 +78,7 @@ const TopBar = () =>
                         >
                             <i className='bx bx-x text-xl'></i>
                         </button>
-                        <h3 className='text-lg md:text-xl font-bold mb-4 flex items-center gap-2 text-primary-600 dark:text-primary-400'>
+                        <h3 className='text-lg md:text-xl font-bold mb-4 flex items-center gap-2 bg-gradient-to-r from-primary-600 to-rose-500 dark:from-primary-400 dark:to-rose-300 text-transparent bg-clip-text inline-block'>
                             <i className='bx bx-map text-2xl'></i> Vị trí Cửa hàng CapyLumine
                         </h3>
                         <div className='w-full h-[calc(100%-3.5rem)] rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700'>

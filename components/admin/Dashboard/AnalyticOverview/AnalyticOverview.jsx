@@ -32,8 +32,8 @@ const icons = {
     </div>
   ),
   order: (
-    <div className="bg-secondary-100 p-3 rounded-full">
-      <svg className="w-6 h-6 text-secondary-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <div className="bg-primary-50 dark:bg-primary-900/20 p-3 rounded-full">
+      <svg className="w-6 h-6 text-primary-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
         <path d="M9 17v-2a2 2 0 012-2h2a2 2 0 012 2v2" />
         <path d="M21 17V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10" />
       </svg>
@@ -45,7 +45,7 @@ const percentColor = {
   green: "bg-green-100 text-green-600",
   red: "bg-red-100 text-red-500",
   blue: "bg-blue-100 text-blue-600",
-  yellow: "bg-secondary-100 text-secondary-600",
+  yellow: "bg-primary-50 dark:bg-primary-900/20 text-primary-600",
 };
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -148,7 +148,7 @@ export default function AnalyticOverview() {
               border-l-8 border-[1px] cursor-pointer
               ${item.percentType === "green" ? "border-green-400" : ""}
               ${item.percentType === "blue" ? "border-blue-400" : ""}
-              ${item.percentType === "yellow" ? "border-secondary-400" : ""}
+              ${item.percentType === "yellow" ? "border-primary-500" : ""}
               ${item.percentType === "red" ? "border-red-400" : ""}
               hover:scale-[1.03] hover:shadow-2xl transition-all duration-200
             `}

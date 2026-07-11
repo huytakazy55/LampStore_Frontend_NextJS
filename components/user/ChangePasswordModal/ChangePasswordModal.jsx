@@ -82,7 +82,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) =>
             <div className='bg-white dark:bg-gray-900 w-full max-w-md rounded-lg shadow-2xl overflow-hidden'
                 onClick={e => e.stopPropagation()}>
                 {/* Header */}
-                <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-rose-50 to-primary-50 dark:from-gray-800 dark:to-gray-800'>
+                <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-rose-50 to-primary-50 dark:bg-gray-800'>
                     <h2 className='text-lg font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2'>
                         <i className='bx bx-lock-alt text-rose-500'></i>
                         Đổi mật khẩu
