@@ -146,7 +146,7 @@ const TrendingProduct = () => {
               <div key={product.id} className='p-[3px]'>
                 <div
                   className='flex h-[10rem] md:h-[12rem] cursor-pointer bg-white dark:bg-[#1a1a1a] rounded-sm overflow-hidden border border-gray-100 dark:border-[#2a2a2a] transition-all duration-300 hover:border-primary-200 dark:hover:border-primary-800 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08),0_0_0_1px_rgba(139,92,246,0.1)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:-translate-y-0.5 group'
-                  onClick={() => navigate(`/product/${product.slug || product.id}`)}
+                  onClick={() => { if (product.slug || product.id) navigate(`/product/${product.slug || product.id}`); }}
                 >
                   {/* Image */}
                   <div className='relative w-[38%] md:w-[40%] flex-shrink-0 bg-gray-50 dark:bg-[#111] flex items-center justify-center p-3 overflow-hidden'>

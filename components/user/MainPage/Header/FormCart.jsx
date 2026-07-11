@@ -16,7 +16,7 @@ const FormCart = ({ toggleCart, popupRef, setToggleCart }) => {
 
     const handleViewProduct = (productId) => {
         setToggleCart(false);
-        navigate(`/product/${productId}`);
+        if (productId) navigate(`/product/${productId}`);
     };
 
     return (

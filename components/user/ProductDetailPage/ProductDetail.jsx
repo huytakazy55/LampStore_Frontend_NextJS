@@ -324,7 +324,7 @@ const ProductDetail = () =>
             },
             "offers": {
                 "@type": "Offer",
-                "url": `${SITE_URL}/product/${id}`,
+                "url": `${SITE_URL}/product/${id || ''}`,
                 "priceCurrency": "VND",
                 "price": price,
                 "availability": stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
@@ -407,13 +407,13 @@ const ProductDetail = () =>
                 <title>{getPageTitle()}</title>
                 <meta name="description" content={getMetaDescription()} />
                 <meta name="keywords" content={`${product.name}, ${product.tags || ''}, đèn trang trí, CapyLumine, mua đèn online`} />
-                <link rel="canonical" href={`${SITE_URL}/product/${id}`} />
+                {id && <link rel="canonical" href={`${SITE_URL}/product/${id}`} />}
 
                 {/* Open Graph (Facebook, Zalo) */}
                 <meta property="og:type" content="product" />
                 <meta property="og:title" content={product.name} />
                 <meta property="og:description" content={getMetaDescription()} />
-                <meta property="og:url" content={`${SITE_URL}/product/${id}`} />
+                {id && <meta property="og:url" content={`${SITE_URL}/product/${id}`} />}
                 <meta property="og:image" content={mainImage} />
                 <meta property="og:site_name" content="CapyLumine" />
                 <meta property="og:locale" content="vi_VN" />
@@ -802,7 +802,7 @@ const ProductDetail = () =>
                                         <div
                                             key={rp.id}
                                             className='group cursor-pointer bg-white dark:bg-gray-800 rounded-sm overflow-hidden border border-gray-100 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-300'
-                                            onClick={() => navigate(`/product/${rp.id}`)}
+                                            onClick={() => { if (rp.id) navigate(`/product/${rp.id}`); }}
                                         >
                                             <div className='relative h-36 sm:h-44 md:h-48 overflow-hidden bg-gray-50 dark:bg-gray-700'>
                                                 <img

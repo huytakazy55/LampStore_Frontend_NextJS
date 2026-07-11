@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, notFound } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import Header from '@/components/user/MainPage/Header/Header';
@@ -91,7 +91,16 @@ export default function ProductDetailPage() {
     const { isInWishlist, toggleWishlist } = useWishlist();
     const { data: allProducts = [] } = useProducts();
 
+    // Redirect to 404 if slug is 'undefined' or missing
     useEffect(() => {
+        if (!slug || slug === 'undefined') {
+            notFound();
+            return;
+        }
+    }, [slug]);
+
+    useEffect(() => {
+        if (!slug || slug === 'undefined') return;
         window.scrollTo(0, 0);
 
         const fetchProduct = async () => {
@@ -666,7 +675,7 @@ export default function ProductDetailPage() {
                                                     <div className='flex items-center gap-3 p-3 bg-gray-50/50 dark:bg-gray-800/30'>
                                                         <img src={addonImg} alt={addon.name} className='w-12 h-12 rounded object-cover border border-gray-200 dark:border-gray-600 flex-shrink-0 cursor-pointer' onClick={() => setPreviewImg({ src: addonImg, name: addon.name, price: addonBasePrice })} onError={(e) => { e.target.src = '/images/cameras-2.jpg'; }} />
                                                         <div className='flex-1 min-w-0'>
-                                                            <a href={`/product/${addon.slug}`} className='text-sm font-medium text-gray-800 dark:text-gray-200 hover:text-primary-600 transition-colors line-clamp-1'>{addon.name}</a>
+                                                            {addon.slug ? <a href={`/product/${addon.slug}`} className='text-sm font-medium text-gray-800 dark:text-gray-200 hover:text-primary-600 transition-colors line-clamp-1'>{addon.name}</a> : <span className='text-sm font-medium text-gray-800 dark:text-gray-200 line-clamp-1'>{addon.name}</span>}
                                                             <div className='flex items-center gap-2 mt-0.5'>
                                                                 <span className='text-sm font-bold text-primary-600'>₫{formatPrice(addonBasePrice)}</span>
                                                                 {addonHasDiscount && <span className='text-xs text-gray-400 line-through'>₫{formatPrice(addonOriginal)}</span>}
@@ -975,7 +984,7 @@ export default function ProductDetailPage() {
                                     <div
                                         key={rp.id}
                                         className='group cursor-pointer bg-white dark:bg-gray-800 rounded-sm overflow-hidden border border-gray-100 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-300'
-                                        onClick={() => router.push(`/product/${rp.slug || rp.id}`)}
+                                        onClick={() => { if (rp.slug || rp.id) router.push(`/product/${rp.slug || rp.id}`); }}
                                     >
                                         <div className='relative h-36 sm:h-44 md:h-48 overflow-hidden bg-gray-50 dark:bg-gray-700'>
                                             <img

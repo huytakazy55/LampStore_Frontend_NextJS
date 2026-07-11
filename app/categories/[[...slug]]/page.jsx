@@ -171,7 +171,7 @@ export default function CategoryPage() {
                                             return (
                                                 <div key={product.id}
                                                     className="relative group cursor-pointer bg-white rounded-sm overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:-translate-y-1.5 border border-gray-100"
-                                                    onClick={() => router.push(`/product/${product.slug || product.id}`)}>
+                                                    onClick={() => { if (product.slug || product.id) router.push(`/product/${product.slug || product.id}`); }}>
                                                     {hasDiscount && (
                                                         <div className="absolute top-3 left-3 z-10 bg-gradient-to-r from-primary-600 via-tertiary-500 to-accent-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-sm shadow-lg">
                                                             -{discountPercent}%

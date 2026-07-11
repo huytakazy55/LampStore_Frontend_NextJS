@@ -35,7 +35,7 @@ const SmallProductCard = ({ product, navigate, onAddToCartClick }) => {
   return (
     <div
       className='relative group cursor-pointer bg-white dark:bg-[#1a1a1a] rounded-sm overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08),0_0_0_1px_rgba(139,92,246,0.1)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:-translate-y-1 border border-gray-100 dark:border-[#2a2a2a] hover:border-primary-200 dark:hover:border-primary-800'
-      onClick={() => navigate(`/product/${product.slug || product.id}`)}
+      onClick={() => { if (product.slug || product.id) navigate(`/product/${product.slug || product.id}`); }}
     >
       {/* Discount Badge */}
       {hasDiscount && (

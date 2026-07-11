@@ -178,7 +178,7 @@ const Header = () =>
   {
     setShowSuggestions(false);
     setSearchKeyword(product.name || '');
-    navigate(`/product/${product.slug || product.id}`);
+    if (product.slug || product.id) navigate(`/product/${product.slug || product.id}`);
   };
 
   // Enter key → chuyển trang tìm kiếm

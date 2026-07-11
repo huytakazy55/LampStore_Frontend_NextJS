@@ -166,7 +166,7 @@ const WishlistPage = () => {
                                     {/* Image */}
                                     <div
                                         className='relative h-48 bg-gray-50 flex items-center justify-center cursor-pointer overflow-hidden'
-                                        onClick={() => navigate(`/product/${item.productSlug || item.productId}`)}
+                                        onClick={() => { if (item.productSlug || item.productId) navigate(`/product/${item.productSlug || item.productId}`); }}
                                     >
                                         <img
                                             src={getImgSrc(item.productImage)}
@@ -199,7 +199,7 @@ const WishlistPage = () => {
                                         )}
                                         <h3
                                             className='text-sm font-medium text-gray-800 line-clamp-2 mb-2 cursor-pointer hover:text-primary-600 transition-colors leading-snug h-10'
-                                            onClick={() => navigate(`/product/${item.productSlug || item.productId}`)}
+                                            onClick={() => { if (item.productSlug || item.productId) navigate(`/product/${item.productSlug || item.productId}`); }}
                                         >
                                             {item.productName}
                                         </h3>
@@ -232,7 +232,7 @@ const WishlistPage = () => {
                                                 Thêm vào giỏ
                                             </button>
                                             <button
-                                                onClick={() => navigate(`/product/${item.productSlug || item.productId}`)}
+                                                onClick={() => { if (item.productSlug || item.productId) navigate(`/product/${item.productSlug || item.productId}`); }}
                                                 className='flex-1 bg-gradient-to-r from-primary-500 to-rose-400 text-white py-2 rounded-sm hover:from-primary-600 hover:to-rose-500 transition-colors text-sm font-medium cursor-pointer'
                                             >
                                                 Mua ngay

@@ -197,7 +197,7 @@ function SearchResults() {
                                             <div
                                                 key={product.id}
                                                 className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700 hover:shadow-lg hover:shadow-primary-100/30 dark:hover:shadow-primary-900/10 hover:border-primary-200 dark:hover:border-primary-700 transition-all duration-300 cursor-pointer flex flex-col"
-                                                onClick={() => navigate(`/product/${product.slug || product.id}`)}
+                                                onClick={() => { if (product.slug || product.id) navigate(`/product/${product.slug || product.id}`); }}
                                             >
                                                 {/* Image */}
                                                 <div className="relative aspect-square overflow-hidden bg-gray-50 dark:bg-gray-900">

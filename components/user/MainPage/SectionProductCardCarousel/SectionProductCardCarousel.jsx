@@ -222,7 +222,7 @@ const SectionProductCardCarousel = () =>
               <ProductCardItem
                 key={product.id}
                 product={product}
-                onClick={() => navigate(`/product/${product.slug || product.id}`)}
+                onClick={() => { if (product.slug || product.id) navigate(`/product/${product.slug || product.id}`); }}
                 isInWishlist={isInWishlist(product.id)}
                 onToggleWishlist={toggleWishlist}
                 onAddToCartClick={setCartModalProduct}

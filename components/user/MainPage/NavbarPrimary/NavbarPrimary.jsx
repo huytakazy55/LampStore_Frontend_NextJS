@@ -235,7 +235,7 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () => {
                           onClick={() => {
                             setShowDropdown(false)
                             setHoveredCategory(null)
-                            navigate(`/product/${product.slug || product.id}`)
+                            if (product.slug || product.id) navigate(`/product/${product.slug || product.id}`)
                           }}
                           style={{ animationDelay: `${idx * 50}ms` }}
                         >

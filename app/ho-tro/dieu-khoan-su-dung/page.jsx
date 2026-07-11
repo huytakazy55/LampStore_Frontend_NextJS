@@ -137,7 +137,7 @@ export default function DieuKhoanSuDungPage() {
                     {[
                         { icon: 'bx-store', text: 'CapyLumine.com' },
                         { icon: 'bx-phone', text: '(+84) 969 608 810' },
-                        { icon: 'bx-envelope', text: 'Khongthaydoi124@gmail.com' },
+                        { icon: 'bx-envelope', text: 'support@capylumine.com' },
                         { icon: 'bx-map', text: 'A2 Vĩnh Hồ, Thịnh Quang, Đống Đa, Hà Nội' },
                     ].map((c, i) => (
                         <div key={i} className="flex items-center gap-3">

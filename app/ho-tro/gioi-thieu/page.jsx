@@ -16,9 +16,7 @@ export default function GioiThieuPage() {
 
             <div className="bg-gradient-to-r from-primary-50 to-accent-50 dark:from-primary-950/30 dark:to-accent-950/30 rounded-2xl p-6 mb-8 border border-primary-100 dark:border-primary-800/40">
                 <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-base m-0">
-                    <strong className="text-primary-700 dark:text-primary-400">CapyLumine</strong> là thương hiệu đèn trang trí cao cấp hàng đầu Việt Nam,
-                    chuyên cung cấp các sản phẩm đèn ngủ dễ thương, đèn bàn học, đèn LED nghệ thuật và đèn anime với thiết kế độc đáo,
-                    chất lượng vượt trội.
+                    <strong className="text-primary-700 dark:text-primary-400">CapyLumine</strong> là thương hiệu chuyên cung cấp đèn ngủ và đèn trang trí với thiết kế hiện đại, dễ thương và đa dạng phong cách.
                 </p>
             </div>
 
@@ -36,7 +34,7 @@ export default function GioiThieuPage() {
                         <i className='bx bx-target-lock text-primary-600 dark:text-primary-400 text-xl' />
                     </div>
                     <h4 className="font-bold text-gray-800 dark:text-gray-100 mb-2">Tầm nhìn</h4>
-                    <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Trở thành thương hiệu đèn trang trí được yêu thích nhất tại Việt Nam, mang ánh sáng nghệ thuật đến mọi gia đình.</p>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Mang ánh sáng nghệ thuật và sự thư giãn đến mọi không gian sống thông qua những thiết kế đèn độc đáo.</p>
                 </div>
                 <div className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl p-5 shadow-sm">
                     <div className="w-10 h-10 bg-primary-100 dark:bg-primary-900/40 rounded-lg flex items-center justify-center mb-3">
@@ -76,7 +74,7 @@ export default function GioiThieuPage() {
                     </div>
                     <div className="flex items-center gap-3">
                         <i className='bx bx-envelope text-primary-600 dark:text-primary-400 text-lg' />
-                        <span className="text-gray-700 dark:text-gray-300 text-sm">Khongthaydoi124@gmail.com</span>
+                        <span className="text-gray-700 dark:text-gray-300 text-sm">support@capylumine.com</span>
                     </div>
                     <div className="flex items-center gap-3">
                         <i className='bx bx-map text-primary-600 dark:text-primary-400 text-lg' />

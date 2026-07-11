@@ -34,7 +34,8 @@ function getImagePath(image)
 function toAbsoluteSiteUrl(path, fallback = DEFAULT_OG_IMAGE)
 {
     if (!path) return fallback;
-    if (path.startsWith('http')) {
+    if (path.startsWith('http'))
+    {
         try
         {
             const url = new URL(path);
@@ -74,6 +75,15 @@ async function fetchProductBySlug(slug)
 export async function generateMetadata({ params })
 {
     const { slug } = await params;
+
+    // Prevent indexing of /product/undefined
+    if (!slug || slug === 'undefined')
+    {
+        return {
+            title: 'Không tìm thấy sản phẩm | CapyLumine',
+            robots: { index: false, follow: false },
+        };
+    }
 
     try
     {
@@ -249,18 +259,66 @@ function getBreadcrumbJsonLd(productName, slug)
     };
 }
 
+// Helper: format price for SSR
+function formatPriceSSR(price)
+{
+    if (!price) return '0';
+    return Number(price).toLocaleString('vi-VN');
+}
+
+// Helper: resolve image to absolute URL for SSR rendering
+function resolveImgSrc(path)
+{
+    if (!path) return null;
+    if (path.startsWith('http')) return path;
+    return `${SITE_URL}${path.startsWith('/') ? '' : '/'}${path}`;
+}
+
+// Fetch related products (same category)
+async function fetchRelatedProducts(product)
+{
+    try
+    {
+        const res = await fetch(`${API_ENDPOINT}/api/Products`, { next: { revalidate: 120 } });
+        if (!res.ok) return [];
+        const data = await res.json();
+        const products = data?.$values || data || [];
+        return products
+            .filter(p => p.categoryId === product.categoryId && p.id !== product.id && (p.slug || p.id))
+            .slice(0, 6);
+    } catch
+    {
+        return [];
+    }
+}
+
 export default async function ProductLayout({ children, params })
 {
     const { slug } = await params;
     const productJsonLd = await getProductJsonLd(slug);
 
-    // Get product name for breadcrumb
-    let productName = 'Sản phẩm';
+    // Fetch product for SSR content
+    let product = null;
+    let relatedProducts = [];
     try
     {
-        const product = await fetchProductBySlug(slug);
-        if (product) productName = product.name;
+        product = await fetchProductBySlug(slug);
+        if (product)
+        {
+            relatedProducts = await fetchRelatedProducts(product);
+        }
     } catch { }
+
+    const productName = product?.name || 'Sản phẩm';
+    const variant = product?.variant;
+    const price = product ? getProductPrice(product) : 0;
+    const originalPrice = variant?.price || product?.maxPrice || 0;
+    const hasDiscount = variant?.discountPrice && variant.discountPrice < variant.price;
+    const discountPercent = hasDiscount ? Math.round((1 - variant.discountPrice / variant.price) * 100) : 0;
+    const stock = variant?.stock || 0;
+    const productImages = product ? getProductImages(product) : [];
+    const description = product?.description ? stripHtml(product.description, 1000) : '';
+    const categoryName = product?.categoryName || product?.category?.name || '';
 
     return (
         <>
@@ -274,6 +332,97 @@ export default async function ProductLayout({ children, params })
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(getBreadcrumbJsonLd(productName, slug)) }}
             />
+
+            {/* SSR Product Content — visible to Googlebot, hidden after client hydration */}
+            {product && (
+                <div data-ssr-content="product" style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap', borderWidth: 0 }}>
+                    <article itemScope itemType="https://schema.org/Product">
+                        {/* Breadcrumb */}
+                        <nav aria-label="Breadcrumb">
+                            <a href="/">Trang chủ</a> &gt;
+                            {categoryName && <><a href="/categories">{categoryName}</a> &gt;</>}
+                            <span>{productName}</span>
+                        </nav>
+
+                        {/* Product Name */}
+                        <h1 itemProp="name">{productName}</h1>
+
+                        {/* Product Images */}
+                        {productImages.length > 0 && (
+                            <div>
+                                {productImages.map((imgUrl, i) => (
+                                    <img key={i} src={imgUrl} alt={`${productName} - Ảnh ${i + 1}`} itemProp="image" width="400" height="400" loading={i === 0 ? 'eager' : 'lazy'} />
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Price */}
+                        <div itemProp="offers" itemScope itemType="https://schema.org/Offer">
+                            <meta itemProp="priceCurrency" content="VND" />
+                            <meta itemProp="price" content={String(price)} />
+                            <meta itemProp="availability" content={stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock'} />
+                            <p>Giá: <strong>{formatPriceSSR(price)}₫</strong></p>
+                            {hasDiscount && (
+                                <p>Giá gốc: <del>{formatPriceSSR(originalPrice)}₫</del> (-{discountPercent}%)</p>
+                            )}
+                            <p>{stock > 0 ? `Còn ${stock} sản phẩm` : 'Hết hàng'}</p>
+                        </div>
+
+                        {/* Product Details */}
+                        <div>
+                            <h2>Chi tiết sản phẩm</h2>
+                            <p>Tên: {productName}</p>
+                            {variant?.materials && <p>Chất liệu: {variant.materials}</p>}
+                            {variant?.weight && <p>Trọng lượng: {variant.weight} gram</p>}
+                            {product?.tags && <p>Tags: {product.tags}</p>}
+                            {categoryName && <p>Danh mục: <a href={`/categories/${product.category?.slug || ''}`}>{categoryName}</a></p>}
+                        </div>
+
+                        {/* Description */}
+                        {description && (
+                            <div>
+                                <h2>Mô tả sản phẩm</h2>
+                                <p itemProp="description">{description}</p>
+                            </div>
+                        )}
+
+                        {/* Trust badges */}
+                        <ul>
+                            <li>Đổi ý miễn phí 15 ngày</li>
+                            <li>Hàng chính hãng 100%</li>
+                            <li>Miễn phí vận chuyển</li>
+                        </ul>
+
+                        {/* Related Products — crawlable links */}
+                        {relatedProducts.length > 0 && (
+                            <div>
+                                <h2>Sản phẩm liên quan</h2>
+                                <ul>
+                                    {relatedProducts.map(rp =>
+                                    {
+                                        const rpSlug = rp.slug || rp.id;
+                                        const rpVariant = rp.variant;
+                                        const rpPrice = rpVariant?.discountPrice || rpVariant?.price || rp.minPrice || 0;
+                                        const rpImgs = normalizeArray(rp.images);
+                                        const rpImgPath = rpImgs.length > 0 ? getImagePath(rpImgs[0]) : null;
+                                        const rpImgUrl = rpImgPath ? resolveImgSrc(rpImgPath) : null;
+                                        return (
+                                            <li key={rp.id}>
+                                                <a href={`/product/${rpSlug}`}>
+                                                    {rpImgUrl && <img src={rpImgUrl} alt={rp.name} width="200" height="200" loading="lazy" />}
+                                                    <span>{rp.name}</span>
+                                                    <span> - {formatPriceSSR(rpPrice)}₫</span>
+                                                </a>
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
+                            </div>
+                        )}
+                    </article>
+                </div>
+            )}
+
             {children}
         </>
     );

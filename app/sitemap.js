@@ -35,12 +35,14 @@ export default async function sitemap()
         {
             const data = await res.json();
             const categories = data?.$values || data || [];
-            categoryPages = categories.map(cat => ({
-                url: `${SITE_URL}/categories/${cat.slug || cat.id}`,
-                lastModified: new Date(cat.updatedAt || cat.createdAt || new Date()),
-                changeFrequency: 'weekly',
-                priority: 0.8,
-            }));
+            categoryPages = categories
+                .filter(cat => cat.slug || cat.id)
+                .map(cat => ({
+                    url: `${SITE_URL}/categories/${cat.slug || cat.id}`,
+                    lastModified: new Date(cat.updatedAt || cat.createdAt || new Date()),
+                    changeFrequency: 'weekly',
+                    priority: 0.8,
+                }));
         }
     } catch (error)
     {
@@ -56,12 +58,14 @@ export default async function sitemap()
         {
             const data = await res.json();
             const products = data?.$values || data || [];
-            productPages = products.map(product => ({
-                url: `${SITE_URL}/product/${product.slug || product.id}`,
-                lastModified: new Date(product.updatedAt || product.createdAt || new Date()),
-                changeFrequency: 'weekly',
-                priority: 0.9,
-            }));
+            productPages = products
+                .filter(product => product.slug || product.id)
+                .map(product => ({
+                    url: `${SITE_URL}/product/${product.slug || product.id}`,
+                    lastModified: new Date(product.updatedAt || product.createdAt || new Date()),
+                    changeFrequency: 'weekly',
+                    priority: 0.9,
+                }));
         }
     } catch (error)
     {
@@ -77,12 +81,14 @@ export default async function sitemap()
         {
             const data = await res.json();
             const news = data?.$values || data || [];
-            newsPages = news.map(item => ({
-                url: `${SITE_URL}/news/${item.slug || item.id}`,
-                lastModified: new Date(item.updatedAt || item.createdAt || new Date()),
-                changeFrequency: 'weekly',
-                priority: 0.6,
-            }));
+            newsPages = news
+                .filter(item => item.slug || item.id)
+                .map(item => ({
+                    url: `${SITE_URL}/news/${item.slug || item.id}`,
+                    lastModified: new Date(item.updatedAt || item.createdAt || new Date()),
+                    changeFrequency: 'weekly',
+                    priority: 0.6,
+                }));
         }
     } catch (error)
     {

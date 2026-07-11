@@ -21,6 +21,9 @@ const AllProducts = dynamic(() => import('@/components/user/MainPage/AllProducts
 const BannerImage = dynamic(() => import('@/components/user/MainPage/BannerImage/BannerImage'), { ssr: false });
 const Newsletter = dynamic(() => import('@/components/user/MainPage/Newsletter/Newsletter'), { ssr: false });
 const FlashSale = dynamic(() => import('@/components/user/MainPage/FlashSale/FlashSale'), { ssr: false });
+const CustomerReviews = dynamic(() => import('@/components/user/MainPage/SocialProof/CustomerReviews'), { ssr: false });
+const CustomerGallery = dynamic(() => import('@/components/user/MainPage/SocialProof/CustomerGallery'), { ssr: false });
+const WhyChooseUs = dynamic(() => import('@/components/user/MainPage/WhyChooseUs/WhyChooseUs'), { ssr: false });
 
 import PageLoader from '@/components/common/PageLoader';
 
@@ -59,8 +62,16 @@ export default function HomePage() {
 
                 <ScrollTimeline />
 
-                {/* === BELOW THE FOLD: Lazy load khi scroll đến === */}
+                {/* 1. Sản phẩm bán chạy (Trending) */}
+                <div data-section="trending" data-label="Bán chạy" data-aos="fade-up" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 400px' }}>
+                    <LazySection minHeightClass="min-h-[200px] sm:min-h-[400px]">
+                        <Suspense fallback={<SectionSpinner minHeightClass="min-h-[200px] sm:min-h-[400px]" />}>
+                            <SectionProductCardCarousel />
+                        </Suspense>
+                    </LazySection>
+                </div>
 
+                {/* 2. Danh mục nổi bật */}
                 <div data-section="categories" data-label="Danh mục" data-aos="fade-up" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 280px' }}>
                     <LazySection minHeightClass="min-h-[120px] sm:min-h-[280px]">
                         <Suspense fallback={<SectionSpinner minHeightClass="min-h-[120px] sm:min-h-[280px]" />}>
@@ -69,11 +80,37 @@ export default function HomePage() {
                     </LazySection>
                 </div>
 
-                {/* === FLASH SALE (hiển thị khi có chương trình đang diễn ra) === */}
+                {/* FLASH SALE */}
                 <Suspense fallback={null}>
                     <FlashSale />
                 </Suspense>
 
+                {/* 3. Banner sản phẩm chủ lực */}
+                <LazySection minHeightClass="min-h-[100px] sm:min-h-[160px]">
+                    <Suspense fallback={<SectionSpinner minHeightClass="min-h-[100px] sm:min-h-[160px]" />}>
+                        <BannerImage />
+                    </Suspense>
+                </LazySection>
+
+                {/* 4. Tại sao chọn CapyLumine */}
+                <div data-section="whychooseus" data-label="Tại sao chọn" data-aos="fade-up">
+                    <LazySection minHeightClass="min-h-[300px]">
+                        <Suspense fallback={<SectionSpinner minHeightClass="min-h-[300px]" />}>
+                            <WhyChooseUs />
+                        </Suspense>
+                    </LazySection>
+                </div>
+
+                {/* 5. Không gian / Video thực tế */}
+                <div data-section="gallery" data-label="Feedback" data-aos="fade-up">
+                    <LazySection minHeightClass="min-h-[300px]">
+                        <Suspense fallback={<SectionSpinner minHeightClass="min-h-[300px]" />}>
+                            <CustomerGallery />
+                        </Suspense>
+                    </LazySection>
+                </div>
+
+                {/* 6. Sản phẩm mới / Tất cả SP */}
                 <div data-section="products" data-label="Sản phẩm" data-aos="fade-up" data-aos-delay="100" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 500px' }}>
                     <LazySection minHeightClass="min-h-[280px] sm:min-h-[500px]">
                         <Suspense fallback={<SectionSpinner minHeightClass="min-h-[280px] sm:min-h-[500px]" />}>
@@ -81,15 +118,7 @@ export default function HomePage() {
                         </Suspense>
                     </LazySection>
                 </div>
-
-                <div data-section="trending" data-label="Xu hướng" data-aos="fade-up" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 400px' }}>
-                    <LazySection minHeightClass="min-h-[200px] sm:min-h-[400px]">
-                        <Suspense fallback={<SectionSpinner minHeightClass="min-h-[200px] sm:min-h-[400px]" />}>
-                            <SectionProductCardCarousel />
-                        </Suspense>
-                    </LazySection>
-                </div>
-
+                
                 <div data-section="allproducts" data-label="Tất cả SP" data-aos="fade-up" data-aos-delay="100">
                     <Suspense fallback={<SectionSpinner height="160px" />}>
                         <div className="py-2" />
@@ -99,12 +128,16 @@ export default function HomePage() {
                     </Suspense>
                 </div>
 
-                <LazySection minHeightClass="min-h-[100px] sm:min-h-[160px]">
-                    <Suspense fallback={<SectionSpinner minHeightClass="min-h-[100px] sm:min-h-[160px]" />}>
-                        <BannerImage />
-                    </Suspense>
-                </LazySection>
+                {/* 7. Khách hàng nói gì (Reviews) */}
+                <div data-section="reviews" data-label="Đánh giá" data-aos="fade-up">
+                    <LazySection minHeightClass="min-h-[300px]">
+                        <Suspense fallback={<SectionSpinner minHeightClass="min-h-[300px]" />}>
+                            <CustomerReviews />
+                        </Suspense>
+                    </LazySection>
+                </div>
 
+                {/* 8. Bài viết tư vấn */}
                 <div data-section="news" data-label="Tin tức" data-aos="fade-up" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 450px' }}>
                     <LazySection minHeightClass="min-h-[300px] sm:min-h-[450px]">
                         <Suspense fallback={<SectionSpinner minHeightClass="min-h-[300px] sm:min-h-[450px]" />}>

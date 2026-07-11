@@ -106,8 +106,8 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
               <i className='bx bx-right-arrow-alt text-base' />
             </button>
             <div className="flex items-center gap-2 pl-3 border-l border-gray-300">
-              <div className="text-gray-900 dark:text-white text-sm font-bold">5,000+</div>
-              <div className="text-gray-500 text-[10px]">Khách hàng</div>
+              <i className='bx bxs-check-shield text-primary-700 text-sm' />
+              <div className="text-gray-500 text-[10px] leading-tight">Bảo hành 12 tháng<br/>Giao hàng toàn quốc</div>
             </div>
           </div>
         </div>
@@ -152,7 +152,7 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
             <div className="flex items-center gap-2.5 mb-4">
               <div className="w-3 h-3 bg-primary-600 rounded-sm" />
               <span className="text-primary-700 text-xs md:text-sm font-semibold tracking-[0.15em] uppercase">
-                Về Lumina Home
+                Về CapyLumine
               </span>
             </div>
 
@@ -204,9 +204,10 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
 
               {/* Stat */}
               <div className="flex items-center gap-3 pl-4 md:pl-6 border-l border-gray-300">
+                <i className='bx bxs-check-shield text-primary-700 text-lg md:text-xl' />
                 <div>
-                  <div className="text-gray-900 text-lg md:text-xl font-bold leading-none">5,000+</div>
-                  <div className="text-gray-500 text-[10px] md:text-xs mt-0.5">Khách hàng tin dùng</div>
+                  <div className="text-gray-900 text-sm md:text-base font-bold leading-none">Bảo hành 12 tháng</div>
+                  <div className="text-gray-500 text-[10px] md:text-xs mt-0.5">Giao COD · Đổi trả 15 ngày</div>
                 </div>
               </div>
             </div>

@@ -74,9 +74,12 @@ const Footer = () =>
                     <div className='w-full lg:w-[40%]'>
                         <div className='mb-5 md:mb-6'>
                             <h3 className='text-lg md:text-xl font-bold text-white dark:text-white uppercase tracking-wide'>
-                                Tranh Đèn Ngủ <span className='text-white dark:text-white'>3D Tráng Gương</span>
+                                CapyLumine
                             </h3>
-                            <p className='text-white dark:text-white text-sm mt-1'>Đèn ngủ cao cấp — Nâng tầm giấc ngủ Việt</p>
+                            <p className='text-white dark:text-white text-sm mt-1 font-semibold'>Đèn ngủ & Đèn trang trí</p>
+                            <p className='text-gray-200 dark:text-gray-300 text-xs mt-2 leading-relaxed'>
+                                Mang đến những sản phẩm chiếu sáng đẹp, tiện ích và giàu cảm xúc cho không gian sống.
+                            </p>
                         </div>
 
                         {/* Contact grid 2 cột */}
@@ -90,7 +93,7 @@ const Footer = () =>
                             <div className='flex items-start gap-3'>
                                 <span className='w-2 h-2 rounded-full bg-white dark:bg-white mt-[7px] flex-shrink-0'></span>
                                 <div className='text-sm text-white dark:text-white'>
-                                    <p>Khongthaydoi124@gmail.com</p>
+                                    <p>support@capylumine.com</p>
                                 </div>
                             </div>
                             <div className='flex items-start gap-3'>
@@ -103,7 +106,7 @@ const Footer = () =>
                             <div className='flex items-start gap-3'>
                                 <span className='w-2 h-2 rounded-full bg-white dark:bg-white mt-[7px] flex-shrink-0'></span>
                                 <div className='text-sm text-white dark:text-white'>
-                                    <p>CapyLumine.com</p>
+                                    <p>capylumine.com</p>
                                 </div>
                             </div>
                         </div>
@@ -218,7 +221,7 @@ const Footer = () =>
             <div className='w-full py-4 bg-primary-900 dark:bg-[#111]'>
                 <div className='flex flex-col sm:flex-row justify-between items-center gap-2 xl:mx-auto xl:max-w-[1440px] px-6 xl:px-0'>
                     <div className='text-xs md:text-sm text-white dark:text-white text-center'>
-                        © 2026 | Bản quyền thuộc về <span className='text-white dark:text-white font-semibold'>CapyLumine.com</span>
+                        © 2026 | Bản quyền thuộc về <span className='text-white dark:text-white font-semibold'>CapyLumine</span>
                     </div>
                     <div className='flex items-center gap-4 text-white dark:text-white text-xs'>
                         <a href='/ho-tro/dieu-khoan-su-dung' className='hover:text-gray-200 dark:hover:text-gray-200 transition-colors'>Điều khoản</a>
