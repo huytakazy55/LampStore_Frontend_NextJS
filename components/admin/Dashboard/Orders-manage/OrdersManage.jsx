@@ -129,6 +129,29 @@ const OrdersManage = () =>
         }
     };
 
+    const handlePaymentConfirm = (orderId) =>
+    {
+        Modal.confirm({
+            title: 'Xác nhận đã thanh toán',
+            content: 'Xác nhận đơn hàng này đã được thanh toán qua chuyển khoản?',
+            okText: 'Xác nhận đã thanh toán',
+            cancelText: 'Đóng',
+            onOk: async () =>
+            {
+                try
+                {
+                    await OrderService.updatePaymentStatus(orderId, 'Paid');
+                    message.success('Đã xác nhận thanh toán');
+                    fetchOrders();
+                } catch (error)
+                {
+                    const errMsg = error?.response?.data?.message || 'Lỗi khi cập nhật thanh toán';
+                    message.error(errMsg);
+                }
+            },
+        });
+    };
+
     const confirmStatusChange = (orderId, newStatus, actionLabel) =>
     {
         const isCancelling = newStatus === 'Cancelled';
@@ -254,6 +277,52 @@ const OrdersManage = () =>
             ),
         },
         {
+            title: 'TT Thanh toán',
+            dataIndex: 'paymentStatus',
+            key: 'paymentStatus',
+            width: 150,
+            align: 'center',
+            render: (paymentStatus, record) => {
+                const psConfig = {
+                    Paid: { color: '#059669', bg: '#d1fae5', border: '#6ee7b7', label: 'Đã thanh toán', icon: 'bx-check-circle' },
+                    Unpaid: { color: '#dc2626', bg: '#fee2e2', border: '#fca5a5', label: 'Chưa thanh toán', icon: 'bx-x-circle' },
+                    COD: { color: '#6b7280', bg: '#f3f4f6', border: '#d1d5db', label: 'COD', icon: 'bx-money' },
+                };
+                const ps = psConfig[paymentStatus] || psConfig.Unpaid;
+                return (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+                        <span style={{
+                            display: 'inline-flex', alignItems: 'center', gap: 4,
+                            padding: '2px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600,
+                            background: ps.bg, color: ps.color, border: `1px solid ${ps.border}`,
+                            whiteSpace: 'nowrap',
+                        }}>
+                            <i className={`bx ${ps.icon}`} style={{ fontSize: 12 }}></i>
+                            {ps.label}
+                        </span>
+                        {paymentStatus === 'Unpaid' && (
+                            <Tooltip title="Xác nhận đã thanh toán">
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); handlePaymentConfirm(record.id); }}
+                                    style={{
+                                        display: 'inline-flex', alignItems: 'center', gap: 3,
+                                        padding: '1px 8px', borderRadius: 4, border: '1px solid #6ee7b7',
+                                        background: '#ecfdf5', color: '#059669', cursor: 'pointer',
+                                        fontSize: 10, fontWeight: 600, transition: 'all 0.2s',
+                                    }}
+                                    onMouseEnter={e => { e.currentTarget.style.background = '#d1fae5'; e.currentTarget.style.transform = 'scale(1.05)'; }}
+                                    onMouseLeave={e => { e.currentTarget.style.background = '#ecfdf5'; e.currentTarget.style.transform = 'scale(1)'; }}
+                                >
+                                    <i className='bx bx-check' style={{ fontSize: 12 }}></i>
+                                    Xác nhận
+                                </button>
+                            </Tooltip>
+                        )}
+                    </div>
+                );
+            },
+        },
+        {
             title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
@@ -330,6 +399,7 @@ const OrdersManage = () =>
     const stats = useMemo(() => ({
         total: orders.length,
         pending: orders.filter(o => o.status === 'Pending').length,
+        unpaid: orders.filter(o => o.paymentStatus === 'Unpaid').length,
         shipping: orders.filter(o => o.status === 'Shipping').length,
         completed: orders.filter(o => o.status === 'Completed').length,
         failedDelivery: orders.filter(o => o.status === 'FailedDelivery').length,
@@ -375,6 +445,17 @@ const OrdersManage = () =>
                         },
                         {
                             icon: (
+                                <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center text-red-500 text-2xl">
+                                    <i className="bx bx-x-circle"></i>
+                                </div>
+                            ),
+                            value: stats.unpaid,
+                            label: "Chờ thanh toán",
+                            percent: "Bank",
+                            percentType: "orange"
+                        },
+                        {
+                            icon: (
                                 <div className="w-12 h-12 rounded-full bg-cyan-100 flex items-center justify-center text-cyan-500 text-2xl">
                                     <i className="bx bx-package"></i>
                                 </div>
@@ -412,6 +493,7 @@ const OrdersManage = () =>
                             green: "bg-green-100 text-green-500",
                             blue: "bg-blue-100 text-blue-500",
                             yellow: "bg-primary-50 dark:bg-primary-900/20 text-primary-500",
+                            orange: "bg-orange-100 text-orange-500",
                             cyan: "bg-cyan-100 text-cyan-500",
                             red: "bg-red-100 text-red-500",
                         };
@@ -425,6 +507,7 @@ const OrdersManage = () =>
                                   ${item.percentType === "green" ? "border-green-400" : ""}
                                   ${item.percentType === "blue" ? "border-blue-400" : ""}
                                   ${item.percentType === "yellow" ? "border-primary-500" : ""}
+                                  ${item.percentType === "orange" ? "border-orange-400" : ""}
                                   ${item.percentType === "cyan" ? "border-cyan-400" : ""}
                                   ${item.percentType === "red" ? "border-red-400" : ""}
                                   hover:scale-[1.03] hover:shadow-2xl transition-all duration-200
@@ -513,6 +596,7 @@ const OrdersManage = () =>
                     order={selectedOrder}
                     onClose={() => { setSelectedOrder(null); }}
                     onStatusChange={(id, status) => { handleStatusChange(id, status); setSelectedOrder(null); }}
+                    onRefresh={fetchOrders}
                 />
             )}
         </div>

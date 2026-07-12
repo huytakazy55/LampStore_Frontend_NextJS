@@ -48,6 +48,13 @@ const OrderService = {
         return response.data;
     },
 
+    // Update payment status (admin)
+    updatePaymentStatus: async (id, status) =>
+    {
+        const response = await axiosInstance.patch(`/api/Orders/${id}/payment-status`, { status });
+        return response.data;
+    },
+
     // Delete order (admin)
     deleteOrder: async (id) =>
     {

@@ -318,6 +318,22 @@ export default function OrderHistoryPage()
                                     {order.paymentMethod === 'cod' ? 'Thanh toán khi nhận hàng' : order.paymentMethod === 'bank' ? 'Chuyển khoản ngân hàng' : order.paymentMethod}
                                 </span>
                             </div>
+                            {order.paymentMethod === 'bank' && (
+                                <div className='flex justify-between text-gray-500 dark:text-gray-400'>
+                                    <span>Trạng thái thanh toán:</span>
+                                    {order.paymentStatus === 'Unpaid' ? (
+                                        <span className='inline-flex items-center gap-1 px-2 py-0.5 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded text-red-600 dark:text-red-400 text-xs font-semibold'>
+                                            <i className='bx bx-x-circle text-xs'></i>
+                                            Chưa thanh toán
+                                        </span>
+                                    ) : (
+                                        <span className='inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700 rounded text-emerald-600 dark:text-emerald-400 text-xs font-semibold'>
+                                            <i className='bx bx-check-circle text-xs'></i>
+                                            Đã thanh toán
+                                        </span>
+                                    )}
+                                </div>
+                            )}
                             <div className='flex justify-between items-center pt-2 border-t border-gray-200 dark:border-gray-700'>
                                 <span className='font-bold text-gray-800 dark:text-gray-100'>Tổng cộng:</span>
                                 <span className='text-lg font-bold text-primary-600'>
@@ -487,6 +503,18 @@ export default function OrderHistoryPage()
                                     <div className='flex items-center justify-between px-4 md:px-5 py-3 bg-gray-50/50 dark:bg-gray-800/30 border-t border-gray-100 dark:border-gray-800'>
                                         <span className='text-xs text-gray-400 dark:text-gray-500'>
                                             {items.length} sản phẩm • {order.paymentMethod === 'cod' ? 'COD' : order.paymentMethod === 'bank' ? 'Chuyển khoản' : order.paymentMethod}
+                                            {order.paymentStatus === 'Unpaid' && (
+                                                <span className='ml-1.5 inline-flex items-center gap-1 px-1.5 py-0.5 bg-red-50 border border-red-200 rounded text-red-600 text-[10px] font-semibold'>
+                                                    <i className='bx bx-x-circle text-[10px]'></i>
+                                                    Chưa thanh toán
+                                                </span>
+                                            )}
+                                            {order.paymentStatus === 'Paid' && order.paymentMethod === 'bank' && (
+                                                <span className='ml-1.5 inline-flex items-center gap-1 px-1.5 py-0.5 bg-emerald-50 border border-emerald-200 rounded text-emerald-600 text-[10px] font-semibold'>
+                                                    <i className='bx bx-check-circle text-[10px]'></i>
+                                                    Đã thanh toán
+                                                </span>
+                                            )}
                                         </span>
                                         <div className='flex items-center gap-3'>
                                             {order.status === 'Completed' && (

@@ -185,8 +185,8 @@ const ProductCarousel = () => {
             <button
               key={tab.key}
               className={`relative flex items-center gap-1.5 md:gap-2 px-5 md:px-7 py-2 md:py-2.5 rounded-sm text-xs md:text-sm font-semibold transition-all duration-300 ${activeTab === tab.key
-                ? 'bg-white dark:bg-gray-700 bg-primary-600 dark:bg-primary-400 text-transparent bg-clip-text inline-block shadow-md'
-                : 'text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
+                ? 'bg-primary-600 text-white shadow-md dark:bg-primary-500'
+                : 'text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400'
                 }`}
               onClick={() => setActiveTab(tab.key)}
             >

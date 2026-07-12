@@ -7,7 +7,7 @@ import ChatService from '@/services/ChatService';
 import GuestProfileService from '@/services/GuestProfileService';
 import NotificationService from '@/services/NotificationService';
 import Image from 'next/image';
-import zaloLogo from '@/assets/images/zalo-logo.jpg';
+import zaloLogo from '@/assets/images/zalo-logo-removebg.png';
 import zaloQrCode from '@/assets/images/zalo-add-friend.jpg';
 
 const CONTACT_PHONE = '0969608810';
@@ -140,12 +140,12 @@ const ChatButton = () =>
         title="Liên hệ Zalo"
       >
         <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center">
-          <Image src={zaloLogo} alt="Zalo Logo" className="bx-tada transition-transform duration-300 group-hover:scale-110 w-full h-full object-contain" style={{ animationDuration: '0.8s' }} />
+          <Image src={zaloLogo} alt="Zalo Logo" className="bx-tada transition-transform duration-300 group-hover:scale-110 w-[90%] h-[90%] object-contain" style={{ animationDuration: '0.8s' }} />
         </div>
 
         <div className="absolute inset-0 rounded-full bg-[#0088FF] animate-ping opacity-20 pointer-events-none" style={{ animationDuration: '3s', animationDelay: '0s' }}></div>
         <span className="pointer-events-none absolute right-[120%] top-1/2 -translate-y-1/2 translate-x-4 whitespace-nowrap rounded-lg bg-white/90 backdrop-blur-sm px-4 py-2 text-[14px] font-bold text-[#0088FF] opacity-0 shadow-xl transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 dark:bg-gray-800 dark:text-[#0088FF] border border-white/20">
-          Kết bạn Zalo
+          Mua hàng qua Zalo
         </span>
       </button>
 
@@ -190,10 +190,9 @@ const ChatButton = () =>
       </div>
 
       {/* Chat Backdrop */}
-      <div 
-        className={`fixed inset-0 z-[9991] bg-black/40 backdrop-blur-sm transition-all duration-300 ${
-          isChatOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-        }`}
+      <div
+        className={`fixed inset-0 z-[9991] bg-black/40 backdrop-blur-sm transition-all duration-300 ${isChatOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+          }`}
         onClick={() => setIsChatOpen(false)}
       ></div>
 

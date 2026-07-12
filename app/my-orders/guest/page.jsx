@@ -188,6 +188,18 @@ export default function GuestOrdersPage()
                                                             <i className={`bx ${status.icon} mr-1`}></i>
                                                             {status.label}
                                                         </span>
+                                                        {order.paymentStatus === 'Unpaid' && (
+                                                            <span className='px-2 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700'>
+                                                                <i className='bx bx-x-circle mr-1'></i>
+                                                                Chưa thanh toán
+                                                            </span>
+                                                        )}
+                                                        {order.paymentStatus === 'Paid' && order.paymentMethod === 'bank' && (
+                                                            <span className='px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700'>
+                                                                <i className='bx bx-check-circle mr-1'></i>
+                                                                Đã thanh toán
+                                                            </span>
+                                                        )}
                                                     </div>
                                                     <p className='text-xs text-gray-500'>{formatDate(order.orderDate)}</p>
                                                 </div>
@@ -273,6 +285,16 @@ export default function GuestOrdersPage()
                                                         <span>Thanh toán:</span>
                                                         <span>{order.paymentMethod === 'cod' ? 'Thanh toán khi nhận hàng' : 'Chuyển khoản ngân hàng'}</span>
                                                     </div>
+                                                    {order.paymentMethod === 'bank' && (
+                                                        <div className='flex justify-between text-xs text-gray-400'>
+                                                            <span>TT thanh toán:</span>
+                                                            {order.paymentStatus === 'Unpaid' ? (
+                                                                <span className='text-red-600 font-semibold'>Chưa thanh toán</span>
+                                                            ) : (
+                                                                <span className='text-green-600 font-semibold'>Đã thanh toán</span>
+                                                            )}
+                                                        </div>
+                                                    )}
                                                 </div>
                                                 {order.status === 'Completed' && (
                                                     <div className='border-t border-gray-100 pt-3 mt-3 flex justify-end'>

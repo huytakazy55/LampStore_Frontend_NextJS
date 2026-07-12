@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useContext } from 'react';
-import { Modal, Button } from 'antd';
+import { Modal, Button, message } from 'antd';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import { ModalHeader } from '../shared/ModalComponents';
+import OrderService from '@/services/OrderService';
 
 const statusConfig = {
     Pending: { label: 'Chờ xử lý', bg: '#fef3c7', border: '#fcd34d', text: '#b45309', icon: 'bx-time-five' },
@@ -117,7 +118,7 @@ const OrderStatusTimeline = ({ currentStatus }) =>
     );
 };
 
-const OrderDetailModal = ({ order, onClose, onStatusChange }) =>
+const OrderDetailModal = ({ order, onClose, onStatusChange, onRefresh }) =>
 {
     const { themeColors } = useContext(ThemeContext);
 
@@ -173,6 +174,30 @@ const OrderDetailModal = ({ order, onClose, onStatusChange }) =>
             okType: 'danger',
             cancelText: 'Đóng',
             onOk: () => onStatusChange(order.id, 'Cancelled'),
+        });
+    };
+
+    const handlePaymentConfirm = () =>
+    {
+        Modal.confirm({
+            title: 'Xác nhận đã thanh toán',
+            content: 'Xác nhận đơn hàng này đã được thanh toán qua chuyển khoản?',
+            okText: 'Xác nhận đã thanh toán',
+            cancelText: 'Đóng',
+            onOk: async () =>
+            {
+                try
+                {
+                    await OrderService.updatePaymentStatus(order.id, 'Paid');
+                    message.success('Đã xác nhận thanh toán');
+                    if (onRefresh) onRefresh();
+                    onClose();
+                } catch (error)
+                {
+                    const errMsg = error?.response?.data?.message || 'Lỗi khi cập nhật thanh toán';
+                    message.error(errMsg);
+                }
+            },
         });
     };
 
@@ -333,6 +358,38 @@ const OrderDetailModal = ({ order, onClose, onStatusChange }) =>
             <div className="order-detail-body">
                 {/* Status Timeline */}
                 <OrderStatusTimeline currentStatus={order.status} />
+
+                {/* Payment Status Warning */}
+                {order.paymentStatus === 'Unpaid' && (
+                    <div style={{
+                        padding: '12px 16px', marginBottom: 16, borderRadius: 10,
+                        background: '#fef2f2', border: '1px solid #fca5a5',
+                        display: 'flex', alignItems: 'center', gap: 10,
+                    }}>
+                        <div style={{
+                            width: 32, height: 32, borderRadius: '50%', background: '#dc2626', color: '#fff',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0,
+                        }}>
+                            <i className='bx bx-x-circle'></i>
+                        </div>
+                        <div style={{ flex: 1 }}>
+                            <div style={{ fontWeight: 600, color: '#dc2626', fontSize: 13 }}>Chưa thanh toán</div>
+                            <div style={{ fontSize: 11, color: '#991b1b' }}>Đơn hàng chuyển khoản này chưa được xác nhận thanh toán</div>
+                        </div>
+                        <Button
+                            size="small"
+                            onClick={handlePaymentConfirm}
+                            style={{
+                                background: '#059669', borderColor: '#059669', color: '#fff',
+                                borderRadius: 6, fontWeight: 600, fontSize: 12,
+                                display: 'flex', alignItems: 'center', gap: 4,
+                            }}
+                        >
+                            <i className='bx bx-check-circle' style={{ fontSize: 14 }}></i>
+                            Xác nhận đã thanh toán
+                        </Button>
+                    </div>
+                )}
 
                 {/* Action buttons */}
                 {(nextAction || canCancel) && (
@@ -516,6 +573,27 @@ const OrderDetailModal = ({ order, onClose, onStatusChange }) =>
                         }}>
                             {order.paymentMethod === 'cod' ? 'Thanh toán khi nhận hàng' : order.paymentMethod === 'bank' ? 'Chuyển khoản ngân hàng' : order.paymentMethod}
                         </span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, fontSize: 13, color: '#6b7280' }}>
+                        <span>Trạng thái thanh toán:</span>
+                        {(() => {
+                            const psConfig = {
+                                Paid: { color: '#059669', bg: '#d1fae5', border: '#6ee7b7', label: 'Đã thanh toán', icon: 'bx-check-circle' },
+                                Unpaid: { color: '#dc2626', bg: '#fee2e2', border: '#fca5a5', label: 'Chưa thanh toán', icon: 'bx-x-circle' },
+                                COD: { color: '#6b7280', bg: '#f3f4f6', border: '#d1d5db', label: 'COD', icon: 'bx-money' },
+                            };
+                            const ps = psConfig[order.paymentStatus] || psConfig.Unpaid;
+                            return (
+                                <span style={{
+                                    display: 'inline-flex', alignItems: 'center', gap: 4,
+                                    padding: '2px 10px', borderRadius: 4, fontSize: 12, fontWeight: 600,
+                                    background: ps.bg, color: ps.color, border: `1px solid ${ps.border}`,
+                                }}>
+                                    <i className={`bx ${ps.icon}`} style={{ fontSize: 13 }}></i>
+                                    {ps.label}
+                                </span>
+                            );
+                        })()}
                     </div>
                     <div style={{ borderTop: '1px solid #e5e7eb', paddingTop: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <span style={{ fontWeight: 700, fontSize: 15, color: '#111827' }}>Tổng cộng:</span>

@@ -204,10 +204,10 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
 
               {/* Stat */}
               <div className="flex items-center gap-3 pl-4 md:pl-6 border-l border-gray-300">
-                <i className='bx bxs-check-shield text-primary-700 text-lg md:text-xl' />
+                <i className='bx bxs-package text-primary-700 text-lg md:text-xl' />
                 <div>
-                  <div className="text-gray-900 text-sm md:text-base font-bold leading-none">Bảo hành 12 tháng</div>
-                  <div className="text-gray-500 text-[10px] md:text-xs mt-0.5">Giao COD · Đổi trả 15 ngày</div>
+                  <div className="text-gray-900 text-sm md:text-base font-bold leading-none">Miễn phí ship Hà Nội</div>
+                  <div className="text-gray-500 text-[10px] md:text-xs mt-0.5">Giao COD toàn quốc</div>
                 </div>
               </div>
             </div>

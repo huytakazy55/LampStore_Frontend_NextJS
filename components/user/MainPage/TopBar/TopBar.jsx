@@ -53,11 +53,11 @@ const TopBar = () =>
                         <li className='hidden lg:flex cursor-pointer items-center gap-1'><i className='bx bx-rocket text-base md:text-h3 relative top-[1px]'></i> Track your order</li>
                         <li className='hidden lg:block text-slate-300 relative top-[3px]'>|</li>
                         <li className='cursor-pointer flex items-center gap-2'>
-                            <div className='w-6 h-6 md:w-7 md:h-7 flex items-center justify-center rounded-[2px] border border-gray-400'>
+                            <div className='w-6 h-6 md:w-7 md:h-7 flex items-center justify-center rounded-[5px] border border-gray-400'>
                                 <i className='bx bx-phone text-sm md:text-base'></i>
                             </div>
                             <div className='hidden sm:flex flex-col text-left'>
-                                <span className='text-[9px] md:text-[10px] text-gray-500 leading-none mb-0.5'>Gọi ngay</span>
+                                <span className='text-[9px] md:text-[10px] text-gray-500 leading-none mb-0.5'>Mua hàng gọi</span>
                                 <span className='text-[11px] md:text-xs font-bold leading-none'>0969608810</span>
                             </div>
                         </li>
