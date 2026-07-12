@@ -34,7 +34,7 @@ const SmallProductCard = ({ product, navigate, onAddToCartClick }) => {
 
   return (
     <div
-      className='relative group cursor-pointer bg-white dark:bg-[#1a1a1a] rounded-sm overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08),0_0_0_1px_rgba(139,92,246,0.1)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:-translate-y-1 border border-gray-100 dark:border-[#2a2a2a] hover:border-primary-200 dark:hover:border-primary-800'
+      className='relative group cursor-pointer bg-white dark:bg-[#1a1a1a] rounded-sm overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08),0_0_0_1px_rgba(249,115,22,0.3)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.3),0_0_0_1px_rgba(249,115,22,0.3)] hover:-translate-y-1 border border-gray-100 dark:border-[#2a2a2a] hover:border-orange-500 dark:hover:border-orange-500'
       onClick={() => { if (product.slug || product.id) navigate(`/product/${product.slug || product.id}`); }}
     >
       {/* Discount Badge */}
@@ -68,28 +68,46 @@ const SmallProductCard = ({ product, navigate, onAddToCartClick }) => {
           {product.name}
         </h3>
 
-        {/* Price + Cart */}
-        <div className='flex items-end justify-between mt-2 pt-2 border-t border-gray-100 dark:border-[#2a2a2a]'>
-          <div>
-            <div className='text-sm md:text-base font-bold bg-primary-600 dark:bg-primary-400 text-transparent bg-clip-text inline-block'>
-              {formatPrice(price)}<span className='text-[10px] font-normal ml-0.5'>₫</span>
-            </div>
+        {/* Price Row */}
+        <div className="flex items-center gap-2 mt-2">
+            <span className="text-[0.95rem] md:text-[1.1rem] font-bold text-orange-600 dark:text-orange-500 inline-block leading-tight">
+                {formatPrice(price)}<span className="text-[0.7rem] font-medium ml-px underline">đ</span>
+            </span>
             {hasDiscount && (
-              <div className='text-[9px] md:text-[10px] text-gray-400 dark:text-[#6b6b6b] line-through -mt-0.5'>
-                {formatPrice(originalPrice)}₫
-              </div>
+                <span className="text-[0.65rem] md:text-[0.75rem] text-gray-400 dark:text-[#6b6b6b] line-through leading-none">
+                    {formatPrice(originalPrice)}<span className="underline">đ</span>
+                </span>
             )}
-          </div>
-          <button
-            className='w-7 h-7 md:w-8 md:h-8 rounded-sm bg-primary-600 dark:bg-primary-900 text-white dark:text-primary-300 flex items-center justify-center transition-all duration-300 hover:bg-primary-700 hover:text-white hover:shadow-[0_2px_8px_rgba(139,92,246,0.3)] active:scale-95'
-            onClick={(e) => {
-              e.stopPropagation();
-              onAddToCartClick(product);
-            }}
-            aria-label="Thêm vào giỏ hàng"
-          >
-            <i className='bx bxs-cart-add text-sm md:text-base'></i>
-          </button>
+        </div>
+
+        {/* Sold Count */}
+        <div className="flex items-center gap-1 mt-1.5 text-gray-500 dark:text-gray-400 text-[0.65rem] md:text-xs">
+            <i className='bx bx-purchase-tag text-orange-500'></i>
+            <span>Đã bán {product.sellCount || 0}</span>
+        </div>
+
+        {/* Actions Row */}
+        <div className="flex items-stretch gap-1.5 md:gap-2 mt-3">
+            <button
+                className="flex-1 flex items-center justify-center py-1.5 rounded-sm border border-orange-500 text-orange-500 bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 dark:hover:bg-orange-900/40 transition-colors cursor-pointer"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onAddToCartClick(product);
+                }}
+                aria-label="Thêm vào giỏ hàng"
+            >
+                <span className="text-[8.5px] sm:text-[9px] md:text-xs font-semibold">Thêm vào giỏ</span>
+            </button>
+            <button
+                className="flex-1 flex items-center justify-center py-1.5 rounded-sm border border-transparent bg-orange-500 text-white hover:bg-orange-600 transition-colors cursor-pointer"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onAddToCartClick(product);
+                }}
+                aria-label="Mua ngay"
+            >
+                <span className="text-[9px] md:text-xs font-semibold">Mua ngay</span>
+            </button>
         </div>
       </div>
     </div>

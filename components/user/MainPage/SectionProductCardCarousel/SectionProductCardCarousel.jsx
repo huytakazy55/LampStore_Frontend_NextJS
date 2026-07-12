@@ -52,7 +52,7 @@ const ProductCardItem = ({ product, onClick, isInWishlist, onToggleWishlist, onA
 
   return (
     <div className='p-[5px]' onClick={onClick}>
-      <div className='flex gap-0 h-48 md:h-54 rounded-sm overflow-hidden bg-white dark:bg-[#1a1a1a] border border-gray-100 dark:border-[#2a2a2a] cursor-pointer transition-all duration-300 relative hover:border-primary-200 dark:hover:border-primary-800 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08),0_0_0_1px_rgba(139,92,246,0.1)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.3),0_0_0_1px_rgba(139,92,246,0.15)] hover:-translate-y-0.5 group'>
+      <div className='flex gap-0 h-48 md:h-54 rounded-sm overflow-hidden bg-white dark:bg-[#1a1a1a] border border-gray-100 dark:border-[#2a2a2a] cursor-pointer transition-all duration-300 relative hover:border-orange-500 dark:hover:border-orange-500 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08),0_0_0_1px_rgba(249,115,22,0.3)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.3),0_0_0_1px_rgba(249,115,22,0.3)] hover:-translate-y-0.5 group'>
         {/* Image Section */}
         <div className='relative w-[42%] flex-shrink-0 bg-gray-50 dark:bg-[#111] flex items-center justify-center p-3 overflow-hidden'>
           {/* Discount Badge */}
@@ -109,13 +109,24 @@ const ProductCardItem = ({ product, onClick, isInWishlist, onToggleWishlist, onA
               <i className={`bx ${isInWishlist ? 'bxs-heart' : 'bx-heart'}`}></i>
             </button>
             <button
-              className='flex-1 flex items-center justify-center gap-1.5 h-7 md:h-8 border-none rounded-sm bg-primary-600 dark:bg-primary-900 text-white dark:text-primary-300 text-[0.68rem] md:text-[0.72rem] font-semibold cursor-pointer transition-all duration-200 hover:bg-primary-700 dark:hover:bg-primary-400 hover:text-white hover:shadow-[0_2px_8px_rgba(139,92,246,0.3)] active:scale-[0.97]'
+              className='flex-1 flex items-center justify-center gap-1 md:gap-1.5 h-7 md:h-8 border-none rounded-sm bg-orange-500 dark:bg-orange-600 text-white text-[0.68rem] md:text-[0.72rem] font-semibold cursor-pointer transition-all duration-200 hover:bg-orange-600 hover:shadow-[0_2px_8px_rgba(249,115,22,0.3)] active:scale-[0.97]'
+              onClick={(e) => { e.stopPropagation(); onAddToCartClick && onAddToCartClick(product); }}
+              tabIndex={-1}
+              aria-label="Mua ngay"
+            >
+              <i className='bx bx-shopping-bag text-sm md:text-[0.95rem]'></i>
+              <span className="hidden sm:inline">Mua ngay</span>
+              <span className="inline sm:hidden">Mua</span>
+            </button>
+            <button
+              className='flex-1 flex items-center justify-center gap-1 md:gap-1.5 h-7 md:h-8 border-none rounded-sm bg-primary-600 dark:bg-primary-900 text-white dark:text-primary-300 text-[0.68rem] md:text-[0.72rem] font-semibold cursor-pointer transition-all duration-200 hover:bg-primary-700 dark:hover:bg-primary-400 hover:text-white hover:shadow-[0_2px_8px_rgba(139,92,246,0.3)] active:scale-[0.97]'
               onClick={(e) => { e.stopPropagation(); onAddToCartClick && onAddToCartClick(product); }}
               tabIndex={-1}
               aria-label="Thêm vào giỏ hàng"
             >
               <i className='bx bx-cart-add text-sm md:text-[0.95rem]'></i>
-              <span>Thêm giỏ</span>
+              <span className="hidden sm:inline">Thêm giỏ</span>
+              <span className="inline sm:hidden">Thêm</span>
             </button>
           </div>
         </div>

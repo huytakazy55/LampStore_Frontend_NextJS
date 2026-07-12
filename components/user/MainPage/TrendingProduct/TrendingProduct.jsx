@@ -145,7 +145,7 @@ const TrendingProduct = () => {
             return (
               <div key={product.id} className='p-[3px]'>
                 <div
-                  className='flex h-[10rem] md:h-[12rem] cursor-pointer bg-white dark:bg-[#1a1a1a] rounded-sm overflow-hidden border border-gray-100 dark:border-[#2a2a2a] transition-all duration-300 hover:border-primary-200 dark:hover:border-primary-800 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08),0_0_0_1px_rgba(139,92,246,0.1)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:-translate-y-0.5 group'
+                  className='flex h-[10rem] md:h-[12rem] cursor-pointer bg-white dark:bg-[#1a1a1a] rounded-sm overflow-hidden border border-gray-100 dark:border-[#2a2a2a] transition-all duration-300 hover:border-orange-500 dark:hover:border-orange-500 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08),0_0_0_1px_rgba(249,115,22,0.3)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.3),0_0_0_1px_rgba(249,115,22,0.3)] hover:-translate-y-0.5 group'
                   onClick={() => { if (product.slug || product.id) navigate(`/product/${product.slug || product.id}`); }}
                 >
                   {/* Image */}
@@ -188,16 +188,28 @@ const TrendingProduct = () => {
                           </span>
                         )}
                       </div>
-                      <button
-                        className='w-7 h-7 md:w-8 md:h-8 rounded-sm bg-primary-600 dark:bg-primary-900 text-white dark:text-primary-300 flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-primary-700 hover:text-white hover:shadow-[0_2px_8px_rgba(139,92,246,0.3)] active:scale-95'
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setCartModalProduct(product);
-                        }}
-                        aria-label="Thêm vào giỏ hàng"
-                      >
-                        <i className='bx bxs-cart-add text-sm md:text-base'></i>
-                      </button>
+                      <div className='flex items-center gap-1.5'>
+                        <button
+                          className='w-7 h-7 md:w-8 md:h-8 rounded-sm bg-orange-500 dark:bg-orange-600 text-white flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-orange-600 hover:shadow-[0_2px_8px_rgba(249,115,22,0.3)] active:scale-95'
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setCartModalProduct(product);
+                          }}
+                          aria-label="Mua ngay"
+                        >
+                          <i className='bx bx-shopping-bag text-sm md:text-base'></i>
+                        </button>
+                        <button
+                          className='w-7 h-7 md:w-8 md:h-8 rounded-sm bg-primary-600 dark:bg-primary-900 text-white dark:text-primary-300 flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-primary-700 hover:text-white hover:shadow-[0_2px_8px_rgba(139,92,246,0.3)] active:scale-95'
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setCartModalProduct(product);
+                          }}
+                          aria-label="Thêm vào giỏ hàng"
+                        >
+                          <i className='bx bxs-cart-add text-sm md:text-base'></i>
+                        </button>
+                      </div>
                     </div>
 
                     {/* Wishlist */}
