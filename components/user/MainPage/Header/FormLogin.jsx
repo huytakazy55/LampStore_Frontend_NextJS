@@ -136,7 +136,7 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
 
     const handleFacebookLoginError = (error) => {
         console.error('Facebook login error:', error);
-        showToast('Có lỗi xảy ra khi đăng nhập Facebook!', 'error');
+        showToast('Đăng nhập qua Facebook hiện đang phát triển!', 'error');
     };
 
     const validateFormSignin = () => {
@@ -288,7 +288,7 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                             <i className='bx bx-x text-xl'></i>
                         </button>
 
-                {/* FORMS CONTAINER */}
+                        {/* FORMS CONTAINER */}
                         <div className="relative w-full sm:min-h-[480px]">
 
                             {/* LOGIN - left side on desktop */}
@@ -303,7 +303,11 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                                             <div className="relative">
                                                 <i className={`bx bx-user ${iconCls}`}></i>
                                                 <input className={formErrors.username ? inputErrCls : inputCls} type="text" autoFocus name="username" value={stateSignin.username} onChange={HandleOnChangeStateSignin} placeholder="Tên đăng nhập" autoComplete="one-time-code" autoCorrect="off" autoCapitalize="off" spellCheck="false" />
-                                                {isRememberedAccount && stateSignin.username && <span className="absolute right-3 top-1/2 -translate-y-1/2"><i className='bx bxs-check-circle text-primary-500'></i></span>}
+                                                {stateSignin.username && (
+                                                    <button type="button" onClick={() => { setStateSignin({ ...stateSignin, username: '' }); setIsRememberedAccount(false); }} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer flex items-center justify-center">
+                                                        <i className='bx bx-x-circle text-lg leading-none'></i>
+                                                    </button>
+                                                )}
                                             </div>
                                             {formErrors.username && <p className="mt-1 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.username}</p>}
                                         </div>

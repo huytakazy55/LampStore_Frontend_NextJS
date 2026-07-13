@@ -53,7 +53,7 @@ export default function HoTroLayout({ children }) {
                         {/* Sidebar */}
                         <aside className="lg:w-72 shrink-0">
                             <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden sticky top-24">
-                                <div className="bg-gradient-to-r from-primary-600 via-tertiary-500 to-accent-500 px-5 py-4">
+                                <div className="bg-orange-500 px-5 py-4">
                                     <h3 className="text-white font-bold text-sm flex items-center gap-2">
                                         <i className='bx bx-support text-lg' /> Danh mục hỗ trợ
                                     </h3>

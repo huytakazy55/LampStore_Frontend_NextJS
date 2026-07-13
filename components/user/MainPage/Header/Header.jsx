@@ -479,8 +479,9 @@ const Header = () =>
             }
           </ul>
         </div>
-        <FormLogin toggleLogin={toggleLogin} setToggleLogin={setToggleLogin} />
       </div>
+
+      <FormLogin toggleLogin={toggleLogin} setToggleLogin={setToggleLogin} />
 
       {/* Mobile search bar - shown below header on mobile */}
       <div className='md:hidden px-4 pb-3' ref={searchRef}>

@@ -80,11 +80,6 @@ const SmallProductCard = ({ product, navigate, onAddToCartClick }) => {
             )}
         </div>
 
-        {/* Sold Count */}
-        <div className="flex items-center gap-1 mt-1.5 text-gray-500 dark:text-gray-400 text-[0.65rem] md:text-xs">
-            <i className='bx bx-purchase-tag text-orange-500'></i>
-            <span>Đã bán {product.sellCount || 0}</span>
-        </div>
 
         {/* Actions Row */}
         <div className="flex items-stretch gap-1.5 md:gap-2 mt-3">
