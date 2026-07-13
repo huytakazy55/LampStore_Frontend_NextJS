@@ -18,7 +18,7 @@ const getImgSrc = (path) => {
     return resolveImagePath(path, defaultImg);
 };
 
-const AddToCartModal = ({ isOpen, onClose, product }) => {
+const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
     const { addToCart } = useCart();
     const navigate = useNavigate();
     const [mounted, setMounted] = useState(false);
@@ -141,10 +141,69 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
             return;
         }
 
+        // --- FLYING ANIMATION ---
+        const imgEl = document.getElementById('modal-main-image');
+        const cartEl = document.getElementById('floating-cart-btn') || document.querySelector('[aria-label="Giỏ hàng"]');
+
+        if (imgEl) {
+            const imgRect = imgEl.getBoundingClientRect();
+            let targetRect;
+            if (cartEl) {
+                targetRect = cartEl.getBoundingClientRect();
+            } else {
+                targetRect = { left: window.innerWidth - 60, top: window.innerHeight - 60, width: 60, height: 60 };
+            }
+
+            const flyingImg = document.createElement('img');
+            flyingImg.src = imgEl.src;
+            flyingImg.style.position = 'fixed';
+            flyingImg.style.zIndex = '999999';
+            flyingImg.style.left = `${imgRect.left}px`;
+            flyingImg.style.top = `${imgRect.top}px`;
+            flyingImg.style.width = `${imgRect.width}px`;
+            flyingImg.style.height = `${imgRect.height}px`;
+            flyingImg.style.objectFit = 'contain';
+            flyingImg.style.borderRadius = '8px';
+            const isMovingDown = targetRect.top > imgRect.top;
+            const topBezier = isMovingDown 
+                ? 'cubic-bezier(0.3, -0.5, 0.8, 1)' 
+                : 'cubic-bezier(0.3, 0, 0.7, 1.4)';
+
+            flyingImg.style.transition = `left 0.8s linear, top 0.8s ${topBezier}, width 0.8s linear, height 0.8s linear, opacity 0.8s ease-in, transform 0.8s ease-in`;
+            flyingImg.style.pointerEvents = 'none';
+            document.body.appendChild(flyingImg);
+
+            // Force reflow
+            void flyingImg.offsetWidth;
+
+            // Set end position
+            flyingImg.style.left = `${targetRect.left + targetRect.width / 2 - 20}px`;
+            flyingImg.style.top = `${targetRect.top + targetRect.height / 2 - 20}px`;
+            flyingImg.style.width = '40px';
+            flyingImg.style.height = '40px';
+            flyingImg.style.opacity = '0.2';
+            flyingImg.style.transform = 'scale(0.2) rotate(360deg)';
+
+            setTimeout(() => {
+                if (document.body.contains(flyingImg)) {
+                    document.body.removeChild(flyingImg);
+                }
+                // Thêm hiệu ứng đón hàng cho giỏ hàng
+                if (cartEl) {
+                    cartEl.style.transform = 'scale(1.15)';
+                    cartEl.style.transition = 'transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                    setTimeout(() => {
+                        cartEl.style.transform = 'scale(1)';
+                    }, 200);
+                }
+            }, 800);
+        }
+        // --- END FLYING ANIMATION ---
+
         addToCart({
             productId: product.id,
             name: product.name,
-            image: mainImage,
+            image: currentCarouselImage,
             price: basePrice,
             quantity,
             selectedOptions,
@@ -190,6 +249,7 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
                                 </button>
                             )}
                             <img
+                                id="modal-main-image"
                                 src={currentCarouselImage}
                                 alt={product.name}
                                 className="max-h-36 sm:max-h-72 w-auto object-contain drop-shadow-md rounded transition-all duration-300"
@@ -331,41 +391,46 @@ const AddToCartModal = ({ isOpen, onClose, product }) => {
 
                         {/* Action Buttons */}
                         <div className="mt-auto flex gap-3 sm:gap-4 pt-3 sm:pt-4 border-t border-gray-100 dark:border-gray-800">
-                            <button
-                                onClick={handleAddToCart}
-                                className="flex-1 bg-primary-600 text-white py-2.5 sm:py-3 rounded-md font-medium hover:bg-primary-700 transition-colors flex justify-center items-center gap-2 cursor-pointer text-sm sm:text-base"
-                            >
-                                <i className="bx bx-cart-add text-xl"></i>
-                                Thêm vào giỏ
-                            </button>
-                            <button
-                                onClick={() => {
-                                    if (!allOptionsSelected) {
-                                        setShowError(true);
-                                        return;
-                                    }
-                                    // Tạo item checkout trực tiếp
-                                    const totalAdditionalBuy = Object.values(selectedOptions)
-                                        .reduce((sum, opt) => sum + (opt.additionalPrice || 0), 0);
-                                    const buyItem = {
-                                        key: `buynow_${product.id}_${Date.now()}`,
-                                        productId: product.id,
-                                        name: product.name,
-                                        image: mainImage,
-                                        basePrice: basePrice,
-                                        finalPrice: basePrice + totalAdditionalBuy,
-                                        quantity,
-                                        selectedOptions,
-                                        weight: variant?.weight || 0
-                                    };
-                                    onClose();
-                                    sessionStorage.setItem('buyNowItems', JSON.stringify([buyItem]));
-                                    navigate('/checkout');
-                                }}
-                                className="flex-1 bg-primary-600 text-white py-2.5 sm:py-3 rounded-md font-medium hover:bg-primary-700 transition-colors shadow-sm cursor-pointer text-sm sm:text-base"
-                            >
-                                Mua ngay
-                            </button>
+                            {(!mode || mode === 'add_to_cart') && (
+                                <button
+                                    onClick={handleAddToCart}
+                                    className="flex-1 bg-primary-600 text-white py-2.5 sm:py-3 rounded-md font-medium hover:bg-primary-700 transition-colors flex justify-center items-center gap-2 cursor-pointer text-sm sm:text-base"
+                                >
+                                    <i className="bx bx-cart-add text-xl"></i>
+                                    Thêm vào giỏ
+                                </button>
+                            )}
+                            {(!mode || mode === 'buy_now') && (
+                                <button
+                                    onClick={() => {
+                                        if (!allOptionsSelected) {
+                                            setShowError(true);
+                                            return;
+                                        }
+                                        // Tạo item checkout trực tiếp
+                                        const totalAdditionalBuy = Object.values(selectedOptions)
+                                            .reduce((sum, opt) => sum + (opt.additionalPrice || 0), 0);
+                                        const buyItem = {
+                                            key: `buynow_${product.id}_${Date.now()}`,
+                                            productId: product.id,
+                                            name: product.name,
+                                            image: mainImage,
+                                            basePrice: basePrice,
+                                            finalPrice: basePrice + totalAdditionalBuy,
+                                            quantity,
+                                            selectedOptions,
+                                            weight: variant?.weight || 0
+                                        };
+                                        onClose();
+                                        sessionStorage.setItem('buyNowItems', JSON.stringify([buyItem]));
+                                        navigate('/checkout');
+                                    }}
+                                    className="flex-1 bg-primary-600 text-white py-2.5 sm:py-3 rounded-md font-medium hover:bg-primary-700 transition-colors shadow-sm cursor-pointer text-sm sm:text-base flex justify-center items-center gap-2"
+                                >
+                                    {mode === 'buy_now' ? <i className="bx bx-credit-card text-xl"></i> : null}
+                                    Mua ngay
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>

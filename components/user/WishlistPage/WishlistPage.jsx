@@ -31,6 +31,7 @@ const WishlistPage = () => {
     const [wishlistItems, setWishlistItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [cartModalProduct, setCartModalProduct] = useState(null);
+    const [cartModalMode, setCartModalMode] = useState(null);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -225,17 +226,16 @@ const WishlistPage = () => {
                                         {/* Actions */}
                                         <div className='flex gap-2'>
                                             <button
-                                                onClick={() => handleAddToCart(item)}
-                                                className='flex-1 flex items-center justify-center gap-1 bg-primary-50 border border-primary-500 text-primary-600 py-2 rounded-sm hover:bg-primary-100 transition-colors text-sm font-medium cursor-pointer'
+                                                className='flex-1 flex items-center justify-center gap-1.5 py-1.5 md:py-2 text-[10px] md:text-xs font-semibold rounded-sm border border-orange-500 text-orange-500 bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 dark:hover:bg-orange-900/40 transition-colors cursor-pointer'
+                                                onClick={(e) => { e.stopPropagation(); setCartModalMode('add_to_cart'); handleAddToCart(item); }}
                                             >
-                                                <i className='bx bx-cart-add text-lg'></i>
-                                                Thêm vào giỏ
+                                                <i className='bx bxs-cart-add text-sm md:text-base'></i> Thêm vào giỏ
                                             </button>
                                             <button
-                                                onClick={() => { if (item.productSlug || item.productId) navigate(`/product/${item.productSlug || item.productId}`); }}
-                                                className='flex-1 bg-primary-600 text-white py-2 rounded-sm hover:bg-primary-700 transition-colors text-sm font-medium cursor-pointer'
+                                                className='flex-1 flex items-center justify-center gap-1.5 py-1.5 md:py-2 text-[10px] md:text-xs font-semibold rounded-sm border border-transparent bg-orange-500 text-white hover:bg-orange-600 transition-colors cursor-pointer'
+                                                onClick={(e) => { e.stopPropagation(); setCartModalMode('buy_now'); handleAddToCart(item); }}
                                             >
-                                                Mua ngay
+                                                <i className='bx bx-shopping-bag text-sm md:text-base'></i> Mua ngay
                                             </button>
                                         </div>
                                     </div>
@@ -251,6 +251,7 @@ const WishlistPage = () => {
                 isOpen={!!cartModalProduct}
                 onClose={() => setCartModalProduct(null)}
                 product={cartModalProduct}
+                mode={cartModalMode}
             />
 
             <Footer />

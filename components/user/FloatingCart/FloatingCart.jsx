@@ -187,6 +187,11 @@ const FloatingCart = () =>
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <p className="text-xs text-gray-800 dark:text-gray-200 font-medium line-clamp-1">{item.name}</p>
+                                    {Object.keys(item.selectedOptions || {}).length > 0 && (
+                                        <p className="text-[10px] text-gray-500 dark:text-gray-400 line-clamp-1 mt-0.5">
+                                            {Object.values(item.selectedOptions).map(opt => opt.value).join(', ')}
+                                        </p>
+                                    )}
                                     <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
                                         x{item.quantity} · <span className="text-primary-600 font-medium">{formatPrice(item.finalPrice)}₫</span>
                                     </p>

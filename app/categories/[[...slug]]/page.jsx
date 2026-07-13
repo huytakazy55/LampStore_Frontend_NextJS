@@ -12,6 +12,7 @@ import { useProducts } from '@/hooks/useProducts';
 import AddToCartModal from '@/components/user/MainPage/AddToCartModal';
 import PageLoader from '@/components/common/PageLoader';
 import { resolveImagePath } from '@/lib/imageUtils';
+import { useWishlist } from '@/contexts/WishlistContext';
 
 const DEFAULT_IMAGE = '/images/cameras-2.jpg';
 
@@ -44,9 +45,11 @@ export default function CategoryPage() {
     // Dùng React Query hooks thay vì useEffect + fetch trực tiếp
     const { data: categories = [], isLoading: loading } = useCategories();
     const { data: allProducts = [], isLoading: productsLoading } = useProducts();
+    const { isInWishlist, toggleWishlist } = useWishlist();
 
     const [activeCategory, setActiveCategory] = useState(categoryIdentifier || null);
     const [cartModalProduct, setCartModalProduct] = useState(null);
+    const [cartModalMode, setCartModalMode] = useState(null);
     const [transitioning, setTransitioning] = useState(false);
 
     // Smooth category switch with fade
@@ -170,40 +173,80 @@ export default function CategoryPage() {
 
                                             return (
                                                 <div key={product.id}
-                                                    className="relative group cursor-pointer bg-white rounded-sm overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:-translate-y-1.5 border border-gray-100"
+                                                    className="relative group cursor-pointer bg-white dark:bg-[#1a1a1a] rounded-sm overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08),0_0_0_1px_rgba(249,115,22,0.3)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.3),0_0_0_1px_rgba(249,115,22,0.3)] hover:-translate-y-1 border border-gray-100 dark:border-[#2a2a2a] hover:border-orange-500 dark:hover:border-orange-500"
                                                     onClick={() => { if (product.slug || product.id) router.push(`/product/${product.slug || product.id}`); }}>
+                                                    {/* Discount Badge */}
                                                     {hasDiscount && (
-                                                        <div className="absolute top-3 left-3 z-10 bg-gradient-to-r from-primary-600 via-tertiary-500 to-accent-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-sm shadow-lg">
+                                                        <div className="absolute top-2.5 left-2.5 z-10 bg-primary-600 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)]">
                                                             -{discountPercent}%
                                                         </div>
                                                     )}
-                                                    <div className="relative h-36 sm:h-44 md:h-52 overflow-hidden">
-                                                        <Image className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                                    {/* Wishlist Button */}
+                                                    <button
+                                                        className={`absolute top-2.5 right-2.5 z-10 w-7 h-7 md:w-8 md:h-8 rounded-sm flex items-center justify-center transition-all duration-300 shadow-sm backdrop-blur-sm ${isInWishlist(product.id)
+                                                        ? 'bg-primary-600 text-white scale-105'
+                                                        : 'bg-white/80 dark:bg-[#1a1a1a]/80 text-gray-400 dark:text-gray-500 hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:text-primary-500 hover:scale-105'
+                                                        }`}
+                                                        onClick={(e) => { e.stopPropagation(); toggleWishlist(product.id); }}
+                                                        aria-label={isInWishlist(product.id) ? 'Bỏ yêu thích' : 'Thêm yêu thích'}
+                                                    >
+                                                        <i className={`bx ${isInWishlist(product.id) ? 'bxs-heart' : 'bx-heart'} text-sm md:text-base`}></i>
+                                                    </button>
+                                                    {/* Image Container */}
+                                                    <div className="relative h-48 sm:h-56 md:h-60 overflow-hidden bg-gray-50 dark:bg-[#111]">
+                                                        <Image className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-108"
                                                             src={getProductImageSrc(product)} alt={product.name}
                                                             fill sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw" quality={75} />
                                                     </div>
-                                                    <div className="p-3 md:p-4">
-                                                        <p className="text-[10px] md:text-xs text-gray-400 font-medium uppercase tracking-wider mb-1">
+                                                    {/* Content */}
+                                                    <div className="p-3 md:p-3.5">
+                                                        {/* Category */}
+                                                        <p className="text-[9px] md:text-[10px] text-gray-400 dark:text-gray-500 font-medium uppercase tracking-wider mb-1">
                                                             {product.category?.name || activeCategoryData?.name || 'Đèn ngủ'}
                                                         </p>
-                                                        <h3 className="text-xs md:text-sm font-semibold text-gray-800 line-clamp-2 leading-snug min-h-[2.4em] group-hover:text-primary-700 transition-colors duration-200">
+                                                        {/* Title */}
+                                                        <h3 className="text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300 line-clamp-2 leading-snug min-h-[2.4em] group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-200">
                                                             {product.name}
                                                         </h3>
-                                                        <div className="flex items-end justify-between mt-2.5 pt-2.5 border-t border-gray-100">
-                                                            <div>
-                                                                <div className="text-sm md:text-base font-bold text-primary-600">
-                                                                    {formatPrice(price)}<span className="text-[10px] font-normal ml-0.5">₫</span>
-                                                                </div>
-                                                                {hasDiscount && (
-                                                                    <div className="text-[10px] text-gray-400 line-through -mt-0.5">
-                                                                        {formatPrice(originalPrice)}₫
-                                                                    </div>
-                                                                )}
-                                                            </div>
+                                                        {/* Price Row */}
+                                                        <div className="flex items-center gap-2 mt-2">
+                                                            <span className="text-[0.95rem] md:text-[1.1rem] font-bold text-orange-600 dark:text-orange-500 inline-block leading-tight">
+                                                                {formatPrice(price)}<span className="text-[0.7rem] font-medium ml-px underline">đ</span>
+                                                            </span>
+                                                            {hasDiscount && (
+                                                                <span className="text-[0.65rem] md:text-[0.75rem] text-gray-400 dark:text-[#6b6b6b] line-through leading-none">
+                                                                    {formatPrice(originalPrice)}<span className="underline">đ</span>
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                        {/* Sold Count */}
+                                                        <div className="flex items-center gap-1 mt-1.5 text-gray-500 dark:text-gray-400 text-[0.65rem] md:text-xs">
+                                                            <i className='bx bx-purchase-tag text-orange-500'></i>
+                                                            <span>Đã bán {product.sellCount || 0}</span>
+                                                        </div>
+                                                        {/* Actions Row */}
+                                                        <div className="flex items-stretch gap-1.5 md:gap-2 mt-3">
                                                             <button
-                                                                className="w-8 h-8 md:w-9 md:h-9 rounded-sm bg-primary-50 text-primary-600 flex items-center justify-center transition-all duration-300 group-hover:bg-primary-500 group-hover:text-white"
-                                                                onClick={(e) => { e.stopPropagation(); setCartModalProduct(product); }}>
-                                                                <i className='bx bxs-cart-add text-base md:text-lg'></i>
+                                                                className="flex-1 flex items-center justify-center py-1.5 rounded-sm border border-orange-500 text-orange-500 bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 dark:hover:bg-orange-900/40 transition-colors cursor-pointer"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    setCartModalMode('add_to_cart');
+                                                                    setCartModalProduct(product);
+                                                                }}
+                                                                aria-label="Thêm vào giỏ hàng"
+                                                            >
+                                                                <span className="text-[8.5px] sm:text-[9px] md:text-xs font-semibold">Thêm vào giỏ</span>
+                                                            </button>
+                                                            <button
+                                                                className="flex-1 flex items-center justify-center py-1.5 rounded-sm border border-transparent bg-orange-500 text-white hover:bg-orange-600 transition-colors cursor-pointer"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    setCartModalMode('buy_now');
+                                                                    setCartModalProduct(product);
+                                                                }}
+                                                                aria-label="Mua ngay"
+                                                            >
+                                                                <span className="text-[9px] md:text-xs font-semibold">Mua ngay</span>
                                                             </button>
                                                         </div>
                                                     </div>
@@ -229,6 +272,7 @@ export default function CategoryPage() {
                 isOpen={!!cartModalProduct}
                 onClose={() => setCartModalProduct(null)}
                 product={cartModalProduct}
+                mode={cartModalMode}
             />
         </>
     );

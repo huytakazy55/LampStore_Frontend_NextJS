@@ -16,6 +16,7 @@ import { useWishlist } from '@/contexts/WishlistContext';
 import { useProducts } from '@/hooks/useProducts';
 import ImageLightbox from '@/components/common/ImageLightbox';
 import PageLoader from '@/components/common/PageLoader';
+import AddToCartModal from '@/components/user/MainPage/AddToCartModal';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
@@ -73,6 +74,8 @@ export default function ProductDetailPage() {
     const [addonTempOptions, setAddonTempOptions] = useState({});
     // Image preview popup
     const [previewImg, setPreviewImg] = useState(null);
+    const [cartModalProduct, setCartModalProduct] = useState(null);
+    const [cartModalMode, setCartModalMode] = useState(null);
 
     // Review states
     const [reviews, setReviews] = useState([]);
@@ -989,34 +992,86 @@ export default function ProductDetailPage() {
                                 const rpImgs = rp.images?.$values || rp.images || [];
                                 const rpImgPath = rpImgs.length > 0 ? (rpImgs[0].imagePath || rpImgs[0].ImagePath) : null;
                                 return (
-                                    <div
-                                        key={rp.id}
-                                        className='group cursor-pointer bg-white dark:bg-gray-800 rounded-sm overflow-hidden border border-gray-100 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-300'
-                                        onClick={() => { if (rp.slug || rp.id) router.push(`/product/${rp.slug || rp.id}`); }}
-                                    >
-                                        <div className='relative h-36 sm:h-44 md:h-48 overflow-hidden bg-gray-50 dark:bg-gray-700'>
-                                            <img
-                                                className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-500'
-                                                src={getImgSrc(rpImgPath)}
-                                                alt={rp.name}
-                                                loading='lazy'
-                                                onError={(e) => { e.target.src = '/images/cameras-2.jpg'; }}
-                                            />
-                                            {rpHasDiscount && (
-                                                <div className='absolute top-2 left-2 bg-gradient-to-r from-primary-600 via-tertiary-500 to-accent-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm shadow'>-{rpDiscountPercent}%</div>
-                                            )}
-                                        </div>
-                                        <div className='p-3'>
-                                            <p className='text-[10px] text-gray-400 uppercase tracking-wider mb-1'>{rp.category?.name || ''}</p>
-                                            <h3 className='text-xs md:text-sm font-medium text-gray-800 dark:text-gray-200 line-clamp-2 leading-snug min-h-[2.4em] group-hover:text-primary-700 dark:group-hover:text-primary-400 transition-colors'>{rp.name}</h3>
-                                            <div className='flex items-center gap-2 mt-2'>
-                                                <span className='text-sm font-bold text-primary-600'>₫{formatPrice(rpPrice)}</span>
-                                                {rpHasDiscount && (
-                                                    <span className='text-[10px] text-gray-400 line-through'>₫{formatPrice(rpOriginal)}</span>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
+                                                <div key={rp.id}
+                                                    className="relative group cursor-pointer bg-white dark:bg-[#1a1a1a] rounded-sm overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08),0_0_0_1px_rgba(249,115,22,0.3)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.3),0_0_0_1px_rgba(249,115,22,0.3)] hover:-translate-y-1 border border-gray-100 dark:border-[#2a2a2a] hover:border-orange-500 dark:hover:border-orange-500"
+                                                    onClick={() => { if (rp.slug || rp.id) router.push(`/product/${rp.slug || rp.id}`); }}>
+                                                    {/* Discount Badge */}
+                                                    {rpHasDiscount && (
+                                                        <div className="absolute top-2.5 left-2.5 z-10 bg-primary-600 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)]">
+                                                            -{rpDiscountPercent}%
+                                                        </div>
+                                                    )}
+                                                    {/* Wishlist Button */}
+                                                    <button
+                                                        className={`absolute top-2.5 right-2.5 z-10 w-7 h-7 md:w-8 md:h-8 rounded-sm flex items-center justify-center transition-all duration-300 shadow-sm backdrop-blur-sm ${isInWishlist(rp.id)
+                                                        ? 'bg-primary-600 text-white scale-105'
+                                                        : 'bg-white/80 dark:bg-[#1a1a1a]/80 text-gray-400 dark:text-gray-500 hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:text-primary-500 hover:scale-105'
+                                                        }`}
+                                                        onClick={(e) => { e.stopPropagation(); toggleWishlist(rp.id); }}
+                                                        aria-label={isInWishlist(rp.id) ? 'Bỏ yêu thích' : 'Thêm yêu thích'}
+                                                    >
+                                                        <i className={`bx ${isInWishlist(rp.id) ? 'bxs-heart' : 'bx-heart'} text-sm md:text-base`}></i>
+                                                    </button>
+                                                    {/* Image Container */}
+                                                    <div className="relative h-48 sm:h-56 md:h-60 overflow-hidden bg-gray-50 dark:bg-[#111]">
+                                                        <img className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-108"
+                                                            src={getImgSrc(rpImgPath)} alt={rp.name}
+                                                            loading='lazy'
+                                                            onError={(e) => { e.target.src = '/images/cameras-2.jpg'; }} />
+                                                    </div>
+                                                    {/* Content */}
+                                                    <div className="p-3 md:p-3.5">
+                                                        {/* Category */}
+                                                        <p className="text-[9px] md:text-[10px] text-gray-400 dark:text-gray-500 font-medium uppercase tracking-wider mb-1">
+                                                            {rp.category?.name || 'Đèn ngủ'}
+                                                        </p>
+                                                        {/* Title */}
+                                                        <h3 className="text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300 line-clamp-2 leading-snug min-h-[2.4em] group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-200">
+                                                            {rp.name}
+                                                        </h3>
+                                                        {/* Price Row */}
+                                                        <div className="flex items-center gap-2 mt-2">
+                                                            <span className="text-[0.95rem] md:text-[1.1rem] font-bold text-orange-600 dark:text-orange-500 inline-block leading-tight">
+                                                                {formatPrice(rpPrice)}<span className="text-[0.7rem] font-medium ml-px underline">đ</span>
+                                                            </span>
+                                                            {rpHasDiscount && (
+                                                                <span className="text-[0.65rem] md:text-[0.75rem] text-gray-400 dark:text-[#6b6b6b] line-through leading-none">
+                                                                    {formatPrice(rpOriginal)}<span className="underline">đ</span>
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                        {/* Sold Count */}
+                                                        <div className="flex items-center gap-1 mt-1.5 text-gray-500 dark:text-gray-400 text-[0.65rem] md:text-xs">
+                                                            <i className='bx bx-purchase-tag text-orange-500'></i>
+                                                            <span>Đã bán {rp.sellCount || 0}</span>
+                                                        </div>
+                                                        {/* Actions Row */}
+                                                        <div className="flex items-stretch gap-1.5 md:gap-2 mt-3">
+                                                            <button
+                                                                className="flex-1 flex items-center justify-center py-1.5 rounded-sm border border-orange-500 text-orange-500 bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 dark:hover:bg-orange-900/40 transition-colors cursor-pointer"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    setCartModalMode('add_to_cart');
+                                                                    setCartModalProduct(rp);
+                                                                }}
+                                                                aria-label="Thêm vào giỏ hàng"
+                                                            >
+                                                                <span className="text-[8.5px] sm:text-[9px] md:text-xs font-semibold">Thêm vào giỏ</span>
+                                                            </button>
+                                                            <button
+                                                                className="flex-1 flex items-center justify-center py-1.5 rounded-sm border border-transparent bg-orange-500 text-white hover:bg-orange-600 transition-colors cursor-pointer"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    setCartModalMode('buy_now');
+                                                                    setCartModalProduct(rp);
+                                                                }}
+                                                                aria-label="Mua ngay"
+                                                            >
+                                                                <span className="text-[9px] md:text-xs font-semibold">Mua ngay</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                 );
                             })}
                         </div>
@@ -1051,6 +1106,12 @@ export default function ProductDetailPage() {
             )}
 
             <Footer />
+            <AddToCartModal
+                isOpen={!!cartModalProduct}
+                onClose={() => setCartModalProduct(null)}
+                product={cartModalProduct}
+                mode={cartModalMode}
+            />
         </>
     );
 }

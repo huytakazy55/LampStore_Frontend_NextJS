@@ -31,6 +31,7 @@ const LenisProvider = ({ children }) =>
                 });
 
                 lenisRef.current = lenis;
+                window.__lenis = lenis;
 
                 function raf(time)
                 {
@@ -54,6 +55,7 @@ const LenisProvider = ({ children }) =>
             {
                 lenisRef.current.destroy();
                 lenisRef.current = null;
+                delete window.__lenis;
             }
         };
     }, []);

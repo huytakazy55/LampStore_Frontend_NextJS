@@ -92,7 +92,7 @@ const SmallProductCard = ({ product, navigate, onAddToCartClick }) => {
                 className="flex-1 flex items-center justify-center py-1.5 rounded-sm border border-orange-500 text-orange-500 bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 dark:hover:bg-orange-900/40 transition-colors cursor-pointer"
                 onClick={(e) => {
                     e.stopPropagation();
-                    onAddToCartClick(product);
+                    onAddToCartClick(product, 'add_to_cart');
                 }}
                 aria-label="Thêm vào giỏ hàng"
             >
@@ -102,7 +102,7 @@ const SmallProductCard = ({ product, navigate, onAddToCartClick }) => {
                 className="flex-1 flex items-center justify-center py-1.5 rounded-sm border border-transparent bg-orange-500 text-white hover:bg-orange-600 transition-colors cursor-pointer"
                 onClick={(e) => {
                     e.stopPropagation();
-                    onAddToCartClick(product);
+                    onAddToCartClick(product, 'buy_now');
                 }}
                 aria-label="Mua ngay"
             >
@@ -118,6 +118,7 @@ const AllProducts = () => {
   const { data: allProducts = [], isLoading: loading } = useProducts();
   const [activeCategory, setActiveCategory] = useState(null);
   const [cartModalProduct, setCartModalProduct] = useState(null);
+  const [cartModalMode, setCartModalMode] = useState(null);
   const navigate = useNavigate();
 
   const products = useMemo(() => {
@@ -216,7 +217,7 @@ const AllProducts = () => {
                 className="animate-fade-in-up"
                 style={{ animationDelay: `${(index % itemsPerRow) * 75}ms` }}
               >
-                <SmallProductCard product={product} navigate={navigate} onAddToCartClick={setCartModalProduct} />
+                <SmallProductCard product={product} navigate={navigate} onAddToCartClick={(prod, mode) => { setCartModalProduct(prod); setCartModalMode(mode); }} />
               </div>
             ))}
             {/* Fill empty spaces with placeholders if less than visibleCount and not total length (optional, keeping minimal empty state here) */}
@@ -243,6 +244,7 @@ const AllProducts = () => {
         isOpen={!!cartModalProduct}
         onClose={() => setCartModalProduct(null)}
         product={cartModalProduct}
+        mode={cartModalMode}
       />
     </div >
   );

@@ -49,6 +49,7 @@ const CustomNextArrow = ({ onClick }) => (
 const TrendingProduct = () => {
   const { data: allProducts = [], isLoading: loading } = useProducts();
   const [cartModalProduct, setCartModalProduct] = useState(null);
+  const [cartModalMode, setCartModalMode] = useState(null);
   const navigate = useNavigate();
   const { isInWishlist, toggleWishlist } = useWishlist();
 
@@ -145,18 +146,18 @@ const TrendingProduct = () => {
             return (
               <div key={product.id} className='p-[3px]'>
                 <div
-                  className='flex h-[10rem] md:h-[12rem] cursor-pointer bg-white dark:bg-[#1a1a1a] rounded-sm overflow-hidden border border-gray-100 dark:border-[#2a2a2a] transition-all duration-300 hover:border-orange-500 dark:hover:border-orange-500 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08),0_0_0_1px_rgba(249,115,22,0.3)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.3),0_0_0_1px_rgba(249,115,22,0.3)] hover:-translate-y-0.5 group'
+                  className='flex h-auto min-h-[9rem] md:min-h-[11rem] cursor-pointer bg-white dark:bg-[#1a1a1a] rounded-sm overflow-hidden border border-gray-100 dark:border-[#2a2a2a] transition-all duration-300 hover:border-orange-500 dark:hover:border-orange-500 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08),0_0_0_1px_rgba(249,115,22,0.3)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.3),0_0_0_1px_rgba(249,115,22,0.3)] hover:-translate-y-0.5 group'
                   onClick={() => { if (product.slug || product.id) navigate(`/product/${product.slug || product.id}`); }}
                 >
                   {/* Image */}
-                  <div className='relative w-[38%] md:w-[40%] flex-shrink-0 bg-gray-50 dark:bg-[#111] flex items-center justify-center p-3 overflow-hidden'>
+                  <div className='relative w-[40%] md:w-[42%] flex-shrink-0 bg-gray-50 dark:bg-[#111] overflow-hidden'>
                     {hasDiscount && (
                       <div className="absolute top-2 left-2 z-10 bg-primary-600 text-white text-[0.6rem] font-bold px-1.5 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)]">
                         -{discountPercent}%
                       </div>
                     )}
                     <img
-                      className='max-h-full max-w-full object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.08)] transition-transform duration-500 group-hover:scale-108'
+                      className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-108'
                       src={getImageSrc(product)}
                       alt={product.name}
                       loading="lazy"
@@ -193,6 +194,7 @@ const TrendingProduct = () => {
                           className='w-7 h-7 md:w-8 md:h-8 rounded-sm bg-orange-500 dark:bg-orange-600 text-white flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-orange-600 hover:shadow-[0_2px_8px_rgba(249,115,22,0.3)] active:scale-95'
                           onClick={(e) => {
                             e.stopPropagation();
+                            setCartModalMode('buy_now');
                             setCartModalProduct(product);
                           }}
                           aria-label="Mua ngay"
@@ -203,6 +205,7 @@ const TrendingProduct = () => {
                           className='w-7 h-7 md:w-8 md:h-8 rounded-sm bg-primary-600 dark:bg-primary-900 text-white dark:text-primary-300 flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-primary-700 hover:text-white hover:shadow-[0_2px_8px_rgba(139,92,246,0.3)] active:scale-95'
                           onClick={(e) => {
                             e.stopPropagation();
+                            setCartModalMode('add_to_cart');
                             setCartModalProduct(product);
                           }}
                           aria-label="Thêm vào giỏ hàng"
@@ -235,6 +238,7 @@ const TrendingProduct = () => {
         isOpen={!!cartModalProduct}
         onClose={() => setCartModalProduct(null)}
         product={cartModalProduct}
+        mode={cartModalMode}
       />
     </div>
   );

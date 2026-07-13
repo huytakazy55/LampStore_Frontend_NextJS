@@ -52,9 +52,9 @@ const ProductCardItem = ({ product, onClick, isInWishlist, onToggleWishlist, onA
 
   return (
     <div className='p-[5px]' onClick={onClick}>
-      <div className='flex gap-0 h-48 md:h-54 rounded-sm overflow-hidden bg-white dark:bg-[#1a1a1a] border border-gray-100 dark:border-[#2a2a2a] cursor-pointer transition-all duration-300 relative hover:border-orange-500 dark:hover:border-orange-500 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08),0_0_0_1px_rgba(249,115,22,0.3)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.3),0_0_0_1px_rgba(249,115,22,0.3)] hover:-translate-y-0.5 group'>
+      <div className='flex gap-0 h-auto rounded-sm overflow-hidden bg-white dark:bg-[#1a1a1a] border border-gray-100 dark:border-[#2a2a2a] cursor-pointer transition-all duration-300 relative hover:border-orange-500 dark:hover:border-orange-500 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08),0_0_0_1px_rgba(249,115,22,0.3)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.3),0_0_0_1px_rgba(249,115,22,0.3)] hover:-translate-y-0.5 group'>
         {/* Image Section */}
-        <div className='relative w-[42%] flex-shrink-0 bg-gray-50 dark:bg-[#111] flex items-center justify-center p-3 overflow-hidden'>
+        <div className='relative w-[42%] md:w-[45%] flex-shrink-0 bg-gray-50 dark:bg-[#111] aspect-square overflow-hidden'>
           {/* Discount Badge */}
           {hasDiscount && (
             <div className="absolute top-2 left-2 z-10 bg-primary-600 text-white text-[0.6rem] md:text-[0.65rem] font-bold px-1.5 md:px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)] tracking-wide">
@@ -67,7 +67,7 @@ const ProductCardItem = ({ product, onClick, isInWishlist, onToggleWishlist, onA
             {product.sellCount || 0} đã bán
           </div>
           {imageSrc ? (
-            <Image src={imageSrc} alt={product.name} className='object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.08)] transition-transform duration-500 group-hover:scale-108' fill sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw" quality={50} />
+            <Image src={imageSrc} alt={product.name} className='object-cover transition-transform duration-500 group-hover:scale-108' fill sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw" quality={50} />
           ) : (
             <div className='w-full h-full flex items-center justify-center'>
               <i className='bx bx-image text-3xl text-gray-300'></i>
@@ -110,7 +110,7 @@ const ProductCardItem = ({ product, onClick, isInWishlist, onToggleWishlist, onA
             </button>
             <button
               className='flex-1 flex items-center justify-center gap-1 md:gap-1.5 h-7 md:h-8 border border-orange-500 rounded-sm text-orange-500 bg-orange-50 dark:bg-orange-900/20 text-[0.68rem] md:text-[0.72rem] font-semibold cursor-pointer transition-all duration-200 hover:bg-orange-100 dark:hover:bg-orange-900/40 active:scale-[0.97]'
-              onClick={(e) => { e.stopPropagation(); onAddToCartClick && onAddToCartClick(product); }}
+              onClick={(e) => { e.stopPropagation(); onAddToCartClick && onAddToCartClick(product, 'add_to_cart'); }}
               tabIndex={-1}
               aria-label="Thêm vào giỏ hàng"
             >
@@ -120,7 +120,7 @@ const ProductCardItem = ({ product, onClick, isInWishlist, onToggleWishlist, onA
             </button>
             <button
               className='flex-1 flex items-center justify-center gap-1 md:gap-1.5 h-7 md:h-8 border border-transparent rounded-sm bg-orange-500 dark:bg-orange-600 text-white text-[0.68rem] md:text-[0.72rem] font-semibold cursor-pointer transition-all duration-200 hover:bg-orange-600 hover:shadow-[0_2px_8px_rgba(249,115,22,0.3)] active:scale-[0.97]'
-              onClick={(e) => { e.stopPropagation(); onAddToCartClick && onAddToCartClick(product); }}
+              onClick={(e) => { e.stopPropagation(); onAddToCartClick && onAddToCartClick(product, 'buy_now'); }}
               tabIndex={-1}
               aria-label="Mua ngay"
             >
@@ -147,6 +147,7 @@ const SectionProductCardCarousel = () =>
   const navigate = useNavigate();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const [cartModalProduct, setCartModalProduct] = useState(null);
+  const [cartModalMode, setCartModalMode] = useState(null);
   const sliderContainerRef = useRef(null);
   const [slidesToShow, setSlidesToShow] = useState(3);
   const [mounted, setMounted] = useState(false);
@@ -236,7 +237,7 @@ const SectionProductCardCarousel = () =>
                 onClick={() => { if (product.slug || product.id) navigate(`/product/${product.slug || product.id}`); }}
                 isInWishlist={isInWishlist(product.id)}
                 onToggleWishlist={toggleWishlist}
-                onAddToCartClick={setCartModalProduct}
+                onAddToCartClick={(prod, mode) => { setCartModalProduct(prod); setCartModalMode(mode); }}
               />
             ))}
           </Slider2>
@@ -247,6 +248,7 @@ const SectionProductCardCarousel = () =>
         isOpen={!!cartModalProduct}
         onClose={() => setCartModalProduct(null)}
         product={cartModalProduct}
+        mode={cartModalMode}
       />
     </div>
   )

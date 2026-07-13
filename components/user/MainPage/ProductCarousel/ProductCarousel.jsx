@@ -103,7 +103,7 @@ const ProductCard = ({ product, isLast, navigate, onAddToCartClick, isInWishlist
                 className="flex-1 flex items-center justify-center py-1.5 rounded-sm border border-orange-500 text-orange-500 bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 dark:hover:bg-orange-900/40 transition-colors cursor-pointer"
                 onClick={(e) => {
                     e.stopPropagation();
-                    onAddToCartClick(product);
+                    onAddToCartClick(product, 'add_to_cart');
                 }}
                 aria-label="Thêm vào giỏ hàng"
             >
@@ -113,7 +113,7 @@ const ProductCard = ({ product, isLast, navigate, onAddToCartClick, isInWishlist
                 className="flex-1 flex items-center justify-center py-1.5 rounded-sm border border-transparent bg-orange-500 text-white hover:bg-orange-600 transition-colors cursor-pointer"
                 onClick={(e) => {
                     e.stopPropagation();
-                    onAddToCartClick(product);
+                    onAddToCartClick(product, 'buy_now');
                 }}
                 aria-label="Mua ngay"
             >
@@ -129,6 +129,7 @@ const ProductCarousel = () => {
   const [activeTab, setActiveTab] = useState('featured');
   const { data: allProducts = [], isLoading: loading } = useProducts();
   const [cartModalProduct, setCartModalProduct] = useState(null);
+  const [cartModalMode, setCartModalMode] = useState(null);
   const navigate = useNavigate();
   const { isInWishlist, toggleWishlist } = useWishlist();
 
@@ -225,7 +226,7 @@ const ProductCarousel = () => {
                 product={product}
                 isLast={index === displayProducts.length - 1}
                 navigate={navigate}
-                onAddToCartClick={setCartModalProduct}
+                onAddToCartClick={(prod, mode) => { setCartModalProduct(prod); setCartModalMode(mode); }}
                 isInWishlist={isInWishlist(product.id)}
                 onToggleWishlist={toggleWishlist}
               />
@@ -239,6 +240,7 @@ const ProductCarousel = () => {
         isOpen={!!cartModalProduct}
         onClose={() => setCartModalProduct(null)}
         product={cartModalProduct}
+        mode={cartModalMode}
       />
     </div>
   );

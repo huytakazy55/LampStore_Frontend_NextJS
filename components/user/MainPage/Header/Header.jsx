@@ -103,6 +103,8 @@ const Header = () =>
 
   const handleClickOutside = (event, ref, buttonRef, toggleFunction) =>
   {
+    if (!document.body.contains(event.target)) return;
+    
     if (ref.current && !ref.current.contains(event.target) &&
       buttonRef.current && !buttonRef.current.contains(event.target))
     {

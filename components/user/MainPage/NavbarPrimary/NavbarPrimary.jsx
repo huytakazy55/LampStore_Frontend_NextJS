@@ -179,7 +179,7 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () => {
             onMouseLeave={() => handleCategoryHover(null)}
           >
             <div
-              className="bg-primary-500/85 dark:bg-primary-900/80 backdrop-blur-xl border border-primary-500/20 dark:border-gray-700/50 shadow-[0_25px_60px_-15px_rgba(249,115,22,0.15)] dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] rounded-b-sm overflow-hidden"
+              className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border border-primary-500/20 dark:border-gray-700/50 shadow-[0_25px_60px_-15px_rgba(249,115,22,0.15)] dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] rounded-b-sm overflow-hidden"
             >
               <div className="flex h-[350px]">
                 {/* Left — Category Image + Info */}

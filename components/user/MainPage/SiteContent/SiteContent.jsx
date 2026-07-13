@@ -3,8 +3,7 @@
 import React, { useRef, useEffect } from 'react'
 import { useNavigate } from '@/lib/router-compat'
 import Image from 'next/image'
-const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_new_02.webp'; const Banner3 = '/images/banner_new_03.webp'; export const SiteContent = () =>
-{
+const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_new_02.webp'; const Banner3 = '/images/banner_new_03.webp'; export const SiteContent = () => {
   const navigate = useNavigate();
 
   const phrases = [
@@ -13,7 +12,7 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
     'Thiết Kế Tinh Tế',
     'Phong Cách Hiện Đại',
   ];
-  
+
   const mobileTextRef = useRef(null);
   const desktopTextRef = useRef(null);
 
@@ -25,7 +24,7 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
 
     const type = () => {
       const currentPhrase = phrases[phraseIdx];
-      
+
       if (!isDeleting) {
         if (charIdx < currentPhrase.length) {
           charIdx++;
@@ -47,29 +46,26 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
         } else {
           isDeleting = false;
           phraseIdx = (phraseIdx + 1) % phrases.length;
-          timeout = setTimeout(type, 400); 
+          timeout = setTimeout(type, 400);
         }
       }
     };
 
-    timeout = setTimeout(type, 3000); 
-    
+    timeout = setTimeout(type, 3000);
+
     return () => clearTimeout(timeout);
   }, []);
 
   // Inject blink keyframe into head
-  useEffect(() =>
-  {
+  useEffect(() => {
     const styleId = 'blink-cursor-keyframe'
-    if (!document.getElementById(styleId))
-    {
+    if (!document.getElementById(styleId)) {
       const style = document.createElement('style')
       style.id = styleId
       style.textContent = `@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }`
       document.head.appendChild(style)
     }
-    return () =>
-    {
+    return () => {
       const el = document.getElementById(styleId)
       if (el) el.remove()
     }
@@ -99,15 +95,29 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
           </p>
           <div className="flex items-center gap-3">
             <button
-              onClick={() => navigate('/#products')}
-              className="bg-primary-700 hover:bg-primary-800 text-white text-xs font-semibold px-5 py-2 rounded-sm transition-all duration-300 cursor-pointer flex items-center gap-1.5"
+              onClick={() => {
+                const element = document.querySelector('[data-section="products"]');
+                if (element) {
+                  try {
+                    const rect = element.getBoundingClientRect();
+                    const viewportHeight = window.innerHeight;
+                    const shouldCenter = (rect.height > 0 && rect.height < viewportHeight - 150);
+                    element.scrollIntoView({ behavior: 'smooth', block: shouldCenter ? 'center' : 'start' });
+                  } catch (e) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                  }
+                } else {
+                  navigate('/#products');
+                }
+              }}
+              className="bg-primary-700 hover:bg-primary-800 text-white text-xs font-semibold px-5 py-2.5 rounded-sm transition-all duration-300 shadow-md active:scale-95 cursor-pointer flex items-center gap-1.5"
             >
               Khám Phá
               <i className='bx bx-right-arrow-alt text-base' />
             </button>
             <div className="flex items-center gap-2 pl-3 border-l border-gray-300">
               <i className='bx bxs-check-shield text-primary-700 text-sm' />
-              <div className="text-gray-500 text-[10px] leading-tight">Bảo hành 12 tháng<br/>Giao hàng toàn quốc</div>
+              <div className="text-gray-500 text-[10px] leading-tight">Bảo hành 12 tháng<br />Giao hàng toàn quốc</div>
             </div>
           </div>
         </div>
@@ -151,7 +161,7 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
             {/* Tagline */}
             <div className="flex items-center gap-2.5 mb-4">
               <div className="w-3 h-3 bg-primary-600 rounded-sm" />
-              <span className="text-white text-xs md:text-sm font-semibold tracking-[0.15em] uppercase">
+              <span className="text-gray-500 dark:text-gray-400 text-xs md:text-sm font-semibold tracking-[0.15em] uppercase">
                 Về CapyLumine
               </span>
             </div>
@@ -195,10 +205,24 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
             {/* CTA + Stats */}
             <div className="flex flex-wrap items-center gap-4 md:gap-6">
               <button
-                onClick={() => navigate('/#products')}
+                onClick={() => {
+                  const element = document.querySelector('[data-section="products"]');
+                  if (element) {
+                    try {
+                      const rect = element.getBoundingClientRect();
+                      const viewportHeight = window.innerHeight;
+                      const shouldCenter = (rect.height > 0 && rect.height < viewportHeight - 150);
+                      element.scrollIntoView({ behavior: 'smooth', block: shouldCenter ? 'center' : 'start' });
+                    } catch (e) {
+                      element.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  } else {
+                    navigate('/#products');
+                  }
+                }}
                 className="bg-primary-700 hover:bg-primary-800 text-white text-xs md:text-sm font-semibold px-6 md:px-8 py-2.5 md:py-3 rounded-sm transition-all duration-300 hover:shadow-lg hover:shadow-primary-700/25 active:scale-95 cursor-pointer flex items-center gap-2"
               >
-                Khám Phá Ngay
+                Đặt mua ngay
                 <i className='bx bx-right-arrow-alt text-lg' />
               </button>
 
