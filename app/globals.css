@@ -330,7 +330,8 @@ html {
     background-color: rgb(239 68 68 / 0.2);
   }
 
-  table .bx-image-add {
+  table .bx-image-add,
+  table .bx-show {
     font-size: 1rem;
     color: #3b82f6;
     cursor: pointer;
@@ -340,7 +341,8 @@ html {
     background-color: rgb(59 130 246 / 0.2);
   }
 
-  table .bx-image-add:hover {
+  table .bx-image-add:hover,
+  table .bx-show:hover {
     background-color: rgb(59 130 246 / 0.3);
   }
 

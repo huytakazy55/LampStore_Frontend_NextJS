@@ -13,6 +13,7 @@ import CreateModal from './CreateModal';
 import UpdateModal from './UpdateModal';
 import ImportModal from './ImportModal';
 import UploadModal from './UploadModal';
+import DetailModal from './DetailModal';
 import { DeleteOutlined, FileExcelOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
 import axios from 'axios';
@@ -60,6 +61,10 @@ const Products = () => {
   const handleUploadOpen = () => setOpenUpload(true);
   const handleUploadClose = () => setOpenUpload(false);
   const [openUpload, setOpenUpload] = React.useState(false);
+  //Modal Detail
+  const [openDetail, setOpenDetail] = React.useState(false);
+  const handleDetailOpen = () => setOpenDetail(true);
+  const handleDetailClose = () => setOpenDetail(false);
   //Pagination
   const [page, setPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -212,6 +217,12 @@ const Products = () => {
   const handleUploadClick = (id) => {
     handleUploadOpen();
     setUpdateId(id);
+  }
+
+  const handleDetailClick = (id) => {
+    const product = productData.find((item) => item.id === id);
+    setSelectedProduct(product);
+    handleDetailOpen();
   }
 
   const fetchProducts = () => {
@@ -396,6 +407,15 @@ const Products = () => {
       align: 'center',
       render: (_, record) => (
         <Space size={6} className="admin-action-group">
+          <Tooltip title="Xem chi tiết">
+            <Button
+              type="text"
+              className="admin-action-btn"
+              icon={<i className='bx bx-show'></i>}
+              onClick={() => handleDetailClick(record.id)}
+              style={{ color: themeColors.EndColorLinear }}
+            />
+          </Tooltip>
           <Tooltip title="Quản lý hình ảnh sản phẩm">
             <Button
               type="text"
@@ -607,6 +627,13 @@ const Products = () => {
         setProductData={setProductData}
         style={style}
         updateId={updateId}
+      />
+
+      <DetailModal
+        open={openDetail}
+        onClose={handleDetailClose}
+        product={selectedProduct}
+        categories={categories}
       />
 
       {/* Filter Modal */}
