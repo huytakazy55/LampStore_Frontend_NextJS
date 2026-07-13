@@ -179,8 +179,7 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () => {
             onMouseLeave={() => handleCategoryHover(null)}
           >
             <div
-              className="bg-gray-900/95 backdrop-blur-xl border border-gray-700/50 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] rounded-b-sm overflow-hidden"
-              style={{ boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.2)' }}
+              className="bg-primary-500/85 dark:bg-primary-900/80 backdrop-blur-xl border border-primary-500/20 dark:border-gray-700/50 shadow-[0_25px_60px_-15px_rgba(249,115,22,0.15)] dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] rounded-b-sm overflow-hidden"
             >
               <div className="flex h-[350px]">
                 {/* Left — Category Image + Info */}
@@ -191,14 +190,14 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () => {
                     className="absolute inset-0 w-full h-full object-cover opacity-90"
                     onError={(e) => { e.target.src = Product1 }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/60 to-transparent" />
                   <div className="relative mt-auto z-10">
                     <div className="flex items-center gap-2 mb-2">
                       <div className="w-1 h-6 bg-primary-400 rounded-full" />
                       <span className="text-primary-400 text-[10px] font-semibold tracking-[0.2em] uppercase">Bộ sưu tập</span>
                     </div>
                     <h3 className="text-white text-xl font-bold leading-tight mb-2">{hoveredCategory.name}</h3>
-                    <p className="text-gray-400 text-xs leading-relaxed mb-4 line-clamp-2">
+                    <p className="text-gray-200 text-xs leading-relaxed mb-4 line-clamp-2">
                       {hoveredCategory.description
                         ? stripHtml(hoveredCategory.description)
                         : `Khám phá bộ sưu tập ${hoveredCategory.name.toLowerCase()}`}
@@ -219,11 +218,11 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () => {
                 {/* Right — Products Grid */}
                 <div className="w-full lg:w-[70%] p-5">
                   <div className="flex items-center justify-between mb-4">
-                    <h4 className="text-gray-100 text-base font-bold flex items-center gap-2">
-                      <i className='bx bx-grid-alt text-primary-500' />
+                    <h4 className="text-gray-900 dark:text-gray-100 text-base font-bold flex items-center gap-2">
+                      <i className='bx bx-grid-alt text-primary-600' />
                       Sản phẩm nổi bật
                     </h4>
-                    <span className="text-gray-400 text-xs">{products.length} sản phẩm</span>
+                    <span className="text-gray-700 dark:text-gray-400 text-xs font-medium">{products.length} sản phẩm</span>
                   </div>
 
                   {products.length > 0 ? (
@@ -231,7 +230,7 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () => {
                       {products.map((product, idx) => (
                         <div
                           key={product.id || idx}
-                          className="flex items-center gap-3 p-2.5 rounded-sm bg-gray-800/80 hover:bg-primary-900/40 border border-transparent hover:border-primary-500/50 cursor-pointer group transition-all duration-200 hover:shadow-sm"
+                          className="flex items-center gap-3 p-2.5 rounded-sm bg-white/80 hover:bg-white dark:bg-gray-800/80 dark:hover:bg-primary-900/60 border border-white/50 dark:border-transparent hover:border-primary-300 dark:hover:border-primary-500/50 cursor-pointer group transition-all duration-200 shadow-sm hover:shadow-md"
                           onClick={() => {
                             setShowDropdown(false)
                             setHoveredCategory(null)
@@ -239,7 +238,7 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () => {
                           }}
                           style={{ animationDelay: `${idx * 50}ms` }}
                         >
-                          <div className="w-14 h-14 flex-shrink-0 rounded-sm overflow-hidden bg-gray-800 border border-gray-700">
+                          <div className="w-14 h-14 flex-shrink-0 rounded-sm overflow-hidden bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
                             <img
                               src={getProductImageSrc(product)}
                               alt={product.name}
@@ -248,21 +247,21 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () => {
                             />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h5 className="text-sm font-medium text-gray-200 truncate group-hover:text-primary-300 transition-colors duration-200">
+                            <h5 className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate group-hover:text-primary-600 dark:group-hover:text-primary-300 transition-colors duration-200">
                               {product.name}
                             </h5>
-                            <p className="text-xs font-bold text-primary-400 mt-0.5">
+                            <p className="text-xs font-bold text-primary-600 dark:text-primary-400 mt-0.5">
                               {formatPrice(product.minPrice || product.price)}
                             </p>
                           </div>
-                          <i className='bx bx-chevron-right text-gray-500 group-hover:text-primary-400 transition-colors text-lg' />
+                          <i className='bx bx-chevron-right text-gray-400 dark:text-gray-500 group-hover:text-primary-500 dark:group-hover:text-primary-400 transition-colors text-lg' />
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <div className="flex flex-col items-center justify-center h-[200px] text-gray-400">
-                      <div className="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center mb-3">
-                        <i className='bx bx-loader-alt bx-spin text-xl text-gray-400' />
+                    <div className="flex flex-col items-center justify-center h-[200px] text-gray-600 dark:text-gray-400">
+                      <div className="w-12 h-12 rounded-full bg-white/80 dark:bg-gray-800 flex items-center justify-center mb-3">
+                        <i className='bx bx-loader-alt bx-spin text-xl text-primary-500 dark:text-gray-500' />
                       </div>
                       <p className="text-sm font-medium">Đang tải sản phẩm...</p>
                     </div>

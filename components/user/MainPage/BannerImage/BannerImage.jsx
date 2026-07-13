@@ -22,7 +22,7 @@ const BannerImage = () => {
 
   if (loading) {
     return (
-      <div className={`w-full mt-8 md:mt-16 xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0 ${containerMinHeight}`}>
+      <div className={`w-full xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0 ${containerMinHeight}`}>
         <div className={`flex flex-col sm:flex-row justify-between items-center w-full gap-3 md:gap-4 ${containerMinHeight}`}>
           <div className='w-full sm:w-[49%] h-28 md:h-40 bg-gray-100 rounded-lg animate-pulse' />
           <div className='w-full sm:w-[49%] h-28 md:h-40 bg-gray-100 rounded-lg animate-pulse' />
@@ -36,7 +36,7 @@ const BannerImage = () => {
   }
 
   return (
-    <div className={`w-full mt-8 md:mt-16 xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0 ${containerMinHeight}`}>
+    <div className={`w-full xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0 ${containerMinHeight}`}>
       <div className={`flex flex-col sm:flex-row justify-between items-center w-full gap-3 md:gap-4 ${containerMinHeight}`}>
         {banners.slice(0, 2).map((banner, index) => (
           <div key={banner.id} className='w-full sm:w-[49%] h-28 md:h-40 relative overflow-hidden rounded-lg'>

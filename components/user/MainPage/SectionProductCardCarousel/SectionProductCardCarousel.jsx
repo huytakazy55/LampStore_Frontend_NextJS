@@ -109,17 +109,7 @@ const ProductCardItem = ({ product, onClick, isInWishlist, onToggleWishlist, onA
               <i className={`bx ${isInWishlist ? 'bxs-heart' : 'bx-heart'}`}></i>
             </button>
             <button
-              className='flex-1 flex items-center justify-center gap-1 md:gap-1.5 h-7 md:h-8 border-none rounded-sm bg-orange-500 dark:bg-orange-600 text-white text-[0.68rem] md:text-[0.72rem] font-semibold cursor-pointer transition-all duration-200 hover:bg-orange-600 hover:shadow-[0_2px_8px_rgba(249,115,22,0.3)] active:scale-[0.97]'
-              onClick={(e) => { e.stopPropagation(); onAddToCartClick && onAddToCartClick(product); }}
-              tabIndex={-1}
-              aria-label="Mua ngay"
-            >
-              <i className='bx bx-shopping-bag text-sm md:text-[0.95rem]'></i>
-              <span className="hidden sm:inline">Mua ngay</span>
-              <span className="inline sm:hidden">Mua</span>
-            </button>
-            <button
-              className='flex-1 flex items-center justify-center gap-1 md:gap-1.5 h-7 md:h-8 border-none rounded-sm bg-primary-600 dark:bg-primary-900 text-white dark:text-primary-300 text-[0.68rem] md:text-[0.72rem] font-semibold cursor-pointer transition-all duration-200 hover:bg-primary-700 dark:hover:bg-primary-400 hover:text-white hover:shadow-[0_2px_8px_rgba(139,92,246,0.3)] active:scale-[0.97]'
+              className='flex-1 flex items-center justify-center gap-1 md:gap-1.5 h-7 md:h-8 border border-orange-500 rounded-sm text-orange-500 bg-orange-50 dark:bg-orange-900/20 text-[0.68rem] md:text-[0.72rem] font-semibold cursor-pointer transition-all duration-200 hover:bg-orange-100 dark:hover:bg-orange-900/40 active:scale-[0.97]'
               onClick={(e) => { e.stopPropagation(); onAddToCartClick && onAddToCartClick(product); }}
               tabIndex={-1}
               aria-label="Thêm vào giỏ hàng"
@@ -127,6 +117,16 @@ const ProductCardItem = ({ product, onClick, isInWishlist, onToggleWishlist, onA
               <i className='bx bx-cart-add text-sm md:text-[0.95rem]'></i>
               <span className="hidden sm:inline">Thêm giỏ</span>
               <span className="inline sm:hidden">Thêm</span>
+            </button>
+            <button
+              className='flex-1 flex items-center justify-center gap-1 md:gap-1.5 h-7 md:h-8 border border-transparent rounded-sm bg-orange-500 dark:bg-orange-600 text-white text-[0.68rem] md:text-[0.72rem] font-semibold cursor-pointer transition-all duration-200 hover:bg-orange-600 hover:shadow-[0_2px_8px_rgba(249,115,22,0.3)] active:scale-[0.97]'
+              onClick={(e) => { e.stopPropagation(); onAddToCartClick && onAddToCartClick(product); }}
+              tabIndex={-1}
+              aria-label="Mua ngay"
+            >
+              <i className='bx bx-shopping-bag text-sm md:text-[0.95rem]'></i>
+              <span className="hidden sm:inline">Mua ngay</span>
+              <span className="inline sm:hidden">Mua</span>
             </button>
           </div>
         </div>

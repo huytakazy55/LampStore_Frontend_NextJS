@@ -165,13 +165,13 @@ const WishlistPage = () => {
                                 <div key={item.id} className='bg-white rounded-sm shadow-sm border border-gray-100 overflow-hidden group hover:shadow-md transition-shadow'>
                                     {/* Image */}
                                     <div
-                                        className='relative h-48 bg-gray-50 flex items-center justify-center cursor-pointer overflow-hidden'
+                                        className='relative w-full aspect-square bg-gray-50 flex items-center justify-center cursor-pointer overflow-hidden'
                                         onClick={() => { if (item.productSlug || item.productId) navigate(`/product/${item.productSlug || item.productId}`); }}
                                     >
                                         <img
                                             src={getImgSrc(item.productImage)}
                                             alt={item.productName}
-                                            className='max-h-full max-w-full object-contain p-4 group-hover:scale-105 transition-transform duration-300'
+                                            className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-500'
                                             onError={(e) => { e.target.src = defaultImg; }}
                                         />
                                         {hasDiscount && (

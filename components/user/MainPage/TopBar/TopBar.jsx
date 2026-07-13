@@ -1,69 +1,34 @@
 "use client";
 
-import React, { useEffect, useState } from 'react'
-import AuthService from '@/services/AuthService';
-import GuestProfileService from '@/services/GuestProfileService';
+import React, { useState } from 'react'
 
-const TopBar = () =>
-{
-    const [name, setName] = useState('');
-    const [token, setToken] = useState(null);
-    const [guestCode, setGuestCode] = useState(null);
+const TopBar = () => {
     const [showMap, setShowMap] = useState(false);
+    const [showFbConfirm, setShowFbConfirm] = useState(false);
 
-    useEffect(() =>
-    {
-        const t = localStorage.getItem('token');
-        setToken(t);
-        if (!t)
-        {
-            setGuestCode(GuestProfileService.getGuestCode());
-        }
-    }, []);
-
-    useEffect(() =>
-    {
-        if (token)
-        {
-            AuthService.profile()
-                .then((res) =>
-                {
-                    setName(res.fullName);
-                })
-                .catch((error) =>
-                {
-                    console.error("Error fetching profile:", error);
-                });
-        }
-    }, [token]);
     return (
-        <div className='h-10 md:h-12 bg-gray-100 border-b border-gray-300'>
-            <nav className='xl:mx-auto xl:max-w-[1440px] flex justify-between items-center h-full px-4 xl:px-0'>
-                <div className='hidden sm:block'>
-                    <p className='text-xs md:text-sm'>Welcome to CapyLumine</p>
+        <div className='h-8 md:h-10 bg-white dark:bg-[#111] text-gray-700 dark:text-gray-400 border-b border-gray-200 dark:border-transparent transition-colors duration-300'>
+            <nav className='xl:mx-auto xl:max-w-[1440px] flex justify-between items-center h-full px-4 xl:px-0 text-[10px] md:text-xs font-medium tracking-wide'>
+                <div className='flex items-center gap-4 md:gap-8'>
+                    <div className='flex items-center gap-1.5 cursor-pointer hover:text-primary-600 dark:hover:text-primary-400 transition-colors' onClick={() => setShowMap(true)} title='Xem bản đồ cửa hàng'>
+                        <i className='bx bx-map text-sm'></i>
+                        <span className='hidden sm:inline'>A2 Vĩnh Hồ, Thịnh Quang, Đống Đa, Hà Nội</span>
+                        <span className='sm:hidden'>A2 Vĩnh Hồ, Hà Nội</span>
+                    </div>
+                    <div className='flex items-center gap-1.5 hover:text-primary-600 dark:hover:text-primary-400 transition-colors cursor-pointer' title='Gọi Hotline mua hàng'>
+                        <i className='bx bx-phone text-sm'></i>
+                        <span>(+84) 969 608 810</span>
+                    </div>
                 </div>
-                {/* Mobile: chỉ hiện Welcome ngắn */}
-                <div className='sm:hidden'>
-                    <p className='text-xs'>Welcome to CapyLumine</p>
-                </div>
-                <div>
-                    <ul className='flex justify-between gap-2 md:gap-4 text-xs md:text-sm'>
-                        <li className='hidden md:flex cursor-pointer items-center gap-1 hover:text-primary-600 transition-colors' onClick={() => setShowMap(true)}><i className='bx bx-map text-base md:text-h3 relative top-[1px]' ></i> Store Locator</li>
-                        <li className='hidden md:block text-slate-300 relative top-[3px]'>|</li>
-                        <li className='hidden lg:flex cursor-pointer items-center gap-1'><i className='bx bx-rocket text-base md:text-h3 relative top-[1px]'></i> Track your order</li>
-                        <li className='hidden lg:block text-slate-300 relative top-[3px]'>|</li>
-                        <li className='cursor-pointer flex items-center gap-2'>
-                            <div className='w-6 h-6 md:w-7 md:h-7 flex items-center justify-center rounded-[5px] border border-gray-400'>
-                                <i className='bx bx-phone text-sm md:text-base'></i>
-                            </div>
-                            <div className='hidden sm:flex flex-col text-left'>
-                                <span className='text-[9px] md:text-[10px] text-gray-500 leading-none mb-0.5'>Mua hàng gọi</span>
-                                <span className='text-[11px] md:text-xs font-bold leading-none'>0969608810</span>
-                            </div>
-                        </li>
-                        <li className='text-slate-300 relative top-[3px]'>|</li>
-                        <li className='cursor-pointer flex items-center gap-1'><i className='bx bx-user text-base md:text-h3 relative top-[1px]'></i> <span className='truncate max-w-[80px] sm:max-w-none'>{name ? name : (guestCode ? `Khách: ${guestCode}` : 'My Account')}</span></li>
-                    </ul>
+
+                <div className='flex items-center gap-4 md:gap-6'>
+                    <button onClick={() => setShowFbConfirm(true)} className='hidden sm:block hover:text-primary-600 dark:hover:text-primary-400 transition-colors uppercase cursor-pointer bg-transparent border-none p-0 text-[10px] md:text-xs font-medium tracking-wide' title='Theo dõi Facebook CapyLumine'>Facebook</button>
+                    <button onClick={() => window.dispatchEvent(new CustomEvent('openZaloQr'))} className='hover:text-primary-600 dark:hover:text-primary-400 transition-colors uppercase cursor-pointer bg-transparent border-none p-0 text-[10px] md:text-xs font-medium tracking-wide tooltip-trigger relative group' title='Mã QR Zalo'>
+                        Zalo
+                    </button>
+                    <div className='flex items-center gap-1.5 ml-2 cursor-pointer' title='Ngôn ngữ: Tiếng Việt'>
+                        <img src="https://flagcdn.com/w20/vn.png" alt="VN" className='w-4 h-[11px] object-cover rounded-[1px]' />
+                    </div>
                 </div>
             </nav>
 
@@ -91,6 +56,37 @@ const TopBar = () =>
                                 loading="lazy"
                                 referrerPolicy="no-referrer-when-downgrade"
                             ></iframe>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Facebook Confirm Popup */}
+            {showFbConfirm && (
+                <div className='fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity' onClick={() => setShowFbConfirm(false)}>
+                    <div className='bg-white dark:bg-gray-800 rounded-xl w-[90%] max-w-sm p-6 relative shadow-2xl' onClick={(e) => e.stopPropagation()}>
+                        <h3 className='text-lg font-bold text-gray-900 dark:text-white mb-3'>
+                            Chuyển hướng
+                        </h3>
+                        <p className='text-gray-600 dark:text-gray-300 text-sm mb-6'>
+                            Bạn có muốn chuyển hướng sang trang Facebook của Capy Lumine không?
+                        </p>
+                        <div className='flex justify-end gap-3'>
+                            <button 
+                                className='px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 text-sm font-medium transition-colors cursor-pointer border-none'
+                                onClick={() => setShowFbConfirm(false)}
+                            >
+                                Huỷ
+                            </button>
+                            <a 
+                                href="https://www.facebook.com/profile.php?id=61592105631152"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className='px-4 py-2 rounded-lg bg-[#1877F2] hover:bg-[#166FE5] text-white text-sm font-medium transition-colors cursor-pointer no-underline flex items-center'
+                                onClick={() => setShowFbConfirm(false)}
+                            >
+                                Đồng ý
+                            </a>
                         </div>
                     </div>
                 </div>

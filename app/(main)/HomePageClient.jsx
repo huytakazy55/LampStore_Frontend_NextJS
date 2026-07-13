@@ -49,7 +49,7 @@ export default function HomePage() {
             <Header />
             <NavbarPrimary />
 
-            <main>
+            <main className="flex flex-col gap-12 md:gap-20 pb-12 md:pb-20">
 
                 <div data-section="hero" data-label="Trang chủ" data-aos="fade-up">
                     <SiteContent />
@@ -81,7 +81,7 @@ export default function HomePage() {
 
                 <div data-section="allproducts" data-label="Tất cả SP" data-aos="fade-up" data-aos-delay="100">
                     <Suspense fallback={<SectionSpinner height="160px" />}>
-                        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 md:p-6 mb-6">
+                        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 md:p-6">
                             <AllProducts />
                         </div>
                     </Suspense>

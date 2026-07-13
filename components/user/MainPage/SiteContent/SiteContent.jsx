@@ -76,7 +76,7 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
   }, [])
 
   return (
-    <div className="w-full bg-gray-50 mb-4 md:mb-6">
+    <div className="w-full bg-gray-50">
       <div className="xl:max-w-[1440px] mx-auto px-4 xl:px-0 py-4 md:py-6 lg:py-8">
 
         {/* ===== MOBILE: Minimal compact hero ===== */}

@@ -106,7 +106,15 @@ export default function ProductDetailPage() {
         const fetchProduct = async () => {
             try {
                 setLoading(true);
-                const res = await ProductManage.GetProductBySlug(slug);
+                // Check if slug is a GUID
+                const isGuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(slug);
+                let res;
+                if (isGuid) {
+                    res = await ProductManage.GetProductById(slug);
+                } else {
+                    res = await ProductManage.GetProductBySlug(slug);
+                }
+                
                 const data = res.data;
 
                 if (data) {
@@ -492,11 +500,11 @@ export default function ProductDetailPage() {
                     {/* Images */}
                     <div className='w-full md:w-[37%] px-4'>
                         <div
-                            className='w-full h-[280px] sm:h-[350px] md:h-[400px] border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden flex items-center justify-center bg-gray-50 dark:bg-gray-800 cursor-pointer group relative'
+                            className='w-full border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden flex items-center justify-center bg-white dark:bg-gray-800 cursor-pointer group relative'
                             onClick={() => setLightboxOpen(true)}
                         >
                             <img
-                                className='max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300'
+                                className='w-full h-auto object-contain group-hover:scale-105 transition-transform duration-300'
                                 src={mainImage}
                                 alt={product.name}
                                 onError={(e) => { e.target.src = '/images/cameras-2.jpg'; }}
@@ -572,7 +580,7 @@ export default function ProductDetailPage() {
                         )}
 
                         {/* Price */}
-                        <div className={`flex flex-wrap items-center bg-primary-600 dark:from-primary-900/20 dark:to-gray-800 gap-2 md:gap-3 py-3 md:py-4 px-4 md:px-6 my-3 md:my-4 rounded-lg ${flashSaleItem ? 'hidden' : ''}`}>
+                        <div className={`flex flex-wrap items-center bg-gradient-to-r from-primary-50 to-slate-50 dark:from-primary-900/20 dark:to-gray-800 gap-2 md:gap-3 py-3 md:py-4 px-4 md:px-6 my-3 md:my-4 rounded-lg ${flashSaleItem ? 'hidden' : ''}`}>
                             <div className='text-xl md:text-2xl font-bold text-primary-600'>₫{formatPrice(price)}</div>
                             {hasDiscount && (
                                 <>

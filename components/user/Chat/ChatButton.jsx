@@ -26,6 +26,12 @@ const ChatButton = () =>
     isChatOpenRef.current = isChatOpen;
   }, [isChatOpen]);
 
+  useEffect(() => {
+    const handleOpenZaloQr = () => setIsZaloPopupOpen(true);
+    window.addEventListener('openZaloQr', handleOpenZaloQr);
+    return () => window.removeEventListener('openZaloQr', handleOpenZaloQr);
+  }, []);
+
   const getCurrentUserId = () =>
   {
     try

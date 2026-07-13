@@ -229,7 +229,7 @@ const AllProducts = () => {
             <div className="mt-6 flex justify-center">
               <button
                 onClick={() => setVisibleRows(prev => prev + 2)}
-                className="px-8 py-2 border-2 border-primary-400 dark:border-primary-600 bg-primary-600 dark:bg-primary-400 text-transparent bg-clip-text inline-block font-medium rounded-sm hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors"
+                className="px-8 py-2 border-2 border-primary-500 dark:border-primary-600 text-primary-600 dark:text-primary-400 bg-transparent hover:bg-primary-50 dark:hover:bg-primary-900/40 font-medium rounded-sm transition-colors cursor-pointer"
               >
                 Xem thêm
               </button>

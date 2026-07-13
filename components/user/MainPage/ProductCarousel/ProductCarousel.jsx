@@ -185,7 +185,7 @@ const ProductCarousel = () => {
 
   if (loading) {
     return (
-      <div className='w-full py-8 md:py-16 mb-4 xl:mx-auto xl:max-w-[1440px] flex justify-center items-center px-4 xl:px-0'>
+      <div className='w-full py-8 md:py-16 xl:mx-auto xl:max-w-[1440px] flex justify-center items-center px-4 xl:px-0'>
         <div className="text-center">
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-500 mx-auto"></div>
           <p className="mt-3 text-gray-500 text-sm">Đang tải sản phẩm...</p>
@@ -195,7 +195,7 @@ const ProductCarousel = () => {
   }
 
   return (
-    <div className='w-full mb-4 xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0'>
+    <div className='w-full xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0'>
       {/* Tab Selector */}
       <div className='flex justify-center items-center mb-6 md:mb-8'>
         <div className='inline-flex items-center bg-gray-50 dark:bg-gray-800/80 rounded-sm p-1 md:p-1.5 border border-gray-200/60 dark:border-gray-700/50 shadow-sm'>
