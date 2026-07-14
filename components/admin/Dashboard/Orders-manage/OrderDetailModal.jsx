@@ -554,7 +554,7 @@ const OrderDetailModal = ({ order, onClose, onStatusChange, onRefresh }) =>
                 <div style={{ background: '#f9fafb', borderRadius: 10, padding: '16px 20px', border: '1px solid #f3f4f6' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10, fontSize: 13, color: '#6b7280' }}>
                         <span>Tạm tính:</span>
-                        <span style={{ color: '#111827' }}>{formatPrice(order.totalAmount - (order.shippingFee || 0))}đ</span>
+                        <span style={{ color: '#111827' }}>{formatPrice(order.totalAmount - (order.shippingFee || 0) + (order.discountAmount || 0))}đ</span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10, fontSize: 13, color: '#6b7280' }}>
                         <span>Phí vận chuyển:</span>
@@ -562,6 +562,12 @@ const OrderDetailModal = ({ order, onClose, onStatusChange, onRefresh }) =>
                             {order.shippingFee > 0 ? `${formatPrice(order.shippingFee)}đ` : 'Miễn phí'}
                         </span>
                     </div>
+                    {order.discountAmount > 0 && (
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10, fontSize: 13, color: '#059669' }}>
+                            <span>Mã giảm giá {order.discountCode ? `(${order.discountCode})` : ''}:</span>
+                            <span style={{ fontWeight: 500 }}>-{formatPrice(order.discountAmount)}đ</span>
+                        </div>
+                    )}
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, fontSize: 13, color: '#6b7280' }}>
                         <span>Phương thức thanh toán:</span>
                         <span style={{

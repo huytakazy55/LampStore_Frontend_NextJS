@@ -164,12 +164,12 @@ const DetailModal = ({ open, onClose, product: initialProduct, categories }) => 
       onCancel={onClose}
       footer={null}
       width={1300}
-      style={{ top: 20 }}
+      centered
       bodyStyle={{ padding: 0, background: '#f5f5f5' }}
       closeIcon={<span style={{ fontSize: 24 }}>&times;</span>}
     >
       <Spin spinning={loading}>
-        <div style={{ maxHeight: '70vh', overflowY: 'auto', overflowX: 'hidden', padding: '16px 20px' }}>
+        <div style={{ maxHeight: '85vh', overflowY: 'auto', overflowX: 'hidden', padding: '16px 20px' }}>
           
           <Row gutter={[20, 20]}>
             {/* Left Column: Core Product Content */}

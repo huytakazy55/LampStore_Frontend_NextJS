@@ -304,7 +304,7 @@ export default function OrderHistoryPage()
                         <div className='bg-gray-50 dark:bg-gray-800/50 rounded-lg px-4 py-3 space-y-2 text-sm'>
                             <div className='flex justify-between text-gray-500 dark:text-gray-400'>
                                 <span>Tạm tính:</span>
-                                <span>{formatPrice(order.totalAmount - (order.shippingFee || 0))}đ</span>
+                                <span>{formatPrice(order.totalAmount - (order.shippingFee || 0) + (order.discountAmount || 0))}đ</span>
                             </div>
                             <div className='flex justify-between text-gray-500 dark:text-gray-400'>
                                 <span>Phí vận chuyển:</span>
@@ -312,6 +312,12 @@ export default function OrderHistoryPage()
                                     {order.shippingFee > 0 ? `${formatPrice(order.shippingFee)}đ` : 'Miễn phí'}
                                 </span>
                             </div>
+                            {order.discountAmount > 0 && (
+                                <div className='flex justify-between text-emerald-600'>
+                                    <span>Mã giảm giá {order.discountCode ? `(${order.discountCode})` : ''}:</span>
+                                    <span className='font-medium'>-{formatPrice(order.discountAmount)}đ</span>
+                                </div>
+                            )}
                             <div className='flex justify-between text-gray-500 dark:text-gray-400'>
                                 <span>Phương thức thanh toán:</span>
                                 <span className='inline-flex items-center gap-1 px-2 py-0.5 bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-700 rounded text-primary-700 dark:text-primary-400 text-xs font-medium'>

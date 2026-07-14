@@ -34,7 +34,11 @@ const FormCart = ({ toggleCart, popupRef, setToggleCart }) => {
                 )}
             </div>
 
-            <div className='w-full overflow-y-auto custom-scrollbar flex-1 max-h-[22rem] p-4 flex flex-col gap-4'>
+            <div 
+                className='w-full overflow-y-auto overscroll-contain custom-scrollbar flex-1 max-h-[22rem] p-4 flex flex-col gap-4'
+                data-lenis-prevent="true"
+                onWheel={(e) => e.stopPropagation()}
+            >
                 {cartItems.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-8 text-gray-400">
                         <i className='bx bx-cart text-5xl mb-3'></i>
@@ -108,7 +112,7 @@ const FormCart = ({ toggleCart, popupRef, setToggleCart }) => {
                     </div>
                     <div className='flex justify-between gap-3'>
                         <button
-                            onClick={() => { setToggleCart(false); navigate('/checkout'); }}
+                            onClick={() => { setToggleCart(false); navigate('/cart'); }}
                             className='flex-1 py-2.5 px-4 rounded-md text-sm font-medium border border-primary-500 text-primary-600 bg-white dark:bg-transparent hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-colors cursor-pointer'
                         >
                             Xem giỏ hàng

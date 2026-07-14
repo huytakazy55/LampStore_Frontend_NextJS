@@ -304,7 +304,7 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                                                 <i className={`bx bx-user ${iconCls}`}></i>
                                                 <input className={formErrors.username ? inputErrCls : inputCls} type="text" autoFocus name="username" value={stateSignin.username} onChange={HandleOnChangeStateSignin} placeholder="Tên đăng nhập" autoComplete="one-time-code" autoCorrect="off" autoCapitalize="off" spellCheck="false" />
                                                 {stateSignin.username && (
-                                                    <button type="button" onClick={() => { setStateSignin({ ...stateSignin, username: '' }); setIsRememberedAccount(false); }} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer flex items-center justify-center">
+                                                    <button type="button" onClick={() => { setStateSignin({ ...stateSignin, username: '', password: '' }); setIsRememberedAccount(false); }} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer flex items-center justify-center">
                                                         <i className='bx bx-x-circle text-lg leading-none'></i>
                                                     </button>
                                                 )}
@@ -356,6 +356,10 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                                     <div className="mb-4 sm:mb-6">
                                         <h3 className="text-xl sm:text-2xl font-bold bg-primary-600 dark:bg-primary-400 text-transparent bg-clip-text inline-block mb-1">Tạo tài khoản</h3>
                                         <p className="text-gray-400 text-xs sm:text-sm">Đăng ký để bắt đầu mua sắm</p>
+                                        <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700/50 rounded-lg shadow-sm">
+                                            <i className='bx bxs-gift text-yellow-600 text-lg animate-pulse'></i>
+                                            <span className="text-xs font-medium text-yellow-800 dark:text-yellow-500">Tặng ngay mã <strong className="text-yellow-700 dark:text-yellow-400">50K</strong> khi đăng ký mới!</span>
+                                        </div>
                                     </div>
                                     <form onSubmit={handleSignup} autoComplete="nope">
                                         <div className="mb-3 sm:mb-4">

@@ -4,14 +4,12 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useCart } from '@/contexts/CartContext';
 import { useNavigate } from '@/lib/router-compat';
 
-const formatPrice = (price) =>
-{
+const formatPrice = (price) => {
     if (!price) return '0';
     return price.toLocaleString('vi-VN');
 };
 
-const FloatingCart = () =>
-{
+const FloatingCart = () => {
     const { cartCount, cartTotal, cartItems, removeFromCart } = useCart();
     const navigate = useNavigate();
     const [mounted, setMounted] = useState(false);
@@ -24,28 +22,22 @@ const FloatingCart = () =>
 
     // Show floating cart when user scrolls down past the header area
     // Supports both smooth-scrollbar (homepage) and native scroll (other pages)
-    useEffect(() =>
-    {
+    useEffect(() => {
         let scrollbarInstance = null;
         let cleanupSmoothScroll = null;
 
-        const checkVisibility = (scrollY) =>
-        {
+        const checkVisibility = (scrollY) => {
             setIsVisible(scrollY > 200);
         };
 
         // Try to find smooth-scrollbar instance (used on homepage)
-        const tryAttachSmoothScrollbar = () =>
-        {
-            try
-            {
+        const tryAttachSmoothScrollbar = () => {
+            try {
                 const Scrollbar = require('smooth-scrollbar').default;
                 const instances = Scrollbar.getAll();
-                if (instances.length > 0)
-                {
+                if (instances.length > 0) {
                     scrollbarInstance = instances[0];
-                    const listener = (status) =>
-                    {
+                    const listener = (status) => {
                         checkVisibility(status.offset.y);
                     };
                     scrollbarInstance.addListener(listener);
@@ -59,30 +51,25 @@ const FloatingCart = () =>
         };
 
         // Native window scroll handler
-        const handleWindowScroll = () =>
-        {
+        const handleWindowScroll = () => {
             checkVisibility(window.scrollY);
         };
 
         // Try smooth-scrollbar first, fall back to window scroll
         const hasSmoothScroll = tryAttachSmoothScrollbar();
-        if (!hasSmoothScroll)
-        {
+        if (!hasSmoothScroll) {
             window.addEventListener('scroll', handleWindowScroll, { passive: true });
             handleWindowScroll();
         }
 
         // Re-check periodically in case smooth-scrollbar initializes later
-        const retryTimer = !hasSmoothScroll ? setTimeout(() =>
-        {
-            if (tryAttachSmoothScrollbar())
-            {
+        const retryTimer = !hasSmoothScroll ? setTimeout(() => {
+            if (tryAttachSmoothScrollbar()) {
                 window.removeEventListener('scroll', handleWindowScroll);
             }
         }, 2000) : null;
 
-        return () =>
-        {
+        return () => {
             if (cleanupSmoothScroll) cleanupSmoothScroll();
             window.removeEventListener('scroll', handleWindowScroll);
             if (retryTimer) clearTimeout(retryTimer);
@@ -90,10 +77,8 @@ const FloatingCart = () =>
     }, []);
 
     // Bounce animation when cart count changes
-    useEffect(() =>
-    {
-        if (cartCount > prevCountRef.current && isVisible)
-        {
+    useEffect(() => {
+        if (cartCount > prevCountRef.current && isVisible) {
             setBounce(true);
             const timer = setTimeout(() => setBounce(false), 600);
             return () => clearTimeout(timer);
@@ -102,14 +87,11 @@ const FloatingCart = () =>
     }, [cartCount, isVisible]);
 
     // Close expanded panel when clicking outside
-    useEffect(() =>
-    {
-        const handleClickOutside = (e) =>
-        {
+    useEffect(() => {
+        const handleClickOutside = (e) => {
             if (isExpanded &&
                 expandedRef.current && !expandedRef.current.contains(e.target) &&
-                cartBtnRef.current && !cartBtnRef.current.contains(e.target))
-            {
+                cartBtnRef.current && !cartBtnRef.current.contains(e.target)) {
                 setIsExpanded(false);
             }
         };
@@ -118,19 +100,15 @@ const FloatingCart = () =>
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [isExpanded]);
 
-    const handleCartClick = useCallback(() =>
-    {
-        if (cartItems.length > 0)
-        {
+    const handleCartClick = useCallback(() => {
+        if (cartItems.length > 0) {
             setIsExpanded(!isExpanded);
-        } else
-        {
+        } else {
             setIsExpanded(false);
         }
     }, [cartItems.length, isExpanded]);
 
-    const handleCheckout = useCallback(() =>
-    {
+    const handleCheckout = useCallback(() => {
         setIsExpanded(false);
         navigate('/checkout');
     }, [navigate]);
@@ -218,12 +196,20 @@ const FloatingCart = () =>
                             <span className="text-xs text-gray-500 dark:text-gray-400">Tổng cộng:</span>
                             <span className="text-base font-bold text-primary-600">{formatPrice(cartTotal)}₫</span>
                         </div>
-                        <button
-                            onClick={handleCheckout}
-                            className="w-full py-2.5 rounded-xl bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-all shadow-lg shadow-primary-500/20 active:scale-[0.98] cursor-pointer"
-                        >
-                            Thanh toán ngay
-                        </button>
+                        <div className='flex justify-between gap-3'>
+                            <button
+                                onClick={() => { setIsExpanded(false); navigate('/cart'); }}
+                                className='flex-1 py-2 rounded-sm text-sm font-semibold border border-primary-500 text-primary-600 bg-white dark:bg-transparent hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-all cursor-pointer'
+                            >
+                                Xem giỏ hàng
+                            </button>
+                            <button
+                                onClick={handleCheckout}
+                                className="flex-1 py-2 rounded-sm bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-all shadow-lg shadow-primary-500/20 active:scale-[0.98] cursor-pointer"
+                            >
+                                Thanh toán
+                            </button>
+                        </div>
                     </div>
                 </div>
 

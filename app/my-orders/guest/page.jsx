@@ -269,7 +269,7 @@ export default function GuestOrdersPage()
                                                 <div className='border-t border-gray-100 pt-3 mt-3 space-y-1.5'>
                                                     <div className='flex justify-between text-sm'>
                                                         <span className='text-gray-500'>Tạm tính:</span>
-                                                        <span>{formatPrice(subtotal)}₫</span>
+                                                        <span>{formatPrice(subtotal + (order.discountAmount || 0))}₫</span>
                                                     </div>
                                                     <div className='flex justify-between text-sm'>
                                                         <span className='text-gray-500'>Phí vận chuyển:</span>
@@ -277,6 +277,12 @@ export default function GuestOrdersPage()
                                                             {shippingFee === 0 ? 'Miễn phí' : `${formatPrice(shippingFee)}₫`}
                                                         </span>
                                                     </div>
+                                                    {order.discountAmount > 0 && (
+                                                        <div className='flex justify-between text-sm text-emerald-600'>
+                                                            <span>Mã giảm giá {order.discountCode ? `(${order.discountCode})` : ''}:</span>
+                                                            <span className='font-medium'>-{formatPrice(order.discountAmount)}₫</span>
+                                                        </div>
+                                                    )}
                                                     <div className='flex justify-between text-sm font-bold pt-1 border-t border-dashed border-gray-200'>
                                                         <span>Tổng cộng:</span>
                                                         <span className='text-primary-600'>{formatPrice(orderTotal)}₫</span>

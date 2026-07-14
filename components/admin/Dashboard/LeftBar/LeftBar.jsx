@@ -66,6 +66,7 @@ const LeftBar = () =>
         { name: "Tags", icon: "bxs-tag", path: "/admin/tags", roles: ["Administrator", "Manager"] },
         { name: "Banners", icon: "bxs-image", path: "/admin/banners", roles: ["Administrator", "Manager"] },
         { name: "Flash Sale", icon: "bxs-bolt", path: "/admin/flashsales", roles: ["Administrator", "Manager"] },
+        { name: "Discount", icon: "bxs-purchase-tag", path: "/admin/discounts", roles: ["Administrator", "Manager"] },
         { name: "News", icon: "bxs-news", path: "/admin/news", roles: ["Administrator", "Manager"] },
         { name: "Products", icon: "bxs-package", path: "/admin/products", roles: ["Administrator", "Manager", "Warehouse staff"] },
         { name: "Orders", icon: "bxs-store-alt", path: "/admin/orders", roles: ["Administrator", "Manager", "Accountant"] },
@@ -82,7 +83,8 @@ const LeftBar = () =>
                 userMenus.includes(item.name) ||
                 (["Analytics", "VisitorMap"].includes(item.name) && userRoles.includes("Administrator")) ||
                 (item.name === "News" && userRoles.includes("Administrator")) ||
-                (item.name === "Flash Sale" && userRoles.some(r => ["Administrator", "Manager"].includes(r)))
+                (item.name === "Flash Sale" && userRoles.some(r => ["Administrator", "Manager"].includes(r))) ||
+                (item.name === "Discount" && userRoles.some(r => ["Administrator", "Manager"].includes(r)))
             );
         }
 

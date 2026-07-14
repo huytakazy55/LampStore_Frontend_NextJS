@@ -32,7 +32,7 @@ export default function CheckoutPage()
 {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { cartItems, cartTotal, clearCart } = useCart();
+    const { cartItems, cartTotal, clearCart, removeFromCart } = useCart();
 
     // Buy Now: read items from sessionStorage on mount
     const [buyNowItems, setBuyNowItems] = useState(null);
@@ -64,12 +64,24 @@ export default function CheckoutPage()
                 sessionStorage.removeItem('pendingOrderTotal');
             }
             setOrderSuccess(true);
-            clearCart();
+            
+            const pendingBuyNowItemsStr = sessionStorage.getItem('buyNowItems');
+            if (pendingBuyNowItemsStr) {
+                try {
+                    const pendingBuyNowItems = JSON.parse(pendingBuyNowItemsStr);
+                    pendingBuyNowItems.forEach(item => {
+                        if (item.key) removeFromCart(item.key);
+                    });
+                } catch (e) {}
+            } else {
+                clearCart();
+            }
+
             toast.success('Thanh toán thành công!');
         } else if (isCancel === 'true') {
             toast.error('Thanh toán đã bị hủy.');
         }
-    }, [searchParams, clearCart]);
+    }, [searchParams, clearCart, removeFromCart]);
 
     const checkoutItems = buyNowItems || cartItems;
 
@@ -95,6 +107,11 @@ export default function CheckoutPage()
     const [savedTotal, setSavedTotal] = useState(0);
     const [userProfile, setUserProfile] = useState(null);
 
+    // Discount states
+    const [discountCode, setDiscountCode] = useState('');
+    const [appliedDiscount, setAppliedDiscount] = useState(null);
+    const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
+
     // Province data states
     const [provinces, setProvinces] = useState([]);
     const [districts, setDistricts] = useState([]);
@@ -102,6 +119,63 @@ export default function CheckoutPage()
     const [loadingProvinces, setLoadingProvinces] = useState(true);
     const [loadingDistricts, setLoadingDistricts] = useState(false);
     const [loadingWards, setLoadingWards] = useState(false);
+
+    // Auto apply selected voucher from cart
+    useEffect(() => {
+        const storedVoucher = sessionStorage.getItem('selectedVoucher');
+        if (storedVoucher && !discountCode) {
+            setDiscountCode(storedVoucher);
+        }
+    }, [discountCode]);
+
+    useEffect(() => {
+        const storedVoucher = sessionStorage.getItem('selectedVoucher');
+        const subtotal = checkoutItems.reduce((sum, item) => sum + (item.finalPrice * item.quantity), 0);
+        const totalWeight = checkoutItems.reduce((sum, item) => sum + ((item.weight || 0) * item.quantity), 0);
+        const shippingFee = totalWeight > 0 ? (totalWeight <= 1000 ? 30000 : totalWeight <= 3000 ? 50000 : 70000) : 0;
+        const totalWithoutDiscount = subtotal + shippingFee;
+
+        if (storedVoucher && totalWithoutDiscount > 0 && !appliedDiscount && !isApplyingDiscount) {
+            const applyStored = async () => {
+                setIsApplyingDiscount(true);
+                try {
+                    const token = localStorage.getItem('token');
+                    if (!token) return;
+
+                    const res = await fetch(`${API_ENDPOINT}/api/DiscountCode/apply`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            code: storedVoucher,
+                            Code: storedVoucher,
+                            orderTotalAmount: totalWithoutDiscount,
+                            OrderTotalAmount: totalWithoutDiscount
+                        })
+                    });
+
+                    if (res.ok) {
+                        const data = await res.json();
+                        setAppliedDiscount({
+                            code: data.code || data.Code,
+                            amount: data.discountAmount !== undefined ? data.discountAmount : data.DiscountAmount,
+                            percentage: data.discountPercentage !== undefined ? data.discountPercentage : data.DiscountPercentage
+                        });
+                        sessionStorage.removeItem('selectedVoucher');
+                    }
+                } catch (error) {
+                    console.error('Error applying stored voucher:', error);
+                } finally {
+                    setIsApplyingDiscount(false);
+                    sessionStorage.removeItem('selectedVoucher'); // remove after trying once
+                }
+            };
+            applyStored();
+        }
+    }, [checkoutItems, appliedDiscount, isApplyingDiscount]);
+
 
     // Fetch provinces on mount
     useEffect(() =>
@@ -324,7 +398,60 @@ export default function CheckoutPage()
     };
 
     const shippingFee = calculateShippingFee(totalWeight);
-    const total = subtotal + shippingFee;
+    const totalWithoutDiscount = subtotal + shippingFee;
+    const total = totalWithoutDiscount - (appliedDiscount ? appliedDiscount.amount : 0);
+
+    const handleApplyDiscount = async () => {
+        if (!discountCode.trim()) return;
+        setIsApplyingDiscount(true);
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                toast.error('Vui lòng đăng nhập để sử dụng mã giảm giá');
+                setIsApplyingDiscount(false);
+                return;
+            }
+
+            const res = await fetch(`${API_ENDPOINT}/api/DiscountCode/apply`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    code: discountCode,
+                    Code: discountCode,
+                    orderTotalAmount: totalWithoutDiscount,
+                    OrderTotalAmount: totalWithoutDiscount
+                })
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                console.log('Apply discount response:', data); // DEBUG
+                setAppliedDiscount({
+                    code: data.code || data.Code,
+                    amount: data.discountAmount !== undefined ? data.discountAmount : data.DiscountAmount,
+                    percentage: data.discountPercentage !== undefined ? data.discountPercentage : data.DiscountPercentage
+                });
+                toast.success('Áp dụng mã giảm giá thành công!');
+            } else {
+                const errorData = await res.json();
+                toast.error(errorData.message || 'Mã giảm giá không hợp lệ hoặc đã hết hạn');
+                setAppliedDiscount(null);
+            }
+        } catch (error) {
+            console.error('Lỗi khi áp dụng mã giảm giá:', error);
+            toast.error('Có lỗi xảy ra khi áp dụng mã giảm giá');
+        } finally {
+            setIsApplyingDiscount(false);
+        }
+    };
+
+    const handleRemoveDiscount = () => {
+        setAppliedDiscount(null);
+        setDiscountCode('');
+    };
 
     const handleChange = (e) =>
     {
@@ -412,6 +539,8 @@ export default function CheckoutPage()
                 paymentMethod: formData.paymentMethod,
                 totalAmount: total,
                 shippingFee: shippingFee,
+                discountCode: appliedDiscount ? appliedDiscount.code : null,
+                discountAmount: appliedDiscount ? appliedDiscount.amount : 0,
                 orderItems: checkoutItems.map(item => ({
                     productId: item.id || item.productId,
                     productName: item.name,
@@ -449,7 +578,14 @@ export default function CheckoutPage()
             setOrderId(created.orderCode?.toString() || (created.id ? created.id.substring(0, 8).toUpperCase() : 'LS-' + Date.now().toString(36).toUpperCase()));
             setSavedTotal(total);
             setOrderSuccess(true);
-            if (!buyNowItems) clearCart();
+            
+            if (buyNowItems) {
+                buyNowItems.forEach(item => {
+                    if (item.key) removeFromCart(item.key);
+                });
+            } else {
+                clearCart();
+            }
 
             // Save guest info for future auto-fill (if guest checkout)
             if (!isLoggedIn)
@@ -849,9 +985,48 @@ export default function CheckoutPage()
                                                 Miễn phí vận chuyển cho đơn từ 500.000₫
                                             </p>
                                         )}
+                                        {appliedDiscount && (
+                                            <div className='flex justify-between text-sm text-green-600'>
+                                                <span>Giảm giá ({appliedDiscount.code}):</span>
+                                                <span className='font-medium'>-{formatPrice(appliedDiscount.amount)}₫</span>
+                                            </div>
+                                        )}
                                         <div className='border-t border-gray-100 pt-3 flex justify-between items-center'>
                                             <span className='font-semibold text-gray-800'>Tổng cộng:</span>
                                             <span className='text-xl font-bold text-primary-600'>{formatPrice(total)}₫</span>
+                                        </div>
+                                    </div>
+
+                                    {/* Discount Code Input */}
+                                    <div className='border-t border-gray-100 pt-4 mt-4'>
+                                        <label className='block text-sm font-medium text-gray-700 mb-2'>Mã giảm giá</label>
+                                        <div className='flex gap-2'>
+                                            <input
+                                                type='text'
+                                                value={discountCode}
+                                                onChange={(e) => setDiscountCode(e.target.value.toUpperCase())}
+                                                disabled={!!appliedDiscount}
+                                                placeholder='Nhập mã giảm giá...'
+                                                className='flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-400 disabled:bg-gray-100 uppercase'
+                                            />
+                                            {appliedDiscount ? (
+                                                <button
+                                                    type="button"
+                                                    onClick={handleRemoveDiscount}
+                                                    className='px-4 py-2 bg-red-500 text-white rounded-lg text-sm font-medium hover:bg-red-600 cursor-pointer'
+                                                >
+                                                    Hủy
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    type="button"
+                                                    onClick={handleApplyDiscount}
+                                                    disabled={isApplyingDiscount || !discountCode.trim()}
+                                                    className='px-4 py-2 bg-gray-800 text-white rounded-lg text-sm font-medium hover:bg-gray-900 disabled:opacity-50 cursor-pointer'
+                                                >
+                                                    {isApplyingDiscount ? '...' : 'Áp dụng'}
+                                                </button>
+                                            )}
                                         </div>
                                     </div>
 

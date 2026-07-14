@@ -53,6 +53,9 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
   const [addressPopupOpen, setAddressPopupOpen] = useState(false);
   const [addressDraft, setAddressDraft] = useState(null);
 
+  const [discountCodes, setDiscountCodes] = useState([]);
+  const [loadingDiscounts, setLoadingDiscounts] = useState(false);
+
   // Map profile data from Header's API response when modal opens
   useEffect(() =>
   {
@@ -160,6 +163,29 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
 
     fetchWards();
   }, [addressDraft?.District]);
+
+  useEffect(() => {
+    if (infoSideActive === 'discount' && toggleProfile) {
+      setLoadingDiscounts(true);
+      const token = localStorage.getItem('token');
+      if (token) {
+        fetch(`${API_ENDPOINT}/api/DiscountCode/my-codes`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+          .then(res => res.json())
+          .then(data => {
+            const codes = data?.$values || data || [];
+            setDiscountCodes(codes);
+          })
+          .catch(err => console.error("Lỗi khi tải mã giảm giá", err))
+          .finally(() => setLoadingDiscounts(false));
+      } else {
+        setLoadingDiscounts(false);
+      }
+    }
+  }, [infoSideActive, toggleProfile]);
 
   const handleSubmit = (e) =>
   {
@@ -437,11 +463,18 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
                 Thông tin người dùng
               </button>
               <button onClick={() => setInfoSideActive('bill')}
-                className={`relative px-1 py-3 text-sm font-medium transition-colors cursor-pointer ${infoSideActive === 'bill'
+                className={`relative px-1 py-3 mr-6 text-sm font-medium transition-colors cursor-pointer ${infoSideActive === 'bill'
                   ? 'text-primary-600 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-primary-600 after:rounded-full'
                   : 'text-gray-400 hover:text-gray-600'}`}>
                 <i className='bx bx-receipt mr-1.5 align-middle'></i>
                 Thông tin hóa đơn
+              </button>
+              <button onClick={() => setInfoSideActive('discount')}
+                className={`relative px-1 py-3 text-sm font-medium transition-colors cursor-pointer ${infoSideActive === 'discount'
+                  ? 'text-primary-600 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-primary-600 after:rounded-full'
+                  : 'text-gray-400 hover:text-gray-600'}`}>
+                <i className='bx bx-purchase-tag-alt mr-1.5 align-middle'></i>
+                Mã giảm giá
               </button>
             </div>
 
@@ -516,6 +549,52 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
                     <i className='bx bx-receipt text-3xl text-gray-300 dark:text-gray-600'></i>
                   </div>
                   <p className='text-gray-400 text-sm'>Chưa có thông tin hóa đơn</p>
+                </div>
+              </div>
+
+              {/* Discount tab */}
+              <div className={`${infoSideActive === 'discount' ? 'block' : 'hidden'}`}>
+                <div className='py-4'>
+                  {loadingDiscounts ? (
+                    <div className='text-center py-8 text-gray-500'>Đang tải mã giảm giá...</div>
+                  ) : discountCodes && discountCodes.length > 0 ? (
+                    <div className='grid gap-4 max-h-[50vh] overflow-y-auto pr-2'>
+                      {discountCodes.map(code => (
+                        <div key={code.code} className='border border-gray-200 rounded-lg p-4 flex justify-between items-center bg-gray-50/50'>
+                          <div>
+                            <div className='font-bold text-lg text-primary-600'>{code.code}</div>
+                            <div className='text-sm text-gray-600 mt-1'>
+                              Giảm {code.discountType === 'Percentage' 
+                                ? `${code.discountPercentage}% ${code.maxDiscountAmount > 0 ? `(Tối đa ${code.maxDiscountAmount.toLocaleString('vi-VN')}₫)` : ''}`
+                                : `${code.discountAmount?.toLocaleString('vi-VN')}₫`
+                              }
+                            </div>
+                            <div className='text-xs text-gray-500 mt-1'>Đơn tối thiểu: {code.minOrderAmount.toLocaleString('vi-VN')}₫</div>
+                            <div className='text-xs text-gray-500'>Hạn sử dụng: {new Date(code.expiryDate).toLocaleDateString('vi-VN')}</div>
+                          </div>
+                          <div className='text-right'>
+                            <button
+                              type='button'
+                              onClick={() => {
+                                navigator.clipboard.writeText(code.code);
+                                toast.success('Đã sao chép mã giảm giá');
+                              }}
+                              className='px-3 py-1.5 bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs font-semibold rounded cursor-pointer transition-colors'
+                            >
+                              Sao chép
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className='flex flex-col items-center justify-center py-12 text-center'>
+                      <div className='w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4'>
+                        <i className='bx bx-purchase-tag text-3xl text-gray-300 dark:text-gray-600'></i>
+                      </div>
+                      <p className='text-gray-400 text-sm'>Bạn chưa có mã giảm giá nào</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
