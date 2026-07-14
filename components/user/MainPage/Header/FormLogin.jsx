@@ -31,8 +31,23 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
     const [isRememberedAccount, setIsRememberedAccount] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
+    
+    // OTP states
+    const [showOtpInput, setShowOtpInput] = useState(false);
+    const [otpCode, setOtpCode] = useState('');
+    const [otpCountdown, setOtpCountdown] = useState(0);
+
     const role = useSelector((state) => state.auth.role);
     const navigate = useNavigate();
+
+    // OTP Countdown timer
+    useEffect(() => {
+        let timer;
+        if (otpCountdown > 0) {
+            timer = setTimeout(() => setOtpCountdown(prev => prev - 1), 1000);
+        }
+        return () => clearTimeout(timer);
+    }, [otpCountdown]);
 
     const showToast = (message, type = 'success') => {
         if (type === 'success') toast.success(message);
@@ -82,6 +97,9 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
         }
         setStateSignup({ username: '', email: '', password: '' });
         setAcceptTerms(false);
+        setShowOtpInput(false);
+        setOtpCode('');
+        setOtpCountdown(0);
     }
 
     const handleGoogleLoginSuccess = async (googleUserData) => {
@@ -194,14 +212,51 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
         if (!validateFormSignup()) return;
         setIsLoading(true);
         try {
-            await AuthService.signup(stateSignup.username, stateSignup.email, stateSignup.password);
-            showToast('Đăng ký thành công!');
-            setStateSignup({ username: '', email: '', password: '' });
-            setAcceptTerms(false);
-            setChangeForm(false);
+            await AuthService.requestSignUpOtp(stateSignup.username, stateSignup.email, stateSignup.password);
+            showToast('Mã OTP đã được gửi đến email của bạn!', 'success');
+            setShowOtpInput(true);
+            setOtpCountdown(60);
         } catch (err) {
             const validationErrors = getApiValidationErrors(err);
-            const errorMessage = validationErrors?.[0] || getApiErrorMessage(err, "Có lỗi xảy ra khi đăng ký!");
+            const errorMessage = validationErrors?.[0] || getApiErrorMessage(err, "Có lỗi xảy ra khi yêu cầu đăng ký!");
+            showToast(errorMessage, "error");
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    const handleVerifyOtp = async (e) => {
+        e.preventDefault();
+        if (!otpCode || otpCode.length < 6) {
+            setFormErrors(prev => ({ ...prev, otp: 'Vui lòng nhập mã OTP 6 số' }));
+            return;
+        }
+        setIsLoading(true);
+        try {
+            await AuthService.signUpVerifyOtp(stateSignup.username, stateSignup.email, stateSignup.password, otpCode);
+            showToast('Đăng ký tài khoản thành công!');
+            setStateSignup({ username: '', email: '', password: '' });
+            setAcceptTerms(false);
+            setShowOtpInput(false);
+            setOtpCode('');
+            setChangeForm(false); // Switch to login
+        } catch (err) {
+            const errorMessage = getApiErrorMessage(err, "Mã OTP không chính xác hoặc đã hết hạn!");
+            showToast(errorMessage, "error");
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    const handleResendOtp = async () => {
+        if (otpCountdown > 0) return;
+        setIsLoading(true);
+        try {
+            await AuthService.requestSignUpOtp(stateSignup.username, stateSignup.email, stateSignup.password);
+            showToast('Mã OTP mới đã được gửi!', 'success');
+            setOtpCountdown(60);
+        } catch (err) {
+            const errorMessage = getApiErrorMessage(err, "Không thể gửi lại mã OTP!");
             showToast(errorMessage, "error");
         } finally {
             setIsLoading(false);
@@ -373,50 +428,102 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                                             <span className="text-xs font-medium text-yellow-800 dark:text-yellow-500">Tặng ngay mã <strong className="text-yellow-700 dark:text-yellow-400">50K</strong> khi đăng ký mới!</span>
                                         </div>
                                     </div>
-                                    <form onSubmit={handleSignup} autoComplete="nope">
-                                        <div className="mb-3 sm:mb-4">
-                                            <div className="relative">
-                                                <i className={`bx bx-user ${iconCls}`}></i>
-                                                <input className={formErrors.username ? inputErrCls : inputCls} type="text" name="username" value={stateSignup.username} onChange={HandleOnChangeStateSignup} placeholder="Tên đăng nhập" autoComplete="one-time-code" />
-                                            </div>
-                                            {formErrors.username && <p className="mt-1 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.username}</p>}
-                                        </div>
-                                        <div className="mb-3 sm:mb-4">
-                                            <div className="relative">
-                                                <i className={`bx bx-envelope ${iconCls}`}></i>
-                                                <input className={formErrors.email ? inputErrCls : inputCls} type="email" name="email" value={stateSignup.email} onChange={HandleOnChangeStateSignup} placeholder="email@example.com" autoComplete="one-time-code" />
-                                            </div>
-                                            {formErrors.email && <p className="mt-1 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.email}</p>}
-                                        </div>
-                                        <div className="mb-3 sm:mb-4">
-                                            <div className="relative">
-                                                <i className={`bx bx-lock-alt ${iconCls}`}></i>
-                                                <input className={formErrors.password ? inputErrCls : inputCls} type={showPasswordSignup ? "text" : "password"} name="password" value={stateSignup.password} onChange={HandleOnChangeStateSignup} onFocus={() => setFocusPasswordSignup(true)} onBlur={() => setFocusPasswordSignup(false)} placeholder="Tối thiểu 6 ký tự" autoComplete="new-password" />
-                                                {(focusPasswordSignup || stateSignup.password.length > 0) && (
-                                                    <button type="button" onClick={() => setShowPasswordSignup(!showPasswordSignup)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary-600 transition-colors cursor-pointer">
-                                                        <i className={`bx ${showPasswordSignup ? 'bx-hide' : 'bx-show'} text-lg`}></i>
-                                                    </button>
-                                                )}
-                                            </div>
-                                            {formErrors.password && <p className="mt-1 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.password}</p>}
-                                        </div>
-                                        <div className="mb-4 sm:mb-6">
-                                            <label className="flex items-start gap-2 cursor-pointer select-none">
-                                                <div className="relative mt-0.5">
-                                                    <input type="checkbox" name="acceptTerms" checked={acceptTerms} onChange={(e) => { setAcceptTerms(e.target.checked); setFormErrors(prev => ({ ...prev, acceptTerms: '' })); }} className="sr-only peer" />
-                                                    <div className={`w-4 h-4 border-2 rounded transition-all flex items-center justify-center ${formErrors.acceptTerms ? 'border-red-400 bg-red-50' : 'border-gray-300 peer-checked:bg-primary-600 peer-checked:border-primary-500'}`}>
-                                                        {acceptTerms && <i className='bx bx-check text-white text-xs'></i>}
-                                                    </div>
+                                    {showOtpInput ? (
+                                        <form onSubmit={handleVerifyOtp} autoComplete="nope" className="animate-[fl-open_0.3s_ease]">
+                                            <div className="text-center mb-6">
+                                                <div className="w-16 h-16 bg-primary-100 dark:bg-primary-900/50 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                    <i className='bx bx-envelope text-3xl text-primary-600 dark:text-primary-400'></i>
                                                 </div>
-                                                <span className="text-xs text-gray-500 leading-relaxed">Tôi đồng ý với <a href="/ho-tro/dieu-khoan-su-dung" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline font-medium" onClick={e => e.stopPropagation()}>Điều khoản sử dụng</a> và <a href="/ho-tro/chinh-sach-bao-mat" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline font-medium" onClick={e => e.stopPropagation()}>Chính sách bảo mật</a></span>
-                                            </label>
-                                            {formErrors.acceptTerms && <p className="mt-1 ml-6 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.acceptTerms}</p>}
-                                        </div>
-                                        <button type="submit" disabled={isLoading || !acceptTerms} className={`w-full py-3 rounded-full bg-primary-600 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 dark:shadow-primary-900/30 transition-all duration-300 ${isLoading || !acceptTerms ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-700 cursor-pointer active:scale-[0.97] hover:-translate-y-0.5'}`}>
-                                            {isLoading ? <span className="flex items-center justify-center gap-2"><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>Đang xử lý...</span> : 'ĐĂNG KÝ TÀI KHOẢN'}
-                                        </button>
-                                        <p className="text-center text-sm text-gray-500 mt-4 sm:mt-5 sm:hidden">Đã có tài khoản?{' '}<button type="button" onClick={ChangeFormLogin} className="text-primary-600 font-semibold cursor-pointer">Đăng nhập</button></p>
-                                    </form>
+                                                <h4 className="text-lg font-bold text-gray-800 dark:text-white mb-2">Nhập mã xác nhận</h4>
+                                                <p className="text-sm text-gray-500">Mã OTP đã được gửi đến email <strong className="text-gray-700 dark:text-gray-300">{stateSignup.email}</strong></p>
+                                            </div>
+                                            
+                                            <div className="mb-6">
+                                                <div className="relative">
+                                                    <i className={`bx bx-dialpad-alt ${iconCls}`}></i>
+                                                    <input 
+                                                        className={formErrors.otp ? inputErrCls : inputCls} 
+                                                        type="text" 
+                                                        maxLength="6"
+                                                        value={otpCode} 
+                                                        onChange={(e) => {
+                                                            setOtpCode(e.target.value.replace(/\D/g, ''));
+                                                            setFormErrors(prev => ({...prev, otp: ''}));
+                                                        }} 
+                                                        placeholder="Nhập 6 chữ số" 
+                                                        autoFocus
+                                                    />
+                                                </div>
+                                                {formErrors.otp && <p className="mt-1 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.otp}</p>}
+                                            </div>
+
+                                            <button type="submit" disabled={isLoading || otpCode.length < 6} className={`w-full py-3 rounded-full bg-primary-600 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 dark:shadow-primary-900/30 transition-all duration-300 ${isLoading || otpCode.length < 6 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-700 cursor-pointer active:scale-[0.97] hover:-translate-y-0.5'}`}>
+                                                {isLoading ? <span className="flex items-center justify-center gap-2"><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>Đang xử lý...</span> : 'XÁC NHẬN'}
+                                            </button>
+
+                                            <div className="mt-6 flex flex-col items-center gap-3">
+                                                <p className="text-sm text-gray-500">
+                                                    Chưa nhận được mã?{' '}
+                                                    <button 
+                                                        type="button" 
+                                                        onClick={handleResendOtp}
+                                                        disabled={otpCountdown > 0 || isLoading}
+                                                        className={`font-semibold transition-colors ${otpCountdown > 0 || isLoading ? 'text-gray-400 cursor-not-allowed' : 'text-primary-600 hover:text-primary-700 cursor-pointer'}`}
+                                                    >
+                                                        {otpCountdown > 0 ? `Gửi lại sau ${otpCountdown}s` : 'Gửi lại ngay'}
+                                                    </button>
+                                                </p>
+                                                <button type="button" onClick={() => setShowOtpInput(false)} className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                                                    <i className='bx bx-left-arrow-alt align-middle mr-1'></i> Quay lại đăng ký
+                                                </button>
+                                            </div>
+                                        </form>
+                                    ) : (
+                                        <form onSubmit={handleSignup} autoComplete="nope">
+                                            <div className="mb-3 sm:mb-4">
+                                                <div className="relative">
+                                                    <i className={`bx bx-user ${iconCls}`}></i>
+                                                    <input className={formErrors.username ? inputErrCls : inputCls} type="text" name="username" value={stateSignup.username} onChange={HandleOnChangeStateSignup} placeholder="Tên đăng nhập" autoComplete="one-time-code" />
+                                                </div>
+                                                {formErrors.username && <p className="mt-1 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.username}</p>}
+                                            </div>
+                                            <div className="mb-3 sm:mb-4">
+                                                <div className="relative">
+                                                    <i className={`bx bx-envelope ${iconCls}`}></i>
+                                                    <input className={formErrors.email ? inputErrCls : inputCls} type="email" name="email" value={stateSignup.email} onChange={HandleOnChangeStateSignup} placeholder="email@example.com" autoComplete="one-time-code" />
+                                                </div>
+                                                {formErrors.email && <p className="mt-1 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.email}</p>}
+                                            </div>
+                                            <div className="mb-3 sm:mb-4">
+                                                <div className="relative">
+                                                    <i className={`bx bx-lock-alt ${iconCls}`}></i>
+                                                    <input className={formErrors.password ? inputErrCls : inputCls} type={showPasswordSignup ? "text" : "password"} name="password" value={stateSignup.password} onChange={HandleOnChangeStateSignup} onFocus={() => setFocusPasswordSignup(true)} onBlur={() => setFocusPasswordSignup(false)} placeholder="Tối thiểu 6 ký tự" autoComplete="new-password" />
+                                                    {(focusPasswordSignup || stateSignup.password.length > 0) && (
+                                                        <button type="button" onClick={() => setShowPasswordSignup(!showPasswordSignup)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary-600 transition-colors cursor-pointer">
+                                                            <i className={`bx ${showPasswordSignup ? 'bx-hide' : 'bx-show'} text-lg`}></i>
+                                                        </button>
+                                                    )}
+                                                </div>
+                                                {formErrors.password && <p className="mt-1 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.password}</p>}
+                                            </div>
+                                            <div className="mb-4 sm:mb-6">
+                                                <label className="flex items-start gap-2 cursor-pointer select-none">
+                                                    <div className="relative mt-0.5">
+                                                        <input type="checkbox" name="acceptTerms" checked={acceptTerms} onChange={(e) => { setAcceptTerms(e.target.checked); setFormErrors(prev => ({ ...prev, acceptTerms: '' })); }} className="sr-only peer" />
+                                                        <div className={`w-4 h-4 border-2 rounded transition-all flex items-center justify-center ${formErrors.acceptTerms ? 'border-red-400 bg-red-50' : 'border-gray-300 peer-checked:bg-primary-600 peer-checked:border-primary-500'}`}>
+                                                            {acceptTerms && <i className='bx bx-check text-white text-xs'></i>}
+                                                        </div>
+                                                    </div>
+                                                    <span className="text-xs text-gray-500 leading-relaxed">Tôi đồng ý với <a href="/ho-tro/dieu-khoan-su-dung" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline font-medium" onClick={e => e.stopPropagation()}>Điều khoản sử dụng</a> và <a href="/ho-tro/chinh-sach-bao-mat" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline font-medium" onClick={e => e.stopPropagation()}>Chính sách bảo mật</a></span>
+                                                </label>
+                                                {formErrors.acceptTerms && <p className="mt-1 ml-6 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.acceptTerms}</p>}
+                                            </div>
+                                            <button type="submit" disabled={isLoading || !acceptTerms} className={`w-full py-3 rounded-full bg-primary-600 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 dark:shadow-primary-900/30 transition-all duration-300 ${isLoading || !acceptTerms ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-700 cursor-pointer active:scale-[0.97] hover:-translate-y-0.5'}`}>
+                                                {isLoading ? <span className="flex items-center justify-center gap-2"><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>Đang xử lý...</span> : 'ĐĂNG KÝ TÀI KHOẢN'}
+                                            </button>
+                                            <p className="text-center text-sm text-gray-500 mt-4 sm:mt-5 sm:hidden">Đã có tài khoản?{' '}<button type="button" onClick={ChangeFormLogin} className="text-primary-600 font-semibold cursor-pointer">Đăng nhập</button></p>
+                                        </form>
+                                    )}
                                 </div>
                             </div>
                         </div>

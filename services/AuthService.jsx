@@ -37,6 +37,25 @@ class AuthService
         });
     }
 
+    requestSignUpOtp(username, email, password)
+    {
+        return axiosInstance.post("/api/Account/RequestSignUpOtp", {
+            username: username,
+            email: email,
+            password: password
+        });
+    }
+
+    signUpVerifyOtp(username, email, password, otp)
+    {
+        return axiosInstance.post("/api/Account/SignUpVerifyOtp", {
+            username: username,
+            email: email,
+            password: password,
+            otp: otp
+        });
+    }
+
     async googleSignIn(googleUserData)
     {
         const response = await axiosInstance.post("/api/Account/GoogleSignIn", {

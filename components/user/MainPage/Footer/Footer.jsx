@@ -74,7 +74,7 @@ const Footer = () =>
                     <div className='w-full lg:w-[40%]'>
                         <div className='mb-5 md:mb-6'>
                             <h3 className='text-lg md:text-xl font-bold text-white dark:text-white uppercase tracking-wide'>
-                                CapyLumine
+                                CAPYLUMINE - THẮP SÁNG KHÔNG GIAN CỦA BẠN
                             </h3>
                             <p className='text-white dark:text-white text-sm mt-1 font-semibold'>Đèn ngủ & Đèn trang trí</p>
                             <p className='text-gray-200 dark:text-gray-300 text-xs mt-2 leading-relaxed'>
@@ -87,7 +87,7 @@ const Footer = () =>
                             <div className='flex items-start gap-3'>
                                 <span className='w-2 h-2 rounded-full bg-white dark:bg-white mt-[7px] flex-shrink-0'></span>
                                 <div className='text-sm text-white dark:text-white'>
-                                    <p>(+84)969 608 810</p>
+                                    <p>0969 608 810</p>
                                 </div>
                             </div>
                             <div className='flex items-start gap-3'>
@@ -106,7 +106,7 @@ const Footer = () =>
                             <div className='flex items-start gap-3'>
                                 <span className='w-2 h-2 rounded-full bg-white dark:bg-white mt-[7px] flex-shrink-0'></span>
                                 <div className='text-sm text-white dark:text-white'>
-                                    <p>capylumine.com</p>
+                                    <p><a href="https://capylumine.com" target="_blank" rel="noopener noreferrer">https://capylumine.com</a></p>
                                 </div>
                             </div>
                         </div>
@@ -132,29 +132,29 @@ const Footer = () =>
                         </div>
                     </div>
 
-                    {/* === Cột phải: Logo + Social === */}
-                    <div className='w-full lg:w-[30%] flex flex-col items-center lg:items-end'>
-                        {/* Logo & Text matching screenshot_9 */}
+                    {/* === Cột phải: Logo + Social + Thanh toán === */}
+                    <div className='w-full lg:w-[30%] flex flex-col items-center lg:items-end mt-8 lg:mt-0'>
+                        {/* Logo & Text */}
                         <div className='flex items-center gap-3.5 mb-6 lg:justify-end'>
-                            <div className='w-20 h-20 md:w-[88px] md:h-[88px] rounded-2xl overflow-hidden shadow-lg flex-shrink-0'>
-                                <img src='/images/Capylumine-sm.png' alt="CapyLumine" className='w-full h-full object-cover' />
+                            <div className='w-20 h-20 md:w-[88px] md:h-[88px] rounded-2xl overflow-hidden shadow-lg flex-shrink-0 bg-white p-1'>
+                                <img src='/images/Capylumine-sm.png' alt="CapyLumine" className='w-full h-full object-cover rounded-xl' />
                             </div>
                             <div className='flex flex-col mt-2 md:mt-4'>
                                 <div className={`text-[24px] md:text-[32px] font-extrabold tracking-tight font-sans leading-none mb-1 flex items-center ml-1`}>
-                                    <span className='text-[#4631a3]'>Capy</span>
-                                    <span className='text-[#9328f5]'>Lum</span>
+                                    <span className='text-white dark:text-gray-100'>Capy</span>
+                                    <span className='text-[#ffce54]'>Lum</span>
                                     <span className='relative inline-block'>
-                                        <span className='text-[#9328f5] relative z-10'>ı</span>
+                                        <span className='text-[#ffce54] relative z-10'>ı</span>
                                         {/* Sparkle as dot */}
                                         <span className="absolute top-[1px] left-1/2 -translate-x-1/2 z-20 pointer-events-none flex items-center justify-center">
-                                            <svg className="relative w-1.5 h-1.5 md:w-2 md:h-2 text-[#ffce54]" viewBox="0 0 24 24" fill="currentColor">
+                                            <svg className="relative w-1.5 h-1.5 md:w-2 md:h-2 text-white" viewBox="0 0 24 24" fill="currentColor">
                                                 <path d="M12 0C12 0 12 10 24 12C12 14 12 24 12 24C12 24 12 14 0 12C12 10 12 0 12 0Z" />
                                             </svg>
                                         </span>
                                     </span>
-                                    <span className='text-[#9328f5]'>ne</span>
+                                    <span className='text-[#ffce54]'>ne</span>
                                 </div>
-                                
+
                                 <div className='flex items-center ml-1'>
                                     <div className="relative flex items-center justify-center">
                                         <svg className="w-[18px] h-[18px] md:w-[22px] md:h-[22px] text-[#ffce54] drop-shadow-[0_0_6px_rgba(255,206,84,0.6)]" viewBox="0 0 24 24" fill="currentColor">
@@ -167,40 +167,60 @@ const Footer = () =>
                                             <path d="M12 0C12 0 12 10 24 12C12 14 12 24 12 24C12 24 12 14 0 12C12 10 12 0 12 0Z" />
                                         </svg>
                                     </div>
-                                    <div className='text-[12px] md:text-[14px] text-[#ffce54] font-extrabold tracking-tighter uppercase leading-none ml-1.5 md:ml-2' style={{ fontFamily: 'sans-serif' }}>
+                                    <div className='text-[12px] md:text-[14px] text-white/90 font-bold tracking-tighter uppercase leading-none ml-1.5 md:ml-2' style={{ fontFamily: 'sans-serif' }}>
                                         DREAMY NIGHT LIGHTS
                                     </div>
-                                    <svg className="w-3 h-3 md:w-3.5 md:h-3.5 text-[#ffce54] ml-1 mb-0.5" viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M12 0C12 0 12 10 24 12C12 14 12 24 12 24C12 24 12 14 0 12C12 10 12 0 12 0Z" />
-                                    </svg>
                                 </div>
                             </div>
                         </div>
 
                         {/* Social icons */}
-                        <div className='flex items-center gap-3 mb-6'>
+                        <div className='flex items-center gap-3 mb-8 lg:justify-end'>
                             {[
-                                { icon: 'bxl-facebook-square', label: 'Facebook' },
-                                { icon: 'bxl-instagram', label: 'Instagram' },
-                                { icon: 'bxl-tiktok', label: 'TikTok' },
-                                { icon: 'bxl-youtube', label: 'YouTube' },
+                                { icon: 'bxl-facebook-square', label: 'Facebook', url: 'https://facebook.com/capylumine' },
+                                { icon: 'bxl-instagram', label: 'Instagram', url: 'https://instagram.com/capylumine' },
+                                { icon: 'bxl-tiktok', label: 'TikTok', url: 'https://tiktok.com/@capylumine' },
+                                { icon: 'bxl-youtube', label: 'YouTube', url: 'https://youtube.com/@capylumine' },
                             ].map((social) => (
                                 <a
                                     key={social.icon}
-                                    href='#'
+                                    href={social.url}
+                                    target='_blank'
+                                    rel='noreferrer'
                                     aria-label={social.label}
-                                    className='w-10 h-10 rounded-full border border-white dark:border-white flex items-center justify-center text-white dark:text-white transition-all duration-300 hover:text-gray-200 hover:border-gray-200 dark:hover:text-gray-200 dark:hover:border-gray-200 hover:-translate-y-1'
+                                    className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white transition-all duration-300 hover:bg-white hover:text-primary-600 hover:border-white hover:-translate-y-1 shadow-sm'
                                 >
-                                    <i className={`bx ${social.icon} text-lg`}></i>
+                                    <i className={`bx ${social.icon} text-lg md:text-xl`}></i>
                                 </a>
                             ))}
                         </div>
 
-                        {/* Decorative dots */}
-                        <div className='flex items-center gap-2'>
-                            <span className='w-4 h-4 rounded-full bg-white/40 dark:bg-white/40 border border-white/30 dark:border-white/30'></span>
-                            <span className='w-4 h-4 rounded-full bg-white/40 dark:bg-white/40 border border-white/30 dark:border-white/30'></span>
-                            <span className='w-4 h-4 rounded-full bg-white dark:bg-white'></span>
+                        {/* Phương thức thanh toán */}
+                        <div className='flex flex-col items-center lg:items-end mb-6'>
+                            <h4 className='text-xs font-semibold text-white/80 uppercase tracking-wider mb-2'>Phương thức thanh toán</h4>
+                            <div className='flex items-center gap-2'>
+                                <div className='h-8 w-12 bg-white rounded flex items-center justify-center' title='Visa'>
+                                    <i className='bx bxl-visa text-[#1a1f71] text-3xl'></i>
+                                </div>
+                                <div className='h-8 w-12 bg-white rounded flex items-center justify-center' title='Mastercard'>
+                                    <i className='bx bxl-mastercard text-[#eb001b] text-3xl'></i>
+                                </div>
+                                <div className='h-8 w-12 bg-white rounded flex items-center justify-center' title='MoMo'>
+                                    <span className='text-[#a50064] font-bold text-sm tracking-tighter'>MoMo</span>
+                                </div>
+                                <div className='h-8 w-14 bg-white rounded flex items-center justify-center' title='VNPay'>
+                                    <span className='font-black text-sm italic tracking-tighter'><span className='text-[#005BAA]'>VN</span><span className='text-[#ED1C24]'>PAY</span></span>
+                                </div>
+                                <div className='h-8 px-2 bg-white rounded flex items-center justify-center text-[11px] font-bold text-gray-800 tracking-wider' title='COD'>
+                                    COD
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Chứng nhận */}
+                        <div className='flex items-center gap-3 lg:justify-end'>
+                            <img src='https://online.gov.vn/PublicImages/2015/08/27/11/20150827110756-dathongbao.png' alt='Đã thông báo Bộ Công Thương' className='h-10 object-contain' />
+                            <img src='https://images.dmca.com/Badges/dmca_protected_sml_120n.png?ID=1' alt='DMCA Protected' className='h-6 object-contain' />
                         </div>
                     </div>
                 </div>
@@ -221,14 +241,16 @@ const Footer = () =>
             <div className='w-full py-4 bg-primary-900 dark:bg-[#111]'>
                 <div className='flex flex-col sm:flex-row justify-between items-center gap-2 xl:mx-auto xl:max-w-[1440px] px-6 xl:px-0'>
                     <div className='text-xs md:text-sm text-white dark:text-white text-center'>
-                        © 2026 | Bản quyền thuộc về <span className='text-white dark:text-white font-semibold'>CapyLumine</span>
+                        © 2026 | Bản quyền thuộc về <span className='text-white dark:text-white font-semibold'>CapyLumine Night Light</span>
                     </div>
-                    <div className='flex items-center gap-4 text-white dark:text-white text-xs'>
-                        <a href='/ho-tro/dieu-khoan-su-dung' className='hover:text-gray-200 dark:hover:text-gray-200 transition-colors'>Điều khoản</a>
-                        <span>•</span>
-                        <a href='/ho-tro/chinh-sach-bao-mat' className='hover:text-gray-200 dark:hover:text-gray-200 transition-colors'>Chính sách</a>
-                        <span>•</span>
-                        <a href='#' className='hover:text-gray-200 dark:hover:text-gray-200 transition-colors'>Liên hệ</a>
+                    <div className='flex items-center flex-wrap justify-center gap-3 md:gap-4 text-white dark:text-white text-xs'>
+                        <a href='/ho-tro/dieu-khoan-su-dung' className='hover:text-primary-300 dark:hover:text-primary-400 transition-colors'>Điều khoản</a>
+                        <span className='text-white/40'>•</span>
+                        <a href='/ho-tro/chinh-sach-bao-mat' className='hover:text-primary-300 dark:hover:text-primary-400 transition-colors'>Chính sách bảo mật</a>
+                        <span className='text-white/40'>•</span>
+                        <a href='/ho-tro/giai-quyet-khieu-nai' className='hover:text-primary-300 dark:hover:text-primary-400 transition-colors'>Giải quyết khiếu nại</a>
+                        <span className='text-white/40'>•</span>
+                        <a href='/lien-he' className='hover:text-primary-300 dark:hover:text-primary-400 transition-colors'>Liên hệ</a>
                     </div>
                 </div>
             </div>
