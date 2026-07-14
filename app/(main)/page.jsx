@@ -54,12 +54,6 @@ export default function HomePage() {
 
             <main className="flex flex-col gap-4">
 
-                {/* Promotional Banner */}
-                <div className="bg-gradient-to-r from-primary-600 via-primary-500 to-primary-600 text-white py-2 px-4 text-center text-xs sm:text-sm font-medium shadow-md flex items-center justify-center gap-2 animate-[pulse_3s_ease-in-out_infinite]">
-                    <i className='bx bxs-gift text-lg animate-bounce'></i>
-                    <span><strong>Ưu đãi đặc biệt:</strong> Đăng ký tài khoản mới nhận ngay <strong className="text-yellow-300 text-base">mã giảm giá 50K</strong> cho đơn hàng đầu tiên!</span>
-                </div>
-
                 <div data-section="hero" data-label="Trang chủ">
                     <SiteContent />
                 </div>

@@ -47,13 +47,13 @@ export default function CartPage() {
                 fetch(`${API_ENDPOINT}/api/DiscountCode/my-codes`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
-                .then(res => res.json())
-                .then(data => {
-                    const codes = data?.$values || data || [];
-                    setDiscountCodes(codes);
-                })
-                .catch(err => console.error("Lỗi khi tải mã giảm giá", err))
-                .finally(() => setLoadingDiscounts(false));
+                    .then(res => res.json())
+                    .then(data => {
+                        const codes = data?.$values || data || [];
+                        setDiscountCodes(codes);
+                    })
+                    .catch(err => console.error("Lỗi khi tải mã giảm giá", err))
+                    .finally(() => setLoadingDiscounts(false));
             } else {
                 setLoadingDiscounts(false);
             }
@@ -302,9 +302,9 @@ export default function CartPage() {
                     <div className="bg-white rounded shadow-sm mb-4 px-5 py-4 flex items-center justify-between md:justify-end border border-gray-100">
                         <span className="text-gray-800 flex items-center text-sm font-medium">
                             <i className='bx bxs-coupon text-primary-500 mr-2 text-xl'></i>
-                            Shopee Voucher
+                            CapyLumine Voucher
                         </span>
-                        
+
                         <div className="ml-8 flex items-center gap-3">
                             {appliedVoucher && (
                                 <div className="text-xs bg-green-50 text-green-600 px-2 py-1 rounded border border-green-200">
@@ -389,12 +389,12 @@ export default function CartPage() {
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 transition-opacity">
                     <div className="bg-white rounded-lg shadow-xl w-full max-w-lg overflow-hidden flex flex-col max-h-[80vh]" onClick={(e) => e.stopPropagation()}>
                         <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                            <h3 className="text-lg font-semibold text-gray-800">Chọn Shopee Voucher</h3>
+                            <h3 className="text-lg font-semibold text-gray-800">Chọn Voucher</h3>
                             <button onClick={() => setIsVoucherModalOpen(false)} className="text-gray-400 hover:text-red-500 transition-colors p-1 rounded-full hover:bg-red-50">
                                 <i className="bx bx-x text-2xl leading-none"></i>
                             </button>
                         </div>
-                        
+
                         <div className="p-6 overflow-y-auto flex-1 bg-gray-50">
                             {loadingDiscounts ? (
                                 <div className='text-center py-8 text-gray-500'>Đang tải mã giảm giá...</div>
@@ -407,7 +407,7 @@ export default function CartPage() {
                                                 <div className="flex-1">
                                                     <div className='font-bold text-base text-primary-600'>{code.code}</div>
                                                     <div className='text-sm text-gray-700 mt-0.5 font-medium'>
-                                                        Giảm {code.discountType === 'Percentage' 
+                                                        Giảm {code.discountType === 'Percentage'
                                                             ? `${code.discountPercentage}% ${code.maxDiscountAmount > 0 ? `(Tối đa ${formatPrice(code.maxDiscountAmount)}₫)` : ''}`
                                                             : `${formatPrice(code.discountAmount)}₫`
                                                         }
@@ -424,11 +424,10 @@ export default function CartPage() {
                                                             setIsVoucherModalOpen(false);
                                                             toast.success('Đã áp dụng mã giảm giá!');
                                                         }}
-                                                        className={`px-4 py-2 text-xs font-semibold rounded transition-colors ${
-                                                            isEligible 
-                                                                ? 'bg-primary-50 text-primary-600 border border-primary-500 hover:bg-primary-600 hover:text-white cursor-pointer' 
-                                                                : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                                        }`}
+                                                        className={`px-4 py-2 text-xs font-semibold rounded transition-colors ${isEligible
+                                                            ? 'bg-primary-50 text-primary-600 border border-primary-500 hover:bg-primary-600 hover:text-white cursor-pointer'
+                                                            : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                                            }`}
                                                     >
                                                         Sử dụng
                                                     </button>

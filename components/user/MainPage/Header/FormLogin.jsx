@@ -257,9 +257,15 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                                     <i className='bx bxs-store-alt text-white text-2xl'></i>
                                 </div>
                                 <h2 className="text-2xl font-bold text-white mb-2">{changeForm ? 'Chào mừng trở lại!' : 'Xin chào!'}</h2>
-                                <p className="text-white/80 text-sm mb-6 max-w-[220px] leading-relaxed">
+                                <p className={`text-white/80 text-sm max-w-[220px] leading-relaxed ${!changeForm ? 'mb-3' : 'mb-6'}`}>
                                     {changeForm ? 'Đăng nhập để tiếp tục mua sắm cùng chúng tôi' : 'Đăng ký tài khoản để trải nghiệm mua sắm tuyệt vời'}
                                 </p>
+                                {!changeForm && (
+                                    <div className="mb-5 inline-flex items-center gap-1.5 px-3 py-1.5 bg-yellow-400/20 border border-yellow-400/40 rounded-lg shadow-sm">
+                                        <i className='bx bxs-gift text-yellow-300 text-lg animate-pulse'></i>
+                                        <span className="text-xs font-medium text-yellow-100">Tặng mã <strong className="text-yellow-300">50K</strong> khi đăng ký!</span>
+                                    </div>
+                                )}
                                 <button type="button" onClick={ChangeFormLogin}
                                     className="px-8 py-2.5 rounded-full border-2 border-white/70 text-white text-sm font-semibold hover:bg-white hover:text-primary-600 transition-all duration-300 cursor-pointer tracking-wide">
                                     {changeForm ? 'ĐĂNG NHẬP' : 'ĐĂNG KÝ'}
@@ -279,7 +285,13 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                                     <div className="w-9 h-9 bg-white/15 rounded-xl flex items-center justify-center"><i className='bx bxs-store-alt text-white text-lg'></i></div>
                                     <h2 className="text-xl font-bold text-white">{changeForm ? 'Tạo tài khoản' : 'Chào mừng trở lại'}</h2>
                                 </div>
-                                <p className="text-white/70 text-xs ml-12">{changeForm ? 'Đăng ký để trải nghiệm mua sắm' : 'Đăng nhập vào tài khoản của bạn'}</p>
+                                <p className={`text-white/70 text-xs ml-12 ${changeForm ? 'mb-2' : ''}`}>{changeForm ? 'Đăng ký để trải nghiệm mua sắm' : 'Đăng nhập vào tài khoản của bạn'}</p>
+                                {changeForm && (
+                                    <div className="ml-12 inline-flex items-center gap-1.5 px-2 py-1 bg-yellow-400/20 border border-yellow-400/40 rounded-lg">
+                                        <i className='bx bxs-gift text-yellow-300 text-[10px] animate-pulse'></i>
+                                        <span className="text-[10px] font-medium text-yellow-100">Tặng mã 50K khi đăng ký!</span>
+                                    </div>
+                                )}
                             </div>
                         </div>
 

@@ -1,14 +1,24 @@
 "use client";
 
 import React, { useState } from 'react'
-
+import { useSelector } from 'react-redux';
 const TopBar = () => {
     const [showMap, setShowMap] = useState(false);
     const [showFbConfirm, setShowFbConfirm] = useState(false);
-
+    const isAuthenticated = useSelector((state) => state.auth?.isAuthenticated);
+    
     return (
-        <div className='h-8 md:h-10 bg-white dark:bg-[#111] text-gray-700 dark:text-gray-400 border-b border-gray-200 dark:border-transparent transition-colors duration-300'>
-            <nav className='xl:mx-auto xl:max-w-[1440px] flex justify-between items-center h-full px-4 xl:px-0 text-[10px] md:text-xs font-medium tracking-wide'>
+        <div className='flex flex-col'>
+            {/* Promotional Banner */}
+            {!isAuthenticated && (
+                <div className="bg-gradient-to-r from-primary-600 via-primary-500 to-primary-600 text-white py-1.5 px-4 text-center text-[10px] md:text-xs font-medium shadow-sm flex items-center justify-center gap-2 animate-[pulse_3s_ease-in-out_infinite]">
+                    <i className='bx bxs-gift text-sm animate-bounce'></i>
+                    <span><strong>Ưu đãi đặc biệt:</strong> Đăng ký tài khoản mới nhận ngay <strong className="text-yellow-300 text-[11px] md:text-sm">mã giảm giá 50K</strong> cho đơn hàng đầu tiên!</span>
+                </div>
+            )}
+            
+            <div className='h-8 md:h-10 bg-white dark:bg-[#111] text-gray-700 dark:text-gray-400 border-b border-gray-200 dark:border-transparent transition-colors duration-300'>
+                <nav className='xl:mx-auto xl:max-w-[1440px] flex justify-between items-center h-full px-4 xl:px-0 text-[10px] md:text-xs font-medium tracking-wide'>
                 <div className='flex items-center gap-4 md:gap-8'>
                     <div className='flex items-center gap-1.5 cursor-pointer hover:text-primary-600 dark:hover:text-primary-400 transition-colors group relative' onClick={() => setShowMap(true)}>
                         <i className='bx bx-map text-sm'></i>
@@ -98,6 +108,7 @@ const TopBar = () => {
                     </div>
                 </div>
             )}
+        </div>
         </div>
     )
 }
