@@ -217,15 +217,16 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
     };
 
     return createPortal(
-        <div
-            className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center bg-black/50 transition-opacity"
-            onClick={onClose}
-        >
-            {/* Modal Box */}
-            <div
-                className="bg-white dark:bg-gray-900 rounded-t-lg sm:rounded-md shadow-xl w-full sm:mx-4 max-w-3xl max-h-[90vh] sm:max-h-[85vh] overflow-y-auto relative animate-fadeIn"
-                onClick={(e) => e.stopPropagation()}
-            >
+        <div className="fixed inset-0 z-[9999] transition-opacity duration-300">
+            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm touch-none"></div>
+            <div className="fixed inset-0 overflow-y-auto" onClick={onClose}>
+                <div className="flex min-h-full items-start justify-center p-4 sm:p-4">
+                    {/* Modal Box */}
+                    <div
+                        className="relative m-auto bg-white dark:bg-gray-900 rounded-lg shadow-xl w-full max-w-3xl flex flex-col max-h-[90dvh] sm:max-h-[85vh] animate-fadeIn overflow-hidden"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex-1 overflow-y-auto">
                 {/* Close Button */}
                 <button
                     onClick={onClose}
@@ -252,7 +253,7 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
                                 id="modal-main-image"
                                 src={currentCarouselImage}
                                 alt={product.name}
-                                className="max-h-36 sm:max-h-72 w-auto object-contain drop-shadow-md rounded transition-all duration-300"
+                                className="max-h-64 sm:max-h-72 w-auto object-contain drop-shadow-md rounded transition-all duration-300"
                                 onError={(e) => { e.target.src = defaultImg; }}
                             />
                             {allImageSrcs.length > 1 && (
@@ -431,6 +432,8 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
                                     Mua ngay
                                 </button>
                             )}
+                        </div>
+                    </div>
                         </div>
                     </div>
                 </div>

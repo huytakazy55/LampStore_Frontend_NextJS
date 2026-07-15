@@ -87,11 +87,12 @@ const ChangePasswordModal = ({ isOpen, onClose }) =>
     const inputClass = 'w-full border border-gray-200 dark:border-gray-700 rounded-lg pl-10 pr-10 py-2.5 text-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 focus:border-primary-400 focus:ring-1 focus:ring-primary-200 transition placeholder:text-gray-400';
 
     return (
-        <div className='fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4'
-            onClick={handleClose}
-            onWheel={e => e.stopPropagation()}>
-            <div className='bg-white dark:bg-gray-900 w-full max-w-md rounded-lg shadow-2xl overflow-hidden'
-                onClick={e => e.stopPropagation()}>
+        <div className='fixed inset-0 z-[9999] transition-all duration-300'>
+            <div className='fixed inset-0 bg-black/40 backdrop-blur-sm touch-none'></div>
+            <div className='fixed inset-0 overflow-y-auto' onClick={handleClose} onWheel={e => e.stopPropagation()}>
+                <div className='flex min-h-full items-start justify-center p-4'>
+                    <div className='relative m-auto bg-white dark:bg-gray-900 w-full max-w-md rounded-lg shadow-2xl overflow-hidden'
+                        onClick={e => e.stopPropagation()}>
                 {/* Header */}
                 <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-rose-50 to-primary-50 dark:bg-gray-800'>
                     <h2 className='text-lg font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2'>
@@ -187,6 +188,8 @@ const ChangePasswordModal = ({ isOpen, onClose }) =>
                         </button>
                     </div>
                 </form>
+                    </div>
+                </div>
             </div>
         </div>
     );

@@ -56,13 +56,17 @@ const Header = () =>
 
   useEffect(() => { setMounted(true); }, []);
 
-  useEffect(() => {
-    if (mobileMenuOpen) {
+  useEffect(() =>
+  {
+    if (mobileMenuOpen)
+    {
       document.body.style.overflow = 'hidden';
-    } else {
+    } else
+    {
       document.body.style.overflow = 'unset';
     }
-    return () => {
+    return () =>
+    {
       document.body.style.overflow = 'unset';
     };
   }, [mobileMenuOpen]);
@@ -115,7 +119,7 @@ const Header = () =>
   const handleClickOutside = (event, ref, buttonRef, toggleFunction) =>
   {
     if (!document.body.contains(event.target)) return;
-    
+
     if (ref.current && !ref.current.contains(event.target) &&
       buttonRef.current && !buttonRef.current.contains(event.target))
     {
@@ -264,34 +268,34 @@ const Header = () =>
                 <span className='text-[#2e1d75] dark:text-[#a89cd9]'>Capy</span>
                 <span className='text-[#9328f5] dark:text-[#b774fa]'>Lum</span>
                 <span className='relative inline-block'>
-                    <span className='text-[#9328f5] dark:text-[#b774fa] relative z-10'>ı</span>
-                    {/* Sparkle as dot */}
-                    <span className="absolute top-[1px] left-1/2 -translate-x-1/2 z-20 pointer-events-none flex items-center justify-center">
-                        <svg className="relative w-1 h-1 md:w-1.5 md:h-1.5 text-[#ffce54]" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 0C12 0 12 10 24 12C12 14 12 24 12 24C12 24 12 14 0 12C12 10 12 0 12 0Z" />
-                        </svg>
-                    </span>
+                  <span className='text-[#9328f5] dark:text-[#b774fa] relative z-10'>ı</span>
+                  {/* Sparkle as dot */}
+                  <span className="absolute top-[1px] left-1/2 -translate-x-1/2 z-20 pointer-events-none flex items-center justify-center">
+                    <svg className="relative w-1 h-1 md:w-1.5 md:h-1.5 text-[#ffce54]" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 0C12 0 12 10 24 12C12 14 12 24 12 24C12 24 12 14 0 12C12 10 12 0 12 0Z" />
+                    </svg>
+                  </span>
                 </span>
                 <span className='text-[#9328f5] dark:text-[#b774fa]'>ne</span>
               </div>
-              
+
               <div className='flex items-center ml-1'>
                 <div className="relative flex items-center justify-center">
-                    <svg className="w-[16px] h-[16px] md:w-[18px] md:h-[18px] text-[#ffce54] drop-shadow-[0_0_4px_rgba(255,206,84,0.6)]" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M21.996 12.882A10.016 10.016 0 0 1 12 2.004c0-.28.026-.554.07-.822A9.99 9.99 0 0 0 2 11.996 9.99 9.99 0 0 0 12 21.99 9.99 9.99 0 0 0 21.996 12.882z" />
-                    </svg>
-                    <svg className="absolute top-[1px] right-[1px] w-1.5 h-1.5 text-[#fff2a8]" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 0C12 0 12 10 24 12C12 14 12 24 12 24C12 24 12 14 0 12C12 10 12 0 12 0Z" />
-                    </svg>
-                    <svg className="absolute -bottom-1 -right-2 w-2 h-2 text-[#ffce54]" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 0C12 0 12 10 24 12C12 14 12 24 12 24C12 24 12 14 0 12C12 10 12 0 12 0Z" />
-                    </svg>
+                  <svg className="w-[16px] h-[16px] md:w-[18px] md:h-[18px] text-[#ffce54] drop-shadow-[0_0_4px_rgba(255,206,84,0.6)]" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M21.996 12.882A10.016 10.016 0 0 1 12 2.004c0-.28.026-.554.07-.822A9.99 9.99 0 0 0 2 11.996 9.99 9.99 0 0 0 12 21.99 9.99 9.99 0 0 0 21.996 12.882z" />
+                  </svg>
+                  <svg className="absolute top-[1px] right-[1px] w-1.5 h-1.5 text-[#fff2a8]" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0C12 0 12 10 24 12C12 14 12 24 12 24C12 24 12 14 0 12C12 10 12 0 12 0Z" />
+                  </svg>
+                  <svg className="absolute -bottom-1 -right-2 w-2 h-2 text-[#ffce54]" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0C12 0 12 10 24 12C12 14 12 24 12 24C12 24 12 14 0 12C12 10 12 0 12 0Z" />
+                  </svg>
                 </div>
                 <div className='text-[10px] md:text-[12px] text-[#ffce54] font-extrabold tracking-tighter uppercase leading-none ml-1.5' style={{ fontFamily: 'sans-serif' }}>
                   DREAMY NIGHT LIGHTS
                 </div>
                 <svg className="w-2.5 h-2.5 md:w-3 md:h-3 text-[#ffce54] ml-1 mb-0.5" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 0C12 0 12 10 24 12C12 14 12 24 12 24C12 24 12 14 0 12C12 10 12 0 12 0Z" />
+                  <path d="M12 0C12 0 12 10 24 12C12 14 12 24 12 24C12 24 12 14 0 12C12 10 12 0 12 0Z" />
                 </svg>
               </div>
             </div>

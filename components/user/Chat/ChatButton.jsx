@@ -227,15 +227,15 @@ const ChatButton = () =>
       </div>
 
       {/* Zalo QR Popup */}
-      <div
-        className={`fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm transition-all duration-300 ${isZaloPopupOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
-        onClick={() => setIsZaloPopupOpen(false)}
-      >
-        <div
-          className={`relative bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-2xl transition-all duration-500 max-w-sm w-full mx-4 ${isZaloPopupOpen ? 'scale-100 translate-y-0' : 'scale-90 translate-y-8'}`}
-          onClick={e => e.stopPropagation()}
-        >
-          <button onClick={() => setIsZaloPopupOpen(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors bg-transparent border-none cursor-pointer">
+      <div className={`fixed inset-0 z-[9999] transition-all duration-300 ${isZaloPopupOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+        <div className='fixed inset-0 bg-black/60 backdrop-blur-sm touch-none'></div>
+        <div className='fixed inset-0 overflow-y-auto' onClick={() => setIsZaloPopupOpen(false)}>
+          <div className='flex min-h-full items-start justify-center p-4'>
+            <div
+              className={`relative m-auto bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-2xl transition-all duration-500 max-w-sm w-full mx-auto ${isZaloPopupOpen ? 'scale-100 translate-y-0' : 'scale-90 translate-y-8'}`}
+              onClick={e => e.stopPropagation()}
+            >
+              <button onClick={() => setIsZaloPopupOpen(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors bg-transparent border-none cursor-pointer">
             <i className="bx bx-x text-2xl"></i>
           </button>
 
@@ -256,6 +256,8 @@ const ChatButton = () =>
           >
             Mở ứng dụng Zalo
           </a>
+            </div>
+          </div>
         </div>
       </div>
     </>

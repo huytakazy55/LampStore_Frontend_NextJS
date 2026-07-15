@@ -135,11 +135,12 @@ const OrderReviewModal = ({ isOpen, onClose, order }) =>
     const allReviewed = uniqueItems.every(item => reviewStates[item.productId]?.hasReviewed);
 
     return (
-        <div className='fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4'
-            onClick={onClose}
-            onWheel={e => e.stopPropagation()}>
-            <div className='bg-white dark:bg-gray-900 w-full max-w-2xl max-h-[90vh] rounded-lg shadow-2xl overflow-hidden'
-                onClick={e => e.stopPropagation()}>
+        <div className='fixed inset-0 z-[9999] transition-all duration-300'>
+            <div className='fixed inset-0 bg-black/40 backdrop-blur-sm touch-none'></div>
+            <div className='fixed inset-0 overflow-y-auto' onClick={onClose} onWheel={e => e.stopPropagation()}>
+                <div className='flex min-h-full items-start justify-center p-4'>
+                    <div className='relative m-auto bg-white dark:bg-gray-900 w-full max-w-2xl max-h-[90vh] rounded-lg shadow-2xl overflow-hidden flex flex-col'
+                        onClick={e => e.stopPropagation()}>
                 {/* Header */}
                 <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-primary-600 dark:bg-gray-800'>
                     <div>
@@ -257,6 +258,8 @@ const OrderReviewModal = ({ isOpen, onClose, order }) =>
                     >
                         Đóng
                     </button>
+                </div>
+                    </div>
                 </div>
             </div>
         </div>

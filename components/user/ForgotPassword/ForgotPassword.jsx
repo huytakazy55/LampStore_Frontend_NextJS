@@ -54,11 +54,12 @@ const ForgotPassword = ({ visible, onCancel }) => {
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4" onClick={handleCancel}>
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-
-      <div onClick={(e) => e.stopPropagation()}
-        className="relative z-10 w-full max-w-[360px] animate-fadeIn">
+    <div className="fixed inset-0 z-[99999] transition-all duration-300">
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm touch-none" />
+      <div className="fixed inset-0 overflow-y-auto" onClick={handleCancel}>
+        <div className="flex min-h-full items-start justify-center p-4">
+          <div onClick={(e) => e.stopPropagation()}
+            className="relative m-auto z-10 w-full max-w-[360px] animate-fadeIn">
 
         <div className="relative overflow-hidden rounded-lg bg-white dark:bg-gray-900 shadow-[0_25px_60px_rgba(0,0,0,0.3)]">
 
@@ -123,6 +124,8 @@ const ForgotPassword = ({ visible, onCancel }) => {
             <p className="text-center text-[11px] text-gray-400 mt-4">
               Bạn sẽ nhận được email chứa mật khẩu mới trong vài phút
             </p>
+          </div>
+        </div>
           </div>
         </div>
       </div>

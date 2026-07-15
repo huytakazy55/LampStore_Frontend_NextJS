@@ -26,16 +26,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    if (toggleProfile) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [toggleProfile]);
+
 
   const [infoSideActive, setInfoSideActive] = useState('info');
   const [profileData, setProfileData] = useState({
@@ -67,6 +58,20 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
 
   const [discountCodes, setDiscountCodes] = useState([]);
   const [loadingDiscounts, setLoadingDiscounts] = useState(false);
+
+  useEffect(() => {
+    if (toggleProfile || addressPopupOpen) {
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+      document.documentElement.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+      document.documentElement.style.overflow = 'unset';
+    };
+  }, [toggleProfile, addressPopupOpen]);
 
   // Map profile data from Header's API response when modal opens
   useEffect(() =>
@@ -405,15 +410,17 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
   if (!mounted) return null;
 
   return createPortal(
-    <div className={`fixed inset-0 z-[9999] flex items-center justify-center transition-all duration-300 ${toggleProfile ? 'visible opacity-100' : 'invisible opacity-0 pointer-events-none'}`}>
+    <div className={`fixed inset-0 z-[9999] transition-all duration-300 ${toggleProfile ? 'visible opacity-100' : 'invisible opacity-0 pointer-events-none'}`}>
       {/* Backdrop */}
-      <div className='absolute inset-0 bg-black/40 backdrop-blur-sm' onClick={() => setToggleProfile && setToggleProfile(false)}></div>
+      <div className='fixed inset-0 bg-black/40 backdrop-blur-sm touch-none'></div>
 
-      {/* Modal */}
-      <div ref={popupProfileRef} onClick={(e) => e.stopPropagation()}
-        className={`relative w-[95%] max-w-[820px] bg-white dark:bg-gray-900 rounded-lg shadow-[0_20px_60px_rgba(0,0,0,0.2)] overflow-hidden transition-all duration-300 ${toggleProfile ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'}`}>
+      <div className='fixed inset-0 overflow-y-auto' onClick={() => setToggleProfile && setToggleProfile(false)}>
+        <div className='flex min-h-full items-start justify-center p-2 md:p-4'>
+          {/* Modal */}
+          <div ref={popupProfileRef} onClick={(e) => e.stopPropagation()}
+            className={`relative m-auto w-full max-w-[820px] bg-white dark:bg-gray-900 rounded-lg shadow-[0_20px_60px_rgba(0,0,0,0.2)] overflow-hidden transition-all duration-300 overscroll-contain flex flex-col ${toggleProfile ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'}`}>
 
-        {/* Header */}
+            {/* Header */}
         <div className='relative bg-primary-600 dark:bg-black px-6 py-5 overflow-hidden'>
           <div className='absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2'></div>
           <div className='absolute bottom-0 left-16 w-20 h-20 bg-white/5 rounded-full translate-y-1/2'></div>
@@ -427,7 +434,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
         </div>
 
         {/* Body */}
-        <div className='flex flex-col md:flex-row max-h-[calc(85vh-80px)] overflow-y-auto'>
+        <div className='flex flex-col md:flex-row overflow-y-auto min-h-0 max-h-[calc(100vh-140px)] md:max-h-[calc(85vh-80px)]'>
 
           {/* Left Panel - Avatar */}
           <div className='md:w-[260px] flex-shrink-0 border-b md:border-b-0 md:border-r border-gray-100 dark:border-gray-800 p-6 flex flex-col items-center bg-gray-50/50 dark:bg-gray-800/30'>
@@ -466,32 +473,35 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
           {/* Right Panel - Form */}
           <div className='flex-1 min-w-0'>
             {/* Tabs */}
-            <div className='flex border-b border-gray-100 dark:border-gray-800 px-6 pt-1'>
+            <div className='flex w-full border-b border-gray-100 dark:border-gray-800 px-2 md:px-6 pt-1'>
               <button onClick={() => setInfoSideActive('info')}
-                className={`relative px-1 py-3 mr-6 text-sm font-medium transition-colors cursor-pointer ${infoSideActive === 'info'
-                  ? 'text-primary-600 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-primary-600 after:rounded-full'
+                className={`relative flex-1 md:flex-none flex flex-col md:flex-row items-center justify-center py-2.5 md:py-3 md:mr-6 text-[11px] sm:text-sm font-medium transition-colors cursor-pointer ${infoSideActive === 'info'
+                  ? 'text-primary-600 after:absolute after:bottom-0 after:left-2 after:right-2 md:after:left-0 md:after:right-0 after:h-[2px] after:bg-primary-600 after:rounded-full'
                   : 'text-gray-400 hover:text-gray-600'}`}>
-                <i className='bx bx-user mr-1.5 align-middle'></i>
-                Thông tin người dùng
+                <i className='bx bx-user text-lg md:text-base mb-1 md:mb-0 md:mr-1.5 align-middle'></i>
+                <span className='hidden sm:inline'>Thông tin người dùng</span>
+                <span className='sm:hidden'>Hồ sơ</span>
               </button>
               <button onClick={() => setInfoSideActive('bill')}
-                className={`relative px-1 py-3 mr-6 text-sm font-medium transition-colors cursor-pointer ${infoSideActive === 'bill'
-                  ? 'text-primary-600 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-primary-600 after:rounded-full'
+                className={`relative flex-1 md:flex-none flex flex-col md:flex-row items-center justify-center py-2.5 md:py-3 md:mr-6 text-[11px] sm:text-sm font-medium transition-colors cursor-pointer ${infoSideActive === 'bill'
+                  ? 'text-primary-600 after:absolute after:bottom-0 after:left-2 after:right-2 md:after:left-0 md:after:right-0 after:h-[2px] after:bg-primary-600 after:rounded-full'
                   : 'text-gray-400 hover:text-gray-600'}`}>
-                <i className='bx bx-receipt mr-1.5 align-middle'></i>
-                Thông tin hóa đơn
+                <i className='bx bx-receipt text-lg md:text-base mb-1 md:mb-0 md:mr-1.5 align-middle'></i>
+                <span className='hidden sm:inline'>Thông tin hóa đơn</span>
+                <span className='sm:hidden'>Hóa đơn</span>
               </button>
               <button onClick={() => setInfoSideActive('discount')}
-                className={`relative px-1 py-3 text-sm font-medium transition-colors cursor-pointer ${infoSideActive === 'discount'
-                  ? 'text-primary-600 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-primary-600 after:rounded-full'
+                className={`relative flex-1 md:flex-none flex flex-col md:flex-row items-center justify-center py-2.5 md:py-3 text-[11px] sm:text-sm font-medium transition-colors cursor-pointer ${infoSideActive === 'discount'
+                  ? 'text-primary-600 after:absolute after:bottom-0 after:left-2 after:right-2 md:after:left-0 md:after:right-0 after:h-[2px] after:bg-primary-600 after:rounded-full'
                   : 'text-gray-400 hover:text-gray-600'}`}>
-                <i className='bx bx-purchase-tag-alt mr-1.5 align-middle'></i>
-                Mã giảm giá
+                <i className='bx bx-purchase-tag-alt text-lg md:text-base mb-1 md:mb-0 md:mr-1.5 align-middle'></i>
+                <span className='hidden sm:inline'>Mã giảm giá</span>
+                <span className='sm:hidden'>Mã giảm giá</span>
               </button>
             </div>
 
             {/* Form Content */}
-            <div className='p-6'>
+            <div className='p-4 md:p-6'>
               <div className={`${infoSideActive === 'info' ? 'block' : 'hidden'}`}>
                 <form onSubmit={handleSubmit}>
                   <div className='grid grid-cols-1 md:grid-cols-2 gap-5 mb-5'>
@@ -613,31 +623,37 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
           </div>
         </div>
       </div>
+    </div>
+  </div>
 
       {addressPopupOpen && addressDraft && (
-        <div className='fixed inset-0 z-[10000] flex items-center justify-center bg-gray-100/80 backdrop-blur-sm px-3 md:px-6' onClick={closeAddressPopup}>
-          <div
-            className='w-full max-w-[1480px] max-h-[90vh] overflow-y-auto rounded-xl bg-white dark:bg-gray-900 shadow-[0_4px_16px_rgba(15,23,42,0.12)] border border-gray-100 dark:border-gray-800 p-7 md:p-12'
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className='flex items-start justify-between gap-4 mb-9'>
-              <h3 className='text-2xl md:text-[32px] font-bold bg-primary-600 dark:bg-primary-400 text-transparent bg-clip-text inline-block flex items-center gap-4 leading-tight'>
-                <i className='bx bx-map-pin text-primary-600 text-[34px]'></i>
+        <div className='fixed inset-0 z-[10000] transition-all duration-300'>
+          <div className='fixed inset-0 bg-gray-100/80 dark:bg-gray-900/80 backdrop-blur-sm touch-none'></div>
+          <div className='fixed inset-0 overflow-y-auto' onClick={closeAddressPopup}>
+            <div className='flex min-h-full items-start justify-center p-3 md:p-6'>
+              <div
+                className='relative m-auto w-full max-w-[600px] overflow-hidden flex flex-col rounded-xl bg-white dark:bg-gray-900 shadow-[0_4px_16px_rgba(15,23,42,0.12)] border border-gray-100 dark:border-gray-800 pointer-events-auto'
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className='p-5 md:p-8 overflow-y-auto max-h-[calc(100vh-100px)] min-h-0'>
+            <div className='flex items-start justify-between gap-4 mb-6'>
+              <h3 className='text-xl md:text-2xl font-bold bg-primary-600 dark:bg-primary-400 text-transparent bg-clip-text inline-block flex items-center gap-2 leading-tight'>
+                <i className='bx bx-map-pin text-primary-600 text-2xl'></i>
                 Địa chỉ giao hàng
               </h3>
               <button
                 type='button'
                 onClick={closeAddressPopup}
-                className='w-9 h-9 rounded-full border border-gray-200 dark:border-gray-700 text-gray-400 hover:text-primary-600 hover:border-primary-200 dark:hover:border-primary-900 transition-colors flex items-center justify-center'
+                className='w-8 h-8 rounded-full border border-gray-200 dark:border-gray-700 text-gray-400 hover:text-primary-600 hover:border-primary-200 dark:hover:border-primary-900 transition-colors flex items-center justify-center'
                 aria-label='Đóng popup địa chỉ'
               >
-                <i className='bx bx-x text-2xl'></i>
+                <i className='bx bx-x text-xl'></i>
               </button>
             </div>
 
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8'>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-5'>
               <div>
-                <label className='block text-xl md:text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-4' htmlFor='ProfileCity'>
+                <label className='block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5' htmlFor='ProfileCity'>
                   Tỉnh / Thành phố <span className='text-primary-500'>*</span>
                 </label>
                 <select
@@ -645,7 +661,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
                   value={addressDraft.City || ''}
                   onChange={handleProvinceChange}
                   disabled={loadingProvinces}
-                  className='w-full h-[82px] px-8 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl text-xl md:text-2xl bg-primary-600 dark:bg-primary-400 text-transparent bg-clip-text inline-block outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900/30 transition-all'
+                  className='w-full h-11 px-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-sm text-gray-800 dark:text-gray-200 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900/30 transition-all'
                 >
                   <option value=''>{loadingProvinces ? 'Đang tải...' : '-- Chọn Tỉnh/Thành phố --'}</option>
                   {provinces.map((province) => (
@@ -657,7 +673,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
               </div>
 
               <div>
-                <label className='block text-xl md:text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-4' htmlFor='ProfileDistrict'>
+                <label className='block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5' htmlFor='ProfileDistrict'>
                   Quận / Huyện <span className='text-primary-500'>*</span>
                 </label>
                 <select
@@ -665,7 +681,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
                   value={addressDraft.District || ''}
                   onChange={handleDistrictChange}
                   disabled={!addressDraft.City || loadingDistricts}
-                  className='w-full h-[82px] px-8 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl text-xl md:text-2xl bg-primary-600 dark:bg-primary-400 text-transparent bg-clip-text inline-block outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900/30 transition-all disabled:bg-gray-50 disabled:text-gray-400 dark:disabled:bg-gray-800/50'
+                  className='w-full h-11 px-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-sm text-gray-800 dark:text-gray-200 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900/30 transition-all disabled:bg-gray-50 disabled:text-gray-400 dark:disabled:bg-gray-800/50'
                 >
                   <option value=''>
                     {!addressDraft.City ? 'Chọn tỉnh trước' : loadingDistricts ? 'Đang tải...' : '-- Chọn Quận/Huyện --'}
@@ -679,7 +695,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
               </div>
 
               <div>
-                <label className='block text-xl md:text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-4' htmlFor='ProfileWard'>
+                <label className='block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5' htmlFor='ProfileWard'>
                   Phường / Xã
                 </label>
                 <select
@@ -687,7 +703,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
                   value={addressDraft.Ward || ''}
                   onChange={handleWardChange}
                   disabled={!addressDraft.District || loadingWards}
-                  className='w-full h-[82px] px-8 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl text-xl md:text-2xl bg-primary-600 dark:bg-primary-400 text-transparent bg-clip-text inline-block outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900/30 transition-all disabled:bg-gray-50 disabled:text-gray-400 dark:disabled:bg-gray-800/50'
+                  className='w-full h-11 px-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-sm text-gray-800 dark:text-gray-200 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900/30 transition-all disabled:bg-gray-50 disabled:text-gray-400 dark:disabled:bg-gray-800/50'
                 >
                   <option value=''>
                     {!addressDraft.District ? 'Chọn quận/huyện trước' : loadingWards ? 'Đang tải...' : '-- Chọn Phường/Xã --'}
@@ -701,7 +717,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
               </div>
 
               <div className='md:col-span-2'>
-                <label className='block text-xl md:text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-4' htmlFor='ProfileAddressDetail'>
+                <label className='block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5' htmlFor='ProfileAddressDetail'>
                   Địa chỉ cụ thể <span className='text-primary-500'>*</span>
                 </label>
                 <input
@@ -709,24 +725,24 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
                   type='text'
                   value={addressDraft.Address || ''}
                   onChange={(e) => setAddressDraft(prev => ({ ...prev, Address: e.target.value }))}
-                  className='w-full h-[82px] px-8 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl text-xl md:text-2xl bg-primary-600 dark:bg-primary-400 text-transparent bg-clip-text inline-block outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900/30 transition-all placeholder-gray-400'
+                  className='w-full h-11 px-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-sm text-gray-800 dark:text-gray-200 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900/30 transition-all placeholder-gray-400'
                   placeholder='Ví dụ: A2 Vĩnh Hồ'
                 />
               </div>
             </div>
 
-            <div className='mt-9 flex flex-col-reverse sm:flex-row sm:justify-end gap-3'>
+            <div className='mt-8 flex flex-col-reverse sm:flex-row sm:justify-end gap-3'>
               <button
                 type='button'
                 onClick={closeAddressPopup}
-                className='px-5 py-3 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors'
+                className='px-5 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors'
               >
                 Hủy
               </button>
               <button
                 type='button'
                 onClick={saveAddressDraft}
-                className='px-6 py-3 rounded-lg bg-primary-600 text-sm font-semibold text-white hover:bg-primary-700 shadow-md shadow-primary-200 dark:shadow-primary-900/30 transition-all flex items-center justify-center gap-2'
+                className='px-6 py-2.5 rounded-lg bg-primary-600 text-sm font-semibold text-white hover:bg-primary-700 shadow-md shadow-primary-200 dark:shadow-primary-900/30 transition-all flex items-center justify-center gap-2'
               >
                 <i className='bx bx-check-circle text-base'></i>
                 Lưu địa chỉ
@@ -734,8 +750,11 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
             </div>
           </div>
         </div>
-      )}
-    </div>,
+      </div>
+    </div>
+  </div>
+  )}
+</div>,
     document.body
   )
 }

@@ -20,19 +20,23 @@ import AddToCartModal from '@/components/user/MainPage/AddToCartModal';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
-const formatPrice = (price) => {
+const formatPrice = (price) =>
+{
     if (!price) return '0';
     return price.toLocaleString('vi-VN');
 };
 
-const getImgSrc = (path) => {
+const getImgSrc = (path) =>
+{
     if (!path) return '/images/cameras-2.jpg';
     return path.startsWith('http') ? path : `${API_ENDPOINT}${path}`;
 };
 
-const stripHtml = (html) => {
+const stripHtml = (html) =>
+{
     if (!html) return '';
-    if (typeof document !== 'undefined') {
+    if (typeof document !== 'undefined')
+    {
         const tmp = document.createElement('div');
         tmp.innerHTML = html;
         return tmp.textContent || tmp.innerText || '';
@@ -40,7 +44,8 @@ const stripHtml = (html) => {
     return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
 };
 
-const renderRatingStars = (rating) => [1, 2, 3, 4, 5].map((star) => {
+const renderRatingStars = (rating) => [1, 2, 3, 4, 5].map((star) =>
+{
     const starClass = rating >= star - 0.25
         ? 'bxs-star text-orange-400'
         : rating >= star - 0.75
@@ -50,7 +55,8 @@ const renderRatingStars = (rating) => [1, 2, 3, 4, 5].map((star) => {
     return <i key={star} className={`bx ${starClass} text-xs`}></i>;
 });
 
-export default function ProductDetailPage() {
+export default function ProductDetailPage()
+{
     const params = useParams();
     const slug = params.slug;
     const router = useRouter();
@@ -75,13 +81,17 @@ export default function ProductDetailPage() {
     // Image preview popup
     const [previewImg, setPreviewImg] = useState(null);
 
-    useEffect(() => {
-        if (previewImg) {
+    useEffect(() =>
+    {
+        if (previewImg)
+        {
             document.body.style.overflow = 'hidden';
-        } else {
+        } else
+        {
             document.body.style.overflow = 'unset';
         }
-        return () => {
+        return () =>
+        {
             document.body.style.overflow = 'unset';
         };
     }, [previewImg]);
@@ -107,32 +117,40 @@ export default function ProductDetailPage() {
     const { data: allProducts = [] } = useProducts();
 
     // Redirect to 404 if slug is 'undefined' or missing
-    useEffect(() => {
-        if (!slug || slug === 'undefined') {
+    useEffect(() =>
+    {
+        if (!slug || slug === 'undefined')
+        {
             notFound();
             return;
         }
     }, [slug]);
 
-    useEffect(() => {
+    useEffect(() =>
+    {
         if (!slug || slug === 'undefined') return;
         window.scrollTo(0, 0);
 
-        const fetchProduct = async () => {
-            try {
+        const fetchProduct = async () =>
+        {
+            try
+            {
                 setLoading(true);
                 // Check if slug is a GUID
                 const isGuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(slug);
                 let res;
-                if (isGuid) {
+                if (isGuid)
+                {
                     res = await ProductManage.GetProductById(slug);
-                } else {
+                } else
+                {
                     res = await ProductManage.GetProductBySlug(slug);
                 }
-                
+
                 const data = res.data;
 
-                if (data) {
+                if (data)
+                {
                     setProduct(data);
                     setVariant(data.variant || null);
 
@@ -151,9 +169,12 @@ export default function ProductDetailPage() {
 
                     // Collect variant images to show in main gallery
                     const variantImages = [];
-                    vts.forEach(vt => {
-                        vt.values.forEach(val => {
-                            if (val.imageUrl && !baseImages.some(img => img.imagePath === val.imageUrl) && !variantImages.some(img => img.imagePath === val.imageUrl)) {
+                    vts.forEach(vt =>
+                    {
+                        vt.values.forEach(val =>
+                        {
+                            if (val.imageUrl && !baseImages.some(img => img.imagePath === val.imageUrl) && !variantImages.some(img => img.imagePath === val.imageUrl))
+                            {
                                 variantImages.push({
                                     id: `var_${val.value}`,
                                     imagePath: val.imageUrl
@@ -168,28 +189,36 @@ export default function ProductDetailPage() {
                     fetchReviews(data.id);
                     if (isAuthenticated) fetchReviewStatus(data.id);
                 }
-            } catch (e) {
+            } catch (e)
+            {
                 console.error('Error fetching product:', e);
-            } finally {
+            } finally
+            {
                 setLoading(false);
             }
         };
 
-        if (slug) {
+        if (slug)
+        {
             fetchProduct();
         }
     }, [slug, isAuthenticated]);
 
     // Fetch flash sale and check if this product is in it
-    useEffect(() => {
+    useEffect(() =>
+    {
         if (!product?.id) return;
-        const checkFlashSale = async () => {
-            try {
+        const checkFlashSale = async () =>
+        {
+            try
+            {
                 const data = await FlashSaleService.getActiveFlashSale();
-                if (data && data.id) {
+                if (data && data.id)
+                {
                     const items = data.items?.$values || data.items || [];
                     const match = items.find(i => i.productId === product.id);
-                    if (match) {
+                    if (match)
+                    {
                         setFlashSaleItem({ ...match, startTime: data.startTime, endTime: data.endTime });
                     }
                 }
@@ -199,9 +228,11 @@ export default function ProductDetailPage() {
     }, [product?.id]);
 
     // Flash sale countdown
-    useEffect(() => {
+    useEffect(() =>
+    {
         if (!flashSaleItem) return;
-        const tick = () => {
+        const tick = () =>
+        {
             const now = Date.now();
             const start = new Date(flashSaleItem.startTime).getTime();
             const end = new Date(flashSaleItem.endTime).getTime();
@@ -222,25 +253,31 @@ export default function ProductDetailPage() {
         return () => clearInterval(fsTimerRef.current);
     }, [flashSaleItem]);
 
-    const fetchReviews = async (productId) => {
-        try {
+    const fetchReviews = async (productId) =>
+    {
+        try
+        {
             const res = await ReviewService.getProductReviews(productId);
             const data = res.data?.$values || res.data || [];
             setReviews(data);
         } catch (e) { console.error('Error fetching reviews:', e); }
     };
 
-    const fetchReviewStatus = async (productId) => {
-        try {
+    const fetchReviewStatus = async (productId) =>
+    {
+        try
+        {
             const res = await ReviewService.getReviewStatus(productId);
             setReviewStatus(res.data);
         } catch (e) { console.error('Error fetching review status:', e); }
     };
 
-    const handleSubmitReview = async () => {
+    const handleSubmitReview = async () =>
+    {
         if (!isAuthenticated) { toast.info('Vui lòng đăng nhập để đánh giá!'); return; }
         if (!reviewComment.trim()) { toast.warning('Vui lòng nhập nội dung đánh giá!'); return; }
-        try {
+        try
+        {
             setSubmittingReview(true);
             const res = await ReviewService.submitReview({
                 productId: product.id,
@@ -253,7 +290,8 @@ export default function ProductDetailPage() {
             setReviewComment('');
             setReviewRating(5);
             toast.success('Cảm ơn bạn đã đánh giá! ⭐');
-        } catch (e) {
+        } catch (e)
+        {
             const msg = e.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại.';
             toast.error(msg);
         } finally { setSubmittingReview(false); }
@@ -262,16 +300,19 @@ export default function ProductDetailPage() {
     const handleDecrease = () => setQuantity((prev) => Math.max(prev - 1, 1));
     const handleIncrease = () => setQuantity((prev) => Math.min(prev + 1, variant?.stock || 999));
 
-    const handleSelectOption = (typeName, val) => {
+    const handleSelectOption = (typeName, val) =>
+    {
         setSelectedOptions(prev => ({
             ...prev,
             [typeName]: { value: val.value, additionalPrice: val.additionalPrice || 0 }
         }));
         setShowError(false);
 
-        if (val.imageUrl) {
+        if (val.imageUrl)
+        {
             const index = images.findIndex(img => img.imagePath === val.imageUrl);
-            if (index !== -1) {
+            if (index !== -1)
+            {
                 setSelectedImage(index);
             }
         }
@@ -280,8 +321,10 @@ export default function ProductDetailPage() {
     const allOptionsSelected = variantTypes.length === 0 ||
         variantTypes.every(vt => selectedOptions[vt.name]);
 
-    const handleAddToCart = (e) => {
-        if (!allOptionsSelected) {
+    const handleAddToCart = (e) =>
+    {
+        if (!allOptionsSelected)
+        {
             setShowError(true);
             return;
         }
@@ -301,12 +344,14 @@ export default function ProductDetailPage() {
 
         // Add all addon cart items
         const allAddons = getAddOnList();
-        allAddons.forEach(addon => {
+        allAddons.forEach(addon =>
+        {
             const items = addonCart[addon.id] || [];
             const addonImgs = addon.images?.$values || addon.images || [];
             const addonImg = addonImgs.length > 0 ? getImgSrc(addonImgs[0]?.imagePath) : '/images/cameras-2.jpg';
             const addonBasePrice = addon.variant?.discountPrice || addon.variant?.price || addon.minPrice || 0;
-            items.forEach(item => {
+            items.forEach(item =>
+            {
                 addToCart({
                     productId: addon.id,
                     name: addon.name,
@@ -322,8 +367,10 @@ export default function ProductDetailPage() {
         setTimeout(() => setAddedSuccess(false), 2000);
     };
 
-    const handleBuyNow = () => {
-        if (!allOptionsSelected) {
+    const handleBuyNow = () =>
+    {
+        if (!allOptionsSelected)
+        {
             setShowError(true);
             return;
         }
@@ -345,12 +392,14 @@ export default function ProductDetailPage() {
 
         // Add all addon cart items
         const allAddons = getAddOnList();
-        allAddons.forEach(addon => {
+        allAddons.forEach(addon =>
+        {
             const items = addonCart[addon.id] || [];
             const addonImgs = addon.images?.$values || addon.images || [];
             const addonImg = addonImgs.length > 0 ? getImgSrc(addonImgs[0]?.imagePath) : '/images/cameras-2.jpg';
             const addonBasePrice = addon.variant?.discountPrice || addon.variant?.price || addon.minPrice || 0;
-            items.forEach((item, idx) => {
+            items.forEach((item, idx) =>
+            {
                 const itemAdditional = Object.values(item.selectedOptions).reduce((s, o) => s + (o.additionalPrice || 0), 0);
                 const itemPrice = addonBasePrice + itemAdditional;
                 buyItems.push({
@@ -371,7 +420,8 @@ export default function ProductDetailPage() {
     };
 
     // Helper to parse addon variant types
-    const parseAddonVariantTypes = (addon) => {
+    const parseAddonVariantTypes = (addon) =>
+    {
         const vtData = addon?.variantTypes?.$values || addon?.variantTypes || [];
         return Array.isArray(vtData) ? vtData.map(vt => ({
             ...vt,
@@ -383,23 +433,27 @@ export default function ProductDetailPage() {
     };
 
     // Get combined list of add-on products (new many-to-many + legacy single)
-    const getAddOnList = () => {
+    const getAddOnList = () =>
+    {
         const addons = (product?.addOnProducts?.$values || product?.addOnProducts || [])
             .filter(a => a && a.status);
         // Legacy fallback
-        if (addons.length === 0 && product?.addOnProduct && product.addOnProduct.status) {
+        if (addons.length === 0 && product?.addOnProduct && product.addOnProduct.status)
+        {
             return [product.addOnProduct];
         }
         return addons;
     };
 
     // Add an option combo to addon cart
-    const handleAddAddonToCart = (addonId) => {
+    const handleAddAddonToCart = (addonId) =>
+    {
         const tempOpts = addonTempOptions[addonId] || {};
         const addon = getAddOnList().find(a => a.id === addonId);
         const vts = parseAddonVariantTypes(addon);
         const allSelected = vts.length === 0 || vts.every(vt => tempOpts[vt.name]);
-        if (!allSelected) {
+        if (!allSelected)
+        {
             setAddonShowError(prev => ({ ...prev, [addonId]: true }));
             return;
         }
@@ -412,8 +466,10 @@ export default function ProductDetailPage() {
     };
 
     // Remove an item from addon cart
-    const handleRemoveAddonItem = (addonId, idx) => {
-        setAddonCart(prev => {
+    const handleRemoveAddonItem = (addonId, idx) =>
+    {
+        setAddonCart(prev =>
+        {
             const items = [...(prev[addonId] || [])];
             items.splice(idx, 1);
             return { ...prev, [addonId]: items };
@@ -421,8 +477,10 @@ export default function ProductDetailPage() {
     };
 
     // Update qty of addon cart item
-    const handleAddonQty = (addonId, idx, delta) => {
-        setAddonCart(prev => {
+    const handleAddonQty = (addonId, idx, delta) =>
+    {
+        setAddonCart(prev =>
+        {
             const items = [...(prev[addonId] || [])];
             items[idx] = { ...items[idx], qty: Math.max(1, items[idx].qty + delta) };
             return { ...prev, [addonId]: items };
@@ -440,9 +498,11 @@ export default function ProductDetailPage() {
     const discountPercent = hasDiscount ? Math.round((1 - currentVariant.discountPrice / currentVariant.price) * 100) : 0;
     const stock = currentVariant?.stock || 0;
     const mainImage = images.length > 0 ? getImgSrc(images[selectedImage]?.imagePath) : '/images/cameras-2.jpg';
-    const reviewStats = useMemo(() => {
+    const reviewStats = useMemo(() =>
+    {
         const normalizedReviews = Array.isArray(reviews) ? reviews : [];
-        if (normalizedReviews.length > 0) {
+        if (normalizedReviews.length > 0)
+        {
             const totalRating = normalizedReviews.reduce((sum, review) => sum + Number(review.rating || 0), 0);
             return {
                 count: normalizedReviews.length,
@@ -458,7 +518,8 @@ export default function ProductDetailPage() {
     const soldCount = Number(product?.sellCount) || 0;
 
     // Related products
-    const relatedProducts = useMemo(() => {
+    const relatedProducts = useMemo(() =>
+    {
         if (!product || !allProducts.length) return [];
         return allProducts
             .filter(p => p.categoryId === product.categoryId && p.id !== product.id)
@@ -466,7 +527,8 @@ export default function ProductDetailPage() {
     }, [product, allProducts]);
 
     // --- RENDER ---
-    if (loading) {
+    if (loading)
+    {
         return (
             <>
                 <TopBar />
@@ -478,7 +540,8 @@ export default function ProductDetailPage() {
         );
     }
 
-    if (!product) {
+    if (!product)
+    {
         return (
             <>
                 <TopBar />
@@ -608,7 +671,8 @@ export default function ProductDetailPage() {
                         {/* Variant Types — Selectable */}
                         {variantTypes.length > 0 && (
                             <div className='mb-4 md:mb-6'>
-                                {variantTypes.map((vt) => {
+                                {variantTypes.map((vt) =>
+                                {
                                     const values = Array.isArray(vt.values) ? vt.values : [];
                                     if (values.length === 0) return null;
                                     const isRequired = !selectedOptions[vt.name] && showError;
@@ -618,7 +682,8 @@ export default function ProductDetailPage() {
                                                 {vt.name} {isRequired && <span className='text-xs font-normal'>(Chọn)</span>}
                                             </div>
                                             <div className='w-full sm:w-[90%] flex flex-wrap gap-2'>
-                                                {values.map((val) => {
+                                                {values.map((val) =>
+                                                {
                                                     const isSelected = selectedOptions[vt.name]?.value === val.value;
                                                     const hasImage = val.imageUrl;
                                                     return (
@@ -672,7 +737,8 @@ export default function ProductDetailPage() {
                         </div>
 
                         {/* Add-on Products (multi) */}
-                        {(() => {
+                        {(() =>
+                        {
                             const addonList = getAddOnList();
                             if (addonList.length === 0) return null;
                             return (
@@ -682,7 +748,8 @@ export default function ProductDetailPage() {
                                         <span className='text-sm font-medium text-gray-700 dark:text-gray-300'>Mua kèm phụ kiện</span>
                                     </div>
                                     <div className='space-y-3'>
-                                        {addonList.map(addon => {
+                                        {addonList.map(addon =>
+                                        {
                                             const addonImgs = addon.images?.$values || addon.images || [];
                                             const addonImg = addonImgs.length > 0 ? getImgSrc(addonImgs[0]?.imagePath) : '/images/cameras-2.jpg';
                                             const addonBasePrice = addon.variant?.discountPrice || addon.variant?.price || addon.minPrice || 0;
@@ -712,7 +779,8 @@ export default function ProductDetailPage() {
                                                     {/* Variant selector + Add button */}
                                                     {vts.length > 0 ? (
                                                         <div className='px-3 py-2 border-t border-gray-100 dark:border-gray-700/50'>
-                                                            {vts.map(vt => {
+                                                            {vts.map(vt =>
+                                                            {
                                                                 const values = Array.isArray(vt.values) ? vt.values : [];
                                                                 if (values.length === 0) return null;
                                                                 const isRequired = !tempOpts[vt.name] && hasError;
@@ -722,12 +790,14 @@ export default function ProductDetailPage() {
                                                                             {vt.name}: {isRequired && <span className='font-normal'>(Vui lòng chọn)</span>}
                                                                         </div>
                                                                         <div className='flex flex-wrap gap-1.5'>
-                                                                            {values.map(val => {
+                                                                            {values.map(val =>
+                                                                            {
                                                                                 const isSelected = tempOpts[vt.name]?.value === val.value;
                                                                                 const optImg = val.imageUrl ? getImgSrc(val.imageUrl) : null;
                                                                                 return (
                                                                                     <button key={val.id}
-                                                                                        onClick={() => {
+                                                                                        onClick={() =>
+                                                                                        {
                                                                                             setAddonTempOptions(prev => ({ ...prev, [addon.id]: { ...(prev[addon.id] || {}), [vt.name]: { value: val.value, additionalPrice: val.additionalPrice || 0 } } }));
                                                                                             setAddonShowError(prev => ({ ...prev, [addon.id]: false }));
                                                                                         }}
@@ -754,7 +824,8 @@ export default function ProductDetailPage() {
                                                         </div>
                                                     ) : (
                                                         <div className='px-3 py-2 border-t border-gray-100 dark:border-gray-700/50'>
-                                                            <button onClick={() => {
+                                                            <button onClick={() =>
+                                                            {
                                                                 setAddonCart(prev => ({ ...prev, [addon.id]: [...(prev[addon.id] || []), { selectedOptions: {}, qty: 1 }] }));
                                                             }} className='w-full py-1.5 text-xs font-medium border-2 border-dashed border-primary-400 text-primary-600 rounded-md hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors cursor-pointer flex items-center justify-center gap-1'>
                                                                 <i className='bx bx-plus'></i> Thêm vào đơn
@@ -766,7 +837,8 @@ export default function ProductDetailPage() {
                                                     {cartItems.length > 0 && (
                                                         <div className='px-3 pb-2 border-t border-primary-200/50 dark:border-primary-800/30 bg-primary-50/30 dark:bg-primary-900/10'>
                                                             <div className='text-xs font-medium text-primary-700 dark:text-primary-400 py-1.5'>Đã chọn:</div>
-                                                            {cartItems.map((item, idx) => {
+                                                            {cartItems.map((item, idx) =>
+                                                            {
                                                                 const optLabels = Object.entries(item.selectedOptions).map(([k, v]) => `${k}: ${v.value}`).join(', ');
                                                                 const itemAdditional = Object.values(item.selectedOptions).reduce((s, o) => s + (o.additionalPrice || 0), 0);
                                                                 const itemPrice = addonBasePrice + itemAdditional;
@@ -813,19 +885,51 @@ export default function ProductDetailPage() {
                             </button>
                         </div>
 
-                        {/* Trust Badges */}
-                        <div className='flex flex-col sm:flex-row gap-3 md:gap-6 pt-4 border-t border-gray-100 dark:border-gray-700 text-xs md:text-sm text-gray-600 dark:text-gray-400'>
-                            <div className='flex items-center gap-1.5'>
-                                <i className='bx bxs-analyse text-base md:text-lg text-primary-600'></i>
-                                Đổi ý miễn phí 15 ngày
+                        {/* Contact & Policy */}
+                        <div className='mt-5 pt-5 border-t border-gray-100 dark:border-gray-700'>
+                            {/* Chat & Call */}
+                            <div className='flex flex-wrap items-center gap-4 mb-4'>
+                                <a
+                                    href="https://zalo.me/0969608810"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className='flex items-center gap-2 border-[1.5px] border-primary-500 text-primary-600 px-4 py-2 rounded-md hover:bg-primary-50 transition-colors cursor-pointer font-semibold text-sm'
+                                >
+                                    <img src="/images/zalo-logo-removebg.png" alt="Zalo" className="w-6 h-6 object-contain" />
+                                    <span>Chat tư vấn ngay</span>
+                                </a>
+                                <div className='flex items-center gap-2 text-gray-700 dark:text-gray-300 text-sm'>
+                                    <i className='bx bxs-phone text-lg'></i>
+                                    <span>Gọi : <strong className='text-gray-900 dark:text-gray-100 text-base'>0969.608.810</strong> để được tư vấn mua hàng</span>
+                                </div>
                             </div>
-                            <div className='flex items-center gap-1.5'>
-                                <i className='bx bxs-check-shield text-base md:text-lg text-primary-600'></i>
-                                Hàng chính hãng 100%
-                            </div>
-                            <div className='flex items-center gap-1.5'>
-                                <i className='bx bxs-truck text-base md:text-lg text-primary-600'></i>
-                                Miễn phí vận chuyển
+
+                            {/* Policies Box */}
+                            <div className='bg-[#f2f2f2] dark:bg-gray-800 p-4 grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-4 text-sm text-gray-700 dark:text-gray-300'>
+                                <div className='flex items-start gap-2'>
+                                    <i className='bx bxs-check-shield text-primary-600 mt-0.5 text-base'></i>
+                                    <span>Cam kết hàng mới 100%</span>
+                                </div>
+                                <div className='flex items-start gap-2'>
+                                    <i className='bx bx-support text-primary-600 mt-0.5 text-base'></i>
+                                    <span>Hỗ trợ trong suốt quá trình sử dụng</span>
+                                </div>
+                                <div className='flex items-start gap-2'>
+                                    <i className='bx bx-revision text-primary-600 mt-0.5 text-base'></i>
+                                    <span>Lỗi kỹ thuật đổi ngay SP mới</span>
+                                </div>
+                                <div className='flex items-start gap-2'>
+                                    <i className='bx bxs-timer text-primary-600 mt-0.5 text-base'></i>
+                                    <span>Nội thành Hà Nội SIÊU TỐC 2H</span>
+                                </div>
+                                <div className='flex items-start gap-2'>
+                                    <i className='bx bxs-truck text-primary-600 mt-0.5 text-base'></i>
+                                    <span>Freeship đơn hàng từ 500.000đ</span>
+                                </div>
+                                <div className='flex items-start gap-2'>
+                                    <i className='bx bx-package text-primary-600 mt-0.5 text-base'></i>
+                                    <span>Ship COD toàn quốc 3 - 4 ngày</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -872,7 +976,8 @@ export default function ProductDetailPage() {
                         <h2 className='text-base md:text-lg font-semibold text-gray-800 dark:text-gray-100 py-2.5 px-4 border-l-4 border-primary-500 bg-gradient-to-r from-primary-100 to-transparent dark:from-primary-900/20 dark:to-transparent rounded-r-md flex items-center gap-2'><i className='bx bx-star text-primary-500'></i> Đánh giá sản phẩm ({reviews.length})</h2>
 
                         {/* Review Summary */}
-                        {reviews.length > 0 && (() => {
+                        {reviews.length > 0 && (() =>
+                        {
                             const avg = (reviews.reduce((s, r) => s + Number(r.rating), 0) / reviews.length).toFixed(1);
                             const dist = [5, 4, 3, 2, 1].map(star => ({
                                 star,
@@ -995,7 +1100,8 @@ export default function ProductDetailPage() {
                     <section className='w-full py-4 md:py-6 bg-white dark:bg-gray-900 mb-4 rounded-lg shadow-sm px-4 md:px-6'>
                         <h2 className='text-base md:text-lg font-semibold text-gray-800 dark:text-gray-100 py-2.5 px-4 border-l-4 border-primary-500 bg-gradient-to-r from-primary-100 to-transparent dark:from-primary-900/20 dark:to-transparent rounded-r-md flex items-center gap-2 mb-5'><i className='bx bx-bulb text-primary-500'></i> Sản phẩm gợi ý</h2>
                         <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4'>
-                            {relatedProducts.map((rp) => {
+                            {relatedProducts.map((rp) =>
+                            {
                                 const rpVariant = rp.variant;
                                 const rpPrice = rpVariant?.discountPrice || rpVariant?.price || rp.minPrice || 0;
                                 const rpOriginal = rpVariant?.price || rp.maxPrice || 0;
@@ -1004,86 +1110,88 @@ export default function ProductDetailPage() {
                                 const rpImgs = rp.images?.$values || rp.images || [];
                                 const rpImgPath = rpImgs.length > 0 ? (rpImgs[0].imagePath || rpImgs[0].ImagePath) : null;
                                 return (
-                                                <div key={rp.id}
-                                                    className="relative group cursor-pointer bg-white dark:bg-[#1a1a1a] rounded-sm overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08),0_0_0_1px_rgba(249,115,22,0.3)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.3),0_0_0_1px_rgba(249,115,22,0.3)] hover:-translate-y-1 border border-gray-100 dark:border-[#2a2a2a] hover:border-orange-500 dark:hover:border-orange-500"
-                                                    onClick={() => { if (rp.slug || rp.id) router.push(`/product/${rp.slug || rp.id}`); }}>
-                                                    {/* Discount Badge */}
-                                                    {rpHasDiscount && (
-                                                        <div className="absolute top-2.5 left-2.5 z-10 bg-primary-600 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)]">
-                                                            -{rpDiscountPercent}%
-                                                        </div>
-                                                    )}
-                                                    {/* Wishlist Button */}
-                                                    <button
-                                                        className={`absolute top-2.5 right-2.5 z-10 w-7 h-7 md:w-8 md:h-8 rounded-sm flex items-center justify-center transition-all duration-300 shadow-sm backdrop-blur-sm ${isInWishlist(rp.id)
-                                                        ? 'bg-primary-600 text-white scale-105'
-                                                        : 'bg-white/80 dark:bg-[#1a1a1a]/80 text-gray-400 dark:text-gray-500 hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:text-primary-500 hover:scale-105'
-                                                        }`}
-                                                        onClick={(e) => { e.stopPropagation(); toggleWishlist(rp.id); }}
-                                                        aria-label={isInWishlist(rp.id) ? 'Bỏ yêu thích' : 'Thêm yêu thích'}
-                                                    >
-                                                        <i className={`bx ${isInWishlist(rp.id) ? 'bxs-heart' : 'bx-heart'} text-sm md:text-base`}></i>
-                                                    </button>
-                                                    {/* Image Container */}
-                                                    <div className="relative h-48 sm:h-56 md:h-60 overflow-hidden bg-gray-50 dark:bg-[#111]">
-                                                        <img className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-108"
-                                                            src={getImgSrc(rpImgPath)} alt={rp.name}
-                                                            loading='lazy'
-                                                            onError={(e) => { e.target.src = '/images/cameras-2.jpg'; }} />
-                                                    </div>
-                                                    {/* Content */}
-                                                    <div className="p-3 md:p-3.5">
-                                                        {/* Category */}
-                                                        <p className="text-[9px] md:text-[10px] text-gray-400 dark:text-gray-500 font-medium uppercase tracking-wider mb-1">
-                                                            {rp.category?.name || 'Đèn ngủ'}
-                                                        </p>
-                                                        {/* Title */}
-                                                        <h3 className="text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300 line-clamp-2 leading-snug min-h-[2.4em] group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-200">
-                                                            {rp.name}
-                                                        </h3>
-                                                        {/* Price Row */}
-                                                        <div className="flex items-center gap-2 mt-2">
-                                                            <span className="text-[0.95rem] md:text-[1.1rem] font-bold text-orange-600 dark:text-orange-500 inline-block leading-tight">
-                                                                {formatPrice(rpPrice)}<span className="text-[0.7rem] font-medium ml-px underline">đ</span>
-                                                            </span>
-                                                            {rpHasDiscount && (
-                                                                <span className="text-[0.65rem] md:text-[0.75rem] text-gray-400 dark:text-[#6b6b6b] line-through leading-none">
-                                                                    {formatPrice(rpOriginal)}<span className="underline">đ</span>
-                                                                </span>
-                                                            )}
-                                                        </div>
-                                                        {/* Sold Count */}
-                                                        <div className="flex items-center gap-1 mt-1.5 text-gray-500 dark:text-gray-400 text-[0.65rem] md:text-xs">
-                                                            <i className='bx bx-purchase-tag text-orange-500'></i>
-                                                            <span>Đã bán {rp.sellCount || 0}</span>
-                                                        </div>
-                                                        {/* Actions Row */}
-                                                        <div className="flex items-stretch gap-1.5 md:gap-2 mt-3">
-                                                            <button
-                                                                className="flex-1 flex items-center justify-center py-1.5 rounded-sm border border-orange-500 text-orange-500 bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 dark:hover:bg-orange-900/40 transition-colors cursor-pointer"
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    setCartModalMode('add_to_cart');
-                                                                    setCartModalProduct(rp);
-                                                                }}
-                                                                aria-label="Thêm vào giỏ hàng"
-                                                            >
-                                                                <span className="text-[8.5px] sm:text-[9px] md:text-xs font-semibold">Thêm vào giỏ</span>
-                                                            </button>
-                                                            <button
-                                                                className="flex-1 flex items-center justify-center py-1.5 rounded-sm border border-transparent bg-orange-500 text-white hover:bg-orange-600 transition-colors cursor-pointer"
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    setCartModalMode('buy_now');
-                                                                    setCartModalProduct(rp);
-                                                                }}
-                                                                aria-label="Mua ngay"
-                                                            >
-                                                                <span className="text-[9px] md:text-xs font-semibold">Mua ngay</span>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                    <div key={rp.id}
+                                        className="relative group cursor-pointer bg-white dark:bg-[#1a1a1a] rounded-sm overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08),0_0_0_1px_rgba(249,115,22,0.3)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.3),0_0_0_1px_rgba(249,115,22,0.3)] hover:-translate-y-1 border border-gray-100 dark:border-[#2a2a2a] hover:border-orange-500 dark:hover:border-orange-500"
+                                        onClick={() => { if (rp.slug || rp.id) router.push(`/product/${rp.slug || rp.id}`); }}>
+                                        {/* Discount Badge */}
+                                        {rpHasDiscount && (
+                                            <div className="absolute top-2.5 left-2.5 z-10 bg-primary-600 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)]">
+                                                -{rpDiscountPercent}%
+                                            </div>
+                                        )}
+                                        {/* Wishlist Button */}
+                                        <button
+                                            className={`absolute top-2.5 right-2.5 z-10 w-7 h-7 md:w-8 md:h-8 rounded-sm flex items-center justify-center transition-all duration-300 shadow-sm backdrop-blur-sm ${isInWishlist(rp.id)
+                                                ? 'bg-primary-600 text-white scale-105'
+                                                : 'bg-white/80 dark:bg-[#1a1a1a]/80 text-gray-400 dark:text-gray-500 hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:text-primary-500 hover:scale-105'
+                                                }`}
+                                            onClick={(e) => { e.stopPropagation(); toggleWishlist(rp.id); }}
+                                            aria-label={isInWishlist(rp.id) ? 'Bỏ yêu thích' : 'Thêm yêu thích'}
+                                        >
+                                            <i className={`bx ${isInWishlist(rp.id) ? 'bxs-heart' : 'bx-heart'} text-sm md:text-base`}></i>
+                                        </button>
+                                        {/* Image Container */}
+                                        <div className="relative h-48 sm:h-56 md:h-60 overflow-hidden bg-gray-50 dark:bg-[#111]">
+                                            <img className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-108"
+                                                src={getImgSrc(rpImgPath)} alt={rp.name}
+                                                loading='lazy'
+                                                onError={(e) => { e.target.src = '/images/cameras-2.jpg'; }} />
+                                        </div>
+                                        {/* Content */}
+                                        <div className="p-3 md:p-3.5">
+                                            {/* Category */}
+                                            <p className="text-[9px] md:text-[10px] text-gray-400 dark:text-gray-500 font-medium uppercase tracking-wider mb-1">
+                                                {rp.category?.name || 'Đèn ngủ'}
+                                            </p>
+                                            {/* Title */}
+                                            <h3 className="text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300 line-clamp-2 leading-snug min-h-[2.4em] group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-200">
+                                                {rp.name}
+                                            </h3>
+                                            {/* Price Row */}
+                                            <div className="flex items-center gap-2 mt-2">
+                                                <span className="text-[0.95rem] md:text-[1.1rem] font-bold text-orange-600 dark:text-orange-500 inline-block leading-tight">
+                                                    {formatPrice(rpPrice)}<span className="text-[0.7rem] font-medium ml-px underline">đ</span>
+                                                </span>
+                                                {rpHasDiscount && (
+                                                    <span className="text-[0.65rem] md:text-[0.75rem] text-gray-400 dark:text-[#6b6b6b] line-through leading-none">
+                                                        {formatPrice(rpOriginal)}<span className="underline">đ</span>
+                                                    </span>
+                                                )}
+                                            </div>
+                                            {/* Sold Count */}
+                                            <div className="flex items-center gap-1 mt-1.5 text-gray-500 dark:text-gray-400 text-[0.65rem] md:text-xs">
+                                                <i className='bx bx-purchase-tag text-orange-500'></i>
+                                                <span>Đã bán {rp.sellCount || 0}</span>
+                                            </div>
+                                            {/* Actions Row */}
+                                            <div className="flex items-stretch gap-1.5 md:gap-2 mt-3">
+                                                <button
+                                                    className="flex-1 flex items-center justify-center py-1.5 rounded-sm border border-orange-500 text-orange-500 bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 dark:hover:bg-orange-900/40 transition-colors cursor-pointer"
+                                                    onClick={(e) =>
+                                                    {
+                                                        e.stopPropagation();
+                                                        setCartModalMode('add_to_cart');
+                                                        setCartModalProduct(rp);
+                                                    }}
+                                                    aria-label="Thêm vào giỏ hàng"
+                                                >
+                                                    <span className="text-[8.5px] sm:text-[9px] md:text-xs font-semibold">Thêm vào giỏ</span>
+                                                </button>
+                                                <button
+                                                    className="flex-1 flex items-center justify-center py-1.5 rounded-sm border border-transparent bg-orange-500 text-white hover:bg-orange-600 transition-colors cursor-pointer"
+                                                    onClick={(e) =>
+                                                    {
+                                                        e.stopPropagation();
+                                                        setCartModalMode('buy_now');
+                                                        setCartModalProduct(rp);
+                                                    }}
+                                                    aria-label="Mua ngay"
+                                                >
+                                                    <span className="text-[9px] md:text-xs font-semibold">Mua ngay</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 );
                             })}
                         </div>
