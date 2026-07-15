@@ -438,7 +438,8 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
                     </div>
                 </div>
             </div>
-        </div>,
+        </div>
+    </div>,
         document.body
     );
 };
