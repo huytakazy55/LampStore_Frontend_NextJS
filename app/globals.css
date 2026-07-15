@@ -204,7 +204,8 @@ html {
 
   html {
     scroll-behavior: smooth;
-    overflow-x: hidden;
+    overflow-x: clip;
+    max-width: 100%;
     transition: background-color 0.4s ease, color 0.4s ease;
   }
 
@@ -216,7 +217,8 @@ html {
     background-color: #FAFAFA;
     color: #111111;
     font-size: 0.875rem;
-    overflow-x: hidden;
+    overflow-x: clip;
+    max-width: 100%;
   }
 
   code {

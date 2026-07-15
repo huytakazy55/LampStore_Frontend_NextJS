@@ -78,13 +78,15 @@ export default function RootLayout({ children })
                 <link rel="manifest" href="/manifest.json" />
                 <link rel="dns-prefetch" href="https://capylumine.com" />
             </head>
-            <body className={`${geistFont.variable} font-sans antialiased`}>
-                <React.Suspense fallback={null}>
-                    <AnalyticsTracker />
-                </React.Suspense>
-                <ClientProviders>
-                    {children}
-                </ClientProviders>
+            <body className={`${geistFont.variable} font-sans antialiased overflow-x-hidden max-w-[100vw]`}>
+                <div className="flex flex-col min-h-screen overflow-x-hidden w-full relative">
+                    <React.Suspense fallback={null}>
+                        <AnalyticsTracker />
+                    </React.Suspense>
+                    <ClientProviders>
+                        {children}
+                    </ClientProviders>
+                </div>
             </body>
         </html>
     );
