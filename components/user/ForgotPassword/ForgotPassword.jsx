@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AuthService from '@/services/AuthService';
 import { toast } from 'react-toastify';
 
@@ -8,6 +8,17 @@ const ForgotPassword = ({ visible, onCancel }) => {
   const [emailOrUsername, setEmailOrUsername] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (visible) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [visible]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

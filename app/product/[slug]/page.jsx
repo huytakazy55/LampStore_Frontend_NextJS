@@ -74,6 +74,18 @@ export default function ProductDetailPage() {
     const [addonTempOptions, setAddonTempOptions] = useState({});
     // Image preview popup
     const [previewImg, setPreviewImg] = useState(null);
+
+    useEffect(() => {
+        if (previewImg) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [previewImg]);
+
     const [cartModalProduct, setCartModalProduct] = useState(null);
     const [cartModalMode, setCartModalMode] = useState(null);
 

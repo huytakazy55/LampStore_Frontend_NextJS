@@ -56,6 +56,17 @@ const Header = () =>
 
   useEffect(() => { setMounted(true); }, []);
 
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [mobileMenuOpen]);
+
   useEffect(() =>
   {
     if (token)

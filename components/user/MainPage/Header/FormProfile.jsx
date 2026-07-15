@@ -25,6 +25,18 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
   {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (toggleProfile) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [toggleProfile]);
+
   const [infoSideActive, setInfoSideActive] = useState('info');
   const [profileData, setProfileData] = useState({
     FullName: '',

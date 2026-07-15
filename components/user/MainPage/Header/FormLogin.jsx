@@ -59,6 +59,17 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
     }, [role, navigate]);
 
     useEffect(() => {
+        if (toggleLogin) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [toggleLogin]);
+
+    useEffect(() => {
         const rememberedUsername = localStorage.getItem('rememberedUsername');
         const isRemembered = localStorage.getItem('rememberMe') === 'true';
         if (rememberedUsername && isRemembered) {

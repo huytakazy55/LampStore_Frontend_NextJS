@@ -24,6 +24,13 @@ const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) => {
     const [showProductPicker, setShowProductPicker] = useState(false);
     const [saving, setSaving] = useState(false);
 
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, []);
+
     // Load products for picker
     const fetchProducts = useCallback(async () => {
         try {

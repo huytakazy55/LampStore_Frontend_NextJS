@@ -21,6 +21,17 @@ const ChatButton = () =>
   const initializedPollRef = useRef(false);
   const isChatOpenRef = useRef(false);
 
+  useEffect(() => {
+    if (isChatOpen || isZaloPopupOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isChatOpen, isZaloPopupOpen]);
+
   useEffect(() =>
   {
     isChatOpenRef.current = isChatOpen;

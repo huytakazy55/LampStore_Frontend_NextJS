@@ -42,6 +42,17 @@ const OrderReviewModal = ({ isOpen, onClose, order }) =>
 
     const items = order?.orderItems?.$values || order?.orderItems || [];
 
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isOpen]);
+
     // Fetch review status for each product when modal opens
     useEffect(() =>
     {

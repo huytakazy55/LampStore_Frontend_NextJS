@@ -38,6 +38,17 @@ export default function CartPage() {
     const [loadingDiscounts, setLoadingDiscounts] = useState(false);
     const [appliedVoucher, setAppliedVoucher] = useState(null);
 
+    useEffect(() => {
+        if (deleteConfirm.isOpen || isVoucherModalOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [deleteConfirm.isOpen, isVoucherModalOpen]);
+
     // Fetch vouchers when modal opens
     useEffect(() => {
         if (isVoucherModalOpen && discountCodes.length === 0) {

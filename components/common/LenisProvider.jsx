@@ -33,6 +33,19 @@ const LenisProvider = ({ children }) =>
                 lenisRef.current = lenis;
                 window.__lenis = lenis;
 
+                // Sync Lenis with body overflow for modals
+                const observer = new MutationObserver(() => {
+                    if (document.body.style.overflow === 'hidden') {
+                        lenis.stop();
+                        document.documentElement.style.overflow = 'hidden';
+                    } else {
+                        lenis.start();
+                        document.documentElement.style.overflow = '';
+                    }
+                });
+                observer.observe(document.body, { attributes: true, attributeFilter: ['style'] });
+                lenis._observer = observer;
+
                 function raf(time)
                 {
                     lenis.raf(time);
@@ -53,6 +66,9 @@ const LenisProvider = ({ children }) =>
             if (rafId) cancelAnimationFrame(rafId);
             if (lenisRef.current)
             {
+                if (lenisRef.current._observer) {
+                    lenisRef.current._observer.disconnect();
+                }
                 lenisRef.current.destroy();
                 lenisRef.current = null;
                 delete window.__lenis;

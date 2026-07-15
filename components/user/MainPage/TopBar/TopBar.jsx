@@ -1,11 +1,22 @@
 "use client";
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux';
 const TopBar = () => {
     const [showMap, setShowMap] = useState(false);
     const [showFbConfirm, setShowFbConfirm] = useState(false);
     const isAuthenticated = useSelector((state) => state.auth?.isAuthenticated);
+
+    useEffect(() => {
+        if (showMap || showFbConfirm) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [showMap, showFbConfirm]);
     
     return (
         <div className='flex flex-col'>

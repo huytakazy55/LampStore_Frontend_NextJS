@@ -45,6 +45,17 @@ export default function OrderHistoryPage()
     const [filterStatus, setFilterStatus] = useState('all');
     const [reviewOrder, setReviewOrder] = useState(null);
 
+    useEffect(() => {
+        if (selectedOrder) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [selectedOrder]);
+
     useEffect(() =>
     {
         if (typeof window !== 'undefined' && !localStorage.getItem('token'))
