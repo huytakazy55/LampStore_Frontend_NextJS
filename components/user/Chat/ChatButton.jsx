@@ -208,18 +208,17 @@ const ChatButton = () =>
 
       {/* Chat Backdrop */}
       <div
-        className={`fixed inset-0 z-[9991] bg-black/40 backdrop-blur-sm transition-all duration-300 ${isChatOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        className={`fixed inset-0 z-[9991] transition-all duration-300 ${isChatOpen ? 'pointer-events-auto' : 'pointer-events-none'
           }`}
         onClick={() => setIsChatOpen(false)}
       ></div>
 
       {/* Real Chat Window với animation */}
       <div
-        className={`fixed left-1/2 sm:left-auto sm:right-24 z-[9992] transition-all duration-300 ease-out ${isChatOpen
-          ? '-translate-x-1/2 sm:translate-x-0 translate-y-0 scale-100 opacity-100 pointer-events-auto'
-          : '-translate-x-1/2 sm:translate-x-0 translate-y-10 scale-95 opacity-0 pointer-events-none'
-          }`}
-        style={{ bottom: '152px' }}
+        className={`fixed bottom-0 left-0 w-full sm:w-auto sm:left-auto sm:right-24 z-[9992] transition-all duration-300 ease-out origin-bottom sm:origin-bottom-right ${isChatOpen
+          ? 'translate-y-0 scale-100 opacity-100 pointer-events-auto'
+          : 'translate-y-10 scale-95 opacity-0 pointer-events-none'
+          } sm:bottom-[152px]`}
       >
         {isChatOpen && (
           <ChatWindow onClose={() => setIsChatOpen(false)} />
