@@ -349,7 +349,7 @@ const ChatWindow = ({ onClose }) =>
 
   return (
     <div
-      className="flex h-full sm:h-[32rem] w-full sm:w-[22rem] flex-col overflow-hidden sm:rounded-2xl bg-white shadow-[0_6px_18px_rgba(60,60,180,0.13),0_0_0_2.5px_rgba(245,158,11,0.12)]"
+      className="flex min-h-0 h-full sm:h-[32rem] w-full sm:w-[22rem] flex-col overflow-hidden sm:rounded-2xl bg-white shadow-[0_6px_18px_rgba(60,60,180,0.13),0_0_0_2.5px_rgba(245,158,11,0.12)]"
       onWheel={e => e.stopPropagation()}
       tabIndex={0}
     >
@@ -375,7 +375,7 @@ const ChatWindow = ({ onClose }) =>
       </div>
 
       {/* Messages */}
-      <div className="flex flex-1 flex-col gap-[0.6rem] overflow-y-auto overscroll-contain p-4">
+      <div className="flex flex-1 min-h-0 flex-col gap-[0.6rem] overflow-y-auto p-4" style={{ WebkitOverflowScrolling: 'touch' }}>
         {loading ? (
           <div className="flex flex-1 flex-col items-center justify-center text-gray-400">
             <div className="h-8 w-8 animate-spin rounded-full border-[3px] border-gray-200 border-t-primary-500" />
