@@ -45,16 +45,8 @@ export default function OrderHistoryPage()
     const [filterStatus, setFilterStatus] = useState('all');
     const [reviewOrder, setReviewOrder] = useState(null);
 
-    useEffect(() => {
-        if (selectedOrder) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'unset';
-        }
-        return () => {
-            document.body.style.overflow = 'unset';
-        };
-    }, [selectedOrder]);
+    // Body scroll lock removed to fix iOS Safari bug where nested scroll breaks.
+    // Event prevention added to backdrop instead.
 
     useEffect(() =>
     {
@@ -132,9 +124,14 @@ export default function OrderHistoryPage()
         });
 
         return (
-            <div className='fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4'
+            <div className='fixed inset-0 z-[9999] flex items-center justify-center p-4'
                 onClick={() => setSelectedOrder(null)}>
-                <div className='bg-white dark:bg-gray-900 w-full max-w-3xl max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden'
+                <div 
+                    className='fixed inset-0 bg-black/40 backdrop-blur-sm touch-none'
+                    onWheel={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                    onTouchMove={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                ></div>
+                <div className='bg-white dark:bg-gray-900 w-full max-w-3xl max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden relative z-10'
                     onClick={e => e.stopPropagation()}>
                     {/* Modal Header */}
                     <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-primary-600 dark:from-gray-800 dark:to-gray-800'>
@@ -233,20 +230,20 @@ export default function OrderHistoryPage()
                                 Thông tin khách hàng
                             </h3>
                             <div className='border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden text-sm'>
-                                <div className='grid grid-cols-[120px_1fr_120px_1fr] divide-x divide-gray-200 dark:divide-gray-700 border-b border-gray-200 dark:border-gray-700'>
-                                    <div className='px-3 py-2.5 bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400 font-medium'>Họ tên</div>
-                                    <div className='px-3 py-2.5 text-gray-800 dark:text-gray-200'>{order.fullName}</div>
-                                    <div className='px-3 py-2.5 bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400 font-medium'>Số điện thoại</div>
+                                <div className='grid grid-cols-[100px_1fr] md:grid-cols-[120px_1fr_120px_1fr] border-b border-gray-200 dark:border-gray-700'>
+                                    <div className='px-3 py-2.5 bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400 font-medium border-b border-r md:border-b-0 border-gray-200 dark:border-gray-700'>Họ tên</div>
+                                    <div className='px-3 py-2.5 text-gray-800 dark:text-gray-200 border-b md:border-b-0 md:border-r border-gray-200 dark:border-gray-700'>{order.fullName}</div>
+                                    <div className='px-3 py-2.5 bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400 font-medium border-r border-gray-200 dark:border-gray-700'>Số điện thoại</div>
                                     <div className='px-3 py-2.5 text-gray-800 dark:text-gray-200'>{order.phone}</div>
                                 </div>
-                                <div className='grid grid-cols-[120px_1fr_120px_1fr] divide-x divide-gray-200 dark:divide-gray-700 border-b border-gray-200 dark:border-gray-700'>
-                                    <div className='px-3 py-2.5 bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400 font-medium'>Email</div>
-                                    <div className='px-3 py-2.5 text-gray-800 dark:text-gray-200'>{order.email || '—'}</div>
-                                    <div className='px-3 py-2.5 bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400 font-medium'>Ngày đặt</div>
+                                <div className='grid grid-cols-[100px_1fr] md:grid-cols-[120px_1fr_120px_1fr] border-b border-gray-200 dark:border-gray-700'>
+                                    <div className='px-3 py-2.5 bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400 font-medium border-b border-r md:border-b-0 border-gray-200 dark:border-gray-700'>Email</div>
+                                    <div className='px-3 py-2.5 text-gray-800 dark:text-gray-200 border-b md:border-b-0 md:border-r border-gray-200 dark:border-gray-700 truncate' title={order.email || '—'}>{order.email || '—'}</div>
+                                    <div className='px-3 py-2.5 bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400 font-medium border-r border-gray-200 dark:border-gray-700'>Ngày đặt</div>
                                     <div className='px-3 py-2.5 text-gray-800 dark:text-gray-200'>{orderDate}</div>
                                 </div>
-                                <div className='grid grid-cols-[120px_1fr] divide-x divide-gray-200 dark:divide-gray-700'>
-                                    <div className='px-3 py-2.5 bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400 font-medium'>Địa chỉ</div>
+                                <div className='grid grid-cols-[100px_1fr] md:grid-cols-[120px_1fr]'>
+                                    <div className='px-3 py-2.5 bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400 font-medium border-r border-gray-200 dark:border-gray-700'>Địa chỉ</div>
                                     <div className='px-3 py-2.5 text-gray-800 dark:text-gray-200'>
                                         {[order.address, order.ward, order.district, order.city].filter(Boolean).join(', ')}
                                     </div>
@@ -260,13 +257,14 @@ export default function OrderHistoryPage()
                                 <i className='bx bx-cart text-primary-500'></i>
                                 Danh sách sản phẩm ({items.length})
                             </h3>
-                            <div className='border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden'>
-                                <div className='grid grid-cols-[1fr_100px_60px_100px] bg-gray-50 dark:bg-gray-800 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700'>
-                                    <div className='px-3 py-2.5'>Sản phẩm</div>
-                                    <div className='px-3 py-2.5 text-center'>Đơn giá</div>
-                                    <div className='px-3 py-2.5 text-center'>SL</div>
-                                    <div className='px-3 py-2.5 text-right'>Thành tiền</div>
-                                </div>
+                            <div className='border border-gray-200 dark:border-gray-700 rounded-lg overflow-x-auto custom-scrollbar'>
+                                <div className='min-w-[500px]'>
+                                    <div className='grid grid-cols-[1fr_100px_60px_100px] bg-gray-50 dark:bg-gray-800 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700'>
+                                        <div className='px-3 py-2.5'>Sản phẩm</div>
+                                        <div className='px-3 py-2.5 text-center'>Đơn giá</div>
+                                        <div className='px-3 py-2.5 text-center'>SL</div>
+                                        <div className='px-3 py-2.5 text-right'>Thành tiền</div>
+                                    </div>
                                 {items.map((item, idx) =>
                                 {
                                     let options = null;
@@ -307,7 +305,8 @@ export default function OrderHistoryPage()
                                             </div>
                                         </div>
                                     );
-                                })}
+                                    })}
+                                </div>
                             </div>
                         </div>
 

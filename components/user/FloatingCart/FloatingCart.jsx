@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useCart } from '@/contexts/CartContext';
 import { useNavigate } from '@/lib/router-compat';
+import { usePathname } from 'next/navigation';
 
 const formatPrice = (price) => {
     if (!price) return '0';
@@ -12,6 +13,7 @@ const formatPrice = (price) => {
 const FloatingCart = () => {
     const { cartCount, cartTotal, cartItems, removeFromCart } = useCart();
     const navigate = useNavigate();
+    const pathname = usePathname();
     const [mounted, setMounted] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
@@ -124,7 +126,7 @@ const FloatingCart = () => {
                 className={`fixed right-6 z-[9990] transition-all duration-500 ${isVisible
                     ? 'translate-y-0 opacity-100 pointer-events-auto'
                     : 'translate-y-20 opacity-0 pointer-events-none'
-                    }`}
+                    } ${pathname !== '/' ? 'hidden sm:block' : ''}`}
                 style={{ bottom: '216px' }}
             >
                 {/* Expanded mini cart panel */}

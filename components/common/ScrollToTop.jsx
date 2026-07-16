@@ -62,9 +62,9 @@ const ScrollToTop = () => {
     return (
         <button
             onClick={scrollToTop}
-            className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-[9990] w-10 h-10 rounded-full bg-orange-400/30 backdrop-blur-sm flex items-center justify-center text-white/70 hover:text-white hover:bg-orange-500/90 hover:scale-110 active:scale-95 transition-all duration-300 shadow-md ${
+            className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-[9990] w-10 h-10 rounded-full bg-orange-400/30 backdrop-blur-sm items-center justify-center text-white/70 hover:text-white hover:bg-orange-500/90 hover:scale-110 active:scale-95 transition-all duration-300 shadow-md ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
-            }`}
+            } ${pathname !== '/' ? 'hidden sm:flex' : 'flex'}`}
             aria-label="Cuộn lên đầu trang"
         >
             <i className='bx bx-up-arrow-alt text-2xl leading-none'></i>

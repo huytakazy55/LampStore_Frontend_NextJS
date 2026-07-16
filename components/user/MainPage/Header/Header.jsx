@@ -5,7 +5,8 @@ import { usePathname } from 'next/navigation'
 import FormLogin from './FormLogin'
 import FormCart from './FormCart';
 import FormActionLogin from './FormActionLogin';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout as logoutAction } from '@/redux/slices/authSlice';
 // react-tooltip css removed;
 import { toast } from 'react-toastify';
 const Logo = '/images/Capylumine-sm.png'; const avatarimg = '/images/Avatar.jpg'; import AuthService from '@/services/AuthService';
@@ -27,6 +28,7 @@ const Header = () =>
   const { cartCount, cartTotal } = useCart();
   const { wishlistCount } = useWishlist();
   const { isDark, toggleDarkMode } = useTheme();
+  const dispatch = useDispatch();
   const { token, isAuthenticated } = useSelector((state) => state.auth);
   const [toggleLogin, setToggleLogin] = useState(false);
   const [toggleActionLogin, setToggleActionLogin] = useState(false);
@@ -114,6 +116,17 @@ const Header = () =>
   const toggleFormProfile = () =>
   {
     setToggleProfile(!toggleProfile);
+  }
+
+  const { clearCartOnLogout } = useCart();
+  const handleLogout = async () => {
+    clearCartOnLogout();
+    const result = await AuthService.logout();
+    if (result) {
+        dispatch(logoutAction());
+        setMobileMenuOpen(false);
+        navigate('/');
+    }
   }
 
   const handleClickOutside = (event, ref, buttonRef, toggleFunction) =>
@@ -575,23 +588,30 @@ const Header = () =>
             {/* Overlay */}
             <div className='absolute inset-0 bg-black/50' onClick={() => setMobileMenuOpen(false)}></div>
             {/* Drawer */}
-            <div className='absolute right-0 top-0 h-full w-72 bg-white shadow-2xl animate-fadeIn overflow-y-auto'>
-              <div className='p-4 border-b border-gray-200 flex justify-between items-center'>
+            <div className='absolute right-0 top-0 h-full w-72 bg-white shadow-2xl animate-fadeIn flex flex-col'>
+              <div className='p-4 border-b border-gray-200 flex justify-between items-center shrink-0'>
                 <span className='font-semibold text-lg'>Menu</span>
                 <i className='bx bx-x text-2xl cursor-pointer' onClick={() => setMobileMenuOpen(false)}></i>
               </div>
-              <div className='p-4'>
+              <div className='p-4 flex-1 overflow-y-auto'>
                 {/* User actions */}
                 <div className='space-y-3 mb-6'>
                   {mounted && isAuthenticated ? (
                     <>
                       <div className='flex items-center gap-3 p-2 rounded-lg bg-gray-50'>
-                        <img className='w-10 h-10 rounded-full border-2 border-primary-500' src={avatarURL ? avatarURL : (avatar.ProfileAvatar ? (avatar.ProfileAvatar.startsWith('http') ? avatar.ProfileAvatar : `${API_ENDPOINT}${avatar.ProfileAvatar}`) : avatarimg)} alt="Ảnh đại diện" />
-                        <span className='font-medium text-sm'>Tài khoản</span>
+                        <img className='w-10 h-10 rounded-full border-2 border-primary-500 object-cover' src={avatarURL ? avatarURL : (avatar.ProfileAvatar ? (avatar.ProfileAvatar.startsWith('http') ? avatar.ProfileAvatar : `${API_ENDPOINT}${avatar.ProfileAvatar}`) : avatarimg)} alt="Ảnh đại diện" />
+                        <div className='flex flex-col'>
+                           <span className='font-medium text-sm text-gray-800'>{profileApiData?.fullName || 'Tài khoản'}</span>
+                           {profileApiData?.email && <span className='text-xs text-gray-500'>{profileApiData.email}</span>}
+                        </div>
                       </div>
                       <div onClick={() => { toggleFormProfile(); setMobileMenuOpen(false); }} className='flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer'>
                         <i className='bx bx-user text-xl text-gray-600'></i>
                         <span className='text-sm'>Hồ sơ</span>
+                      </div>
+                      <div onClick={() => { navigate('/my-orders'); setMobileMenuOpen(false); }} className='flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer'>
+                        <i className='bx bx-package text-xl text-gray-600'></i>
+                        <span className='text-sm'>Đơn hàng của tôi</span>
                       </div>
                     </>
                   ) : (
@@ -617,7 +637,7 @@ const Header = () =>
                       </div>
                     </>
                   )}
-                  <div onClick={() => { toggleFormcart(); setMobileMenuOpen(false); }} className='flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer'>
+                  <div onClick={() => { navigate('/cart'); setMobileMenuOpen(false); }} className='flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer'>
                     <i className='bx bx-shopping-bag text-xl text-gray-600'></i>
                     <span className='text-sm'>Giỏ hàng</span>
                   </div>
@@ -642,6 +662,15 @@ const Header = () =>
                   </div>
                 </div>
               </div>
+              {/* Footer Action (Logout) */}
+              {mounted && isAuthenticated && (
+                <div className='p-4 border-t border-gray-100 shrink-0 bg-gray-50'>
+                  <div onClick={handleLogout} className='flex items-center justify-center gap-2 p-3 bg-white border border-red-200 text-red-500 rounded-lg cursor-pointer hover:bg-red-50 transition-colors shadow-sm'>
+                    <i className='bx bx-log-out text-xl'></i>
+                    <span className='text-sm font-medium'>Đăng xuất</span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )

@@ -9,12 +9,17 @@ import NotificationService from '@/services/NotificationService';
 import Image from 'next/image';
 import zaloLogo from '@/assets/images/zalo-logo-removebg.png';
 import zaloQrCode from '@/assets/images/zalo-add-friend.jpg';
+import { usePathname } from 'next/navigation';
 
 const CONTACT_PHONE = '0969608810';
 const ZALO_URL = 'https://zalo.me/0969608810';
 
 const ChatButton = () =>
 {
+  const pathname = usePathname();
+  const isChildPage = pathname !== '/';
+  const visibilityClass = isChildPage ? 'hidden sm:flex' : 'flex';
+  
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isZaloPopupOpen, setIsZaloPopupOpen] = useState(false);
   const seenMessageKeysRef = useRef(new Set());
@@ -47,16 +52,8 @@ const ChatButton = () =>
     }
   }, []);
 
-  useEffect(() => {
-    if (isChatOpen || isZaloPopupOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isChatOpen, isZaloPopupOpen]);
+    // Body overflow lock removed to fix iOS Safari scrolling bug inside popups.
+    // We now use touch-none and event prevention on the backdrop directly.
 
   useEffect(() =>
   {
@@ -177,7 +174,7 @@ const ChatButton = () =>
       {/* Zalo Button */}
       <button
         onClick={() => setIsZaloPopupOpen(true)}
-        className="group fixed right-6 z-[1000] flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-[0_8px_20px_rgba(0,136,255,0.3)] transition-all duration-500 ease-out hover:-translate-y-1 hover:scale-110 hover:shadow-[0_12px_25px_rgba(0,136,255,0.5)] active:scale-95 border-none cursor-pointer p-0"
+        className={`group fixed right-6 z-[1000] h-12 w-12 items-center justify-center rounded-full bg-white shadow-[0_8px_20px_rgba(0,136,255,0.3)] transition-all duration-500 ease-out hover:-translate-y-1 hover:scale-110 hover:shadow-[0_12px_25px_rgba(0,136,255,0.5)] active:scale-95 border-none cursor-pointer p-0 ${visibilityClass}`}
         style={{ bottom: '88px' }}
         aria-label="Liên hệ Zalo"
         title="Liên hệ Zalo"
@@ -195,7 +192,7 @@ const ChatButton = () =>
       {/* Phone Button */}
       <a
         href={`tel:${CONTACT_PHONE}`}
-        className="group fixed right-6 z-[1000] flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-[#FF4B4B] to-[#E60000] text-white shadow-[0_8px_20px_rgba(255,75,75,0.3)] transition-all duration-500 ease-out hover:-translate-y-1 hover:scale-110 hover:shadow-[0_12px_25px_rgba(255,75,75,0.5)] active:scale-95"
+        className={`group fixed right-6 z-[1000] h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-[#FF4B4B] to-[#E60000] text-white shadow-[0_8px_20px_rgba(255,75,75,0.3)] transition-all duration-500 ease-out hover:-translate-y-1 hover:scale-110 hover:shadow-[0_12px_25px_rgba(255,75,75,0.5)] active:scale-95 ${visibilityClass}`}
         style={{ bottom: '24px' }}
         aria-label="Gọi điện thoại"
         title="Gọi điện thoại"
@@ -209,7 +206,7 @@ const ChatButton = () =>
       </a>
 
       {/* Chat Button */}
-      <div className="fixed right-6 z-[1000] flex flex-col items-end" style={{ bottom: '152px' }}>
+      <div className={`fixed right-6 z-[1000] flex-col items-end ${visibilityClass}`} style={{ bottom: '152px' }}>
         <button
           onClick={toggleChat}
           className={`group relative flex h-12 w-12 items-center justify-center rounded-full border-none text-white shadow-[0_8px_20px_rgba(107,33,168,0.3)] transition-all duration-500 ease-out hover:-translate-y-1 hover:scale-110 hover:shadow-[0_12px_25px_rgba(107,33,168,0.5)] active:scale-95 cursor-pointer ${isChatOpen
@@ -234,9 +231,11 @@ const ChatButton = () =>
 
       {/* Chat Backdrop */}
       <div
-        className={`fixed inset-0 z-[9991] transition-all duration-300 ${isChatOpen ? 'pointer-events-auto' : 'pointer-events-none'
+        className={`fixed inset-0 z-[9991] transition-all duration-300 touch-none ${isChatOpen ? 'pointer-events-auto' : 'pointer-events-none'
           }`}
         onClick={() => setIsChatOpen(false)}
+        onWheel={(e) => { e.preventDefault(); e.stopPropagation(); }}
+        onTouchMove={(e) => { e.preventDefault(); e.stopPropagation(); }}
       ></div>
 
       {/* Real Chat Window với animation */}
@@ -254,8 +253,12 @@ const ChatButton = () =>
 
       {/* Zalo QR Popup */}
       <div className={`fixed inset-0 z-[9999] transition-all duration-300 ${isZaloPopupOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
-        <div className='fixed inset-0 bg-black/60 backdrop-blur-sm touch-none'></div>
-        <div className='fixed inset-0 overflow-y-auto' onClick={() => setIsZaloPopupOpen(false)}>
+        <div 
+            className='fixed inset-0 bg-black/60 backdrop-blur-sm touch-none'
+            onWheel={(e) => { e.preventDefault(); e.stopPropagation(); }}
+            onTouchMove={(e) => { e.preventDefault(); e.stopPropagation(); }}
+        ></div>
+        <div className='fixed inset-0 overflow-y-auto custom-scrollbar' onClick={() => setIsZaloPopupOpen(false)}>
           <div className='flex min-h-full items-start justify-center p-4'>
             <div
               className={`relative m-auto bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-2xl transition-all duration-500 max-w-sm w-full mx-auto ${isZaloPopupOpen ? 'scale-100 translate-y-0' : 'scale-90 translate-y-8'}`}

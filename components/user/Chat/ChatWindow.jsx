@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, Minimize2, MessageSquare } from 'lucide-react';
+import { Send, Minimize2, MessageSquare, Smile } from 'lucide-react';
+import EmojiPicker from 'emoji-picker-react';
 import ChatService from '@/services/ChatService';
 import NotificationService from '@/services/NotificationService';
 import GuestProfileService from '@/services/GuestProfileService';
@@ -12,6 +13,8 @@ const ChatWindow = ({ onClose }) =>
 {
   const [currentChat, setCurrentChat] = useState(null);
   const [newMessage, setNewMessage] = useState('');
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const emojiPickerRef = useRef(null);
   const [typingUsers, setTypingUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const messagesEndRef = useRef(null);
@@ -27,6 +30,22 @@ const ChatWindow = ({ onClose }) =>
   // Keep refs in sync with state
   useEffect(() => { currentChatRef.current = currentChat; }, [currentChat]);
   useEffect(() => { messagesRef.current = messages; }, [messages]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target)) {
+        setShowEmojiPicker(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const onEmojiClick = (emojiObject) => {
+    setNewMessage(prev => prev + emojiObject.emoji);
+  };
 
   const isGuestMode = () => !localStorage.getItem('token') && !!GuestProfileService.getExistingGuestToken();
 
@@ -441,7 +460,18 @@ const ChatWindow = ({ onClose }) =>
       </div>
 
       {/* Input */}
-      <div className="border-t border-gray-100 bg-gray-50 px-4 py-[0.7rem]">
+      <div className="border-t border-gray-100 bg-gray-50 px-4 py-[0.7rem] relative">
+        {showEmojiPicker && (
+          <div className="absolute bottom-[100%] right-4 mb-2 z-50" ref={emojiPickerRef}>
+            <EmojiPicker 
+              onEmojiClick={onEmojiClick} 
+              searchDisabled={true} 
+              skinTonesDisabled={true}
+              width={280}
+              height={350}
+            />
+          </div>
+        )}
         <div className="flex items-center gap-2">
           <input
             type="text"
@@ -452,6 +482,14 @@ const ChatWindow = ({ onClose }) =>
             className="min-w-0 flex-1 rounded-xl border border-gray-200 px-3 py-1.5 text-[0.97rem] outline-none transition-colors focus:border-primary-400 focus:ring-2 focus:ring-primary-100"
             disabled={loading || !currentChat}
           />
+          <button
+            onClick={() => setShowEmojiPicker(prev => !prev)}
+            disabled={loading || !currentChat}
+            className="flex items-center justify-center rounded-xl bg-gray-200 px-3 py-1.5 text-[0.95rem] font-semibold text-gray-600 transition-all hover:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
+            title="Thêm biểu tượng cảm xúc"
+          >
+            <Smile size={18} />
+          </button>
           <button
             onClick={sendMessage}
             disabled={!newMessage.trim() || loading || !currentChat}

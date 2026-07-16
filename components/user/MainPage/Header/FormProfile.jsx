@@ -446,35 +446,42 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
         <div className='flex flex-col md:flex-row overflow-y-auto min-h-0 max-h-[calc(100vh-140px)] md:max-h-[calc(85vh-80px)]'>
 
           {/* Left Panel - Avatar */}
-          <div className='md:w-[260px] flex-shrink-0 border-b md:border-b-0 md:border-r border-gray-100 dark:border-gray-800 p-6 flex flex-col items-center bg-gray-50/50 dark:bg-gray-800/30'>
+          <div className='md:w-[260px] flex-shrink-0 border-b md:border-b-0 md:border-r border-gray-100 dark:border-gray-800 p-4 pb-2 md:p-6 flex flex-col items-center bg-gray-50/50 dark:bg-gray-800/30'>
             {/* Avatar */}
-            <div className='relative mb-4 group'>
-              <div className='w-28 h-28 rounded-full overflow-hidden ring-4 ring-white dark:ring-gray-700 shadow-lg'>
+            <div className='relative mb-2 md:mb-4 group'>
+              <div className='w-20 h-20 md:w-28 md:h-28 rounded-full overflow-hidden ring-4 ring-white dark:ring-gray-700 shadow-md mx-auto'>
                 <img className='w-full h-full object-cover' src={avatarSrc} alt="Avatar" />
               </div>
+              
+              {/* Camera Upload button */}
+              <button type="button" onClick={() => document.getElementById('fileInput').click()}
+                className='absolute bottom-0 right-0 md:bottom-1 md:right-1 w-7 h-7 md:w-8 md:h-8 bg-primary-600 border-2 border-white dark:border-gray-800 rounded-full flex items-center justify-center shadow-md hover:bg-primary-700 transition-colors cursor-pointer text-white'
+                title="Tải ảnh mới"
+              >
+                <i className='bx bx-camera text-[12px] md:text-[14px]'></i>
+              </button>
+
               {/* Delete button */}
               {profileData.ProfileAvatar && (
                 <button onClick={handleDeleteAvatar}
-                  className='absolute -top-1 -right-1 w-7 h-7 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full flex items-center justify-center shadow-md hover:bg-red-50 hover:border-red-200 transition-colors cursor-pointer group/del'>
-                  <i className='bx bx-trash text-sm text-gray-400 group-hover/del:text-red-500 transition-colors'></i>
+                  title="Xóa ảnh đại diện"
+                  className='absolute top-0 right-0 w-6 h-6 md:w-7 md:h-7 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full flex items-center justify-center shadow-md hover:bg-red-50 hover:border-red-200 transition-colors cursor-pointer group/del'>
+                  <i className='bx bx-trash text-[10px] md:text-sm text-gray-400 group-hover/del:text-red-500 transition-colors'></i>
                 </button>
               )}
             </div>
 
-            <p className='text-base font-semibold text-gray-800 dark:text-gray-100 text-center mb-1'>
-              {profileData.FullName || '—'}
-            </p>
-            <p className='text-xs text-gray-400 dark:text-gray-500 text-center mb-5'>{profileData.Email || ''}</p>
+            <div className="flex flex-col items-center">
+              <p className='text-sm md:text-base font-semibold text-gray-800 dark:text-gray-100 text-center mb-0.5 md:mb-1'>
+                {profileData.FullName || '—'}
+              </p>
+              <p className='text-[11px] md:text-xs text-gray-400 dark:text-gray-500 text-center mb-0 md:mb-5'>{profileData.Email || ''}</p>
+            </div>
 
-            {/* Upload button */}
+            {/* Hidden Input */}
             <input type="file" id="fileInput" className='hidden' onChange={handleFileChange} accept="image/*" />
-            <button type="button" onClick={() => document.getElementById('fileInput').click()}
-              className='w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-lg shadow-md shadow-primary-200 dark:shadow-primary-900/30 transition-all cursor-pointer'>
-              <i className='bx bx-upload text-base'></i>
-              Tải ảnh mới
-            </button>
 
-            <p className='text-[11px] text-gray-400 dark:text-gray-500 text-center mt-3 leading-relaxed'>
+            <p className='hidden md:block text-[11px] text-gray-400 dark:text-gray-500 text-center mt-3 leading-relaxed'>
               Ảnh JPG, PNG tối đa <strong>1 MB</strong>.<br />Sẽ được tự động resize.
             </p>
           </div>
@@ -484,26 +491,26 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
             {/* Tabs */}
             <div className='flex w-full border-b border-gray-100 dark:border-gray-800 px-2 md:px-6 pt-1'>
               <button onClick={() => setInfoSideActive('info')}
-                className={`relative flex-1 md:flex-none flex flex-col md:flex-row items-center justify-center py-2.5 md:py-3 md:mr-6 text-[11px] sm:text-sm font-medium transition-colors cursor-pointer ${infoSideActive === 'info'
+                className={`relative flex-1 md:flex-none flex flex-row items-center justify-center py-2.5 md:py-3 md:mr-6 text-[11px] sm:text-sm font-medium transition-colors cursor-pointer gap-1.5 ${infoSideActive === 'info'
                   ? 'text-primary-600 after:absolute after:bottom-0 after:left-2 after:right-2 md:after:left-0 md:after:right-0 after:h-[2px] after:bg-primary-600 after:rounded-full'
                   : 'text-gray-400 hover:text-gray-600'}`}>
-                <i className='bx bx-user text-lg md:text-base mb-1 md:mb-0 md:mr-1.5 align-middle'></i>
+                <i className='bx bx-user text-base align-middle'></i>
                 <span className='hidden sm:inline'>Thông tin người dùng</span>
                 <span className='sm:hidden'>Hồ sơ</span>
               </button>
               <button onClick={() => setInfoSideActive('bill')}
-                className={`relative flex-1 md:flex-none flex flex-col md:flex-row items-center justify-center py-2.5 md:py-3 md:mr-6 text-[11px] sm:text-sm font-medium transition-colors cursor-pointer ${infoSideActive === 'bill'
+                className={`relative flex-1 md:flex-none flex flex-row items-center justify-center py-2.5 md:py-3 md:mr-6 text-[11px] sm:text-sm font-medium transition-colors cursor-pointer gap-1.5 ${infoSideActive === 'bill'
                   ? 'text-primary-600 after:absolute after:bottom-0 after:left-2 after:right-2 md:after:left-0 md:after:right-0 after:h-[2px] after:bg-primary-600 after:rounded-full'
                   : 'text-gray-400 hover:text-gray-600'}`}>
-                <i className='bx bx-receipt text-lg md:text-base mb-1 md:mb-0 md:mr-1.5 align-middle'></i>
+                <i className='bx bx-receipt text-base align-middle'></i>
                 <span className='hidden sm:inline'>Thông tin hóa đơn</span>
                 <span className='sm:hidden'>Hóa đơn</span>
               </button>
               <button onClick={() => setInfoSideActive('discount')}
-                className={`relative flex-1 md:flex-none flex flex-col md:flex-row items-center justify-center py-2.5 md:py-3 text-[11px] sm:text-sm font-medium transition-colors cursor-pointer ${infoSideActive === 'discount'
+                className={`relative flex-1 md:flex-none flex flex-row items-center justify-center py-2.5 md:py-3 text-[11px] sm:text-sm font-medium transition-colors cursor-pointer gap-1.5 ${infoSideActive === 'discount'
                   ? 'text-primary-600 after:absolute after:bottom-0 after:left-2 after:right-2 md:after:left-0 md:after:right-0 after:h-[2px] after:bg-primary-600 after:rounded-full'
                   : 'text-gray-400 hover:text-gray-600'}`}>
-                <i className='bx bx-purchase-tag-alt text-lg md:text-base mb-1 md:mb-0 md:mr-1.5 align-middle'></i>
+                <i className='bx bx-purchase-tag-alt text-base align-middle'></i>
                 <span className='hidden sm:inline'>Mã giảm giá</span>
                 <span className='sm:hidden'>Mã giảm giá</span>
               </button>

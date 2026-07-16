@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Button, Input, Select, Space, Divider, Tag, Avatar, message } from 'antd';
-import { SendOutlined, UserOutlined } from '@ant-design/icons';
+import { SendOutlined, UserOutlined, SmileOutlined } from '@ant-design/icons';
+import EmojiPicker from 'emoji-picker-react';
 import ChatService from '@/services/ChatService';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMessages, addMessage, removeOptimisticMessage } from '@/redux/slices/chatSlice';
@@ -15,6 +16,8 @@ const AdminChatWindow = ({ chat, onClose, onUpdate }) => {
   const [chatStatus, setChatStatus] = useState(chat?.status || 1);
   const [loading, setLoading] = useState(false);
   const [sending, setSending] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const emojiPickerRef = useRef(null);
   const messagesEndRef = useRef(null);
   const processedMessagesRef = useRef(new Set());
   const dispatch = useDispatch();
@@ -33,6 +36,22 @@ const AdminChatWindow = ({ chat, onClose, onUpdate }) => {
       // event listeners được quản lý bởi useEffect riêng (useCallback handlers)
     };
   }, [chat?.id]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target)) {
+        setShowEmojiPicker(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const onEmojiClick = (emojiObject) => {
+    setNewMessage(prev => prev + emojiObject.emoji);
+  };
 
   const initializeSignalR = async () => {
     try {
@@ -433,7 +452,18 @@ const AdminChatWindow = ({ chat, onClose, onUpdate }) => {
 
 
       {/* Message Input */}
-      <div style={{ padding: '12px 16px', borderTop: '1px solid #f0f0f0', flexShrink: 0 }}>
+      <div style={{ padding: '12px 16px', borderTop: '1px solid #f0f0f0', flexShrink: 0, position: 'relative' }}>
+        {showEmojiPicker && (
+          <div style={{ position: 'absolute', bottom: '100%', right: '16px', marginBottom: '8px', zIndex: 1000 }} ref={emojiPickerRef}>
+            <EmojiPicker 
+              onEmojiClick={onEmojiClick} 
+              searchDisabled={true} 
+              skinTonesDisabled={true}
+              width={280}
+              height={350}
+            />
+          </div>
+        )}
         <div style={{ display: 'flex', gap: '8px' }}>
           <TextArea
             value={newMessage}
@@ -443,15 +473,24 @@ const AdminChatWindow = ({ chat, onClose, onUpdate }) => {
             autoSize={{ minRows: 2, maxRows: 4 }}
             style={{ flex: 1 }}
           />
-          <Button
-            type="primary"
-            icon={<SendOutlined />}
-            onClick={sendMessage}
-            loading={sending}
-            disabled={!newMessage.trim()}
-          >
-            Gửi
-          </Button>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <Button
+              icon={<SmileOutlined />}
+              onClick={() => setShowEmojiPicker(prev => !prev)}
+              title="Thêm biểu tượng cảm xúc"
+              style={{ flex: 1 }}
+            />
+            <Button
+              type="primary"
+              icon={<SendOutlined />}
+              onClick={sendMessage}
+              loading={sending}
+              disabled={!newMessage.trim()}
+              style={{ flex: 1 }}
+            >
+              Gửi
+            </Button>
+          </div>
         </div>
 
         <div style={{ marginTop: '8px', fontSize: '12px', color: '#666' }}>
