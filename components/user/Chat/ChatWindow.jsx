@@ -76,15 +76,10 @@ const ChatWindow = ({ onClose }) =>
             guestChats = response;
           }
 
-          const openChat = guestChats.find(c => c.status === 1 || c.status === 2) || guestChats[0];
+          const openChat = guestChats[0];
           if (openChat)
           {
             await enterChat(openChat);
-          } else
-          {
-            const guestCode = GuestProfileService.getGuestCode() || 'Khách vãng lai';
-            const newChat = await ChatService.createGuestChat('Chat hỗ trợ', guestCode);
-            await enterChat(newChat);
           }
         } else
         {
@@ -109,14 +104,10 @@ const ChatWindow = ({ onClose }) =>
             userChats = response;
           }
 
-          const openChat = userChats.find(c => c.status === 1 || c.status === 2) || userChats[0];
+          const openChat = userChats[0];
           if (openChat)
           {
             await enterChat(openChat);
-          } else
-          {
-            const newChat = await ChatService.createChat('Chat hỗ trợ', 2);
-            await enterChat(newChat);
           }
         }
       } catch (error)
