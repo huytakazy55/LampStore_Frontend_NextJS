@@ -42,14 +42,6 @@ export default function CustomerReviews()
     return (
         <section className="py-12 md:py-16 bg-gray-50 dark:bg-gray-900 overflow-hidden">
             <div className="xl:max-w-[1440px] mx-auto px-4 sm:px-6 xl:px-0">
-                <div className="text-center mb-10 md:mb-14">
-                    <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                        Khách Hàng Nói Gì Về <span className="text-primary-600">CapyLumine</span>
-                    </h2>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm md:text-base max-w-2xl mx-auto">
-                        Những đánh giá chân thực nhất là minh chứng cho chất lượng sản phẩm và dịch vụ của chúng tôi.
-                    </p>
-                </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {reviews.map((review) => (
