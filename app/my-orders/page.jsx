@@ -10,6 +10,7 @@ import Footer from '@/components/user/MainPage/Footer/Footer';
 import OrderService from '@/services/OrderService';
 import OrderReviewModal from '@/components/user/OrderReviewModal/OrderReviewModal';
 import PageLoader from '@/components/common/PageLoader';
+import { lockBodyScroll, unlockBodyScroll } from '@/lib/bodyScrollLock';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
@@ -45,8 +46,16 @@ export default function OrderHistoryPage()
     const [filterStatus, setFilterStatus] = useState('all');
     const [reviewOrder, setReviewOrder] = useState(null);
 
-    // Body scroll lock removed to fix iOS Safari bug where nested scroll breaks.
-    // Event prevention added to backdrop instead.
+    useEffect(() => {
+        if (selectedOrder) {
+            lockBodyScroll();
+        } else {
+            unlockBodyScroll();
+        }
+        return () => {
+            unlockBodyScroll();
+        };
+    }, [selectedOrder]);
 
     useEffect(() =>
     {
@@ -126,11 +135,7 @@ export default function OrderHistoryPage()
         return (
             <div className='fixed inset-0 z-[9999] flex items-center justify-center p-4'
                 onClick={() => setSelectedOrder(null)}>
-                <div 
-                    className='fixed inset-0 bg-black/40 backdrop-blur-sm touch-none'
-                    onWheel={(e) => { e.preventDefault(); e.stopPropagation(); }}
-                    onTouchMove={(e) => { e.preventDefault(); e.stopPropagation(); }}
-                ></div>
+                <div className='fixed inset-0 bg-black/40 backdrop-blur-sm'></div>
                 <div className='bg-white dark:bg-gray-900 w-full max-w-3xl max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden relative z-10'
                     onClick={e => e.stopPropagation()}>
                     {/* Modal Header */}

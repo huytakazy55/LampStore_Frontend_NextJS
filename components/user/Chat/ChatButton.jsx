@@ -10,6 +10,7 @@ import Image from 'next/image';
 import zaloLogo from '@/assets/images/zalo-logo-removebg.png';
 import zaloQrCode from '@/assets/images/zalo-add-friend.jpg';
 import { usePathname } from 'next/navigation';
+import { lockBodyScroll, unlockBodyScroll } from '@/lib/bodyScrollLock';
 
 const CONTACT_PHONE = '0969608810';
 const ZALO_URL = 'https://zalo.me/0969608810';
@@ -52,8 +53,16 @@ const ChatButton = () =>
     }
   }, []);
 
-    // Body overflow lock removed to fix iOS Safari scrolling bug inside popups.
-    // We now use touch-none and event prevention on the backdrop directly.
+  useEffect(() => {
+    if (isChatOpen || isZaloPopupOpen) {
+      lockBodyScroll();
+    } else {
+      unlockBodyScroll();
+    }
+    return () => {
+      unlockBodyScroll();
+    };
+  }, [isChatOpen, isZaloPopupOpen]);
 
   useEffect(() =>
   {
@@ -231,11 +240,9 @@ const ChatButton = () =>
 
       {/* Chat Backdrop */}
       <div
-        className={`fixed inset-0 z-[9991] transition-all duration-300 touch-none ${isChatOpen ? 'pointer-events-auto' : 'pointer-events-none'
+        className={`fixed inset-0 z-[9991] transition-all duration-300 ${isChatOpen ? 'pointer-events-auto' : 'pointer-events-none'
           }`}
         onClick={() => setIsChatOpen(false)}
-        onWheel={(e) => { e.preventDefault(); e.stopPropagation(); }}
-        onTouchMove={(e) => { e.preventDefault(); e.stopPropagation(); }}
       ></div>
 
       {/* Real Chat Window với animation */}
@@ -253,11 +260,7 @@ const ChatButton = () =>
 
       {/* Zalo QR Popup */}
       <div className={`fixed inset-0 z-[9999] transition-all duration-300 ${isZaloPopupOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
-        <div 
-            className='fixed inset-0 bg-black/60 backdrop-blur-sm touch-none'
-            onWheel={(e) => { e.preventDefault(); e.stopPropagation(); }}
-            onTouchMove={(e) => { e.preventDefault(); e.stopPropagation(); }}
-        ></div>
+        <div className='fixed inset-0 bg-black/60 backdrop-blur-sm'></div>
         <div className='fixed inset-0 overflow-y-auto custom-scrollbar' onClick={() => setIsZaloPopupOpen(false)}>
           <div className='flex min-h-full items-start justify-center p-4'>
             <div
