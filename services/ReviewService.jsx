@@ -9,6 +9,12 @@ const ReviewService = {
         return axiosInstance.get(`/api/ProductReviews/${productId}`);
     },
 
+    // Lấy đánh giá gần đây
+    getRecentReviews: (limit = 6) =>
+    {
+        return axiosInstance.get(`/api/ProductReviews/recent?limit=${limit}`);
+    },
+
     // Gửi đánh giá (cần đăng nhập)
     submitReview: (data) =>
     {

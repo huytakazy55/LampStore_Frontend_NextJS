@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-
-const API_ENDPOINT = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5268';
+import ReviewService from '@/services/ReviewService';
 
 export default function CustomerReviews()
 {
@@ -12,10 +11,9 @@ export default function CustomerReviews()
     useEffect(() => {
         const fetchReviews = async () => {
             try {
-                const res = await fetch(`${API_ENDPOINT}/api/ProductReviews/recent?limit=6`);
-                if (res.ok) {
-                    const data = await res.json();
-                    setReviews(data.$values || data || []);
+                const res = await ReviewService.getRecentReviews(6);
+                if (res.data) {
+                    setReviews(res.data.$values || res.data || []);
                 }
             } catch (error) {
                 console.error("Failed to fetch recent reviews:", error);
