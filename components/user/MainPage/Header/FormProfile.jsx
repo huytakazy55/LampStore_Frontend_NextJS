@@ -424,12 +424,21 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
         <div className='relative bg-primary-600 dark:bg-black px-6 py-5 overflow-hidden'>
           <div className='absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2'></div>
           <div className='absolute bottom-0 left-16 w-20 h-20 bg-white/5 rounded-full translate-y-1/2'></div>
-          <div className='relative z-10'>
-            <h2 className='text-lg font-bold text-white flex items-center gap-2'>
-              <i className='bx bx-user-circle text-xl'></i>
-              Thông tin cá nhân
-            </h2>
-            <p className='text-sm text-white/70 mt-0.5'>Quản lý thông tin hồ sơ của bạn</p>
+          <div className='relative z-10 flex justify-between items-start'>
+            <div>
+              <h2 className='text-lg font-bold text-white flex items-center gap-2'>
+                <i className='bx bx-user-circle text-xl'></i>
+                Thông tin cá nhân
+              </h2>
+              <p className='text-sm text-white/70 mt-0.5'>Quản lý thông tin hồ sơ của bạn</p>
+            </div>
+            <button 
+              type="button"
+              onClick={() => setToggleProfile && setToggleProfile(false)}
+              className='text-white/70 hover:text-white bg-white/10 hover:bg-white/20 transition-colors w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-sm cursor-pointer'
+            >
+              <i className='bx bx-x text-2xl'></i>
+            </button>
           </div>
         </div>
 

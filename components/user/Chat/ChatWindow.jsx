@@ -21,7 +21,8 @@ const ChatWindow = ({ onClose }) =>
   const messagesRef = useRef([]);
 
   const dispatch = useDispatch();
-  const messages = useSelector(state => state.chat.messages[currentChat?.id] || []);
+  const activeChatId = currentChat?.id || currentChat?.Id;
+  const messages = useSelector(state => state.chat.messages[activeChatId] || []);
 
   // Keep refs in sync with state
   useEffect(() => { currentChatRef.current = currentChat; }, [currentChat]);
@@ -137,7 +138,8 @@ const ChatWindow = ({ onClose }) =>
       {
         if (currentChatRef.current)
         {
-          loadMessages(currentChatRef.current.id);
+          const cid = currentChatRef.current.id || currentChatRef.current.Id;
+          if (cid) loadMessages(cid);
         }
       }, 5000);
     }
@@ -157,16 +159,20 @@ const ChatWindow = ({ onClose }) =>
 
   const enterChat = async (chat) =>
   {
+    const newChatId = chat.id || chat.Id;
     if (currentChatRef.current && !isGuestMode())
     {
-      await ChatService.leaveChat(currentChatRef.current.id);
+      const oldChatId = currentChatRef.current.id || currentChatRef.current.Id;
+      if (oldChatId) await ChatService.leaveChat(oldChatId);
     }
     setCurrentChat(chat);
-    if (!isGuestMode())
+    if (!isGuestMode() && newChatId)
     {
-      await ChatService.joinChat(chat.id);
+      await ChatService.joinChat(newChatId);
     }
-    await loadMessages(chat.id);
+    if (newChatId) {
+      await loadMessages(newChatId);
+    }
   };
 
   // ── SignalR Listeners ──
@@ -213,7 +219,7 @@ const ChatWindow = ({ onClose }) =>
       isFromSignalR: true
     };
 
-    const activeChatId = currentChatRef.current?.id?.toString().toLowerCase();
+    const activeChatId = (currentChatRef.current?.id || currentChatRef.current?.Id)?.toString().toLowerCase();
     const currentMessages = messagesRef.current;
     const normalizedTargetChatId = targetChatId?.toString().toLowerCase();
 
@@ -241,7 +247,8 @@ const ChatWindow = ({ onClose }) =>
   const handleUserTyping = (event) =>
   {
     const typingData = event.detail;
-    if (currentChatRef.current && typingData.ChatId === currentChatRef.current.id)
+    const currentRefId = currentChatRef.current?.id || currentChatRef.current?.Id;
+    if (currentRefId && typingData.ChatId === currentRefId)
     {
       setTypingUsers(prev =>
       {
@@ -257,9 +264,10 @@ const ChatWindow = ({ onClose }) =>
   const handleMessageRead = (event) =>
   {
     const readData = event.detail;
-    if (currentChatRef.current && readData.ChatId === currentChatRef.current.id)
+    const currentRefId = currentChatRef.current?.id || currentChatRef.current?.Id;
+    if (currentRefId && readData.ChatId === currentRefId)
     {
-      loadMessages(currentChatRef.current.id);
+      loadMessages(currentRefId);
     }
   };
 
@@ -316,17 +324,20 @@ const ChatWindow = ({ onClose }) =>
   const sendMessage = async () =>
   {
     if (!newMessage.trim() || !currentChat) return;
+    const chatId = currentChat.id || currentChat.Id;
+    if (!chatId) return;
+    
     try
     {
       if (isGuestMode())
       {
-        await ChatService.sendGuestMessage(currentChat.id, newMessage);
+        await ChatService.sendGuestMessage(chatId, newMessage);
       } else
       {
-        await ChatService.sendMessage(currentChat.id, newMessage);
+        await ChatService.sendMessage(chatId, newMessage);
       }
       setNewMessage('');
-      await loadMessages(currentChat.id);
+      await loadMessages(chatId);
     } catch (error)
     {
       console.error('Error sending message:', error);
@@ -388,10 +399,15 @@ const ChatWindow = ({ onClose }) =>
         ) : (
           messages.map((message) =>
           {
+            const msgSenderId = message.senderId || message.SenderId;
+            const msgId = message.id || message.Id;
+            const msgContent = message.content || message.Content;
+            const msgCreatedAt = message.createdAt || message.CreatedAt || new Date().toISOString();
+            
             // If senderId is null/undefined and we're in guest mode, it's the guest's own message
-            const isFromCurrentUser = message.senderId === currentUserId || (isGuestMode() && !message.senderId);
+            const isFromCurrentUser = msgSenderId === currentUserId || (isGuestMode() && !msgSenderId);
             return (
-              <div key={message.id} className={`flex ${isFromCurrentUser ? 'justify-end' : 'justify-start'}`}>
+              <div key={msgId} className={`flex ${isFromCurrentUser ? 'justify-end' : 'justify-start'}`}>
                 <div className="flex max-w-[80%] items-end gap-[0.4rem]">
                   {!isFromCurrentUser && (
                     <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary-600 text-[0.7rem] font-bold text-white">A</div>
@@ -406,10 +422,10 @@ const ChatWindow = ({ onClose }) =>
                         🛡️ Admin
                       </p>
                     )}
-                    <p className="m-0">{message.content || message.Content}</p>
+                    <p className="m-0">{msgContent}</p>
                     <div className="mt-[3px] flex items-center justify-end gap-1">
                       <span className="text-[0.68rem] opacity-70">
-                        {new Date(message.createdAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
+                        {new Date(msgCreatedAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
                       </span>
                       {isFromCurrentUser && (
                         <span className="text-[0.68rem] opacity-70">

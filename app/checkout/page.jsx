@@ -12,42 +12,36 @@ import { useCart } from '@/contexts/CartContext';
 import OrderService from '@/services/OrderService';
 import GuestProfileService from '@/services/GuestProfileService';
 import ProfileService from '@/services/ProfileService';
+import DiscountModal from '@/components/user/MainPage/DiscountModal/DiscountModal';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 const PROVINCE_API = 'https://provinces.open-api.vn/api';
 
-const formatPrice = (price) =>
-{
+const formatPrice = (price) => {
     if (!price) return '0';
     return price.toLocaleString('vi-VN');
 };
 
-const getImgSrc = (path) =>
-{
+const getImgSrc = (path) => {
     if (!path) return '/images/cameras-2.jpg';
     return path.startsWith('http') ? path : `${API_ENDPOINT}${path}`;
 };
 
-export default function CheckoutPage()
-{
+export default function CheckoutPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { cartItems, cartTotal, clearCart, removeFromCart } = useCart();
 
     // Buy Now: read items from sessionStorage on mount
     const [buyNowItems, setBuyNowItems] = useState(null);
-    useEffect(() =>
-    {
-        try
-        {
+    useEffect(() => {
+        try {
             const stored = sessionStorage.getItem('buyNowItems');
-            if (stored)
-            {
+            if (stored) {
                 setBuyNowItems(JSON.parse(stored));
                 sessionStorage.removeItem('buyNowItems');
             }
-        } catch (e)
-        {
+        } catch (e) {
             console.error('Error reading buyNow items:', e);
         }
 
@@ -64,7 +58,7 @@ export default function CheckoutPage()
                 sessionStorage.removeItem('pendingOrderTotal');
             }
             setOrderSuccess(true);
-            
+
             const pendingBuyNowItemsStr = sessionStorage.getItem('buyNowItems');
             if (pendingBuyNowItemsStr) {
                 try {
@@ -72,7 +66,7 @@ export default function CheckoutPage()
                     pendingBuyNowItems.forEach(item => {
                         if (item.key) removeFromCart(item.key);
                     });
-                } catch (e) {}
+                } catch (e) { }
             } else {
                 clearCart();
             }
@@ -111,6 +105,7 @@ export default function CheckoutPage()
     const [discountCode, setDiscountCode] = useState('');
     const [appliedDiscount, setAppliedDiscount] = useState(null);
     const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
+    const [showDiscountModal, setShowDiscountModal] = useState(false);
 
     // Province data states
     const [provinces, setProvinces] = useState([]);
@@ -178,20 +173,15 @@ export default function CheckoutPage()
 
 
     // Fetch provinces on mount
-    useEffect(() =>
-    {
-        const fetchProvinces = async () =>
-        {
-            try
-            {
+    useEffect(() => {
+        const fetchProvinces = async () => {
+            try {
                 const res = await fetch(`${PROVINCE_API}/p/`);
                 const data = await res.json();
                 setProvinces(data);
-            } catch (error)
-            {
+            } catch (error) {
                 console.error('Error fetching provinces:', error);
-            } finally
-            {
+            } finally {
                 setLoadingProvinces(false);
             }
         };
@@ -199,26 +189,20 @@ export default function CheckoutPage()
     }, []);
 
     // Fetch districts when province changes
-    useEffect(() =>
-    {
-        if (!formData.city)
-        {
+    useEffect(() => {
+        if (!formData.city) {
             setDistricts([]);
             return;
         }
-        const fetchDistricts = async () =>
-        {
+        const fetchDistricts = async () => {
             setLoadingDistricts(true);
-            try
-            {
+            try {
                 const res = await fetch(`${PROVINCE_API}/p/${formData.city}?depth=2`);
                 const data = await res.json();
                 setDistricts(data.districts || []);
-            } catch (error)
-            {
+            } catch (error) {
                 console.error('Error fetching districts:', error);
-            } finally
-            {
+            } finally {
                 setLoadingDistricts(false);
             }
         };
@@ -226,26 +210,20 @@ export default function CheckoutPage()
     }, [formData.city]);
 
     // Fetch wards when district changes
-    useEffect(() =>
-    {
-        if (!formData.district)
-        {
+    useEffect(() => {
+        if (!formData.district) {
             setWards([]);
             return;
         }
-        const fetchWards = async () =>
-        {
+        const fetchWards = async () => {
             setLoadingWards(true);
-            try
-            {
+            try {
                 const res = await fetch(`${PROVINCE_API}/d/${formData.district}?depth=2`);
                 const data = await res.json();
                 setWards(data.wards || []);
-            } catch (error)
-            {
+            } catch (error) {
                 console.error('Error fetching wards:', error);
-            } finally
-            {
+            } finally {
                 setLoadingWards(false);
             }
         };
@@ -253,21 +231,17 @@ export default function CheckoutPage()
     }, [formData.district]);
 
     // Pre-fill user info if logged in, or guest info if available
-    useEffect(() =>
-    {
-        if (typeof window !== 'undefined')
-        {
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
             const isLoggedIn = !!localStorage.getItem('token');
-            if (isLoggedIn)
-            {
+            if (isLoggedIn) {
                 const savedName = localStorage.getItem('userName');
                 const savedEmail = localStorage.getItem('userEmail');
                 if (savedName) setFormData(prev => ({ ...prev, fullName: savedName }));
                 if (savedEmail) setFormData(prev => ({ ...prev, email: savedEmail }));
 
                 ProfileService.GetCurrentProfile()
-                    .then((res) =>
-                    {
+                    .then((res) => {
                         const profile = res.data;
                         setUserProfile(profile);
                         setFormData(prev => ({
@@ -284,16 +258,13 @@ export default function CheckoutPage()
                             wardName: profile.wardName || prev.wardName,
                         }));
                     })
-                    .catch((error) =>
-                    {
+                    .catch((error) => {
                         console.error('Error fetching checkout profile:', error);
                     });
-            } else
-            {
+            } else {
                 // Auto-fill from saved guest info
                 const guestInfo = GuestProfileService.getGuestInfo();
-                if (guestInfo)
-                {
+                if (guestInfo) {
                     setFormData(prev => ({
                         ...prev,
                         fullName: guestInfo.fullName || prev.fullName,
@@ -306,33 +277,26 @@ export default function CheckoutPage()
         }
     }, []);
 
-    const getCurrentUserId = () =>
-    {
+    const getCurrentUserId = () => {
         const token = localStorage.getItem('token');
         if (!token) return '';
 
-        try
-        {
+        try {
             const decoded = jwtDecode(token);
             return decoded.nameid || decoded.sub || decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] || '';
-        } catch
-        {
+        } catch {
             return '';
         }
     };
 
-    const saveCheckoutInfoToProfile = async () =>
-    {
+    const saveCheckoutInfoToProfile = async () => {
         let profile = userProfile;
-        if (!profile?.id)
-        {
-            try
-            {
+        if (!profile?.id) {
+            try {
                 const res = await ProfileService.GetCurrentProfile();
                 profile = res.data;
                 setUserProfile(profile);
-            } catch
-            {
+            } catch {
                 profile = null;
             }
         }
@@ -349,10 +313,8 @@ export default function CheckoutPage()
             wardName: formData.wardName,
         };
 
-        try
-        {
-            if (profile?.id)
-            {
+        try {
+            if (profile?.id) {
                 await ProfileService.UpdateUserProfile(
                     profile.id,
                     formData.fullName,
@@ -362,8 +324,7 @@ export default function CheckoutPage()
                     formData.address,
                     shippingInfo
                 );
-            } else
-            {
+            } else {
                 const res = await ProfileService.CreateUserProfile(
                     formData.fullName,
                     userId,
@@ -374,8 +335,7 @@ export default function CheckoutPage()
                 );
                 setUserProfile(res.data);
             }
-        } catch (error)
-        {
+        } catch (error) {
             console.error('Error saving checkout info to profile:', error);
         }
     };
@@ -386,8 +346,7 @@ export default function CheckoutPage()
     const totalWeight = checkoutItems.reduce((sum, item) => sum + ((item.weight || 0) * item.quantity), 0);
 
     // Tính phí ship theo cân nặng (gram) — miễn phí nếu đơn >= 500.000đ
-    const calculateShippingFee = (weightInGrams) =>
-    {
+    const calculateShippingFee = (weightInGrams) => {
         if (subtotal >= 500000) return 0;
         if (weightInGrams <= 0) return 15000; // default nếu chưa có weight
         if (weightInGrams <= 500) return 15000;
@@ -435,9 +394,10 @@ export default function CheckoutPage()
                     percentage: data.discountPercentage !== undefined ? data.discountPercentage : data.DiscountPercentage
                 });
                 toast.success('Áp dụng mã giảm giá thành công!');
+                setShowDiscountModal(false);
             } else {
                 const errorData = await res.json();
-                toast.error(errorData.message || 'Mã giảm giá không hợp lệ hoặc đã hết hạn');
+                toast.error(errorData.message || 'Mã giảm giá không hợp lệ hoặc không đủ điều kiện');
                 setAppliedDiscount(null);
             }
         } catch (error) {
@@ -448,23 +408,29 @@ export default function CheckoutPage()
         }
     };
 
+    const openDiscountModal = () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            toast.error('Vui lòng đăng nhập để xem mã giảm giá');
+            return;
+        }
+        setShowDiscountModal(true);
+    };
+
     const handleRemoveDiscount = () => {
         setAppliedDiscount(null);
         setDiscountCode('');
     };
 
-    const handleChange = (e) =>
-    {
+    const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
-        if (errors[name])
-        {
+        if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: '' }));
         }
     };
 
-    const handleProvinceChange = (e) =>
-    {
+    const handleProvinceChange = (e) => {
         const code = e.target.value;
         const name = e.target.options[e.target.selectedIndex]?.text || '';
         setFormData(prev => ({
@@ -480,8 +446,7 @@ export default function CheckoutPage()
         if (errors.city) setErrors(prev => ({ ...prev, city: '' }));
     };
 
-    const handleDistrictChange = (e) =>
-    {
+    const handleDistrictChange = (e) => {
         const code = e.target.value;
         const name = e.target.options[e.target.selectedIndex]?.text || '';
         setFormData(prev => ({
@@ -494,8 +459,7 @@ export default function CheckoutPage()
         if (errors.district) setErrors(prev => ({ ...prev, district: '' }));
     };
 
-    const handleWardChange = (e) =>
-    {
+    const handleWardChange = (e) => {
         const code = e.target.value;
         const name = e.target.options[e.target.selectedIndex]?.text || '';
         setFormData(prev => ({
@@ -505,8 +469,7 @@ export default function CheckoutPage()
         }));
     };
 
-    const validate = () =>
-    {
+    const validate = () => {
         const newErrors = {};
         if (!formData.fullName.trim()) newErrors.fullName = 'Vui lòng nhập họ tên';
         if (!formData.phone.trim()) newErrors.phone = 'Vui lòng nhập số điện thoại';
@@ -518,14 +481,12 @@ export default function CheckoutPage()
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = async (e) =>
-    {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!validate()) return;
 
         setIsSubmitting(true);
-        try
-        {
+        try {
             const isLoggedIn = !!localStorage.getItem('token');
             const orderData = {
                 fullName: formData.fullName,
@@ -552,24 +513,20 @@ export default function CheckoutPage()
             };
 
             let created;
-            if (isLoggedIn)
-            {
+            if (isLoggedIn) {
                 orderData.userId = localStorage.getItem('userId') || null;
                 created = await OrderService.createOrder(orderData);
-            } else
-            {
+            } else {
                 // Guest checkout: attach guestToken
                 orderData.guestToken = GuestProfileService.getGuestToken();
                 created = await OrderService.createGuestOrder(orderData);
             }
 
-            if (isLoggedIn)
-            {
+            if (isLoggedIn) {
                 await saveCheckoutInfoToProfile();
             }
 
-            if (created.checkoutUrl)
-            {
+            if (created.checkoutUrl) {
                 sessionStorage.setItem('pendingOrderTotal', total.toString());
                 window.location.href = created.checkoutUrl;
                 return;
@@ -578,7 +535,7 @@ export default function CheckoutPage()
             setOrderId(created.orderCode?.toString() || (created.id ? created.id.substring(0, 8).toUpperCase() : 'LS-' + Date.now().toString(36).toUpperCase()));
             setSavedTotal(total);
             setOrderSuccess(true);
-            
+
             if (buyNowItems) {
                 buyNowItems.forEach(item => {
                     if (item.key) removeFromCart(item.key);
@@ -588,8 +545,7 @@ export default function CheckoutPage()
             }
 
             // Save guest info for future auto-fill (if guest checkout)
-            if (!isLoggedIn)
-            {
+            if (!isLoggedIn) {
                 GuestProfileService.saveGuestInfo({
                     fullName: formData.fullName,
                     phone: formData.phone,
@@ -597,12 +553,10 @@ export default function CheckoutPage()
                     address: formData.address,
                 });
             }
-        } catch (error)
-        {
+        } catch (error) {
             console.error('Order error:', error);
             toast.error('Đặt hàng thất bại. Vui lòng thử lại!');
-        } finally
-        {
+        } finally {
             setIsSubmitting(false);
         }
     };
@@ -612,8 +566,7 @@ export default function CheckoutPage()
         }`;
 
     // ── Order Success View ──
-    if (orderSuccess)
-    {
+    if (orderSuccess) {
         return (
             <>
                 <TopBar />
@@ -673,8 +626,7 @@ export default function CheckoutPage()
     }
 
     // ── Empty Cart ──
-    if (checkoutItems.length === 0)
-    {
+    if (checkoutItems.length === 0) {
         return (
             <>
                 <TopBar />
@@ -931,8 +883,7 @@ export default function CheckoutPage()
 
                                     {/* Product list */}
                                     <div className='space-y-4 max-h-[400px] overflow-y-auto mb-4 pr-1'>
-                                        {checkoutItems.map((item) =>
-                                        {
+                                        {checkoutItems.map((item) => {
                                             const optionText = Object.entries(item.selectedOptions || {})
                                                 .map(([, opt]) => opt.value)
                                                 .join(', ');
@@ -1001,14 +952,26 @@ export default function CheckoutPage()
                                     <div className='border-t border-gray-100 pt-4 mt-4'>
                                         <label className='block text-sm font-medium text-gray-700 mb-2'>Mã giảm giá</label>
                                         <div className='flex gap-2'>
-                                            <input
-                                                type='text'
-                                                value={discountCode}
-                                                onChange={(e) => setDiscountCode(e.target.value.toUpperCase())}
-                                                disabled={!!appliedDiscount}
-                                                placeholder='Nhập mã giảm giá...'
-                                                className='flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-400 disabled:bg-gray-100 uppercase'
-                                            />
+                                            <div className='relative flex-1'>
+                                                <input
+                                                    type='text'
+                                                    value={discountCode}
+                                                    onChange={(e) => setDiscountCode(e.target.value.toUpperCase())}
+                                                    disabled={!!appliedDiscount}
+                                                    placeholder='Nhập mã giảm giá...'
+                                                    className='w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-400 disabled:bg-gray-100 uppercase'
+                                                />
+                                                {!appliedDiscount && (
+                                                    <button
+                                                        type='button'
+                                                        onClick={openDiscountModal}
+                                                        className='absolute right-2 top-1/2 -translate-y-1/2 hover:scale-110 transition-transform p-1 flex items-center justify-center cursor-pointer'
+                                                        title="Chọn mã giảm giá"
+                                                    >
+                                                        <i className='bx bxs-discount text-xl text-primary-500'></i>
+                                                    </button>
+                                                )}
+                                            </div>
                                             {appliedDiscount ? (
                                                 <button
                                                     type="button"
@@ -1060,6 +1023,53 @@ export default function CheckoutPage()
             </div>
 
             <Footer />
+
+            {/* Discount Modal */}
+            <DiscountModal
+                isOpen={showDiscountModal}
+                onClose={() => setShowDiscountModal(false)}
+                totalAmount={totalWithoutDiscount}
+                onApply={async (code) => {
+                    setDiscountCode(code.code);
+                    setIsApplyingDiscount(true);
+                    try {
+                        const token = localStorage.getItem('token');
+                        const res = await fetch(`${API_ENDPOINT}/api/DiscountCode/apply`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify({
+                                code: code.code,
+                                Code: code.code,
+                                orderTotalAmount: totalWithoutDiscount,
+                                OrderTotalAmount: totalWithoutDiscount
+                            })
+                        });
+
+                        if (res.ok) {
+                            const data = await res.json();
+                            setAppliedDiscount({
+                                code: data.code || data.Code,
+                                amount: data.discountAmount !== undefined ? data.discountAmount : data.DiscountAmount,
+                                percentage: data.discountPercentage !== undefined ? data.discountPercentage : data.DiscountPercentage
+                            });
+                            toast.success('Áp dụng mã giảm giá thành công!');
+                            setShowDiscountModal(false);
+                        } else {
+                            const errorData = await res.json();
+                            toast.error(errorData.message || 'Mã giảm giá không hợp lệ hoặc không đủ điều kiện');
+                            setAppliedDiscount(null);
+                        }
+                    } catch (error) {
+                        console.error('Lỗi khi áp dụng mã giảm giá:', error);
+                        toast.error('Có lỗi xảy ra khi áp dụng mã giảm giá');
+                    } finally {
+                        setIsApplyingDiscount(false);
+                    }
+                }}
+            />
         </>
     );
 }
