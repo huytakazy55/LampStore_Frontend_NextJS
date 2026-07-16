@@ -349,7 +349,7 @@ const ChatWindow = ({ onClose }) =>
 
   return (
     <div
-      className="flex h-[100dvh] sm:h-[32rem] w-full sm:w-[22rem] flex-col overflow-hidden sm:rounded-2xl bg-white shadow-[0_6px_18px_rgba(60,60,180,0.13),0_0_0_2.5px_rgba(245,158,11,0.12)]"
+      className="flex h-full sm:h-[32rem] w-full sm:w-[22rem] flex-col overflow-hidden sm:rounded-2xl bg-white shadow-[0_6px_18px_rgba(60,60,180,0.13),0_0_0_2.5px_rgba(245,158,11,0.12)]"
       onWheel={e => e.stopPropagation()}
       tabIndex={0}
     >

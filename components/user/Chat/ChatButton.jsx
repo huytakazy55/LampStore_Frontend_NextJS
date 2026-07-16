@@ -20,6 +20,32 @@ const ChatButton = () =>
   const seenMessageKeysRef = useRef(new Set());
   const initializedPollRef = useRef(false);
   const isChatOpenRef = useRef(false);
+  const [viewportStyle, setViewportStyle] = useState({});
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.visualViewport) {
+      const updateViewport = () => {
+        if (window.innerWidth < 640) {
+          setViewportStyle({
+            height: `${window.visualViewport.height}px`,
+            top: `${window.visualViewport.offsetTop}px`,
+            bottom: 'auto'
+          });
+        } else {
+          setViewportStyle({});
+        }
+      };
+
+      window.visualViewport.addEventListener('resize', updateViewport);
+      window.visualViewport.addEventListener('scroll', updateViewport);
+      updateViewport();
+
+      return () => {
+        window.visualViewport.removeEventListener('resize', updateViewport);
+        window.visualViewport.removeEventListener('scroll', updateViewport);
+      };
+    }
+  }, []);
 
   useEffect(() => {
     if (isChatOpen || isZaloPopupOpen) {
@@ -215,10 +241,11 @@ const ChatButton = () =>
 
       {/* Real Chat Window với animation */}
       <div
-        className={`fixed bottom-0 left-0 w-full sm:w-auto sm:left-auto sm:right-24 z-[9992] transition-all duration-300 ease-out origin-bottom sm:origin-bottom-right ${isChatOpen
+        className={`fixed bottom-0 left-0 w-full sm:w-auto sm:left-auto sm:right-24 z-[9992] transition-all duration-300 ease-out origin-bottom sm:origin-bottom-right flex flex-col justify-end sm:block ${isChatOpen
           ? 'translate-y-0 scale-100 opacity-100 pointer-events-auto'
           : 'translate-y-10 scale-95 opacity-0 pointer-events-none'
           } sm:bottom-[152px]`}
+        style={viewportStyle}
       >
         {isChatOpen && (
           <ChatWindow onClose={() => setIsChatOpen(false)} />
