@@ -23,8 +23,13 @@ const NewsSection = () => {
 
     return (
         <div className='w-full xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0'>
-            <div className='flex justify-between items-center relative pb-2 border-b border-gray-300 mb-6 md:mb-8 after:w-[30%] md:after:w-[13%] after:h-[1px] after:absolute after:bottom-0 after:bg-primary-600'>
-                <h3 className='text-xl md:text-h3 font-medium text-black'>Tin tức & Góc nội thất</h3>
+            <div className='flex justify-between items-center relative pb-3 border-b border-gray-300 dark:border-[#333] mb-6 md:mb-8 after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-40 after:h-0.5 after:bg-primary-600 after:rounded-sm'>
+                <div className='flex items-center gap-3'>
+                    <div className='w-9 h-9 md:w-[42px] md:h-[42px] flex items-center justify-center bg-primary-600 dark:bg-primary-900 rounded-md flex-shrink-0'>
+                        <i className='bx bx-news text-xl md:text-[1.4rem] text-white'></i>
+                    </div>
+                    <h3 className='text-sm md:text-h3 font-bold text-gray-800 dark:text-gray-200 m-0'>Tin tức & Góc nội thất</h3>
+                </div>
                 <button
                     onClick={() => navigate('/news')}
                     className="text-sm font-medium text-gray-500 hover:text-primary-600 transition-colors flex items-center gap-1"
@@ -95,4 +100,3 @@ const NewsSection = () => {
 };
 
 export default NewsSection;
-

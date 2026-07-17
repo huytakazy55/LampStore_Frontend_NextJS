@@ -3,17 +3,19 @@
 import React, { useState, useEffect } from 'react';
 import ReviewService from '@/services/ReviewService';
 
-export default function CustomerReviews()
-{
+export default function CustomerReviews() {
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchReviews = async () => {
             try {
-                const res = await ReviewService.getRecentReviews(6);
+                // Fetch more reviews to ensure we can get 20 5-star reviews
+                const res = await ReviewService.getRecentReviews(100);
                 if (res.data) {
-                    setReviews(res.data.$values || res.data || []);
+                    const fetchedReviews = res.data.$values || res.data || [];
+                    const fiveStarReviews = fetchedReviews.filter(r => r.rating === 5);
+                    setReviews(fiveStarReviews.slice(0, 20));
                 }
             } catch (error) {
                 console.error("Failed to fetch recent reviews:", error);
@@ -26,12 +28,10 @@ export default function CustomerReviews()
 
     if (loading) {
         return (
-            <section className="py-12 md:py-16 bg-gray-50 dark:bg-gray-900 overflow-hidden">
-                <div className="xl:max-w-[1440px] mx-auto px-4 sm:px-6 xl:px-0 text-center">
-                    <div className="animate-pulse flex flex-col items-center justify-center space-y-4">
-                        <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
-                        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
-                    </div>
+            <section className="py-12 h-[350px] overflow-hidden flex items-center justify-center">
+                <div className="animate-pulse flex flex-col items-center justify-center space-y-4">
+                    <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-64"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-48"></div>
                 </div>
             </section>
         );
@@ -39,48 +39,114 @@ export default function CustomerReviews()
 
     if (reviews.length === 0) return null;
 
-    return (
-        <section className="py-12 md:py-16 bg-gray-50 dark:bg-gray-900 overflow-hidden">
-            <div className="xl:max-w-[1440px] mx-auto px-4 sm:px-6 xl:px-0">
+    const getReviewGap = (review, index, rowIndex) => {
+        const seed = String(review.id || `${review.userName}-${index}-${rowIndex}`)
+            .split('')
+            .reduce((sum, char) => sum + char.charCodeAt(0), 0);
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {reviews.map((review) => (
-                        <div key={review.id} className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
-                            <div className="flex items-start justify-between mb-4">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400 font-bold flex items-center justify-center shrink-0 uppercase">
-                                        {review.userName.charAt(0)}
-                                    </div>
-                                    <div>
-                                        <div className="font-semibold text-gray-900 dark:text-white text-sm">
-                                            {review.userName}
-                                        </div>
-                                        <div className="text-[11px] text-gray-500 dark:text-gray-400 flex items-center gap-1">
-                                            <i className='bx bxs-check-circle text-green-500' />
-                                            Đã mua hàng
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="text-xs text-gray-400 dark:text-gray-500">
-                                    {new Date(review.createAt).toLocaleDateString('vi-VN')}
-                                </div>
-                            </div>
+        return `${24 + ((seed + index * 13 + rowIndex * 17) % 41)}px`;
+    };
 
-                            <div className="flex items-center gap-1 mb-3">
-                                {[...Array(5)].map((_, i) => (
-                                    <i key={i} className={`bx bxs-star text-sm ${i < review.rating ? 'text-yellow-400' : 'text-gray-200 dark:text-gray-700'}`} />
-                                ))}
-                            </div>
+    const getReviewOffsetY = (index) => {
+        const offsets = [0, 58, 22, 86, 36, 72, 12, 96, 46, 64];
 
-                            <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4 line-clamp-4">
-                                "{review.comment}"
-                            </p>
+        return `${offsets[index % offsets.length]}px`;
+    };
 
-                            <div className="pt-4 border-t border-gray-100 dark:border-gray-700 text-xs font-medium text-primary-600 dark:text-primary-400 truncate">
-                                Phân loại: {review.productName}
-                            </div>
+    const renderReviewCard = (review, index, rowIndex, keyPrefix = 'review') => (
+        <div
+            key={`${keyPrefix}-${review.id || index}`}
+            className="flex-none w-[300px] sm:w-[420px] relative bg-white dark:bg-gray-800 rounded-[1.5rem] p-5 shadow-xl flex flex-col"
+            style={{
+                transform: `translateY(${getReviewOffsetY(index)})`,
+                marginRight: getReviewGap(review, index, rowIndex)
+            }}
+        >
+            {/* Quote Icon Background */}
+            <div className="absolute -top-5 right-6 opacity-30 z-0">
+                <i className="bx bxs-quote-right text-6xl text-gray-200 dark:text-gray-700"></i>
+            </div>
+
+            {/* Avatar + Name + Date + Verified at the top */}
+            <div className="flex items-center gap-3 mb-3 relative z-10">
+                {/* Avatar */}
+                <div className="w-10 h-10 rounded-full border-2 border-white dark:border-gray-800 shadow-sm overflow-hidden shrink-0">
+                    <div className="w-full h-full flex items-center justify-center bg-[#E8E4DF] dark:bg-gray-600 text-gray-600 dark:text-gray-300 font-bold text-base uppercase">
+                        {review.userName.charAt(0)}
+                    </div>
+                </div>
+                <div className="flex-grow min-w-0">
+                    <div className="flex justify-between items-center gap-3">
+                        <div className="font-semibold text-orange-500 dark:text-orange-400 text-[15px] truncate" style={{ fontFamily: 'cursive' }}>
+                            {review.userName}
                         </div>
-                    ))}
+                        <div className="text-[11px] text-gray-400 shrink-0">
+                            {new Date(review.createAt).toLocaleDateString('vi-VN')}
+                        </div>
+                    </div>
+                    <div className="text-[11px] text-gray-500 flex items-center gap-1 mt-0.5">
+                        <i className='bx bxs-check-circle text-green-500 text-[13px]' />
+                        Đã mua hàng
+                    </div>
+                </div>
+            </div>
+
+            {/* Stars */}
+            <div className="flex gap-1 text-yellow-400 text-sm mb-2 relative z-10">
+                {[...Array(5)].map((_, i) => (
+                    <i key={i} className="bx bxs-star" />
+                ))}
+            </div>
+
+            {/* Comment */}
+            <p className="text-gray-500 dark:text-gray-300 text-[14px] italic relative z-10 line-clamp-2 mb-3">
+                "{review.comment}"
+            </p>
+
+            {/* Product Name (Footer) */}
+            <div className="pt-2 border-t border-gray-100 dark:border-gray-700 relative z-10 mt-auto">
+                <div className="text-[11px] font-medium text-orange-500 dark:text-orange-400 truncate flex items-center">
+                    <i className='bx bx-shopping-bag mr-1.5 text-[13px]'></i>
+                    {review.productName}
+                </div>
+            </div>
+        </div>
+    );
+
+    return (
+        <section className="py-12">
+            <style>{`
+                @keyframes reviewMarquee {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(-50%); }
+                }
+                .review-track {
+                    display: flex;
+                    align-items: flex-start;
+                    width: max-content;
+                    animation: reviewMarquee 55s linear infinite;
+                    will-change: transform;
+                }
+                .review-track:hover {
+                    animation-play-state: paused;
+                }
+            `}</style>
+
+            <div className="xl:max-w-[1440px] mx-auto px-4 sm:px-6 xl:px-0">
+                <div className='flex flex-col sm:flex-row justify-between gap-2 sm:gap-0 mb-6 md:mb-8 pb-3 border-b border-gray-300 dark:border-[#333] relative after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-24 after:h-0.5 after:bg-primary-600 after:rounded-sm'>
+                    <div className='flex items-center gap-3'>
+                        <div className='w-9 h-9 md:w-[42px] md:h-[42px] flex items-center justify-center bg-primary-600 dark:bg-primary-900 rounded-md flex-shrink-0'>
+                            <i className='bx bxs-star text-xl md:text-[1.4rem] text-white'></i>
+                        </div>
+                        <h3 className='text-sm md:text-h3 font-bold text-gray-800 dark:text-gray-200 m-0'>Đánh giá của khách hàng</h3>
+                    </div>
+                </div>
+
+                <div className="relative overflow-hidden py-6 min-h-[310px]">
+                    <div className="review-track">
+                        {reviews.map((review, index) => renderReviewCard(review, index, 0, 'review'))}
+                        {reviews.map((review, index) => renderReviewCard(review, index, 0, 'review-duplicate'))}
+                    </div>
                 </div>
             </div>
         </section>
