@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import CartService from '@/services/CartService';
 
 const CartContext = createContext();
@@ -72,101 +72,144 @@ const isLoggedIn = () =>
     return !!localStorage.getItem('token');
 };
 
+const getItemsFromApiResponse = (backendData) =>
+{
+    return (backendData?.$values || backendData || [])
+        .map(backendToFrontendItem);
+};
+
+const mergeCartItem = (items, item) =>
+{
+    const key = getCartItemKey(item.productId, item.selectedOptions);
+    const existingIndex = items.findIndex(ci => ci.key === key);
+
+    if (existingIndex >= 0)
+    {
+        const updated = [...items];
+        updated[existingIndex] = {
+            ...updated[existingIndex],
+            quantity: updated[existingIndex].quantity + item.quantity
+        };
+        return updated;
+    }
+
+    const totalAdditional = Object.values(item.selectedOptions || {})
+        .reduce((sum, opt) => sum + (opt.additionalPrice || 0), 0);
+
+    return [...items, {
+        key,
+        productId: item.productId,
+        name: item.name,
+        image: item.image,
+        basePrice: item.price,
+        finalPrice: item.price + totalAdditional,
+        quantity: item.quantity,
+        selectedOptions: item.selectedOptions || {},
+        weight: item.weight || 0
+    }];
+};
+
 export function CartProvider({ children })
 {
     const [cartItems, setCartItems] = useState([]);
+    const cartItemsRef = useRef([]);
+    const syncRequestRef = useRef(0);
 
     // Hydrate from localStorage after mount
     useEffect(() =>
     {
-        setCartItems(loadCart());
+        let cancelled = false;
+
+        const hydrateCart = async () =>
+        {
+            const localItems = loadCart();
+            cartItemsRef.current = localItems;
+            setCartItems(localItems);
+
+            if (!isLoggedIn()) return;
+
+            try
+            {
+                const backendData = await CartService.getMyCart();
+                if (cancelled) return;
+                const items = getItemsFromApiResponse(backendData);
+                cartItemsRef.current = items;
+                setCartItems(items);
+            } catch (error)
+            {
+                console.error('Cart hydration failed:', error);
+            }
+        };
+
+        hydrateCart();
+
+        return () =>
+        {
+            cancelled = true;
+        };
     }, []);
 
     useEffect(() =>
     {
+        cartItemsRef.current = cartItems;
         saveCart(cartItems);
     }, [cartItems]);
 
+    const syncCartSnapshot = useCallback((items) =>
+    {
+        if (!isLoggedIn()) return;
+
+        const requestId = ++syncRequestRef.current;
+
+        CartService.syncCart(items).then(backendData =>
+        {
+            if (requestId !== syncRequestRef.current) return;
+            const syncedItems = getItemsFromApiResponse(backendData);
+            cartItemsRef.current = syncedItems;
+            setCartItems(syncedItems);
+        }).catch(err => console.error('Cart sync failed:', err));
+    }, []);
+
     const addToCart = useCallback((item) =>
     {
-        setCartItems(prev =>
-        {
-            const key = getCartItemKey(item.productId, item.selectedOptions);
-            const existingIndex = prev.findIndex(ci => ci.key === key);
-
-            if (existingIndex >= 0)
-            {
-                const updated = [...prev];
-                updated[existingIndex] = {
-                    ...updated[existingIndex],
-                    quantity: updated[existingIndex].quantity + item.quantity
-                };
-                return updated;
-            }
-
-            const totalAdditional = Object.values(item.selectedOptions || {})
-                .reduce((sum, opt) => sum + (opt.additionalPrice || 0), 0);
-
-            return [...prev, {
-                key,
-                productId: item.productId,
-                name: item.name,
-                image: item.image,
-                basePrice: item.price,
-                finalPrice: item.price + totalAdditional,
-                quantity: item.quantity,
-                selectedOptions: item.selectedOptions || {},
-                weight: item.weight || 0
-            }];
-        });
-
-        if (isLoggedIn())
-        {
-            setTimeout(() =>
-            {
-                const currentCart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
-                CartService.syncCart(currentCart).then(backendData =>
-                {
-                    const items = (backendData?.$values || backendData || [])
-                        .map(backendToFrontendItem);
-                    setCartItems(items);
-                }).catch(err => console.error('Cart add sync failed:', err));
-            }, 300);
-        }
-    }, []);
+        const nextItems = mergeCartItem(cartItemsRef.current, item);
+        cartItemsRef.current = nextItems;
+        setCartItems(nextItems);
+        syncCartSnapshot(nextItems);
+    }, [syncCartSnapshot]);
 
     const removeFromCart = useCallback((key) =>
     {
-        setCartItems(prev =>
+        const item = cartItemsRef.current.find(i => i.key === key);
+        if (item?.backendId && isLoggedIn())
         {
-            const item = prev.find(i => i.key === key);
-            if (item?.backendId && isLoggedIn())
-            {
-                CartService.removeItem(item.backendId).catch(err =>
-                    console.error('Failed to remove from backend:', err)
-                );
-            }
-            return prev.filter(i => i.key !== key);
-        });
+            CartService.removeItem(item.backendId).catch(err =>
+                console.error('Failed to remove from backend:', err)
+            );
+        }
+
+        const nextItems = cartItemsRef.current.filter(i => i.key !== key);
+        cartItemsRef.current = nextItems;
+        setCartItems(nextItems);
     }, []);
 
     const updateQuantity = useCallback((key, quantity) =>
     {
         if (quantity < 1) return;
-        setCartItems(prev => prev.map(item =>
+
+        const item = cartItemsRef.current.find(i => i.key === key);
+        if (item?.backendId && isLoggedIn())
         {
-            if (item.key === key)
-            {
-                if (item.backendId && isLoggedIn())
-                {
-                    CartService.updateItemQuantity(item.backendId, quantity).catch(err =>
-                        console.error('Failed to update quantity in backend:', err)
-                    );
-                }
-                return { ...item, quantity };
-            }
-            return item;
-        }));
+            CartService.updateItemQuantity(item.backendId, quantity).catch(err =>
+                console.error('Failed to update quantity in backend:', err)
+            );
+        }
+
+        const nextItems = cartItemsRef.current.map(cartItem =>
+            cartItem.key === key ? { ...cartItem, quantity } : cartItem
+        );
+        cartItemsRef.current = nextItems;
+        setCartItems(nextItems);
     }, []);
 
     const clearCart = useCallback(() =>
@@ -177,6 +220,7 @@ export function CartProvider({ children })
                 console.error('Failed to clear backend cart:', err)
             );
         }
+        cartItemsRef.current = [];
         setCartItems([]);
     }, []);
 
@@ -186,8 +230,8 @@ export function CartProvider({ children })
         {
             const localItems = loadCart();
             const backendData = await CartService.syncCart(localItems);
-            const items = (backendData?.$values || backendData || [])
-                .map(backendToFrontendItem);
+            const items = getItemsFromApiResponse(backendData);
+            cartItemsRef.current = items;
             setCartItems(items);
         } catch (error)
         {
@@ -197,6 +241,7 @@ export function CartProvider({ children })
 
     const clearCartOnLogout = useCallback(() =>
     {
+        cartItemsRef.current = [];
         setCartItems([]);
         if (typeof window !== 'undefined')
         {
