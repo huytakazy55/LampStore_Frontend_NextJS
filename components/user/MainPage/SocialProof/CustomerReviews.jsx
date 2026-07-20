@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReviewService from '@/services/ReviewService';
 
 export default function CustomerReviews() {
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [animationDuration, setAnimationDuration] = useState(55);
+    const reviewTrackRef = useRef(null);
 
     useEffect(() => {
         const fetchReviews = async () => {
@@ -25,6 +27,23 @@ export default function CustomerReviews() {
         };
         fetchReviews();
     }, []);
+
+    useEffect(() => {
+        const track = reviewTrackRef.current;
+        if (!track || reviews.length === 0) return;
+
+        const updateAnimationDuration = () => {
+            const loopDistance = track.scrollWidth / 2;
+            setAnimationDuration(loopDistance / 100);
+        };
+
+        updateAnimationDuration();
+
+        const resizeObserver = new ResizeObserver(updateAnimationDuration);
+        resizeObserver.observe(track);
+
+        return () => resizeObserver.disconnect();
+    }, [reviews]);
 
     if (loading) {
         return (
@@ -124,7 +143,7 @@ export default function CustomerReviews() {
                     display: flex;
                     align-items: flex-start;
                     width: max-content;
-                    animation: reviewMarquee 55s linear infinite;
+                    animation: reviewMarquee linear infinite;
                     will-change: transform;
                 }
                 .review-track:hover {
@@ -143,7 +162,11 @@ export default function CustomerReviews() {
                 </div>
 
                 <div className="relative overflow-hidden py-6 min-h-[310px]">
-                    <div className="review-track">
+                    <div
+                        ref={reviewTrackRef}
+                        className="review-track"
+                        style={{ animationDuration: `${animationDuration}s` }}
+                    >
                         {reviews.map((review, index) => renderReviewCard(review, index, 0, 'review'))}
                         {reviews.map((review, index) => renderReviewCard(review, index, 0, 'review-duplicate'))}
                     </div>

@@ -420,7 +420,9 @@ const AdminChatWindow = ({ chat, onClose, onUpdate }) => {
                         border: isFromAdmin ? 'none' : '1px solid #d9d9d9'
                       }}
                     >
-                      <p style={{ margin: 0, fontSize: '14px' }}>{msg.content || msg.Content}</p>
+                      <p style={{ margin: 0, fontSize: '14px', whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>
+                        {msg.content || msg.Content}
+                      </p>
                     </div>
                     <p style={{
                       margin: '4px 0 0 0',
@@ -501,4 +503,4 @@ const AdminChatWindow = ({ chat, onClose, onUpdate }) => {
   );
 };
 
-export default AdminChatWindow; 
+export default AdminChatWindow;

@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, Minimize2, MessageSquare, Smile } from 'lucide-react';
+import { Send, Minimize2, MessageSquare, Smile, Package, ChevronDown, ChevronUp, X } from 'lucide-react';
 import EmojiPicker from 'emoji-picker-react';
 import ChatService from '@/services/ChatService';
+import OrderService from '@/services/OrderService';
 import NotificationService from '@/services/NotificationService';
 import GuestProfileService from '@/services/GuestProfileService';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,6 +18,10 @@ const ChatWindow = ({ onClose }) =>
   const emojiPickerRef = useRef(null);
   const [typingUsers, setTypingUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [orders, setOrders] = useState([]);
+  const [ordersLoading, setOrdersLoading] = useState(true);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [showOrders, setShowOrders] = useState(false);
   const messagesEndRef = useRef(null);
   const processedMessagesRef = useRef(new Set());
   const hasSetupListenersRef = useRef(false);
@@ -70,6 +75,43 @@ const ChatWindow = ({ onClose }) =>
   };
 
   const isInitializingRef = useRef(false);
+
+  useEffect(() =>
+  {
+    const loadRecentOrders = async () =>
+    {
+      try
+      {
+        let response;
+        if (isGuestMode())
+        {
+          const guestToken = GuestProfileService.getExistingGuestToken();
+          if (!guestToken) return;
+          response = await OrderService.getGuestOrders(guestToken);
+        } else if (localStorage.getItem('token'))
+        {
+          response = await OrderService.getMyOrders();
+        } else
+        {
+          return;
+        }
+
+        const list = response?.$values || response || [];
+        const sortedOrders = Array.isArray(list)
+          ? [...list].sort((a, b) => new Date(b.orderDate || b.OrderDate) - new Date(a.orderDate || a.OrderDate))
+          : [];
+        setOrders(sortedOrders);
+      } catch (error)
+      {
+        console.error('Error loading recent orders for chat:', error);
+      } finally
+      {
+        setOrdersLoading(false);
+      }
+    };
+
+    loadRecentOrders();
+  }, []);
 
   // ── On mount: initialize chat (SignalR for logged-in, API-only for guest) ──
   useEffect(() =>
@@ -331,22 +373,54 @@ const ChatWindow = ({ onClose }) =>
     }
   };
 
+  const getOrderValue = (order, camelCase, pascalCase) => order?.[camelCase] ?? order?.[pascalCase];
+
+  const getOrderDisplayCode = (order) =>
+  {
+    const orderCode = getOrderValue(order, 'orderCode', 'OrderCode');
+    const id = getOrderValue(order, 'id', 'Id');
+    return orderCode || id?.substring(0, 8).toUpperCase() || 'N/A';
+  };
+
+  const formatOrderPrice = (amount) => Number(amount || 0).toLocaleString('vi-VN') + 'đ';
+
+  const buildOrderSupportMessage = (order, question) =>
+  {
+    const id = getOrderValue(order, 'id', 'Id');
+    const orderCode = getOrderValue(order, 'orderCode', 'OrderCode');
+    const status = getOrderValue(order, 'status', 'Status');
+    const totalAmount = getOrderValue(order, 'totalAmount', 'TotalAmount');
+
+    return [
+      '📦 YÊU CẦU HỖ TRỢ ĐƠN HÀNG',
+      `Mã đơn hàng: ${id || 'N/A'}`,
+      orderCode ? `Mã giao dịch: ${orderCode}` : null,
+      `Trạng thái: ${status || 'N/A'}`,
+      `Tổng tiền: ${formatOrderPrice(totalAmount)}`,
+      `Nội dung: ${question}`
+    ].filter(Boolean).join('\n');
+  };
+
   const sendMessage = async () =>
   {
     if (!newMessage.trim() || !currentChat) return;
     const chatId = currentChat.id || currentChat.Id;
     if (!chatId) return;
+    const content = selectedOrder
+      ? buildOrderSupportMessage(selectedOrder, newMessage.trim())
+      : newMessage.trim();
     
     try
     {
       if (isGuestMode())
       {
-        await ChatService.sendGuestMessage(chatId, newMessage);
+        await ChatService.sendGuestMessage(chatId, content);
       } else
       {
-        await ChatService.sendMessage(chatId, newMessage);
+        await ChatService.sendMessage(chatId, content);
       }
       setNewMessage('');
+      setSelectedOrder(null);
       await loadMessages(chatId);
     } catch (error)
     {
@@ -365,6 +439,7 @@ const ChatWindow = ({ onClose }) =>
 
   // ── Render ──
   const currentUserId = getCurrentUserId();
+  const latestOrder = orders[0];
 
   return (
     <div
@@ -392,6 +467,66 @@ const ChatWindow = ({ onClose }) =>
           <Minimize2 size={18} />
         </button>
       </div>
+
+      {/* Recent order context */}
+      {!ordersLoading && latestOrder && (
+        <div className="border-b border-gray-100 bg-primary-50/70 px-3 py-2">
+          <button
+            type="button"
+            onClick={() => setShowOrders(prev => !prev)}
+            className="flex w-full items-center gap-2 rounded-lg border border-primary-200 bg-white px-3 py-2 text-left shadow-sm transition hover:border-primary-300"
+          >
+            <Package size={18} className="shrink-0 text-primary-600" />
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center justify-between gap-2">
+                <span className="truncate text-xs font-semibold text-gray-800">
+                  Đơn gần nhất #{getOrderDisplayCode(latestOrder)}
+                </span>
+                <span className="shrink-0 text-xs font-semibold text-primary-600">
+                  {formatOrderPrice(getOrderValue(latestOrder, 'totalAmount', 'TotalAmount'))}
+                </span>
+              </div>
+              <p className="m-0 mt-0.5 text-[11px] text-gray-500">
+                {getOrderValue(latestOrder, 'status', 'Status')} · Chọn đơn để hỏi hỗ trợ
+              </p>
+            </div>
+            {showOrders ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          </button>
+
+          {showOrders && (
+            <div className="mt-2 max-h-36 space-y-1.5 overflow-y-auto">
+              {orders.slice(0, 5).map(order =>
+              {
+                const orderId = getOrderValue(order, 'id', 'Id');
+                const isSelected = getOrderValue(selectedOrder, 'id', 'Id') === orderId;
+                return (
+                  <button
+                    key={orderId}
+                    type="button"
+                    onClick={() => {
+                      setSelectedOrder(order);
+                      setShowOrders(false);
+                    }}
+                    className={`flex w-full items-center justify-between rounded-lg border px-3 py-2 text-left text-xs transition ${
+                      isSelected
+                        ? 'border-primary-400 bg-primary-100'
+                        : 'border-gray-200 bg-white hover:border-primary-300'
+                    }`}
+                  >
+                    <span>
+                      <strong>#{getOrderDisplayCode(order)}</strong>
+                      <span className="ml-2 text-gray-500">{getOrderValue(order, 'status', 'Status')}</span>
+                    </span>
+                    <span className="font-semibold text-primary-600">
+                      {formatOrderPrice(getOrderValue(order, 'totalAmount', 'TotalAmount'))}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Messages */}
       <div className="flex flex-1 min-h-0 flex-col gap-[0.6rem] overflow-y-auto p-4" style={{ WebkitOverflowScrolling: 'touch' }}>
@@ -432,7 +567,7 @@ const ChatWindow = ({ onClose }) =>
                         🛡️ Admin
                       </p>
                     )}
-                    <p className="m-0">{msgContent}</p>
+                    <p className="m-0 whitespace-pre-wrap break-words">{msgContent}</p>
                     <div className="mt-[3px] flex items-center justify-end gap-1">
                       <span className="text-[0.68rem] opacity-70">
                         {new Date(msgCreatedAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
@@ -461,6 +596,22 @@ const ChatWindow = ({ onClose }) =>
 
       {/* Input */}
       <div className="border-t border-gray-100 bg-gray-50 px-4 py-[0.7rem] relative">
+        {selectedOrder && (
+          <div className="mb-2 flex items-center gap-2 rounded-lg border border-primary-200 bg-primary-50 px-2.5 py-2 text-xs text-gray-700">
+            <Package size={15} className="shrink-0 text-primary-600" />
+            <span className="min-w-0 flex-1 truncate">
+              Đang hỏi về đơn <strong>#{getOrderDisplayCode(selectedOrder)}</strong>
+            </span>
+            <button
+              type="button"
+              onClick={() => setSelectedOrder(null)}
+              className="rounded p-0.5 text-gray-400 hover:bg-white hover:text-gray-700"
+              aria-label="Bỏ đính kèm đơn hàng"
+            >
+              <X size={14} />
+            </button>
+          </div>
+        )}
         {showEmojiPicker && (
           <div className="absolute bottom-[100%] right-4 mb-2 z-50" ref={emojiPickerRef}>
             <EmojiPicker 
