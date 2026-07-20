@@ -65,6 +65,14 @@ function getProductPrice(product)
     return variant?.discountPrice || variant?.price || product?.minPrice || 0;
 }
 
+function formatSchemaDate(value)
+{
+    if (!value) return null;
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return null;
+    return date.toISOString().split('T')[0];
+}
+
 async function fetchProductBySlug(slug)
 {
     const res = await fetch(`${API_ENDPOINT}/api/Products/slug/${slug}`, { next: { revalidate: 60 } });
@@ -138,6 +146,9 @@ async function getProductJsonLd(slug)
         const price = getProductPrice(product);
         const imageUrls = getProductImages(product);
         const cleanDescription = stripHtml(product.description, 500);
+        const offerValidFrom = formatSchemaDate(product.updatedAt || product.updateAt || product.createdAt || product.createAt)
+            || new Date().toISOString().split('T')[0];
+        const gtin = variant?.gtin || variant?.barcode || product.gtin || product.barcode || product.gtin13 || product.gtin14;
 
         // Fetch reviews using product.id
         let reviews = [];
@@ -151,9 +162,13 @@ async function getProductJsonLd(slug)
             }
         } catch { }
 
-        const avgRating = reviews.length > 0
-            ? (reviews.reduce((s, r) => s + Number(r.rating), 0) / reviews.length).toFixed(1)
-            : null;
+        const validReviews = reviews.filter(r => Number(r.rating) > 0);
+        const productAverageRating = Number(product.averageRating || product.avgRating || 0);
+        const productReviewCount = Number(product.reviewCount || product.reviewsCount || product.ratingCount || 0);
+        const avgRating = validReviews.length > 0
+            ? (validReviews.reduce((s, r) => s + Number(r.rating), 0) / validReviews.length).toFixed(1)
+            : (productAverageRating > 0 && productReviewCount > 0 ? productAverageRating.toFixed(1) : null);
+        const reviewCount = validReviews.length || productReviewCount;
 
         const jsonLd = {
             '@context': 'https://schema.org',
@@ -170,6 +185,7 @@ async function getProductJsonLd(slug)
             productID: product.id,
             sku: variant?.sku || product.id,
             mpn: variant?.sku || product.id,
+            ...(gtin && { gtin }),
             category: product.categoryName || product.category?.name || 'Đèn trang trí',
             ...(variant?.materials && { material: variant.materials }),
             offers: {
@@ -177,6 +193,7 @@ async function getProductJsonLd(slug)
                 url: `${SITE_URL}/product/${slug}`,
                 priceCurrency: 'VND',
                 price: Number(price).toFixed(0),
+                validFrom: offerValidFrom,
                 priceValidUntil: new Date(Date.now() + 180 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
                 availability: (variant?.stock || 0) > 0
                     ? 'https://schema.org/InStock'
@@ -215,17 +232,21 @@ async function getProductJsonLd(slug)
         };
 
         // Add aggregate rating if reviews exist
-        if (avgRating && reviews.length > 0)
+        if (avgRating && reviewCount > 0)
         {
             jsonLd.aggregateRating = {
                 '@type': 'AggregateRating',
                 ratingValue: avgRating,
-                reviewCount: reviews.length,
+                reviewCount,
                 bestRating: 5,
                 worstRating: 1,
             };
+        }
+
+        if (validReviews.length > 0)
+        {
             // Add individual reviews (max 5 for performance)
-            jsonLd.review = reviews.slice(0, 5).map(r => ({
+            jsonLd.review = validReviews.slice(0, 5).map(r => ({
                 '@type': 'Review',
                 author: { '@type': 'Person', name: r.userName || 'Khách hàng' },
                 datePublished: r.createAt || r.createdAt,
@@ -336,7 +357,7 @@ export default async function ProductLayout({ children, params })
             {/* SSR Product Content — visible to Googlebot, hidden after client hydration */}
             {product && (
                 <div data-ssr-content="product" style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap', borderWidth: 0 }}>
-                    <article itemScope itemType="https://schema.org/Product">
+                    <article>
                         {/* Breadcrumb */}
                         <nav aria-label="Breadcrumb">
                             <a href="/">Trang chủ</a> &gt;
@@ -345,22 +366,19 @@ export default async function ProductLayout({ children, params })
                         </nav>
 
                         {/* Product Name */}
-                        <h1 itemProp="name">{productName}</h1>
+                        <h1>{productName}</h1>
 
                         {/* Product Images */}
                         {productImages.length > 0 && (
                             <div>
                                 {productImages.map((imgUrl, i) => (
-                                    <img key={i} src={imgUrl} alt={`${productName} - Ảnh ${i + 1}`} itemProp="image" width="400" height="400" loading={i === 0 ? 'eager' : 'lazy'} />
+                                    <img key={i} src={imgUrl} alt={`${productName} - Ảnh ${i + 1}`} width="400" height="400" loading={i === 0 ? 'eager' : 'lazy'} />
                                 ))}
                             </div>
                         )}
 
                         {/* Price */}
-                        <div itemProp="offers" itemScope itemType="https://schema.org/Offer">
-                            <meta itemProp="priceCurrency" content="VND" />
-                            <meta itemProp="price" content={String(price)} />
-                            <meta itemProp="availability" content={stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock'} />
+                        <div>
                             <p>Giá: <strong>{formatPriceSSR(price)}₫</strong></p>
                             {hasDiscount && (
                                 <p>Giá gốc: <del>{formatPriceSSR(originalPrice)}₫</del> (-{discountPercent}%)</p>
@@ -382,7 +400,7 @@ export default async function ProductLayout({ children, params })
                         {description && (
                             <div>
                                 <h2>Mô tả sản phẩm</h2>
-                                <p itemProp="description">{description}</p>
+                                <p>{description}</p>
                             </div>
                         )}
 
