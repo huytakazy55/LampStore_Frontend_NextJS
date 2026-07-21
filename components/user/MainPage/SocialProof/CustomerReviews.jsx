@@ -7,7 +7,8 @@ export default function CustomerReviews() {
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [animationDuration, setAnimationDuration] = useState(55);
-    const reviewTrackRef = useRef(null);
+    const reviewSequenceRef = useRef(null);
+    const [loopDistance, setLoopDistance] = useState(0);
 
     useEffect(() => {
         const fetchReviews = async () => {
@@ -29,18 +30,19 @@ export default function CustomerReviews() {
     }, []);
 
     useEffect(() => {
-        const track = reviewTrackRef.current;
-        if (!track || reviews.length === 0) return;
+        const sequence = reviewSequenceRef.current;
+        if (!sequence || reviews.length === 0) return;
 
-        const updateAnimationDuration = () => {
-            const loopDistance = track.scrollWidth / 2;
-            setAnimationDuration(loopDistance / 100);
+        const updateLoopMetrics = () => {
+            const distance = sequence.scrollWidth;
+            setLoopDistance(distance);
+            setAnimationDuration(distance / 100);
         };
 
-        updateAnimationDuration();
+        updateLoopMetrics();
 
-        const resizeObserver = new ResizeObserver(updateAnimationDuration);
-        resizeObserver.observe(track);
+        const resizeObserver = new ResizeObserver(updateLoopMetrics);
+        resizeObserver.observe(sequence);
 
         return () => resizeObserver.disconnect();
     }, [reviews]);
@@ -75,58 +77,62 @@ export default function CustomerReviews() {
     const renderReviewCard = (review, index, rowIndex, keyPrefix = 'review') => (
         <div
             key={`${keyPrefix}-${review.id || index}`}
-            className="flex-none w-[300px] sm:w-[420px] relative bg-white dark:bg-gray-800 rounded-[1.5rem] p-5 shadow-xl flex flex-col"
+            className="flex-none"
             style={{
-                transform: `translateY(${getReviewOffsetY(index)})`,
-                marginRight: getReviewGap(review, index, rowIndex)
+                paddingRight: getReviewGap(review, index, rowIndex)
             }}
         >
-            {/* Quote Icon Background */}
-            <div className="absolute -top-5 right-6 opacity-30 z-0">
-                <i className="bx bxs-quote-right text-6xl text-gray-200 dark:text-gray-700"></i>
-            </div>
-
-            {/* Avatar + Name + Date + Verified at the top */}
-            <div className="flex items-center gap-3 mb-3 relative z-10">
-                {/* Avatar */}
-                <div className="w-10 h-10 rounded-full border-2 border-white dark:border-gray-800 shadow-sm overflow-hidden shrink-0">
-                    <div className="w-full h-full flex items-center justify-center bg-[#E8E4DF] dark:bg-gray-600 text-gray-600 dark:text-gray-300 font-bold text-base uppercase">
-                        {review.userName.charAt(0)}
-                    </div>
+            <div
+                className="w-[300px] sm:w-[420px] relative bg-white dark:bg-gray-800 rounded-[1.5rem] p-5 shadow-xl flex flex-col"
+                style={{ transform: `translateY(${getReviewOffsetY(index)})` }}
+            >
+                {/* Quote Icon Background */}
+                <div className="absolute -top-5 right-6 opacity-30 z-0">
+                    <i className="bx bxs-quote-right text-6xl text-gray-200 dark:text-gray-700"></i>
                 </div>
-                <div className="flex-grow min-w-0">
-                    <div className="flex justify-between items-center gap-3">
-                        <div className="font-semibold text-orange-500 dark:text-orange-400 text-[15px] truncate" style={{ fontFamily: 'cursive' }}>
-                            {review.userName}
-                        </div>
-                        <div className="text-[11px] text-gray-400 shrink-0">
-                            {new Date(review.createAt).toLocaleDateString('vi-VN')}
+
+                {/* Avatar + Name + Date + Verified at the top */}
+                <div className="flex items-center gap-3 mb-3 relative z-10">
+                    {/* Avatar */}
+                    <div className="w-10 h-10 rounded-full border-2 border-white dark:border-gray-800 shadow-sm overflow-hidden shrink-0">
+                        <div className="w-full h-full flex items-center justify-center bg-[#E8E4DF] dark:bg-gray-600 text-gray-600 dark:text-gray-300 font-bold text-base uppercase">
+                            {review.userName.charAt(0)}
                         </div>
                     </div>
-                    <div className="text-[11px] text-gray-500 flex items-center gap-1 mt-0.5">
-                        <i className='bx bxs-check-circle text-green-500 text-[13px]' />
-                        Đã mua hàng
+                    <div className="flex-grow min-w-0">
+                        <div className="flex justify-between items-center gap-3">
+                            <div className="font-semibold text-orange-500 dark:text-orange-400 text-[15px] truncate" style={{ fontFamily: 'cursive' }}>
+                                {review.userName}
+                            </div>
+                            <div className="text-[11px] text-gray-400 shrink-0">
+                                {new Date(review.createAt).toLocaleDateString('vi-VN')}
+                            </div>
+                        </div>
+                        <div className="text-[11px] text-gray-500 flex items-center gap-1 mt-0.5">
+                            <i className='bx bxs-check-circle text-green-500 text-[13px]' />
+                            Đã mua hàng
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Stars */}
-            <div className="flex gap-1 text-yellow-400 text-sm mb-2 relative z-10">
-                {[...Array(5)].map((_, i) => (
-                    <i key={i} className="bx bxs-star" />
-                ))}
-            </div>
+                {/* Stars */}
+                <div className="flex gap-1 text-yellow-400 text-sm mb-2 relative z-10">
+                    {[...Array(5)].map((_, i) => (
+                        <i key={i} className="bx bxs-star" />
+                    ))}
+                </div>
 
-            {/* Comment */}
-            <p className="text-gray-500 dark:text-gray-300 text-[14px] italic relative z-10 line-clamp-2 mb-3">
-                "{review.comment}"
-            </p>
+                {/* Comment */}
+                <p className="text-gray-500 dark:text-gray-300 text-[14px] italic relative z-10 line-clamp-2 mb-3">
+                    "{review.comment}"
+                </p>
 
-            {/* Product Name (Footer) */}
-            <div className="pt-2 border-t border-gray-100 dark:border-gray-700 relative z-10 mt-auto">
-                <div className="text-[11px] font-medium text-orange-500 dark:text-orange-400 truncate flex items-center">
-                    <i className='bx bx-shopping-bag mr-1.5 text-[13px]'></i>
-                    {review.productName}
+                {/* Product Name (Footer) */}
+                <div className="pt-2 border-t border-gray-100 dark:border-gray-700 relative z-10 mt-auto">
+                    <div className="text-[11px] font-medium text-orange-500 dark:text-orange-400 truncate flex items-center">
+                        <i className='bx bx-shopping-bag mr-1.5 text-[13px]'></i>
+                        {review.productName}
+                    </div>
                 </div>
             </div>
         </div>
@@ -137,7 +143,7 @@ export default function CustomerReviews() {
             <style>{`
                 @keyframes reviewMarquee {
                     0% { transform: translateX(0); }
-                    100% { transform: translateX(-50%); }
+                    100% { transform: translateX(calc(var(--review-loop-distance, 0px) * -1)); }
                 }
                 .review-track {
                     display: flex;
@@ -148,6 +154,11 @@ export default function CustomerReviews() {
                 }
                 .review-track:hover {
                     animation-play-state: paused;
+                }
+                .review-sequence {
+                    display: flex;
+                    align-items: flex-start;
+                    flex: none;
                 }
             `}</style>
 
@@ -163,12 +174,18 @@ export default function CustomerReviews() {
 
                 <div className="relative overflow-hidden py-6 min-h-[310px]">
                     <div
-                        ref={reviewTrackRef}
                         className="review-track"
-                        style={{ animationDuration: `${animationDuration}s` }}
+                        style={{
+                            '--review-loop-distance': `${loopDistance}px`,
+                            animationDuration: `${animationDuration}s`
+                        }}
                     >
-                        {reviews.map((review, index) => renderReviewCard(review, index, 0, 'review'))}
-                        {reviews.map((review, index) => renderReviewCard(review, index, 0, 'review-duplicate'))}
+                        <div ref={reviewSequenceRef} className="review-sequence">
+                            {reviews.map((review, index) => renderReviewCard(review, index, 0, 'review'))}
+                        </div>
+                        <div className="review-sequence" aria-hidden="true">
+                            {reviews.map((review, index) => renderReviewCard(review, index, 0, 'review-duplicate'))}
+                        </div>
                     </div>
                 </div>
             </div>
