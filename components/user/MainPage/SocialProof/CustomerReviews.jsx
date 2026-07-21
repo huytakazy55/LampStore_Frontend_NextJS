@@ -7,8 +7,10 @@ export default function CustomerReviews() {
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [animationDuration, setAnimationDuration] = useState(55);
+    const reviewViewportRef = useRef(null);
     const reviewSequenceRef = useRef(null);
     const [loopDistance, setLoopDistance] = useState(0);
+    const [repeatCount, setRepeatCount] = useState(3);
 
     useEffect(() => {
         const fetchReviews = async () => {
@@ -30,18 +32,25 @@ export default function CustomerReviews() {
     }, []);
 
     useEffect(() => {
+        const viewport = reviewViewportRef.current;
         const sequence = reviewSequenceRef.current;
-        if (!sequence || reviews.length === 0) return;
+        if (!viewport || !sequence || reviews.length === 0) return;
 
         const updateLoopMetrics = () => {
             const distance = sequence.scrollWidth;
+            const viewportWidth = viewport.offsetWidth;
+
+            if (!distance) return;
+
             setLoopDistance(distance);
             setAnimationDuration(distance / 100);
+            setRepeatCount(Math.max(3, Math.ceil(viewportWidth / distance) + 2));
         };
 
         updateLoopMetrics();
 
         const resizeObserver = new ResizeObserver(updateLoopMetrics);
+        resizeObserver.observe(viewport);
         resizeObserver.observe(sequence);
 
         return () => resizeObserver.disconnect();
@@ -172,7 +181,7 @@ export default function CustomerReviews() {
                     </div>
                 </div>
 
-                <div className="relative overflow-hidden py-6 min-h-[310px]">
+                <div ref={reviewViewportRef} className="relative overflow-hidden py-6 min-h-[310px]">
                     <div
                         className="review-track"
                         style={{
@@ -180,12 +189,16 @@ export default function CustomerReviews() {
                             animationDuration: `${animationDuration}s`
                         }}
                     >
-                        <div ref={reviewSequenceRef} className="review-sequence">
-                            {reviews.map((review, index) => renderReviewCard(review, index, 0, 'review'))}
-                        </div>
-                        <div className="review-sequence" aria-hidden="true">
-                            {reviews.map((review, index) => renderReviewCard(review, index, 0, 'review-duplicate'))}
-                        </div>
+                        {Array.from({ length: repeatCount }).map((_, copyIndex) => (
+                            <div
+                                key={copyIndex}
+                                ref={copyIndex === 0 ? reviewSequenceRef : null}
+                                className="review-sequence"
+                                aria-hidden={copyIndex > 0 ? "true" : undefined}
+                            >
+                                {reviews.map((review, index) => renderReviewCard(review, index, 0, `review-${copyIndex}`))}
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>
