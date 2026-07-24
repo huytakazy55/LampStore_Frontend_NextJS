@@ -95,9 +95,18 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
     const discountPercent = hasDiscount ? Math.round((1 - variant.discountPrice / variant.price) * 100) : 0;
     const stock = variant?.stock || 0;
 
-    const allImageSrcs = images.length > 0
-        ? images.map(img => getImgSrc(img?.imagePath || img?.ImagePath))
-        : [defaultImg];
+    const isVideo = (src) => src?.toLowerCase().endsWith('.mp4') || src?.toLowerCase().endsWith('.webm');
+
+    const allImageSrcs = [];
+    if (product?.videoPath) {
+        allImageSrcs.push(getImgSrc(product.videoPath));
+    }
+    if (images.length > 0) {
+        allImageSrcs.push(...images.map(img => getImgSrc(img?.imagePath || img?.ImagePath)));
+    }
+    if (allImageSrcs.length === 0) {
+        allImageSrcs.push(defaultImg);
+    }
 
     const mainImage = allImageSrcs[0] || defaultImg;
 
@@ -262,13 +271,25 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
                                     <i className="bx bx-chevron-left text-xl"></i>
                                 </button>
                             )}
-                            <img
-                                id="modal-main-image"
-                                src={currentCarouselImage}
-                                alt={product.name}
-                                className="absolute inset-0 w-full h-full p-2 sm:p-4 object-contain transition-all duration-300"
-                                onError={(e) => { e.target.src = defaultImg; }}
-                            />
+                            {isVideo(currentCarouselImage) ? (
+                                <video
+                                    src={currentCarouselImage}
+                                    className="absolute inset-0 w-full h-full p-2 sm:p-4 object-contain transition-all duration-300 bg-black/5 dark:bg-black/20"
+                                    autoPlay
+                                    muted
+                                    loop
+                                    playsInline
+                                    controls
+                                />
+                            ) : (
+                                <img
+                                    id="modal-main-image"
+                                    src={currentCarouselImage}
+                                    alt={product.name}
+                                    className="absolute inset-0 w-full h-full p-2 sm:p-4 object-contain transition-all duration-300"
+                                    onError={(e) => { e.target.src = defaultImg; }}
+                                />
+                            )}
                             {allImageSrcs.length > 1 && (
                                 <button
                                     onClick={handleNextImage}
@@ -290,13 +311,17 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
                                                 setDisplayImage(null);
                                                 setCurrentImageIndex(idx);
                                             }}
-                                            className={`w-2 h-2 rounded-full transition-all cursor-pointer shadow-sm ${
+                                            className={`relative flex items-center justify-center rounded-full transition-all cursor-pointer shadow-sm ${
                                                 (!displayImage && currentImageIndex === idx)
-                                                    ? 'bg-primary-600 scale-125'
-                                                    : 'bg-gray-300 dark:bg-gray-500 hover:bg-gray-400 dark:hover:bg-gray-400'
+                                                    ? 'w-2.5 h-2.5 bg-primary-600 scale-110'
+                                                    : 'w-2 h-2 bg-gray-300 dark:bg-gray-500 hover:bg-gray-400 dark:hover:bg-gray-400'
                                             }`}
                                             aria-label={`View image ${idx + 1}`}
-                                        />
+                                        >
+                                            {isVideo(allImageSrcs[idx]) && (
+                                                <i className={`bx bx-play absolute text-white ${(!displayImage && currentImageIndex === idx) ? 'text-[8px]' : 'text-[6px]'}`}></i>
+                                            )}
+                                        </button>
                                     ))}
                                 </div>
                             )}

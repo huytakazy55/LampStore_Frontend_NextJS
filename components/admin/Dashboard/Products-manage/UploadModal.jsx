@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useContext, useState, useEffect } from 'react'
-import { Modal, Upload, Button, Space, Typography, Card, Row, Col, message, Progress } from 'antd';
-import { InboxOutlined, DeleteOutlined, EyeOutlined, UploadOutlined, CloseOutlined } from '@ant-design/icons';
+import { Modal, Upload, Button, Typography, Card, Row, Col, message, Progress, Popconfirm } from 'antd';
+import { InboxOutlined, DeleteOutlined, EyeOutlined, UploadOutlined, CloseOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import ProductManage from '@/services/ProductManage';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
@@ -23,6 +23,10 @@ const UploadModal = ({ openUpload, handleUploadClose, setProductData, style, upd
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
     const [productImages, setProductImages] = useState([]);
+    const [videoFile, setVideoFile] = useState(null);
+    const [productVideo, setProductVideo] = useState('');
+    const [videoUploading, setVideoUploading] = useState(false);
+    const [videoProgress, setVideoProgress] = useState(0);
 
     const fetchProductImages = () =>
     {
@@ -48,7 +52,107 @@ const UploadModal = ({ openUpload, handleUploadClose, setProductData, style, upd
     useEffect(() =>
     {
         fetchProductImages();
+        if (updateId)
+        {
+            ProductManage.GetProductById(updateId)
+                .then((res) => setProductVideo(res.data?.videoPath || ''))
+                .catch(() => setProductVideo(''));
+        }
+        setVideoFile(null);
+        setVideoProgress(0);
     }, [updateId]);
+
+    const handleVideoUpload = async () =>
+    {
+        if (!videoFile)
+        {
+            message.warning('Vui lòng chọn video để tải lên!');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('videoFile', videoFile);
+        setVideoUploading(true);
+        setVideoProgress(0);
+
+        try
+        {
+            const response = await ProductManage.UploadVideoProduct(updateId, formData, {
+                onUploadProgress: (event) =>
+                {
+                    if (event.total)
+                    {
+                        setVideoProgress(Math.round((event.loaded * 100) / event.total));
+                    }
+                }
+            });
+            setProductVideo(response.data?.videoPath || '');
+            setVideoFile(null);
+            fetchProducts();
+            toast.success('Tải video sản phẩm thành công!');
+        }
+        catch (error)
+        {
+            toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi tải video!');
+        }
+        finally
+        {
+            setVideoUploading(false);
+            setVideoProgress(0);
+        }
+    };
+
+    const handleDeleteVideo = async () =>
+    {
+        try
+        {
+            await ProductManage.DeleteProductVideo(updateId);
+            setProductVideo('');
+            setVideoFile(null);
+            fetchProducts();
+            toast.success('Xóa video sản phẩm thành công!');
+        }
+        catch (error)
+        {
+            toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi xóa video!');
+        }
+    };
+
+    const videoUploadProps = {
+        accept: 'video/mp4,video/webm',
+        maxCount: 1,
+        fileList: videoFile ? [{
+            uid: videoFile.uid || videoFile.name,
+            name: videoFile.name,
+            status: 'done',
+            originFileObj: videoFile
+        }] : [],
+        beforeUpload: (file) =>
+        {
+            const allowedTypes = ['video/mp4', 'video/webm'];
+            if (!allowedTypes.includes(file.type))
+            {
+                message.error('Chỉ hỗ trợ video MP4 hoặc WebM!');
+                return Upload.LIST_IGNORE;
+            }
+            if (file.size > 20 * 1024 * 1024)
+            {
+                message.error('Video không được vượt quá 20MB!');
+                return Upload.LIST_IGNORE;
+            }
+            setVideoFile(file);
+            return false;
+        },
+        onRemove: () =>
+        {
+            setVideoFile(null);
+            return true;
+        },
+        onChange: ({ fileList: nextFiles }) =>
+        {
+            if (nextFiles.length === 0) setVideoFile(null);
+        }
+    };
 
     const handlePreview = async (file) =>
     {
@@ -239,7 +343,7 @@ const UploadModal = ({ openUpload, handleUploadClose, setProductData, style, upd
                 <div className="flex items-center gap-2">
                     <UploadOutlined style={{ color: themeColors.StartColorLinear, fontSize: '20px' }} />
                     <Title level={4} style={{ margin: 0, color: themeColors.StartColorLinear }}>
-                        Upload ảnh sản phẩm
+                        Quản lý media sản phẩm
                     </Title>
                 </div>
             }
@@ -312,6 +416,56 @@ const UploadModal = ({ openUpload, handleUploadClose, setProductData, style, upd
                                 <Progress percent={uploadProgress} status="active" />
                                 <Text type="secondary">Đang tải lên... {uploadProgress}%</Text>
                             </div>
+                        )}
+                    </Card>
+                </Col>
+
+                <Col span={24}>
+                    <Card title="Video sản phẩm" bordered={false}>
+                        {productVideo && (
+                            <div style={{ marginBottom: 16 }}>
+                                <video
+                                    src={productVideo.startsWith('http') ? productVideo : `${API_ENDPOINT}${productVideo}`}
+                                    controls
+                                    preload="metadata"
+                                    style={{ width: '100%', maxHeight: 420, borderRadius: 8, background: '#000' }}
+                                >
+                                    Trình duyệt không hỗ trợ phát video.
+                                </video>
+                                <Popconfirm
+                                    title="Xóa video sản phẩm?"
+                                    description="Thao tác này không thể hoàn tác."
+                                    okText="Xóa"
+                                    cancelText="Hủy"
+                                    onConfirm={handleDeleteVideo}
+                                >
+                                    <Button danger icon={<DeleteOutlined />} style={{ marginTop: 12 }}>
+                                        Xóa video hiện tại
+                                    </Button>
+                                </Popconfirm>
+                            </div>
+                        )}
+
+                        <Upload {...videoUploadProps}>
+                            <Button icon={<VideoCameraOutlined />}>
+                                {productVideo ? 'Chọn video thay thế' : 'Chọn video'}
+                            </Button>
+                        </Upload>
+                        <Text type="secondary" style={{ display: 'block', marginTop: 8 }}>
+                            Hỗ trợ MP4 hoặc WebM, dung lượng tối đa 20MB. Mỗi sản phẩm có một video.
+                        </Text>
+                        <Button
+                            type="primary"
+                            icon={<UploadOutlined />}
+                            onClick={handleVideoUpload}
+                            disabled={!videoFile}
+                            loading={videoUploading}
+                            style={{ marginTop: 12, background: themeColors.StartColorLinear }}
+                        >
+                            {videoUploading ? 'Đang tải video...' : 'Tải video lên'}
+                        </Button>
+                        {videoUploading && (
+                            <Progress percent={videoProgress} status="active" style={{ marginTop: 12 }} />
                         )}
                     </Card>
                 </Col>

@@ -71,6 +71,20 @@ class ProductManage {
         });
     }
 
+    UploadVideoProduct(productId, formData, config = {}) {
+        return axiosInstance.post(`/api/Products/${productId}/video`, formData, {
+            ...config,
+            headers: {
+                ...config.headers,
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+    }
+
+    DeleteProductVideo(productId) {
+        return axiosInstance.delete(`/api/Products/${productId}/video`);
+    }
+
     DeleteProductImage(imageId) {
         return axios.delete(`${API_ENDPOINT}/api/Products/image/${imageId}`);
     }
