@@ -219,11 +219,24 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
     return createPortal(
         <div className="fixed inset-0 z-[9999] transition-opacity duration-300">
             <div className="fixed inset-0 bg-black/50 backdrop-blur-sm touch-none"></div>
+            
+            {/* Global Success Toast */}
+            {addedSuccess && (
+                <div className="fixed top-6 sm:top-10 left-1/2 -translate-x-1/2 z-[10000] flex items-center gap-3 px-5 py-3.5 bg-white dark:bg-gray-800 rounded-lg shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] border border-gray-100 dark:border-gray-700 animate-fadeIn pointer-events-none transition-all">
+                    <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/50 flex items-center justify-center text-green-600 dark:text-green-400 shrink-0">
+                        <i className="bx bx-check text-2xl"></i>
+                    </div>
+                    <span className="font-medium text-gray-800 dark:text-gray-100 text-sm sm:text-base pr-2 whitespace-nowrap">
+                        Đã thêm vào giỏ hàng thành công
+                    </span>
+                </div>
+            )}
+
             <div className="fixed inset-0 overflow-y-auto" onClick={onClose}>
                 <div className="flex min-h-full items-start justify-center p-4 sm:p-4">
                     {/* Modal Box */}
                     <div
-                        className="relative m-auto bg-white dark:bg-gray-900 rounded-lg shadow-xl w-full max-w-3xl flex flex-col max-h-[90dvh] sm:max-h-[85vh] animate-fadeIn overflow-hidden"
+                        className="relative m-auto bg-white dark:bg-gray-900 rounded-lg shadow-xl w-full max-w-4xl flex flex-col max-h-[90dvh] sm:max-h-[85vh] animate-fadeIn overflow-hidden"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="flex-1 overflow-y-auto">
@@ -237,13 +250,13 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
 
                 <div className="flex flex-col md:flex-row">
                     {/* Left: Image Carousel */}
-                    <div className="w-full md:w-2/5 bg-gray-50 dark:bg-gray-800 p-3 sm:p-6 flex flex-col justify-center items-center md:border-r border-b md:border-b-0 border-gray-100 dark:border-gray-700 relative">
-                        {/* Main Image */}
-                        <div className="relative w-full flex justify-center items-center">
+                    <div className="w-full md:w-1/2 bg-white dark:bg-gray-900 md:border-r border-b md:border-b-0 border-gray-100 dark:border-gray-800 relative flex flex-col">
+                        {/* Main Image Container */}
+                        <div className="relative w-full aspect-square md:aspect-auto md:flex-1">
                             {allImageSrcs.length > 1 && (
                                 <button
                                     onClick={handlePrevImage}
-                                    className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 dark:bg-gray-700/80 shadow-md hover:bg-white dark:hover:bg-gray-600 transition-all text-gray-600 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-500 cursor-pointer backdrop-blur-sm"
+                                    className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 dark:bg-gray-700/80 shadow-md hover:bg-white dark:hover:bg-gray-600 transition-all text-gray-600 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-500 cursor-pointer backdrop-blur-sm"
                                     aria-label="Previous image"
                                 >
                                     <i className="bx bx-chevron-left text-xl"></i>
@@ -253,44 +266,45 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
                                 id="modal-main-image"
                                 src={currentCarouselImage}
                                 alt={product.name}
-                                className="max-h-64 sm:max-h-72 w-auto object-contain drop-shadow-md rounded transition-all duration-300"
+                                className="absolute inset-0 w-full h-full p-2 sm:p-4 object-contain transition-all duration-300"
                                 onError={(e) => { e.target.src = defaultImg; }}
                             />
                             {allImageSrcs.length > 1 && (
                                 <button
                                     onClick={handleNextImage}
-                                    className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 dark:bg-gray-700/80 shadow-md hover:bg-white dark:hover:bg-gray-600 transition-all text-gray-600 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-500 cursor-pointer backdrop-blur-sm"
+                                    className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 dark:bg-gray-700/80 shadow-md hover:bg-white dark:hover:bg-gray-600 transition-all text-gray-600 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-500 cursor-pointer backdrop-blur-sm"
                                     aria-label="Next image"
                                 >
                                     <i className="bx bx-chevron-right text-xl"></i>
                                 </button>
                             )}
+
+                            {/* Dot Indicators */}
+                            {allImageSrcs.length > 1 && (
+                                <div className="absolute bottom-3 sm:bottom-4 left-0 right-0 flex items-center justify-center gap-1.5 z-10">
+                                    {allImageSrcs.map((src, idx) => (
+                                        <button
+                                            key={idx}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setDisplayImage(null);
+                                                setCurrentImageIndex(idx);
+                                            }}
+                                            className={`w-2 h-2 rounded-full transition-all cursor-pointer shadow-sm ${
+                                                (!displayImage && currentImageIndex === idx)
+                                                    ? 'bg-primary-600 scale-125'
+                                                    : 'bg-gray-300 dark:bg-gray-500 hover:bg-gray-400 dark:hover:bg-gray-400'
+                                            }`}
+                                            aria-label={`View image ${idx + 1}`}
+                                        />
+                                    ))}
+                                </div>
+                            )}
                         </div>
-                        {/* Dot Indicators */}
-                        {allImageSrcs.length > 1 && (
-                            <div className="flex items-center justify-center gap-1.5 mt-2 sm:mt-3">
-                                {allImageSrcs.map((src, idx) => (
-                                    <button
-                                        key={idx}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setDisplayImage(null);
-                                            setCurrentImageIndex(idx);
-                                        }}
-                                        className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
-                                            (!displayImage && currentImageIndex === idx)
-                                                ? 'bg-primary-600 scale-125'
-                                                : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
-                                        }`}
-                                        aria-label={`View image ${idx + 1}`}
-                                    />
-                                ))}
-                            </div>
-                        )}
                     </div>
 
                     {/* Right: Details */}
-                    <div className="w-full md:w-3/5 p-3 sm:p-6 flex flex-col">
+                    <div className="w-full md:w-1/2 p-4 sm:p-6 lg:p-8 flex flex-col bg-white dark:bg-gray-900">
                         <h2 className="text-base sm:text-xl font-medium text-gray-800 dark:text-gray-100 mb-1 sm:mb-2 leading-snug pr-6">
                             {product.name}
                         </h2>
@@ -382,56 +396,50 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
                             <span className="text-sm text-gray-400 dark:text-gray-500">{stock} sản phẩm có sẵn</span>
                         </div>
 
-                        {/* Success Message */}
-                        {addedSuccess && (
-                            <div className="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-md text-sm flex items-center gap-2 animate-fadeIn">
-                                <i className="bx bx-check-circle text-lg"></i>
-                                Đã thêm vào giỏ hàng thành công!
-                            </div>
-                        )}
-
                         {/* Action Buttons */}
-                        <div className="mt-auto flex gap-3 sm:gap-4 pt-3 sm:pt-4 border-t border-gray-100 dark:border-gray-800">
-                            {(!mode || mode === 'add_to_cart') && (
-                                <button
-                                    onClick={handleAddToCart}
-                                    className="flex-1 bg-primary-600 text-white py-2.5 sm:py-3 rounded-md font-medium hover:bg-primary-700 transition-colors flex justify-center items-center gap-2 cursor-pointer text-sm sm:text-base"
-                                >
-                                    <i className="bx bx-cart-add text-xl"></i>
-                                    Thêm vào giỏ
-                                </button>
-                            )}
-                            {(!mode || mode === 'buy_now') && (
-                                <button
-                                    onClick={() => {
-                                        if (!allOptionsSelected) {
-                                            setShowError(true);
-                                            return;
-                                        }
-                                        // Tạo item checkout trực tiếp
-                                        const totalAdditionalBuy = Object.values(selectedOptions)
-                                            .reduce((sum, opt) => sum + (opt.additionalPrice || 0), 0);
-                                        const buyItem = {
-                                            key: `buynow_${product.id}_${Date.now()}`,
-                                            productId: product.id,
-                                            name: product.name,
-                                            image: mainImage,
-                                            basePrice: basePrice,
-                                            finalPrice: basePrice + totalAdditionalBuy,
-                                            quantity,
-                                            selectedOptions,
-                                            weight: variant?.weight || 0
-                                        };
-                                        onClose();
-                                        sessionStorage.setItem('buyNowItems', JSON.stringify([buyItem]));
-                                        navigate('/checkout');
-                                    }}
-                                    className="flex-1 bg-primary-600 text-white py-2.5 sm:py-3 rounded-md font-medium hover:bg-primary-700 transition-colors shadow-sm cursor-pointer text-sm sm:text-base flex justify-center items-center gap-2"
-                                >
-                                    {mode === 'buy_now' ? <i className="bx bx-credit-card text-xl"></i> : null}
-                                    Mua ngay
-                                </button>
-                            )}
+                        <div className="mt-auto pt-3 sm:pt-4 border-t border-gray-100 dark:border-gray-800">
+                            <div className="flex gap-3 sm:gap-4">
+                                {(!mode || mode === 'add_to_cart') && (
+                                    <button
+                                        onClick={handleAddToCart}
+                                        className="flex-1 bg-primary-600 text-white py-2.5 sm:py-3 rounded-md font-medium hover:bg-primary-700 transition-colors flex justify-center items-center gap-2 cursor-pointer text-sm sm:text-base"
+                                    >
+                                        <i className="bx bx-cart-add text-xl"></i>
+                                        Thêm vào giỏ
+                                    </button>
+                                )}
+                                {(!mode || mode === 'buy_now') && (
+                                    <button
+                                        onClick={() => {
+                                            if (!allOptionsSelected) {
+                                                setShowError(true);
+                                                return;
+                                            }
+                                            // Tạo item checkout trực tiếp
+                                            const totalAdditionalBuy = Object.values(selectedOptions)
+                                                .reduce((sum, opt) => sum + (opt.additionalPrice || 0), 0);
+                                            const buyItem = {
+                                                key: `buynow_${product.id}_${Date.now()}`,
+                                                productId: product.id,
+                                                name: product.name,
+                                                image: mainImage,
+                                                basePrice: basePrice,
+                                                finalPrice: basePrice + totalAdditionalBuy,
+                                                quantity,
+                                                selectedOptions,
+                                                weight: variant?.weight || 0
+                                            };
+                                            onClose();
+                                            sessionStorage.setItem('buyNowItems', JSON.stringify([buyItem]));
+                                            navigate('/checkout');
+                                        }}
+                                        className="flex-1 bg-primary-600 text-white py-2.5 sm:py-3 rounded-md font-medium hover:bg-primary-700 transition-colors shadow-sm cursor-pointer text-sm sm:text-base flex justify-center items-center gap-2"
+                                    >
+                                        {mode === 'buy_now' ? <i className="bx bx-credit-card text-xl"></i> : null}
+                                        Mua ngay
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     </div>
                         </div>
