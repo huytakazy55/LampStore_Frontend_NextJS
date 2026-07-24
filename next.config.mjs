@@ -55,6 +55,7 @@ const nextConfig = {
       { source: '/chatHub', destination: `${apiEndpoint}/chatHub` },
       { source: '/NewsImages/:path*', destination: `${apiEndpoint}/NewsImages/:path*` },
       { source: '/ImageImport/:path*', destination: `${apiEndpoint}/ImageImport/:path*` },
+      { source: '/VideoImport/:path*', destination: `${apiEndpoint}/VideoImport/:path*` },
       { source: '/BannerImages/:path*', destination: `${apiEndpoint}/BannerImages/:path*` },
       { source: '/CategoryImages/:path*', destination: `${apiEndpoint}/CategoryImages/:path*` },
     ];

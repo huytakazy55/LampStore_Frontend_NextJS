@@ -5,7 +5,7 @@ import { Modal, Tag, Typography, Image, Space, Spin, Badge, Card, Row, Col, Divi
 import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import ProductManage from '@/services/ProductManage';
-import { ShoppingCartOutlined, EyeOutlined, HeartOutlined, StarOutlined, AppstoreOutlined, TagsOutlined, InboxOutlined, CalendarOutlined, BarcodeOutlined, PictureOutlined, BarChartOutlined } from '@ant-design/icons';
+import { ShoppingCartOutlined, EyeOutlined, HeartOutlined, StarOutlined, AppstoreOutlined, TagsOutlined, InboxOutlined, CalendarOutlined, BarcodeOutlined, PictureOutlined, BarChartOutlined, VideoCameraOutlined } from '@ant-design/icons';
 
 const { Title, Text } = Typography;
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
@@ -85,6 +85,33 @@ const DetailModal = ({ open, onClose, product: initialProduct, categories }) => 
           );
         })}
       </Space>
+    );
+  };
+
+  const renderVideo = () => {
+    if (!product.videoPath) {
+      return <Text type="secondary">Chưa có video</Text>;
+    }
+
+    const videoUrl = product.videoPath.startsWith('http')
+      ? product.videoPath
+      : `${API_ENDPOINT || ''}${product.videoPath}`;
+
+    return (
+      <video
+        src={videoUrl}
+        controls
+        preload="metadata"
+        style={{
+          display: 'block',
+          width: '100%',
+          maxHeight: 420,
+          borderRadius: 8,
+          background: '#000'
+        }}
+      >
+        Trình duyệt không hỗ trợ phát video.
+      </video>
     );
   };
 
@@ -189,6 +216,15 @@ const DetailModal = ({ open, onClose, product: initialProduct, categories }) => 
                 <div style={{ marginBottom: 12 }}>
                   <Text strong style={{ fontSize: 15, display: 'block', marginBottom: 12 }}><PictureOutlined /> Hình ảnh sản phẩm</Text>
                   {renderImages()}
+                </div>
+
+                <Divider style={{ margin: '16px 0' }} />
+
+                <div style={{ marginBottom: 12 }}>
+                  <Text strong style={{ fontSize: 15, display: 'block', marginBottom: 12 }}>
+                    <VideoCameraOutlined /> Video sản phẩm
+                  </Text>
+                  {renderVideo()}
                 </div>
               </Card>
 

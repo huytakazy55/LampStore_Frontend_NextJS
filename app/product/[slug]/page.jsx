@@ -67,6 +67,7 @@ export default function ProductDetailPage()
     const [images, setImages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedImage, setSelectedImage] = useState(0);
+    const [selectedMedia, setSelectedMedia] = useState('image');
     const [variantTypes, setVariantTypes] = useState([]);
     const [quantity, setQuantity] = useState(1);
     const [selectedOptions, setSelectedOptions] = useState({});
@@ -153,6 +154,8 @@ export default function ProductDetailPage()
                 {
                     setProduct(data);
                     setVariant(data.variant || null);
+                    setSelectedImage(0);
+                    setSelectedMedia(data.videoPath ? 'video' : 'image');
 
                     const imgData = data.images?.$values || data.images;
                     const baseImages = Array.isArray(imgData) ? imgData : [];
@@ -314,6 +317,7 @@ export default function ProductDetailPage()
             if (index !== -1)
             {
                 setSelectedImage(index);
+                setSelectedMedia('image');
             }
         }
     };
@@ -498,6 +502,9 @@ export default function ProductDetailPage()
     const discountPercent = hasDiscount ? Math.round((1 - currentVariant.discountPrice / currentVariant.price) * 100) : 0;
     const stock = currentVariant?.stock || 0;
     const mainImage = images.length > 0 ? getImgSrc(images[selectedImage]?.imagePath) : '/images/cameras-2.jpg';
+    const productVideo = product?.videoPath
+        ? (product.videoPath.startsWith('http') ? product.videoPath : `${API_ENDPOINT || ''}${product.videoPath}`)
+        : '';
     const reviewStats = useMemo(() =>
     {
         const normalizedReviews = Array.isArray(reviews) ? reviews : [];
@@ -578,30 +585,72 @@ export default function ProductDetailPage()
                     {/* Images */}
                     <div className='w-full md:w-[37%] px-4'>
                         <div
-                            className='w-full border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden flex items-center justify-center bg-white dark:bg-gray-800 cursor-pointer group relative'
-                            onClick={() => setLightboxOpen(true)}
+                            className={`w-full aspect-square border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden flex items-center justify-center bg-white dark:bg-gray-800 group relative ${selectedMedia === 'image' ? 'cursor-pointer' : ''}`}
+                            onClick={() => {
+                                if (selectedMedia === 'image') setLightboxOpen(true);
+                            }}
                         >
-                            <img
-                                className='w-full h-auto object-contain group-hover:scale-105 transition-transform duration-300'
-                                src={mainImage}
-                                alt={product.name}
-                                onError={(e) => { e.target.src = '/images/cameras-2.jpg'; }}
-                            />
-                            <div className='absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center'>
-                                <div className='opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 text-white px-4 py-2 rounded-full text-sm flex items-center gap-2'>
-                                    <i className='bx bx-search-alt text-lg'></i>
-                                    Xem ảnh
-                                </div>
-                            </div>
+                            {selectedMedia === 'video' && productVideo ? (
+                                <video
+                                    src={productVideo}
+                                    controls
+                                    autoPlay
+                                    playsInline
+                                    preload='metadata'
+                                    className='w-full h-full bg-black object-contain'
+                                    onClick={(event) => event.stopPropagation()}
+                                >
+                                    Trình duyệt không hỗ trợ phát video.
+                                </video>
+                            ) : (
+                                <>
+                                    <img
+                                        className='w-full h-full object-contain group-hover:scale-105 transition-transform duration-300'
+                                        src={mainImage}
+                                        alt={product.name}
+                                        onError={(e) => { e.target.src = '/images/cameras-2.jpg'; }}
+                                    />
+                                    <div className='absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center'>
+                                        <div className='opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 text-white px-4 py-2 rounded-full text-sm flex items-center gap-2'>
+                                            <i className='bx bx-search-alt text-lg'></i>
+                                            Xem ảnh
+                                        </div>
+                                    </div>
+                                </>
+                            )}
                         </div>
                         <div className='flex gap-2 mt-3 overflow-x-auto pb-2'>
+                            {productVideo && (
+                                <button
+                                    type='button'
+                                    className={`relative w-14 h-14 md:w-16 md:h-16 border rounded cursor-pointer overflow-hidden transition flex-shrink-0 ${selectedMedia === 'video' ? 'border-primary-500 border-2' : 'border-gray-200 dark:border-gray-700 hover:border-primary-300'} bg-black`}
+                                    onClick={() => setSelectedMedia('video')}
+                                    aria-label='Xem video sản phẩm'
+                                >
+                                    <video
+                                        src={productVideo}
+                                        muted
+                                        playsInline
+                                        preload='metadata'
+                                        className='w-full h-full object-cover opacity-80'
+                                    />
+                                    <span className='absolute inset-0 flex items-center justify-center'>
+                                        <span className='w-7 h-7 rounded-full bg-black/60 text-white flex items-center justify-center'>
+                                            <i className='bx bx-play text-xl'></i>
+                                        </span>
+                                    </span>
+                                </button>
+                            )}
                             {images.map((img, i) => (
                                 <img
                                     key={img.id || i}
-                                    className={`w-14 h-14 md:w-16 md:h-16 border rounded cursor-pointer object-cover transition flex-shrink-0 ${selectedImage === i ? 'border-primary-500 border-2' : 'border-gray-200 dark:border-gray-700 hover:border-primary-300'} bg-white dark:bg-gray-800`}
+                                    className={`w-14 h-14 md:w-16 md:h-16 border rounded cursor-pointer object-cover transition flex-shrink-0 ${selectedMedia === 'image' && selectedImage === i ? 'border-primary-500 border-2' : 'border-gray-200 dark:border-gray-700 hover:border-primary-300'} bg-white dark:bg-gray-800`}
                                     src={getImgSrc(img.imagePath)}
                                     alt={`${product.name} - Ảnh ${i + 1}`}
-                                    onClick={() => setSelectedImage(i)}
+                                    onClick={() => {
+                                        setSelectedImage(i);
+                                        setSelectedMedia('image');
+                                    }}
                                     onError={(e) => { e.target.src = '/images/cameras-2.jpg'; }}
                                 />
                             ))}
