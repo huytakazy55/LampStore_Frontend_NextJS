@@ -7,6 +7,7 @@ import ProductManage from '@/services/ProductManage';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '@/contexts/ThemeContext';
+import ProductVideo from '@/components/common/ProductVideo';
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
 const { Dragger } = Upload;
@@ -424,14 +425,11 @@ const UploadModal = ({ openUpload, handleUploadClose, setProductData, style, upd
                     <Card title="Video sản phẩm" bordered={false}>
                         {productVideo && (
                             <div style={{ marginBottom: 16 }}>
-                                <video
+                                <ProductVideo
                                     src={productVideo.startsWith('http') ? productVideo : `${API_ENDPOINT}${productVideo}`}
-                                    controls
                                     preload="metadata"
                                     style={{ width: '100%', maxHeight: 420, borderRadius: 8, background: '#000' }}
-                                >
-                                    Trình duyệt không hỗ trợ phát video.
-                                </video>
+                                />
                                 <Popconfirm
                                     title="Xóa video sản phẩm?"
                                     description="Thao tác này không thể hoàn tác."

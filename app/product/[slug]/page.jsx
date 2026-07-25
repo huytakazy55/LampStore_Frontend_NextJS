@@ -17,6 +17,7 @@ import { useProducts } from '@/hooks/useProducts';
 import ImageLightbox from '@/components/common/ImageLightbox';
 import PageLoader from '@/components/common/PageLoader';
 import AddToCartModal from '@/components/user/MainPage/AddToCartModal';
+import ProductVideo from '@/components/common/ProductVideo';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
@@ -591,17 +592,13 @@ export default function ProductDetailPage()
                             }}
                         >
                             {selectedMedia === 'video' && productVideo ? (
-                                <video
+                                <ProductVideo
                                     src={productVideo}
-                                    controls
                                     autoPlay
-                                    playsInline
                                     preload='metadata'
+                                    wrapperClassName='w-full h-full'
                                     className='w-full h-full bg-black object-contain'
-                                    onClick={(event) => event.stopPropagation()}
-                                >
-                                    Trình duyệt không hỗ trợ phát video.
-                                </video>
+                                />
                             ) : (
                                 <>
                                     <img

@@ -5,6 +5,7 @@ import { Modal, Tag, Typography, Image, Space, Spin, Badge, Card, Row, Col, Divi
 import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import ProductManage from '@/services/ProductManage';
+import ProductVideo from '@/components/common/ProductVideo';
 import { ShoppingCartOutlined, EyeOutlined, HeartOutlined, StarOutlined, AppstoreOutlined, TagsOutlined, InboxOutlined, CalendarOutlined, BarcodeOutlined, PictureOutlined, BarChartOutlined, VideoCameraOutlined } from '@ant-design/icons';
 
 const { Title, Text } = Typography;
@@ -98,20 +99,18 @@ const DetailModal = ({ open, onClose, product: initialProduct, categories }) => 
       : `${API_ENDPOINT || ''}${product.videoPath}`;
 
     return (
-      <video
+      <ProductVideo
         src={videoUrl}
-        controls
         preload="metadata"
         style={{
           display: 'block',
           width: '100%',
-          maxHeight: 420,
+          maxHeight: 220,
           borderRadius: 8,
-          background: '#000'
+          background: '#000',
+          objectFit: 'contain'
         }}
-      >
-        Trình duyệt không hỗ trợ phát video.
-      </video>
+      />
     );
   };
 
@@ -218,14 +217,6 @@ const DetailModal = ({ open, onClose, product: initialProduct, categories }) => 
                   {renderImages()}
                 </div>
 
-                <Divider style={{ margin: '16px 0' }} />
-
-                <div style={{ marginBottom: 12 }}>
-                  <Text strong style={{ fontSize: 15, display: 'block', marginBottom: 12 }}>
-                    <VideoCameraOutlined /> Video sản phẩm
-                  </Text>
-                  {renderVideo()}
-                </div>
               </Card>
 
               {/* Variants Card */}
@@ -260,6 +251,14 @@ const DetailModal = ({ open, onClose, product: initialProduct, categories }) => 
                     {formattedNumber(product.variant.price)} đ
                   </div>
                 )}
+              </Card>
+
+              {/* Product Video Card */}
+              <Card size="small" bordered={false} style={{ borderRadius: '10px', marginBottom: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                <Title level={5} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                  <VideoCameraOutlined /> Video sản phẩm
+                </Title>
+                {renderVideo()}
               </Card>
 
               {/* Specs Card */}

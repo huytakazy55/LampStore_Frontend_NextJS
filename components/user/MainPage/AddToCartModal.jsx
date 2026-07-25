@@ -7,6 +7,7 @@ import ProductManage from '@/services/ProductManage';
 import { useCart } from '@/contexts/CartContext';
 import { useNavigate } from '@/lib/router-compat';
 import { resolveImagePath } from '@/lib/imageUtils';
+import ProductVideo from '@/components/common/ProductVideo';
 
 const formatPrice = (price) => {
     if (!price) return '0';
@@ -259,9 +260,12 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
 
                 <div className="flex flex-col md:flex-row">
                     {/* Left: Image Carousel */}
-                    <div className="w-full md:w-1/2 bg-white dark:bg-gray-900 md:border-r border-b md:border-b-0 border-gray-100 dark:border-gray-800 relative flex flex-col">
+                    <div className="w-full md:w-1/2 md:self-start bg-white dark:bg-gray-900 md:border-r border-b md:border-b-0 border-gray-100 dark:border-gray-800 relative flex flex-col overflow-hidden">
                         {/* Main Image Container */}
-                        <div className="relative w-full aspect-square md:aspect-auto md:flex-1">
+                        <div
+                            className="relative w-full aspect-square shrink-0"
+                            style={{ aspectRatio: '1 / 1' }}
+                        >
                             {allImageSrcs.length > 1 && (
                                 <button
                                     onClick={handlePrevImage}
@@ -272,14 +276,13 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
                                 </button>
                             )}
                             {isVideo(currentCarouselImage) ? (
-                                <video
+                                <ProductVideo
                                     src={currentCarouselImage}
-                                    className="absolute inset-0 w-full h-full p-2 sm:p-4 object-contain transition-all duration-300 bg-black/5 dark:bg-black/20"
+                                    wrapperClassName="absolute inset-0 h-full"
+                                    className="w-full h-full p-2 sm:p-4 object-contain transition-all duration-300 bg-black/5 dark:bg-black/20"
                                     autoPlay
                                     muted
                                     loop
-                                    playsInline
-                                    controls
                                 />
                             ) : (
                                 <img
