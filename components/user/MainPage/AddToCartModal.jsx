@@ -278,8 +278,8 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
                             {isVideo(currentCarouselImage) ? (
                                 <ProductVideo
                                     src={currentCarouselImage}
-                                    wrapperClassName="absolute inset-0 h-full"
-                                    className="w-full h-full p-2 sm:p-4 object-contain transition-all duration-300 bg-black/5 dark:bg-black/20"
+                                    wrapperClassName="h-full overflow-hidden"
+                                    className="absolute inset-0 w-full h-full max-w-full p-2 sm:p-4 object-contain transition-all duration-300 bg-black/5 dark:bg-black/20"
                                     autoPlay
                                     muted
                                     loop
