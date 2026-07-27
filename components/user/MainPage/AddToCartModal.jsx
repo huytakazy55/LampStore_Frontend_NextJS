@@ -258,14 +258,11 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
                     <i className="bx bx-x text-2xl sm:text-3xl"></i>
                 </button>
 
-                <div className="flex flex-col md:flex-row">
+                <div className="flex flex-col md:flex-row md:items-stretch">
                     {/* Left: Image Carousel */}
-                    <div className="w-full md:w-1/2 md:self-start bg-white dark:bg-gray-900 md:border-r border-b md:border-b-0 border-gray-100 dark:border-gray-800 relative flex flex-col overflow-hidden">
+                    <div className="w-full md:w-1/2 bg-white dark:bg-gray-900 md:border-r border-b md:border-b-0 border-gray-100 dark:border-gray-800 relative flex flex-col overflow-hidden">
                         {/* Main Image Container */}
-                        <div
-                            className="relative w-full aspect-square shrink-0"
-                            style={{ aspectRatio: '1 / 1' }}
-                        >
+                        <div className="relative w-full aspect-square shrink-0 md:aspect-auto md:min-h-full md:flex-1">
                             {allImageSrcs.length > 1 && (
                                 <button
                                     onClick={handlePrevImage}

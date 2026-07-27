@@ -12,7 +12,6 @@ const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
 const { Dragger } = Upload;
 const { Text, Title } = Typography;
-
 const UploadModal = ({ openUpload, handleUploadClose, setProductData, style, updateId, fetchProducts }) =>
 {
     const { themeColors } = useContext(ThemeContext);
@@ -100,6 +99,25 @@ const UploadModal = ({ openUpload, handleUploadClose, setProductData, style, upd
         {
             setVideoUploading(false);
             setVideoProgress(0);
+        }
+    };
+
+    const handleMediaUpload = async () =>
+    {
+        if (fileList.length === 0 && !videoFile)
+        {
+            message.warning('Vui lòng chọn ít nhất một hình ảnh hoặc video để tải lên!');
+            return;
+        }
+
+        if (fileList.length > 0)
+        {
+            await handleUpload();
+        }
+
+        if (videoFile)
+        {
+            await handleVideoUpload();
         }
     };
 
@@ -325,6 +343,168 @@ const UploadModal = ({ openUpload, handleUploadClose, setProductData, style, upd
             .custom-modal .ant-upload-list-item-actions .anticon:hover {
                 color: ${themeColors.StartColorLinear};
             }
+
+            .product-media-modal .ant-modal-content {
+                border-radius: 14px;
+            }
+
+            .product-media-modal .ant-modal-body {
+                max-height: calc(88vh - 142px);
+                overflow-y: auto;
+                padding: 16px;
+                background: #f7f8fa;
+            }
+
+            .product-media-modal .ant-modal-footer {
+                padding: 10px 16px;
+                background: #fff;
+            }
+
+            .product-media-modal .media-section {
+                height: 100%;
+                border: 1px solid #e8ebef;
+                border-radius: 12px;
+                box-shadow: 0 2px 8px rgba(15, 23, 42, 0.035);
+            }
+
+            .product-media-modal .media-section .ant-card-head {
+                min-height: 52px;
+                padding: 0 16px;
+                border-bottom-color: #edf0f3;
+            }
+
+            .product-media-modal .media-section .ant-card-head-title {
+                padding: 13px 0;
+                font-size: 14px;
+                font-weight: 600;
+            }
+
+            .product-media-modal .media-section .ant-card-body {
+                padding: 14px;
+            }
+
+            .product-media-modal .current-media-card .ant-card-body {
+                padding: 14px;
+            }
+
+            .product-media-modal .current-image-card {
+                overflow: hidden;
+                border-radius: 9px;
+            }
+
+            .product-media-modal .current-image-card .ant-card-body {
+                display: none;
+            }
+
+            .product-media-modal .current-image-card .ant-card-actions {
+                border-top: 1px solid #edf0f3;
+            }
+
+            .product-media-modal .current-image-card .ant-card-actions > li {
+                margin: 8px 0;
+            }
+
+            .product-media-modal .compact-image-dragger .ant-upload-drag {
+                min-height: 178px;
+                border-radius: 10px;
+                background: #fafbfc;
+            }
+
+            .product-media-modal .compact-image-dragger .ant-upload {
+                padding: 24px 12px;
+            }
+
+            .product-media-modal .compact-image-dragger .ant-upload-drag-icon {
+                margin-bottom: 8px;
+            }
+
+            .product-media-modal .compact-image-dragger .ant-upload-drag-icon .anticon {
+                font-size: 34px;
+            }
+
+            .product-media-modal .compact-image-dragger .ant-upload-text {
+                font-size: 14px;
+            }
+
+            .product-media-modal .compact-image-dragger .ant-upload-hint {
+                font-size: 12px;
+            }
+
+            .product-media-modal .compact-video-dragger {
+                display: block;
+                margin-top: 12px;
+            }
+
+            .product-media-modal .compact-video-dragger .ant-upload-drag {
+                min-height: 142px;
+                border-radius: 10px;
+                background: #fafbfc;
+            }
+
+            .product-media-modal .compact-video-dragger .ant-upload {
+                padding: 20px 12px;
+            }
+
+            .product-media-modal .compact-video-dragger .ant-upload-drag-icon {
+                margin-bottom: 7px;
+            }
+
+            .product-media-modal .compact-video-dragger .ant-upload-drag-icon .anticon {
+                color: ${themeColors.StartColorLinear};
+                font-size: 32px;
+            }
+
+            .product-media-modal .compact-video-dragger .ant-upload-text {
+                margin-bottom: 3px;
+                font-size: 14px;
+            }
+
+            .product-media-modal .compact-video-dragger .ant-upload-hint {
+                font-size: 12px;
+            }
+
+            .product-media-modal .media-video-frame {
+                height: 320px;
+                overflow: hidden;
+                border-radius: 10px;
+                background: #050505;
+            }
+
+            .product-media-modal .media-video-frame video {
+                display: block;
+                width: 100%;
+                height: 320px;
+                object-fit: contain;
+            }
+
+            .product-media-modal .media-video-empty {
+                display: flex;
+                height: 320px;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                border: 1px dashed #d9d9d9;
+                border-radius: 10px;
+                background: #fafbfc;
+                color: #8c8c8c;
+            }
+
+            @media (max-width: 767px) {
+                .product-media-modal .ant-modal-body {
+                    padding: 10px;
+                }
+
+                .product-media-modal .current-image-card img {
+                    height: 105px !important;
+                }
+
+                .product-media-modal .media-video-frame,
+                .product-media-modal .media-video-frame video,
+                .product-media-modal .media-video-empty {
+                    height: 210px;
+                }
+            }
         `;
 
         const styleSheet = document.createElement("style");
@@ -363,73 +543,30 @@ const UploadModal = ({ openUpload, handleUploadClose, setProductData, style, upd
                 <Button
                     key="submit"
                     type="primary"
-                    onClick={handleUpload}
-                    disabled={fileList.length === 0}
-                    loading={uploading}
+                    onClick={handleMediaUpload}
+                    disabled={fileList.length === 0 && !videoFile}
+                    loading={uploading || videoUploading}
                     style={{ background: themeColors.StartColorLinear }}
                 >
-                    {uploading ? 'Đang upload...' : 'Upload'}
+                    {uploading || videoUploading ? 'Đang upload...' : 'Upload media'}
                 </Button>
             ]}
-            className="custom-modal"
+            className="custom-modal product-media-modal"
+            centered
         >
             <Row gutter={[16, 16]}>
-                <Col span={24}>
-                    <Card title="Hình ảnh hiện tại" bordered={false}>
-                        <Row gutter={[5, 5]} style={{ display: 'flex', justifyContent: 'space-around' }}>
-                            {productImages.map((image) => (
-                                <Col span={4} key={image.id} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                    <Card
-                                        hoverable
-                                        style={{ width: '100%' }}
-                                        cover={
-                                            <img
-                                                alt={image.imagePath}
-                                                src={image.imagePath?.startsWith('http') ? image.imagePath : `${API_ENDPOINT}${image.imagePath}`}
-                                                style={{ height: 120, objectFit: 'cover' }}
-                                            />
-                                        }
-                                        actions={[
-                                            <EyeOutlined key="view" onClick={() => handlePreview({ url: image.imagePath?.startsWith('http') ? image.imagePath : `${API_ENDPOINT}${image.imagePath}` })} />,
-                                            <DeleteOutlined key="delete" onClick={() => handleDeleteImage(image.id)} />
-                                        ]}
-                                    />
-                                </Col>
-                            ))}
-                        </Row>
-                    </Card>
-                </Col>
-
-                <Col span={24}>
-                    <Card title="Tải lên hình ảnh mới" bordered={false}>
-                        <Dragger {...uploadProps}>
-                            <p className="ant-upload-drag-icon">
-                                <InboxOutlined />
-                            </p>
-                            <p className="ant-upload-text">Nhấp hoặc kéo thả file vào đây để tải lên</p>
-                            <p className="ant-upload-hint">
-                                Hỗ trợ tải lên nhiều hình ảnh cùng lúc. Mỗi file không vượt quá 5MB.
-                            </p>
-                        </Dragger>
-
-                        {uploading && (
-                            <div style={{ marginTop: 16 }}>
-                                <Progress percent={uploadProgress} status="active" />
-                                <Text type="secondary">Đang tải lên... {uploadProgress}%</Text>
-                            </div>
-                        )}
-                    </Card>
-                </Col>
-
-                <Col span={24}>
-                    <Card title="Video sản phẩm" bordered={false}>
+                <Col xs={24} lg={10}>
+                    <Card title="Video sản phẩm" bordered={false} className="media-section">
                         {productVideo && (
-                            <div style={{ marginBottom: 16 }}>
-                                <ProductVideo
-                                    src={productVideo.startsWith('http') ? productVideo : `${API_ENDPOINT}${productVideo}`}
-                                    preload="metadata"
-                                    style={{ width: '100%', maxHeight: 420, borderRadius: 8, background: '#000' }}
-                                />
+                            <div style={{ marginBottom: 12 }}>
+                                <div className="media-video-frame">
+                                    <ProductVideo
+                                        src={productVideo.startsWith('http') ? productVideo : `${API_ENDPOINT}${productVideo}`}
+                                        preload="metadata"
+                                        wrapperClassName="h-full"
+                                        style={{ width: '100%', height: '100%', background: '#000', objectFit: 'contain' }}
+                                    />
+                                </div>
                                 <Popconfirm
                                     title="Xóa video sản phẩm?"
                                     description="Thao tác này không thể hoàn tác."
@@ -437,35 +574,80 @@ const UploadModal = ({ openUpload, handleUploadClose, setProductData, style, upd
                                     cancelText="Hủy"
                                     onConfirm={handleDeleteVideo}
                                 >
-                                    <Button danger icon={<DeleteOutlined />} style={{ marginTop: 12 }}>
+                                    <Button danger size="small" icon={<DeleteOutlined />} style={{ marginTop: 10 }}>
                                         Xóa video hiện tại
                                     </Button>
                                 </Popconfirm>
                             </div>
                         )}
-
-                        <Upload {...videoUploadProps}>
-                            <Button icon={<VideoCameraOutlined />}>
-                                {productVideo ? 'Chọn video thay thế' : 'Chọn video'}
-                            </Button>
-                        </Upload>
-                        <Text type="secondary" style={{ display: 'block', marginTop: 8 }}>
-                            Hỗ trợ MP4 hoặc WebM, dung lượng tối đa 20MB. Mỗi sản phẩm có một video.
-                        </Text>
-                        <Button
-                            type="primary"
-                            icon={<UploadOutlined />}
-                            onClick={handleVideoUpload}
-                            disabled={!videoFile}
-                            loading={videoUploading}
-                            style={{ marginTop: 12, background: themeColors.StartColorLinear }}
-                        >
-                            {videoUploading ? 'Đang tải video...' : 'Tải video lên'}
-                        </Button>
+                        <Dragger {...videoUploadProps} className="compact-video-dragger">
+                            <p className="ant-upload-drag-icon">
+                                <VideoCameraOutlined />
+                            </p>
+                            <p className="ant-upload-text">
+                                {productVideo ? 'Nhấp hoặc kéo thả video mới để thay thế' : 'Nhấp hoặc kéo thả video vào đây'}
+                            </p>
+                            <p className="ant-upload-hint">
+                                Hỗ trợ MP4 hoặc WebM, dung lượng tối đa 20MB.
+                            </p>
+                        </Dragger>
                         {videoUploading && (
                             <Progress percent={videoProgress} status="active" style={{ marginTop: 12 }} />
                         )}
                     </Card>
+                </Col>
+
+                <Col xs={24} lg={14}>
+                    <div className="flex h-full flex-col gap-4">
+                        <Card
+                            title="Hình ảnh hiện tại"
+                            extra={<Text type="secondary">{productImages.length} ảnh</Text>}
+                            bordered={false}
+                            className="media-section current-media-card"
+                        >
+                            <Row gutter={[12, 12]}>
+                                {productImages.map((image) => (
+                                    <Col xs={12} sm={8} lg={8} key={image.id}>
+                                        <Card
+                                            hoverable
+                                            className="current-image-card"
+                                            style={{ width: '100%' }}
+                                            cover={
+                                                <img
+                                                    alt={image.imagePath}
+                                                    src={image.imagePath?.startsWith('http') ? image.imagePath : `${API_ENDPOINT}${image.imagePath}`}
+                                                    style={{ height: 112, objectFit: 'cover' }}
+                                                />
+                                            }
+                                            actions={[
+                                                <EyeOutlined key="view" onClick={() => handlePreview({ url: image.imagePath?.startsWith('http') ? image.imagePath : `${API_ENDPOINT}${image.imagePath}` })} />,
+                                                <DeleteOutlined key="delete" onClick={() => handleDeleteImage(image.id)} />
+                                            ]}
+                                        />
+                                    </Col>
+                                ))}
+                            </Row>
+                        </Card>
+
+                        <Card title="Tải lên hình ảnh mới" bordered={false} className="media-section">
+                            <Dragger {...uploadProps} className="compact-image-dragger">
+                                <p className="ant-upload-drag-icon">
+                                    <InboxOutlined />
+                                </p>
+                                <p className="ant-upload-text">Nhấp hoặc kéo thả file vào đây để tải lên</p>
+                                <p className="ant-upload-hint">
+                                    Hỗ trợ nhiều hình ảnh cùng lúc, tối đa 5MB mỗi file.
+                                </p>
+                            </Dragger>
+
+                            {uploading && (
+                                <div style={{ marginTop: 16 }}>
+                                    <Progress percent={uploadProgress} status="active" />
+                                    <Text type="secondary">Đang tải lên... {uploadProgress}%</Text>
+                                </div>
+                            )}
+                        </Card>
+                    </div>
                 </Col>
             </Row>
 
