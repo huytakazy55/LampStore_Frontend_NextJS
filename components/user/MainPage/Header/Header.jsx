@@ -304,7 +304,7 @@ const Header = () =>
                     <path d="M12 0C12 0 12 10 24 12C12 14 12 24 12 24C12 24 12 14 0 12C12 10 12 0 12 0Z" />
                   </svg>
                 </div>
-                <div className='text-[10px] md:text-[12px] text-[#ffce54] font-extrabold tracking-tighter uppercase leading-none ml-1.5' style={{ fontFamily: 'sans-serif' }}>
+                <div className='text-[10px] md:text-[12px] text-[#ffce54] font-extrabold tracking-tighter uppercase leading-none ml-1.5 bg-gray-900 rounded-sm px-1 py-0.5' style={{ fontFamily: 'sans-serif' }}>
                   DREAMY NIGHT LIGHTS
                 </div>
                 <svg className="w-2.5 h-2.5 md:w-3 md:h-3 text-[#ffce54] ml-1 mb-0.5" viewBox="0 0 24 24" fill="currentColor">

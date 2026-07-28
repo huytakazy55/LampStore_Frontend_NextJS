@@ -209,7 +209,7 @@ const Footer = () =>
                                     <span className='text-[#a50064] font-bold text-sm tracking-tighter'>MoMo</span>
                                 </div>
                                 <div className='h-8 w-14 bg-white rounded flex items-center justify-center' title='VNPay'>
-                                    <span className='font-black text-sm italic tracking-tighter'><span className='text-[#005BAA]'>VN</span><span className='text-[#ED1C24]'>PAY</span></span>
+                                    <span className='font-black text-sm italic tracking-tighter'><span className='text-[#005BAA]'>VN</span><span className='text-[#DC2626]'>PAY</span></span>
                                 </div>
                                 <div className='h-8 px-2 bg-white rounded flex items-center justify-center text-[11px] font-bold text-gray-800 tracking-wider' title='COD'>
                                     COD
