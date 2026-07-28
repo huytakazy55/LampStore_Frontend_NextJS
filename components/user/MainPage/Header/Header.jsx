@@ -362,7 +362,7 @@ const Header = () =>
           {/* Nút tìm kiếm */}
           <button
             aria-label="Tìm kiếm"
-            className='flex items-center justify-center w-9 h-9 mr-[2px] bg-primary-600 hover:bg-primary-700 text-white rounded-full transition-all duration-200 active:scale-90 cursor-pointer shrink-0'
+            className='flex items-center justify-center w-9 h-9 mr-[2px] bg-cta-700 hover:bg-cta-800 text-white rounded-full transition-all duration-200 active:scale-90 cursor-pointer shrink-0'
             onClick={handleSearch}
           >
             <i className='bx bx-search text-lg'></i>
@@ -454,7 +454,7 @@ const Header = () =>
                 <i className='bx bx-heart text-xl text-primary-500 dark:text-primary-400 transition-all duration-300 group-hover:text-primary-600'></i>
               </div>
               {wishlistCount > 0 && (
-                <div className='absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-primary-600 rounded-full text-center text-[10px] leading-[18px] text-white font-bold shadow-lg shadow-primary-500/30 animate-pulse'>{wishlistCount}</div>
+                <div className='absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-cta-700 rounded-full text-center text-[10px] leading-[18px] text-white font-bold shadow-lg shadow-primary-500/30 animate-pulse'>{wishlistCount}</div>
               )}
               <span className="pointer-events-none absolute top-[calc(100%+10px)] left-1/2 -translate-x-1/2 translate-y-2 whitespace-nowrap rounded-lg bg-white/90 backdrop-blur-sm px-3 py-1.5 text-[12px] font-bold text-gray-700 opacity-0 shadow-lg transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 dark:bg-gray-800 dark:text-gray-200 border border-gray-100 dark:border-gray-700 z-[100]">
                 Danh sách yêu thích
@@ -468,7 +468,7 @@ const Header = () =>
                   <i id='header-cart-icon' className='bx bx-shopping-bag text-xl bg-primary-600 dark:bg-primary-400 text-transparent bg-clip-text inline-block transition-all duration-300 group-hover:text-primary-700'></i>
                 </div>
                 <FormCart popupRef={popupRef} toggleCart={toggleCart} setToggleCart={setToggleCart} />
-                <div className='absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-primary-600 rounded-full text-center text-[10px] leading-[18px] text-white font-bold shadow-lg shadow-primary-400/30'>{cartCount}</div>
+                <div className='absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-cta-700 rounded-full text-center text-[10px] leading-[18px] text-white font-bold shadow-lg shadow-primary-400/30'>{cartCount}</div>
                 <span className="pointer-events-none absolute top-[calc(100%+10px)] left-1/2 -translate-x-1/2 translate-y-2 whitespace-nowrap rounded-lg bg-white/90 backdrop-blur-sm px-3 py-1.5 text-[12px] font-bold text-gray-700 opacity-0 shadow-lg transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 dark:bg-gray-800 dark:text-gray-200 border border-gray-100 dark:border-gray-700 z-[100]">
                   Giỏ hàng
                 </span>
@@ -543,7 +543,7 @@ const Header = () =>
           {/* Nút tìm kiếm mobile */}
           <button
             aria-label="Tìm kiếm"
-            className='flex items-center justify-center w-8 h-8 mr-1 bg-primary-600 hover:bg-primary-700 text-white rounded-full transition-all duration-200 active:scale-90 cursor-pointer shrink-0'
+            className='flex items-center justify-center w-8 h-8 mr-1 bg-cta-700 hover:bg-cta-800 text-white rounded-full transition-all duration-200 active:scale-90 cursor-pointer shrink-0'
             onClick={handleSearch}
           >
             <i className='bx bx-search text-base'></i>

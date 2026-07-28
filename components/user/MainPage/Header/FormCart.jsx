@@ -94,7 +94,8 @@ const FormCart = ({ toggleCart, popupRef, setToggleCart }) => {
                                 </div>
                                 <button
                                     onClick={() => removeFromCart(item.key)}
-                                    className='ml-2 text-gray-300 dark:text-gray-600 hover:text-red-500 transition-colors p-1'
+                                    aria-label="Xóa sản phẩm"
+                                    className='ml-2 text-gray-500 dark:text-gray-400 hover:text-red-500 transition-colors p-1'
                                 >
                                     <i className='bx bx-trash text-lg'></i>
                                 </button>
@@ -119,7 +120,7 @@ const FormCart = ({ toggleCart, popupRef, setToggleCart }) => {
                         </button>
                         <button
                             onClick={() => { setToggleCart(false); navigate('/checkout'); }}
-                            className='flex-1 py-2.5 px-4 rounded-md text-sm font-medium bg-primary-600 text-white hover:bg-primary-700 transition-colors shadow-sm cursor-pointer'
+                            className='flex-1 py-2.5 px-4 rounded-md text-sm font-medium bg-cta-700 text-white hover:bg-cta-800 transition-colors shadow-sm cursor-pointer'
                         >
                             Thanh toán
                         </button>

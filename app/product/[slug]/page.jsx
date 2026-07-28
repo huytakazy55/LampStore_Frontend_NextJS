@@ -678,24 +678,24 @@ export default function ProductDetailPage()
                         {/* Flash Sale Banner */}
                         {flashSaleItem && (
                             <div className='my-3 md:my-4 rounded-lg overflow-hidden'>
-                                <div className='flex items-center justify-between bg-gradient-to-r from-primary-600 via-tertiary-500 to-accent-500 px-4 py-2'>
+                                <div className='flex items-center justify-between bg-gradient-to-r from-cta-700 via-tertiary-700 to-accent-700 px-4 py-2'>
                                     <div className='flex items-center gap-2'>
                                         <span className='text-white text-base'>⚡</span>
                                         <span className='text-white font-bold text-sm tracking-wide'>FLASH SALE</span>
                                     </div>
                                     <div className='flex items-center gap-1.5 text-white text-xs'>
                                         <span>{fsCountdown.label}</span>
-                                        <span className='bg-white/20 rounded px-1.5 py-0.5 font-mono font-bold'>{String(fsCountdown.h).padStart(2, '0')}</span>
+                                        <span className='bg-black/25 rounded px-1.5 py-0.5 font-mono font-bold'>{String(fsCountdown.h).padStart(2, '0')}</span>
                                         <span className='font-bold'>:</span>
-                                        <span className='bg-white/20 rounded px-1.5 py-0.5 font-mono font-bold'>{String(fsCountdown.m).padStart(2, '0')}</span>
+                                        <span className='bg-black/25 rounded px-1.5 py-0.5 font-mono font-bold'>{String(fsCountdown.m).padStart(2, '0')}</span>
                                         <span className='font-bold'>:</span>
-                                        <span className='bg-white/20 rounded px-1.5 py-0.5 font-mono font-bold'>{String(fsCountdown.s).padStart(2, '0')}</span>
+                                        <span className='bg-black/25 rounded px-1.5 py-0.5 font-mono font-bold'>{String(fsCountdown.s).padStart(2, '0')}</span>
                                     </div>
                                 </div>
                                 <div className='flex flex-wrap items-center gap-2 md:gap-3 py-3 md:py-4 px-4 md:px-6 bg-primary-50 dark:bg-primary-900/20'>
                                     <div className='text-xl md:text-2xl font-bold text-primary-600'>₫{formatPrice(flashSaleItem.flashSalePrice)}</div>
                                     <div className='text-xs md:text-sm text-gray-400 dark:text-gray-500 line-through'>₫{formatPrice(flashSaleItem.productOriginalPrice || price)}</div>
-                                    <div className='bg-orange-500 text-white text-xs px-2 py-0.5 rounded font-medium'>-{flashSaleItem.discountPercent}%</div>
+                                    <div className='bg-cta-600 text-white text-xs px-2 py-0.5 rounded font-medium'>-{flashSaleItem.discountPercent}%</div>
                                     {flashSaleItem.stock > 0 && (
                                         <div className='ml-auto text-xs text-gray-500'>Còn {flashSaleItem.stock - flashSaleItem.soldCount} sản phẩm</div>
                                     )}
@@ -709,7 +709,7 @@ export default function ProductDetailPage()
                             {hasDiscount && (
                                 <>
                                     <div className='text-xs md:text-sm text-gray-400 dark:text-gray-500 line-through'>₫{formatPrice(originalPrice)}</div>
-                                    <div className='bg-orange-500 text-white text-xs px-2 py-0.5 rounded font-medium'>-{discountPercent}%</div>
+                                    <div className='bg-cta-600 text-white text-xs px-2 py-0.5 rounded font-medium'>-{discountPercent}%</div>
                                 </>
                             )}
                         </div>
@@ -818,7 +818,7 @@ export default function ProductDetailPage()
                                                             </div>
                                                         </div>
                                                         {cartItems.length > 0 && (
-                                                            <span className='text-xs bg-primary-500 text-white rounded-full w-5 h-5 flex items-center justify-center font-bold flex-shrink-0'>{cartItems.length}</span>
+                                                            <span className='text-xs bg-cta-600 text-white rounded-full w-5 h-5 flex items-center justify-center font-bold flex-shrink-0'>{cartItems.length}</span>
                                                         )}
                                                     </div>
 
@@ -926,7 +926,7 @@ export default function ProductDetailPage()
                             <button onClick={handleAddToCart} className='flex items-center justify-center gap-2 border border-primary-500 bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 py-2.5 px-4 md:px-6 rounded hover:bg-primary-100 dark:hover:bg-primary-900/50 transition text-sm md:text-base w-full sm:w-auto cursor-pointer'>
                                 <i className='bx bxs-cart-add text-lg md:text-xl'></i> Thêm vào giỏ hàng
                             </button>
-                            <button onClick={handleBuyNow} className='bg-primary-500 text-white py-2.5 px-6 md:px-8 rounded hover:bg-primary-600 transition font-medium text-sm md:text-base w-full sm:w-auto cursor-pointer'>
+                            <button onClick={handleBuyNow} className='bg-cta-600 text-white py-2.5 px-6 md:px-8 rounded hover:bg-cta-800 transition font-medium text-sm md:text-base w-full sm:w-auto cursor-pointer'>
                                 Mua ngay
                             </button>
                         </div>
@@ -1083,7 +1083,7 @@ export default function ProductDetailPage()
                                     <button
                                         onClick={handleSubmitReview}
                                         disabled={submittingReview}
-                                        className='bg-primary-500 hover:bg-primary-600 text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 cursor-pointer flex items-center gap-1.5'
+                                        className='bg-cta-600 hover:bg-cta-800 text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 cursor-pointer flex items-center gap-1.5'
                                     >
                                         {submittingReview ? <><i className='bx bx-loader-alt animate-spin'></i> Đang gửi...</> : <><i className='bx bx-send'></i> Gửi đánh giá</>}
                                     </button>
@@ -1161,14 +1161,14 @@ export default function ProductDetailPage()
                                         onClick={() => { if (rp.slug || rp.id) router.push(`/product/${rp.slug || rp.id}`); }}>
                                         {/* Discount Badge */}
                                         {rpHasDiscount && (
-                                            <div className="absolute top-2.5 left-2.5 z-10 bg-primary-600 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)]">
+                                            <div className="absolute top-2.5 left-2.5 z-10 bg-cta-700 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)]">
                                                 -{rpDiscountPercent}%
                                             </div>
                                         )}
                                         {/* Wishlist Button */}
                                         <button
                                             className={`absolute top-2.5 right-2.5 z-10 w-7 h-7 md:w-8 md:h-8 rounded-sm flex items-center justify-center transition-all duration-300 shadow-sm backdrop-blur-sm ${isInWishlist(rp.id)
-                                                ? 'bg-primary-600 text-white scale-105'
+                                                ? 'bg-cta-700 text-white scale-105'
                                                 : 'bg-white/80 dark:bg-[#1a1a1a]/80 text-gray-400 dark:text-gray-500 hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:text-primary-500 hover:scale-105'
                                                 }`}
                                             onClick={(e) => { e.stopPropagation(); toggleWishlist(rp.id); }}
@@ -1224,7 +1224,7 @@ export default function ProductDetailPage()
                                                     <span className="text-[8.5px] sm:text-[9px] md:text-xs font-semibold">Thêm vào giỏ</span>
                                                 </button>
                                                 <button
-                                                    className="flex-1 flex items-center justify-center py-1.5 rounded-sm border border-transparent bg-orange-500 text-white hover:bg-orange-600 transition-colors cursor-pointer"
+                                                    className="flex-1 flex items-center justify-center py-1.5 rounded-sm border border-transparent bg-cta-600 text-white hover:bg-cta-700 transition-colors cursor-pointer"
                                                     onClick={(e) =>
                                                     {
                                                         e.stopPropagation();

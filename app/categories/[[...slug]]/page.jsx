@@ -119,7 +119,7 @@ export default function CategoryPage() {
                             {/* Sidebar */}
                             <div className="w-full lg:w-[260px] flex-shrink-0">
                                 <div className="bg-white rounded-sm border border-gray-200 overflow-hidden sticky top-4">
-                                    <div className="p-4 bg-primary-600 text-white rounded-t-sm">
+                                    <div className="p-4 bg-cta-700 text-white rounded-t-sm">
                                         <h3 className="text-sm font-semibold flex items-center gap-2">
                                             <i className='bx bx-category'></i>
                                             Danh mục ({categories.length})
@@ -177,14 +177,14 @@ export default function CategoryPage() {
                                                     onClick={() => { if (product.slug || product.id) router.push(`/product/${product.slug || product.id}`); }}>
                                                     {/* Discount Badge */}
                                                     {hasDiscount && (
-                                                        <div className="absolute top-2.5 left-2.5 z-10 bg-primary-600 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)]">
+                                                        <div className="absolute top-2.5 left-2.5 z-10 bg-cta-700 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)]">
                                                             -{discountPercent}%
                                                         </div>
                                                     )}
                                                     {/* Wishlist Button */}
                                                     <button
                                                         className={`absolute top-2.5 right-2.5 z-10 w-7 h-7 md:w-8 md:h-8 rounded-sm flex items-center justify-center transition-all duration-300 shadow-sm backdrop-blur-sm ${isInWishlist(product.id)
-                                                        ? 'bg-primary-600 text-white scale-105'
+                                                        ? 'bg-cta-700 text-white scale-105'
                                                         : 'bg-white/80 dark:bg-[#1a1a1a]/80 text-gray-400 dark:text-gray-500 hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:text-primary-500 hover:scale-105'
                                                         }`}
                                                         onClick={(e) => { e.stopPropagation(); toggleWishlist(product.id); }}
@@ -238,7 +238,7 @@ export default function CategoryPage() {
                                                                 <span className="text-[8.5px] sm:text-[9px] md:text-xs font-semibold">Thêm vào giỏ</span>
                                                             </button>
                                                             <button
-                                                                className="flex-1 flex items-center justify-center py-1.5 rounded-sm border border-transparent bg-orange-500 text-white hover:bg-orange-600 transition-colors cursor-pointer"
+                                                                className="flex-1 flex items-center justify-center py-1.5 rounded-sm border border-transparent bg-cta-600 text-white hover:bg-cta-700 transition-colors cursor-pointer"
                                                                 onClick={(e) => {
                                                                     e.stopPropagation();
                                                                     setCartModalMode('buy_now');

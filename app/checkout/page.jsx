@@ -611,7 +611,7 @@ export default function CheckoutPage() {
                                 {typeof window !== 'undefined' && localStorage.getItem('token') && (
                                     <button
                                         onClick={() => router.push('/my-orders')}
-                                        className='flex-1 py-3 bg-primary-500 text-white rounded-lg font-medium hover:bg-primary-600 transition-colors cursor-pointer'
+                                        className='flex-1 py-3 bg-cta-600 text-white rounded-lg font-medium hover:bg-cta-800 transition-colors cursor-pointer'
                                     >
                                         Xem đơn hàng
                                     </button>
@@ -635,7 +635,7 @@ export default function CheckoutPage() {
                 <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center gap-4">
                     <i className='bx bx-cart text-6xl text-gray-300'></i>
                     <p className="text-gray-500 text-lg">Giỏ hàng trống</p>
-                    <button onClick={() => router.push('/')} className="px-6 py-2 bg-primary-500 text-white rounded-lg cursor-pointer hover:bg-primary-600 transition-colors">Tiếp tục mua sắm</button>
+                    <button onClick={() => router.push('/')} className="px-6 py-2 bg-cta-600 text-white rounded-lg cursor-pointer hover:bg-cta-800 transition-colors">Tiếp tục mua sắm</button>
                 </div>
                 <Footer />
             </>
@@ -997,7 +997,7 @@ export default function CheckoutPage() {
                                     <button
                                         type='submit'
                                         disabled={isSubmitting}
-                                        className='w-full mt-6 py-3.5 bg-primary-500 text-white rounded-lg font-semibold text-base hover:bg-primary-600 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer'
+                                        className='w-full mt-6 py-3.5 bg-cta-600 text-white rounded-lg font-semibold text-base hover:bg-cta-800 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer'
                                     >
                                         {isSubmitting ? (
                                             <>

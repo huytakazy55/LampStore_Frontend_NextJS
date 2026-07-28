@@ -70,7 +70,7 @@ const NewsSection = () => {
                                         sizes="(max-width: 768px) 100vw, 33vw"
                                         quality={50}
                                     />
-                                    <div className="absolute top-3 left-3 bg-primary-600 text-white text-xs font-bold px-2 py-1 rounded shadow-sm">
+                                    <div className="absolute top-3 left-3 bg-cta-700 text-white text-xs font-bold px-2 py-1 rounded shadow-sm">
                                         {news.category}
                                     </div>
                                 </div>

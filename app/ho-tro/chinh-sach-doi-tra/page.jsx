@@ -65,7 +65,7 @@ export default function ChinhSachDoiTraPage() {
                     { title: 'Nhận hàng mới / hoàn tiền', desc: 'Sản phẩm mới được gửi lại trong 2-3 ngày làm việc, hoặc hoàn tiền vào tài khoản trong vòng 5-7 ngày.' },
                 ].map((step, i) => (
                     <div key={i} className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
-                        <span className="w-7 h-7 bg-primary-500 text-white rounded-lg flex items-center justify-center text-xs font-bold shrink-0">{i + 1}</span>
+                        <span className="w-7 h-7 bg-cta-600 text-white rounded-lg flex items-center justify-center text-xs font-bold shrink-0">{i + 1}</span>
                         <div>
                             <h4 className="font-semibold text-gray-800 dark:text-gray-100 text-sm">{step.title}</h4>
                             <p className="text-gray-500 dark:text-gray-400 text-xs leading-relaxed mt-0.5">{step.desc}</p>

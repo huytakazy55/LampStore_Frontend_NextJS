@@ -77,7 +77,7 @@ const FormActionLogin = ({ toggleActionLogin, popupActionRef, setToggleActionLog
                 id='FormActionLogin'>
 
                 {/* Profile Header */}
-                <div className='relative px-5 pt-5 pb-4 bg-primary-600 dark:bg-gray-800'>
+                <div className='relative px-5 pt-5 pb-4 bg-gray-50 dark:bg-gray-800'>
                     {/* Decorative circle */}
                     <div className='absolute -top-6 -right-6 w-20 h-20 bg-primary-100/50 dark:bg-primary-900/10 rounded-full'></div>
                     <div className='relative flex items-center gap-3'>
@@ -90,7 +90,7 @@ const FormActionLogin = ({ toggleActionLogin, popupActionRef, setToggleActionLog
                             <p className='text-[13px] font-semibold text-gray-800 dark:text-gray-100 truncate'>
                                 {profileData.Email || 'Cập nhật tài khoản'}
                             </p>
-                            <p className='text-[11px] text-gray-400 dark:text-gray-500 flex items-center gap-1 mt-0.5'>
+                            <p className='text-[11px] text-gray-500 dark:text-gray-400 flex items-center gap-1 mt-0.5'>
                                 <span className='w-1.5 h-1.5 bg-emerald-400 rounded-full inline-block'></span>
                                 Đang hoạt động
                             </p>

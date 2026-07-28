@@ -28,7 +28,7 @@ const getImageSrc = (product) => {
 
 const CustomPrevArrow = ({ onClick }) => (
   <button
-    className='absolute -top-[52px] md:-top-[56px] right-[44px] md:right-[50px] z-10 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-sm bg-primary-600 text-white cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(139,92,246,0.25)] hover:bg-primary-700 hover:shadow-[0_4px_14px_rgba(139,92,246,0.4)] hover:scale-105 active:scale-95'
+    className='absolute -top-[52px] md:-top-[56px] right-[44px] md:right-[50px] z-10 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-sm bg-cta-700 text-white cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(139,92,246,0.25)] hover:bg-cta-800 hover:shadow-[0_4px_14px_rgba(139,92,246,0.4)] hover:scale-105 active:scale-95'
     onClick={onClick}
     aria-label="Sản phẩm trước"
   >
@@ -38,7 +38,7 @@ const CustomPrevArrow = ({ onClick }) => (
 
 const CustomNextArrow = ({ onClick }) => (
   <button
-    className='absolute -top-[52px] md:-top-[56px] right-1 z-10 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-sm bg-primary-600 text-white cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(139,92,246,0.25)] hover:bg-primary-700 hover:shadow-[0_4px_14px_rgba(139,92,246,0.4)] hover:scale-105 active:scale-95'
+    className='absolute -top-[52px] md:-top-[56px] right-1 z-10 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-sm bg-cta-700 text-white cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(139,92,246,0.25)] hover:bg-cta-800 hover:shadow-[0_4px_14px_rgba(139,92,246,0.4)] hover:scale-105 active:scale-95'
     onClick={onClick}
     aria-label="Sản phẩm tiếp theo"
   >
@@ -152,7 +152,7 @@ const TrendingProduct = () => {
                   {/* Image */}
                   <div className='relative w-[40%] md:w-[42%] flex-shrink-0 bg-gray-50 dark:bg-[#111] overflow-hidden'>
                     {hasDiscount && (
-                      <div className="absolute top-2 left-2 z-10 bg-primary-600 text-white text-[0.6rem] font-bold px-1.5 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)]">
+                      <div className="absolute top-2 left-2 z-10 bg-cta-700 text-white text-[0.6rem] font-bold px-1.5 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)]">
                         -{discountPercent}%
                       </div>
                     )}
@@ -191,7 +191,7 @@ const TrendingProduct = () => {
                       </div>
                       <div className='flex items-center gap-1.5'>
                         <button
-                          className='w-7 h-7 md:w-8 md:h-8 rounded-sm bg-orange-500 dark:bg-orange-600 text-white flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-orange-600 hover:shadow-[0_2px_8px_rgba(249,115,22,0.3)] active:scale-95'
+                          className='w-7 h-7 md:w-8 md:h-8 rounded-sm bg-cta-600 dark:bg-cta-700 text-white flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-cta-700 hover:shadow-[0_2px_8px_rgba(249,115,22,0.3)] active:scale-95'
                           onClick={(e) => {
                             e.stopPropagation();
                             setCartModalMode('buy_now');
@@ -202,7 +202,7 @@ const TrendingProduct = () => {
                           <i className='bx bx-shopping-bag text-sm md:text-base'></i>
                         </button>
                         <button
-                          className='w-7 h-7 md:w-8 md:h-8 rounded-sm bg-primary-600 dark:bg-primary-900 text-white dark:text-primary-300 flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-primary-700 hover:text-white hover:shadow-[0_2px_8px_rgba(139,92,246,0.3)] active:scale-95'
+                          className='w-7 h-7 md:w-8 md:h-8 rounded-sm bg-cta-700 dark:bg-cta-800 text-white dark:text-primary-300 flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-cta-800 hover:text-white hover:shadow-[0_2px_8px_rgba(139,92,246,0.3)] active:scale-95'
                           onClick={(e) => {
                             e.stopPropagation();
                             setCartModalMode('add_to_cart');

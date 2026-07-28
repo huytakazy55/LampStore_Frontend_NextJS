@@ -253,6 +253,7 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
                             {/* Close Button */}
                             <button
                                 onClick={onClose}
+                                aria-label="Đóng"
                                 className="absolute top-2 right-2 sm:top-4 sm:right-4 w-8 h-8 sm:w-auto sm:h-auto flex items-center justify-center text-gray-400 dark:text-gray-500 hover:text-primary-600 dark:hover:text-primary-500 transition-colors z-10"
                             >
                                 <i className="bx bx-x text-2xl sm:text-3xl"></i>
@@ -341,7 +342,7 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
                                                 <span className="text-sm line-through text-gray-400 dark:text-gray-500 mb-1">
                                                     ₫{formatPrice(originalPrice)}
                                                 </span>
-                                                <span className="bg-primary-600 text-white text-xs px-1.5 py-0.5 rounded font-medium mb-1">
+                                                <span className="bg-cta-700 text-white text-xs px-1.5 py-0.5 rounded font-medium mb-1">
                                                     -{discountPercent}%
                                                 </span>
                                             </>
@@ -426,7 +427,7 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
                                             {(!mode || mode === 'add_to_cart') && (
                                                 <button
                                                     onClick={handleAddToCart}
-                                                    className="flex-1 bg-primary-600 text-white py-2.5 sm:py-3 rounded-md font-medium hover:bg-primary-700 transition-colors flex justify-center items-center gap-2 cursor-pointer text-sm sm:text-base"
+                                                    className="flex-1 bg-cta-700 text-white py-2.5 sm:py-3 rounded-md font-medium hover:bg-cta-800 transition-colors flex justify-center items-center gap-2 cursor-pointer text-sm sm:text-base"
                                                 >
                                                     <i className="bx bx-cart-add text-xl"></i>
                                                     Thêm vào giỏ
@@ -457,7 +458,7 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
                                                         sessionStorage.setItem('buyNowItems', JSON.stringify([buyItem]));
                                                         navigate('/checkout');
                                                     }}
-                                                    className="flex-1 bg-primary-600 text-white py-2.5 sm:py-3 rounded-md font-medium hover:bg-primary-700 transition-colors shadow-sm cursor-pointer text-sm sm:text-base flex justify-center items-center gap-2"
+                                                    className="flex-1 bg-cta-700 text-white py-2.5 sm:py-3 rounded-md font-medium hover:bg-cta-800 transition-colors shadow-sm cursor-pointer text-sm sm:text-base flex justify-center items-center gap-2"
                                                 >
                                                     {mode === 'buy_now' ? <i className="bx bx-credit-card text-xl"></i> : null}
                                                     Mua ngay

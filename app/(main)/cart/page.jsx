@@ -161,7 +161,7 @@ export default function CartPage() {
                 <div className="min-h-[60vh] bg-gray-50 flex flex-col items-center justify-center gap-4 py-10">
                     <i className='bx bx-cart text-6xl text-gray-300'></i>
                     <p className="text-gray-500 text-lg">Giỏ hàng của bạn còn trống</p>
-                    <button onClick={() => router.push('/')} className="px-6 py-2 bg-primary-500 text-white rounded-lg cursor-pointer hover:bg-primary-600 transition-colors">
+                    <button onClick={() => router.push('/')} className="px-6 py-2 bg-cta-600 text-white rounded-lg cursor-pointer hover:bg-cta-800 transition-colors">
                         MUA NGAY
                     </button>
                 </div>
@@ -336,7 +336,7 @@ export default function CartPage() {
                                 </div>
                                 <button
                                     onClick={handleCheckout}
-                                    className={`px-6 md:px-8 py-2 md:py-3 text-white rounded cursor-pointer transition-colors whitespace-nowrap ${selectedItems.size > 0 ? 'bg-primary-600 hover:bg-primary-700' : 'bg-gray-400 cursor-not-allowed'}`}
+                                    className={`px-6 md:px-8 py-2 md:py-3 text-white rounded cursor-pointer transition-colors whitespace-nowrap ${selectedItems.size > 0 ? 'bg-cta-700 hover:bg-cta-800' : 'bg-gray-400 cursor-not-allowed'}`}
                                 >
                                     Mua Hàng
                                 </button>
@@ -363,7 +363,7 @@ export default function CartPage() {
                             </button>
                             <button
                                 onClick={executeDelete}
-                                className="px-5 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded transition-colors shadow-sm"
+                                className="px-5 py-2 text-sm font-medium text-white bg-cta-700 hover:bg-cta-800 rounded transition-colors shadow-sm"
                             >
                                 Đồng ý
                             </button>

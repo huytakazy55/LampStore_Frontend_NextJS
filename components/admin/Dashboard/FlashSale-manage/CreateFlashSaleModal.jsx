@@ -237,7 +237,7 @@ const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) => {
                         <i className='bx bxs-bolt'></i>
                         {isEditing ? 'Chỉnh sửa Flash Sale' : 'Tạo Flash Sale mới'}
                     </h2>
-                    <button onClick={onClose} className="text-white/80 hover:text-white text-2xl">
+                    <button onClick={onClose} aria-label="Đóng" className="text-white/80 hover:text-white text-2xl">
                         <i className='bx bx-x'></i>
                     </button>
                 </div>
@@ -395,6 +395,7 @@ const CreateFlashSaleModal = ({ flashSale, onClose, onSuccess }) => {
                                             <button
                                                 type="button"
                                                 onClick={() => handleRemoveItem(index)}
+                                                aria-label="Xóa sản phẩm khỏi Flash Sale"
                                                 className="p-1 flash-sale-theme-text"
                                             >
                                                 <i className='bx bx-x text-lg'></i>

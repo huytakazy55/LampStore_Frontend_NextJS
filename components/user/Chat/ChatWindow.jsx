@@ -448,7 +448,7 @@ const ChatWindow = ({ onClose }) =>
       tabIndex={0}
     >
       {/* Header */}
-      <div className="flex min-h-[3.1rem] items-center justify-between bg-primary-600 px-[1.1rem] py-[0.85rem] text-white shadow-[0_2px_8px_rgba(245,158,11,0.18)]">
+      <div className="flex min-h-[3.1rem] items-center justify-between bg-cta-700 px-[1.1rem] py-[0.85rem] text-white shadow-[0_2px_8px_rgba(245,158,11,0.18)]">
         <div className="flex items-center gap-2">
           <MessageSquare size={20} />
           <div>
@@ -462,6 +462,7 @@ const ChatWindow = ({ onClose }) =>
         </div>
         <button
           onClick={onClose}
+          aria-label="Thu nhỏ cửa sổ chat"
           className="flex h-[2.1rem] w-[2.1rem] cursor-pointer items-center justify-center rounded-full border-none bg-white/15 text-white transition-colors hover:bg-white/25"
         >
           <Minimize2 size={18} />
@@ -555,11 +556,11 @@ const ChatWindow = ({ onClose }) =>
               <div key={msgId} className={`flex ${isFromCurrentUser ? 'justify-end' : 'justify-start'}`}>
                 <div className="flex max-w-[80%] items-end gap-[0.4rem]">
                   {!isFromCurrentUser && (
-                    <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary-600 text-[0.7rem] font-bold text-white">A</div>
+                    <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-cta-700 text-[0.7rem] font-bold text-white">A</div>
                   )}
                   <div className={`px-3 py-2 text-[0.9rem] leading-[1.4] shadow-sm ${
                     isFromCurrentUser
-                      ? 'rounded-[0.8rem_0.8rem_0.2rem_0.8rem] bg-primary-600 text-white shadow-primary-500/15'
+                      ? 'rounded-[0.8rem_0.8rem_0.2rem_0.8rem] bg-cta-700 text-white shadow-primary-500/15'
                       : 'rounded-[0.8rem_0.8rem_0.8rem_0.2rem] bg-gray-100 text-gray-800'
                   }`}>
                     {!isFromCurrentUser && (
@@ -644,7 +645,8 @@ const ChatWindow = ({ onClose }) =>
           <button
             onClick={sendMessage}
             disabled={!newMessage.trim() || loading || !currentChat}
-            className="flex items-center justify-center rounded-xl bg-primary-600 px-3 py-1.5 text-[0.95rem] font-semibold text-white shadow-md shadow-primary-500/10 transition-all hover:scale-105 hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-50"
+            aria-label="Gửi"
+            className="flex items-center justify-center rounded-xl bg-cta-700 px-3 py-1.5 text-[0.95rem] font-semibold text-white shadow-md shadow-primary-500/10 transition-all hover:scale-105 hover:bg-cta-800 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Send size={18} />
           </button>

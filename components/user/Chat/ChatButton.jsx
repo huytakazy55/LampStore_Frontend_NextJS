@@ -219,8 +219,8 @@ const ChatButton = () =>
         <button
           onClick={toggleChat}
           className={`group relative flex h-12 w-12 items-center justify-center rounded-full border-none text-white shadow-[0_8px_20px_rgba(107,33,168,0.3)] transition-all duration-500 ease-out hover:-translate-y-1 hover:scale-110 hover:shadow-[0_12px_25px_rgba(107,33,168,0.5)] active:scale-95 cursor-pointer ${isChatOpen
-            ? 'bg-primary-600 rotate-180'
-            : 'bg-primary-600'
+            ? 'bg-cta-600 rotate-180'
+            : 'bg-cta-600'
             }`}
           title="Chat hỗ trợ"
         >
@@ -267,7 +267,7 @@ const ChatButton = () =>
               className={`relative m-auto bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-2xl transition-all duration-500 max-w-sm w-full mx-auto ${isZaloPopupOpen ? 'scale-100 translate-y-0' : 'scale-90 translate-y-8'}`}
               onClick={e => e.stopPropagation()}
             >
-              <button onClick={() => setIsZaloPopupOpen(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors bg-transparent border-none cursor-pointer">
+              <button onClick={() => setIsZaloPopupOpen(false)} aria-label="Đóng" className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors bg-transparent border-none cursor-pointer">
             <i className="bx bx-x text-2xl"></i>
           </button>
 

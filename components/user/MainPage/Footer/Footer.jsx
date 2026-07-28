@@ -14,7 +14,7 @@ const LazyMap = () =>
             {!loaded && (
                 <button
                     onClick={() => setLoaded(true)}
-                    className='absolute inset-0 w-full h-full bg-primary-600/80 dark:bg-gray-800 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-primary-700 dark:hover:bg-gray-700 transition-colors group z-10'
+                    className='absolute inset-0 w-full h-full bg-cta-700/80 dark:bg-gray-800 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-cta-800 dark:hover:bg-gray-700 transition-colors group z-10'
                     aria-label="Nhấn để xem bản đồ Google Maps"
                 >
                     <i className='bx bx-map text-3xl text-white dark:text-primary-500 group-hover:scale-110 transition-transform' />
@@ -44,13 +44,13 @@ const Footer = () =>
     return (
         <footer style={{ contain: 'layout style', contentVisibility: 'auto', containIntrinsicSize: 'auto 500px' }}>
             {/* Main Footer */}
-            <div className='relative overflow-hidden bg-primary-600 dark:bg-black' style={{ minHeight: '380px' }}>
+            <div className='relative overflow-hidden bg-cta-700 dark:bg-black' style={{ minHeight: '380px' }}>
                 {/* === Left Wave (Swoops under the map) — Light mode === */}
                 <svg className='absolute top-0 left-0 w-full h-full pointer-events-none dark:hidden' viewBox="0 0 1440 500" preserveAspectRatio="none" fill="none">
                     {/* Outer wave */}
-                    <path d="M 0,80 C 120,250 250,480 600,500 L 0,500 Z" className="fill-primary-700/40" />
+                    <path d="M 0,80 C 120,250 250,480 600,500 L 0,500 Z" className="fill-primary-900/40" />
                     {/* Inner wave */}
-                    <path d="M 0,180 C 100,320 200,490 450,500 L 0,500 Z" className="fill-primary-500/50" />
+                    <path d="M 0,180 C 100,320 200,490 450,500 L 0,500 Z" className="fill-primary-700/50" />
                 </svg>
 
                 {/* === Left Wave — Dark mode === */}
@@ -227,8 +227,8 @@ const Footer = () =>
 
                 {/* === Bottom S-curve wave — Light mode === */}
                 <svg className='absolute bottom-0 left-0 w-full pointer-events-none dark:hidden' style={{ height: '80px' }} viewBox="0 0 1440 80" preserveAspectRatio="none">
-                    <path d="M800,80 C850,80 900,70 950,55 C1050,25 1150,5 1250,15 C1350,25 1400,50 1440,60 L1440,80 Z" className="fill-primary-800" />
-                    <path d="M850,80 C900,80 950,72 1000,60 C1100,35 1200,18 1300,25 C1380,30 1420,45 1440,55 L1440,80 Z" className="fill-primary-500" />
+                    <path d="M800,80 C850,80 900,70 950,55 C1050,25 1150,5 1250,15 C1350,25 1400,50 1440,60 L1440,80 Z" className="fill-primary-950" />
+                    <path d="M850,80 C900,80 950,72 1000,60 C1100,35 1200,18 1300,25 C1380,30 1420,45 1440,55 L1440,80 Z" className="fill-primary-700" />
                 </svg>
 
                 <svg className='absolute bottom-0 left-0 w-full pointer-events-none hidden dark:block' style={{ height: '80px' }} viewBox="0 0 1440 80" preserveAspectRatio="none">

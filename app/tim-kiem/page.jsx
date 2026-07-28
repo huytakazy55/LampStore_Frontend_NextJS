@@ -210,7 +210,7 @@ function SearchResults() {
                                                         quality={75}
                                                     />
                                                     {discount > 0 && (
-                                                        <div className="absolute top-2 left-2 bg-primary-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                                                        <div className="absolute top-2 left-2 bg-cta-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
                                                             -{discount}%
                                                         </div>
                                                     )}
@@ -245,7 +245,7 @@ function SearchResults() {
                                         Không có sản phẩm nào phù hợp với từ khóa <strong>"{keyword}"</strong>. Hãy thử tìm kiếm với từ khóa khác.
                                     </p>
                                     <button
-                                        className="px-6 py-2.5 bg-primary-500 hover:bg-primary-600 text-white rounded-full font-medium transition-colors duration-200 cursor-pointer"
+                                        className="px-6 py-2.5 bg-cta-600 hover:bg-cta-800 text-white rounded-full font-medium transition-colors duration-200 cursor-pointer"
                                         onClick={() => navigate('/')}
                                     >
                                         Về trang chủ

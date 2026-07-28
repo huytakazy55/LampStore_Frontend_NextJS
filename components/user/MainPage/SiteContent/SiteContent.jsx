@@ -110,7 +110,7 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
                   navigate('/#products');
                 }
               }}
-              className="bg-primary-700 hover:bg-primary-800 text-white text-xs font-semibold px-5 py-2.5 rounded-sm transition-all duration-300 shadow-md active:scale-95 cursor-pointer flex items-center gap-1.5"
+              className="bg-cta-600 hover:bg-cta-700 text-white text-xs font-semibold px-5 py-2.5 rounded-sm transition-all duration-300 shadow-md active:scale-95 cursor-pointer flex items-center gap-1.5"
             >
               Khám Phá
               <i className='bx bx-right-arrow-alt text-base' />
@@ -220,7 +220,7 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
                     navigate('/#products');
                   }
                 }}
-                className="bg-primary-700 hover:bg-primary-800 text-white text-xs md:text-sm font-semibold px-6 md:px-8 py-2.5 md:py-3 rounded-sm transition-all duration-300 hover:shadow-lg hover:shadow-primary-700/25 active:scale-95 cursor-pointer flex items-center gap-2"
+                className="bg-cta-600 hover:bg-cta-700 text-white text-xs md:text-sm font-semibold px-6 md:px-8 py-2.5 md:py-3 rounded-sm transition-all duration-300 hover:shadow-lg hover:shadow-primary-700/25 active:scale-95 cursor-pointer flex items-center gap-2"
               >
                 Đặt mua ngay
                 <i className='bx bx-right-arrow-alt text-lg' />

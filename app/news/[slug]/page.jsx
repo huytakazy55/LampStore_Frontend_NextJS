@@ -71,7 +71,7 @@ export default function NewsDetailPage() {
                 <div className="min-h-screen flex flex-col items-center justify-center gap-4">
                     <i className='bx bx-error-circle text-6xl text-gray-300'></i>
                     <p className="text-lg text-gray-500">Không tìm thấy bài viết</p>
-                    <button onClick={() => router.push('/news')} className="px-6 py-2 bg-primary-500 text-white rounded-lg">Quay lại tin tức</button>
+                    <button onClick={() => router.push('/news')} className="px-6 py-2 bg-cta-600 text-white rounded-lg">Quay lại tin tức</button>
                 </div>
                 <Footer />
             </>
@@ -103,7 +103,7 @@ export default function NewsDetailPage() {
                         )}
                         <div className="p-6 md:p-10">
                             {news.category && (
-                                <span className="inline-block bg-primary-500 text-white text-xs font-bold px-3 py-1 rounded-full mb-4">{news.category}</span>
+                                <span className="inline-block bg-cta-600 text-white text-xs font-bold px-3 py-1 rounded-full mb-4">{news.category}</span>
                             )}
                             <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 leading-tight">{news.title}</h1>
                             <div className="flex items-center gap-4 text-sm text-gray-400 mb-8 pb-6 border-b border-gray-100">

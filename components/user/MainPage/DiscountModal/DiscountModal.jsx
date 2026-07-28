@@ -41,7 +41,7 @@ export default function DiscountModal({ isOpen, onClose, totalAmount, onApply })
                     <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
                         <i className="bx bx-purchase-tag-alt text-primary-600"></i> Chọn Voucher
                     </h3>
-                    <button onClick={onClose} className="text-gray-400 hover:text-red-500 transition-colors p-1 rounded-full hover:bg-red-50 cursor-pointer">
+                    <button onClick={onClose} aria-label="Đóng" className="text-gray-400 hover:text-red-500 transition-colors p-1 rounded-full hover:bg-red-50 cursor-pointer">
                         <i className="bx bx-x text-2xl leading-none"></i>
                     </button>
                 </div>
@@ -76,7 +76,7 @@ export default function DiscountModal({ isOpen, onClose, totalAmount, onApply })
                                                 onClick={() => onApply(code)}
                                                 className={`px-4 py-2 text-xs font-semibold rounded transition-colors ${isEligible
                                                     ? 'bg-primary-50 text-primary-600 border border-primary-500 hover:bg-primary-600 hover:text-white cursor-pointer'
-                                                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                                    : 'bg-gray-100 text-gray-600 cursor-not-allowed'
                                                     }`}
                                             >
                                                 Sử dụng

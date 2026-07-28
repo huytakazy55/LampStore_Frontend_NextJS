@@ -139,7 +139,7 @@ export default function OrderHistoryPage()
                 <div className='bg-white dark:bg-gray-900 w-full max-w-3xl max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden relative z-10'
                     onClick={e => e.stopPropagation()}>
                     {/* Modal Header */}
-                    <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-primary-600 dark:from-gray-800 dark:to-gray-800'>
+                    <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:from-gray-800 dark:to-gray-800'>
                         <div>
                             <h2 className='text-lg font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2'>
                                 Chi tiết đơn hàng
@@ -202,7 +202,7 @@ export default function OrderHistoryPage()
                                                     className={`w-9 h-9 rounded-full flex items-center justify-center text-base font-semibold transition-all duration-300
                                                         ${isCompleted ? 'bg-emerald-500 text-white border-[2.5px] border-emerald-500' :
                                                         isCurrent ? `border-[2.5px] ${statusInfo.bg} ${statusInfo.text} ${statusInfo.border}` :
-                                                        'bg-gray-100 dark:bg-gray-700 text-gray-300 dark:text-gray-500 border-[2.5px] border-gray-200 dark:border-gray-600'}`}
+                                                        'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 border-[2.5px] border-gray-200 dark:border-gray-600'}`}
                                                     style={isCurrent ? { animation: 'pulse-timeline 2s infinite', boxShadow: '0 0 0 4px rgba(59,130,246,0.1)' } : {}}
                                                 >
                                                     {isCompleted ? <i className='bx bx-check'></i> : <i className={`bx ${stepIcons[step]}`}></i>}
@@ -210,7 +210,7 @@ export default function OrderHistoryPage()
                                                 <span className={`mt-2 text-[11px] font-medium text-center
                                                     ${isCompleted ? 'text-emerald-600 dark:text-emerald-400' :
                                                     isCurrent ? `${statusInfo.text} font-bold` :
-                                                    'text-gray-400 dark:text-gray-500'}`}
+                                                    'text-gray-500 dark:text-gray-400'}`}
                                                 >
                                                     {stepLabels[step]}
                                                 </span>
@@ -391,7 +391,7 @@ export default function OrderHistoryPage()
                 </nav>
 
                 {/* Page Header */}
-                <div className='bg-primary-600 dark:bg-primary-400 rounded-xl p-5 md:p-6 mb-6 text-white relative overflow-hidden shadow-lg shadow-primary-500/30'>
+                <div className='bg-cta-700 dark:bg-primary-400 rounded-xl p-5 md:p-6 mb-6 text-white relative overflow-hidden shadow-lg shadow-primary-500/30'>
                     <div className='absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2'></div>
                     <div className='absolute bottom-0 left-20 w-24 h-24 bg-white/5 rounded-full translate-y-1/2'></div>
                     <div className='relative z-10'>
@@ -415,7 +415,7 @@ export default function OrderHistoryPage()
                                 key={tab.key}
                                 onClick={() => setFilterStatus(tab.key)}
                                 className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs md:text-sm font-medium whitespace-nowrap transition-all duration-200 cursor-pointer border ${filterStatus === tab.key
-                                    ? 'bg-primary-600 text-white border-primary-600 shadow-md shadow-primary-200 dark:shadow-primary-900/30'
+                                    ? 'bg-cta-700 text-white border-primary-600 shadow-md shadow-primary-200 dark:shadow-primary-900/30'
                                     : 'bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-primary-300 hover:text-primary-600'
                                     }`}
                             >
@@ -446,7 +446,7 @@ export default function OrderHistoryPage()
                         <p className='text-gray-400 dark:text-gray-500 text-sm mb-5'>Hãy khám phá các sản phẩm tuyệt vời của chúng tôi</p>
                         <button
                             onClick={() => router.push('/')}
-                            className='px-6 py-2.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition text-sm font-medium cursor-pointer flex items-center gap-2'
+                            className='px-6 py-2.5 bg-cta-700 text-white rounded-lg hover:bg-cta-800 transition text-sm font-medium cursor-pointer flex items-center gap-2'
                         >
                             <i className='bx bx-shopping-bag'></i> Mua sắm ngay
                         </button>

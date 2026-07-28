@@ -66,6 +66,7 @@ const ImageLightbox = ({ isOpen, onClose, images, initialIndex = 0 }) =>
             {/* Close button */}
             <button
                 onClick={onClose}
+                aria-label="Đóng"
                 className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all cursor-pointer"
             >
                 <i className="bx bx-x text-2xl"></i>
@@ -80,6 +81,7 @@ const ImageLightbox = ({ isOpen, onClose, images, initialIndex = 0 }) =>
             {images.length > 1 && (
                 <button
                     onClick={handlePrev}
+                    aria-label="Ảnh trước"
                     className="absolute left-3 md:left-6 z-10 w-12 h-12 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center transition-all cursor-pointer hover:scale-110"
                 >
                     <i className="bx bx-chevron-left text-3xl"></i>
@@ -90,6 +92,7 @@ const ImageLightbox = ({ isOpen, onClose, images, initialIndex = 0 }) =>
             {images.length > 1 && (
                 <button
                     onClick={handleNext}
+                    aria-label="Ảnh tiếp theo"
                     className="absolute right-3 md:right-6 z-10 w-12 h-12 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center transition-all cursor-pointer hover:scale-110"
                 >
                     <i className="bx bx-chevron-right text-3xl"></i>
@@ -123,6 +126,7 @@ const ImageLightbox = ({ isOpen, onClose, images, initialIndex = 0 }) =>
                                 setCurrentIndex(i);
                                 setIsZoomed(false);
                             }}
+                            aria-label={`Xem ảnh ${i + 1}`}
                             className={`flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${currentIndex === i
                                 ? 'border-white shadow-lg scale-110'
                                 : 'border-transparent opacity-50 hover:opacity-80'

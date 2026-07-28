@@ -142,7 +142,7 @@ const OrderReviewModal = ({ isOpen, onClose, order }) =>
                     <div className='relative m-auto bg-white dark:bg-gray-900 w-full max-w-2xl max-h-[90vh] rounded-lg shadow-2xl overflow-hidden flex flex-col'
                         onClick={e => e.stopPropagation()}>
                 {/* Header */}
-                <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-primary-600 dark:bg-gray-800'>
+                <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800'>
                     <div>
                         <h2 className='text-lg font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2'>
                             <i className='bx bx-star text-primary-500'></i>
@@ -152,7 +152,7 @@ const OrderReviewModal = ({ isOpen, onClose, order }) =>
                             Đơn hàng #{order.id?.substring(0, 8).toUpperCase()}
                         </p>
                     </div>
-                    <button onClick={onClose}
+                    <button onClick={onClose} aria-label="Đóng"
                         className='w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition cursor-pointer'>
                         <i className='bx bx-x text-xl text-gray-500'></i>
                     </button>
@@ -228,7 +228,7 @@ const OrderReviewModal = ({ isOpen, onClose, order }) =>
                                                 <button
                                                     onClick={() => handleSubmit(item.productId)}
                                                     disabled={state.submitting}
-                                                    className='px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 cursor-pointer flex items-center gap-1.5'
+                                                    className='px-4 py-2 bg-cta-700 hover:bg-cta-800 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 cursor-pointer flex items-center gap-1.5'
                                                 >
                                                     {state.submitting
                                                         ? <><i className='bx bx-loader-alt animate-spin'></i> Đang gửi...</>

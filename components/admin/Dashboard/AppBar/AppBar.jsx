@@ -90,7 +90,7 @@ const AppBar = () => {
 
             {/* Main header area */}
             <div className="appbar-main">
-                <button className="appbar-toggle" onClick={toggleHideLeftBar}>
+                <button className="appbar-toggle" onClick={toggleHideLeftBar} aria-label={leftbar ? 'Ẩn thanh bên' : 'Hiện thanh bên'}>
                     <i className={`bx ${leftbar ? 'bx-menu' : 'bx-menu-alt-left'}`} />
                 </button>
 

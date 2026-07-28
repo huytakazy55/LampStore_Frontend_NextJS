@@ -64,11 +64,11 @@ const ForgotPassword = ({ visible, onCancel }) => {
         <div className="relative overflow-hidden rounded-lg bg-white dark:bg-gray-900 shadow-[0_25px_60px_rgba(0,0,0,0.3)]">
 
           {/* Header */}
-          <div className="relative h-20 overflow-hidden bg-primary-600">
+          <div className="relative h-20 overflow-hidden bg-cta-600">
             <div className="absolute -top-6 -right-6 w-20 h-20 bg-white/10 rounded-full" />
             <div className="absolute -bottom-8 -left-4 w-24 h-24 bg-white/10 rounded-full" />
 
-            <button onClick={handleCancel}
+            <button onClick={handleCancel} aria-label="Đóng"
               className="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/40 text-white transition-all cursor-pointer">
               <i className='bx bx-x text-lg'></i>
             </button>
@@ -110,7 +110,7 @@ const ForgotPassword = ({ visible, onCancel }) => {
                   Hủy
                 </button>
                 <button type="submit" disabled={loading}
-                  className="flex-1 py-2.5 rounded-full bg-primary-600 hover:bg-primary-700 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 dark:shadow-primary-900/30 transition-all duration-300 disabled:opacity-70 cursor-pointer active:scale-[0.97] hover:-translate-y-0.5">
+                  className="flex-1 py-2.5 rounded-full bg-primary-800 hover:bg-primary-900 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 dark:shadow-primary-900/30 transition-all duration-300 disabled:opacity-70 cursor-pointer active:scale-[0.97] hover:-translate-y-0.5">
                   {loading ? (
                     <span className="flex items-center justify-center gap-2">
                       <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>

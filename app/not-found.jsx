@@ -5,8 +5,7 @@ export const metadata = {
     robots: { index: false, follow: false },
 };
 
-export default function NotFound()
-{
+export default function NotFound() {
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4">
             <div className="text-center max-w-md">
@@ -25,7 +24,7 @@ export default function NotFound()
 
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                     <Link href="/"
-                        className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary-500 text-white font-semibold rounded-lg hover:bg-primary-600 transition-all shadow-lg shadow-primary-200">
+                        className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-cta-600 text-white font-semibold rounded-lg hover:bg-cta-800 transition-all shadow-lg shadow-primary-200">
                         <i className='bx bx-home-alt'></i>
                         Về trang chủ
                     </Link>

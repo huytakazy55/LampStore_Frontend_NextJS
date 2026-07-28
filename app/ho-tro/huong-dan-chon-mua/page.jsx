@@ -77,7 +77,7 @@ export default function HuongDanChonMuaPage() {
                     'Xác nhận đơn hàng. Bạn sẽ nhận được SMS/email xác nhận.',
                 ].map((step, i) => (
                     <div key={i} className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
-                        <span className="w-7 h-7 bg-primary-500 text-white rounded-lg flex items-center justify-center text-xs font-bold shrink-0">{i + 1}</span>
+                        <span className="w-7 h-7 bg-cta-600 text-white rounded-lg flex items-center justify-center text-xs font-bold shrink-0">{i + 1}</span>
                         <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">{step}</p>
                     </div>
                 ))}
