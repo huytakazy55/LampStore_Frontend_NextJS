@@ -78,8 +78,8 @@ export default function RootLayout({ children })
                 <link rel="manifest" href="/manifest.json" />
                 <link rel="dns-prefetch" href="https://capylumine.com" />
             </head>
-            <body className={`${geistFont.variable} font-sans antialiased overflow-x-hidden max-w-[100vw]`}>
-                <div className="flex flex-col min-h-screen overflow-x-hidden w-full relative">
+            <body className={`${geistFont.variable} font-sans antialiased overflow-x-clip max-w-[100vw]`}>
+                <div className="flex flex-col min-h-screen overflow-x-clip w-full relative">
                     <React.Suspense fallback={null}>
                         <AnalyticsTracker />
                     </React.Suspense>

@@ -175,8 +175,8 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
             flyingImg.style.objectFit = 'contain';
             flyingImg.style.borderRadius = '8px';
             const isMovingDown = targetRect.top > imgRect.top;
-            const topBezier = isMovingDown 
-                ? 'cubic-bezier(0.3, -0.5, 0.8, 1)' 
+            const topBezier = isMovingDown
+                ? 'cubic-bezier(0.3, -0.5, 0.8, 1)'
                 : 'cubic-bezier(0.3, 0, 0.7, 1.4)';
 
             flyingImg.style.transition = `left 0.8s linear, top 0.8s ${topBezier}, width 0.8s linear, height 0.8s linear, opacity 0.8s ease-in, transform 0.8s ease-in`;
@@ -229,7 +229,7 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
     return createPortal(
         <div className="fixed inset-0 z-[9999] transition-opacity duration-300">
             <div className="fixed inset-0 bg-black/50 backdrop-blur-sm touch-none"></div>
-            
+
             {/* Global Success Toast */}
             {addedSuccess && (
                 <div className="fixed top-6 sm:top-10 left-1/2 -translate-x-1/2 z-[10000] flex items-center gap-3 px-5 py-3.5 bg-white dark:bg-gray-800 rounded-lg shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] border border-gray-100 dark:border-gray-700 animate-fadeIn pointer-events-none transition-all">
@@ -250,229 +250,228 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="flex-1 overflow-y-auto">
-                {/* Close Button */}
-                <button
-                    onClick={onClose}
-                    className="absolute top-2 right-2 sm:top-4 sm:right-4 w-8 h-8 sm:w-auto sm:h-auto flex items-center justify-center text-gray-400 dark:text-gray-500 hover:text-primary-600 dark:hover:text-primary-500 transition-colors z-10"
-                >
-                    <i className="bx bx-x text-2xl sm:text-3xl"></i>
-                </button>
+                            {/* Close Button */}
+                            <button
+                                onClick={onClose}
+                                className="absolute top-2 right-2 sm:top-4 sm:right-4 w-8 h-8 sm:w-auto sm:h-auto flex items-center justify-center text-gray-400 dark:text-gray-500 hover:text-primary-600 dark:hover:text-primary-500 transition-colors z-10"
+                            >
+                                <i className="bx bx-x text-2xl sm:text-3xl"></i>
+                            </button>
 
-                <div className="flex flex-col md:flex-row md:items-stretch">
-                    {/* Left: Image Carousel */}
-                    <div className="w-full md:w-1/2 bg-white dark:bg-gray-900 md:border-r border-b md:border-b-0 border-gray-100 dark:border-gray-800 relative flex flex-col overflow-hidden">
-                        {/* Main Image Container */}
-                        <div className="relative w-full aspect-square shrink-0 md:aspect-auto md:min-h-full md:flex-1">
-                            {allImageSrcs.length > 1 && (
-                                <button
-                                    onClick={handlePrevImage}
-                                    className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 dark:bg-gray-700/80 shadow-md hover:bg-white dark:hover:bg-gray-600 transition-all text-gray-600 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-500 cursor-pointer backdrop-blur-sm"
-                                    aria-label="Previous image"
-                                >
-                                    <i className="bx bx-chevron-left text-xl"></i>
-                                </button>
-                            )}
-                            {isVideo(currentCarouselImage) ? (
-                                <ProductVideo
-                                    src={currentCarouselImage}
-                                    wrapperClassName="h-full overflow-hidden"
-                                    className="absolute inset-0 w-full h-full max-w-full p-2 sm:p-4 object-contain transition-all duration-300 bg-black/5 dark:bg-black/20"
-                                    autoPlay
-                                    muted
-                                    loop
-                                />
-                            ) : (
-                                <img
-                                    id="modal-main-image"
-                                    src={currentCarouselImage}
-                                    alt={product.name}
-                                    className="absolute inset-0 w-full h-full p-2 sm:p-4 object-contain transition-all duration-300"
-                                    onError={(e) => { e.target.src = defaultImg; }}
-                                />
-                            )}
-                            {allImageSrcs.length > 1 && (
-                                <button
-                                    onClick={handleNextImage}
-                                    className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 dark:bg-gray-700/80 shadow-md hover:bg-white dark:hover:bg-gray-600 transition-all text-gray-600 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-500 cursor-pointer backdrop-blur-sm"
-                                    aria-label="Next image"
-                                >
-                                    <i className="bx bx-chevron-right text-xl"></i>
-                                </button>
-                            )}
+                            <div className="flex flex-col md:flex-row md:items-stretch">
+                                {/* Left: Image Carousel */}
+                                <div className="w-full md:w-1/2 bg-white dark:bg-gray-900 md:border-r border-b md:border-b-0 border-gray-100 dark:border-gray-800 relative flex flex-col overflow-hidden">
+                                    {/* Main Image Container */}
+                                    <div className="relative w-full aspect-square shrink-0 md:aspect-auto md:min-h-full md:flex-1">
+                                        {allImageSrcs.length > 1 && (
+                                            <button
+                                                onClick={handlePrevImage}
+                                                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 dark:bg-gray-700/80 shadow-md hover:bg-white dark:hover:bg-gray-600 transition-all text-gray-600 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-500 cursor-pointer backdrop-blur-sm"
+                                                aria-label="Previous image"
+                                            >
+                                                <i className="bx bx-chevron-left text-xl"></i>
+                                            </button>
+                                        )}
+                                        {isVideo(currentCarouselImage) ? (
+                                            <ProductVideo
+                                                src={currentCarouselImage}
+                                                wrapperClassName="h-full overflow-hidden"
+                                                className="absolute inset-0 w-full h-full max-w-full p-2 sm:p-4 object-contain transition-all duration-300 bg-black/5 dark:bg-black/20"
+                                                autoPlay
+                                                muted
+                                                loop
+                                            />
+                                        ) : (
+                                            <img
+                                                id="modal-main-image"
+                                                src={currentCarouselImage}
+                                                alt={product.name}
+                                                className="absolute inset-0 w-full h-full p-2 sm:p-4 object-contain transition-all duration-300"
+                                                onError={(e) => { e.target.src = defaultImg; }}
+                                            />
+                                        )}
+                                        {allImageSrcs.length > 1 && (
+                                            <button
+                                                onClick={handleNextImage}
+                                                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 dark:bg-gray-700/80 shadow-md hover:bg-white dark:hover:bg-gray-600 transition-all text-gray-600 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-500 cursor-pointer backdrop-blur-sm"
+                                                aria-label="Next image"
+                                            >
+                                                <i className="bx bx-chevron-right text-xl"></i>
+                                            </button>
+                                        )}
 
-                            {/* Dot Indicators */}
-                            {allImageSrcs.length > 1 && (
-                                <div className="absolute bottom-3 sm:bottom-4 left-0 right-0 flex items-center justify-center gap-1.5 z-10">
-                                    {allImageSrcs.map((src, idx) => (
-                                        <button
-                                            key={idx}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                setDisplayImage(null);
-                                                setCurrentImageIndex(idx);
-                                            }}
-                                            className={`relative flex items-center justify-center rounded-full transition-all cursor-pointer shadow-sm ${
-                                                (!displayImage && currentImageIndex === idx)
-                                                    ? 'w-2.5 h-2.5 bg-primary-600 scale-110'
-                                                    : 'w-2 h-2 bg-gray-300 dark:bg-gray-500 hover:bg-gray-400 dark:hover:bg-gray-400'
-                                            }`}
-                                            aria-label={`View image ${idx + 1}`}
-                                        >
-                                            {isVideo(allImageSrcs[idx]) && (
-                                                <i className={`bx bx-play absolute text-white ${(!displayImage && currentImageIndex === idx) ? 'text-[8px]' : 'text-[6px]'}`}></i>
-                                            )}
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Right: Details */}
-                    <div className="w-full md:w-1/2 p-4 sm:p-6 lg:p-8 flex flex-col bg-white dark:bg-gray-900">
-                        <h2 className="text-base sm:text-xl font-medium text-gray-800 dark:text-gray-100 mb-1 sm:mb-2 leading-snug pr-6">
-                            {product.name}
-                        </h2>
-
-                        {/* Price Area */}
-                        <div className="flex items-end gap-3 mt-1 sm:mt-2 mb-3 sm:mb-5 bg-primary-50/50 dark:bg-primary-900/20 p-2.5 sm:p-4 rounded-md border border-primary-100/50 dark:border-primary-800/30">
-                            <span className="text-xl sm:text-2xl font-bold text-primary-600">₫{formatPrice(price)}</span>
-                            {hasDiscount && (
-                                <>
-                                    <span className="text-sm line-through text-gray-400 dark:text-gray-500 mb-1">
-                                        ₫{formatPrice(originalPrice)}
-                                    </span>
-                                    <span className="bg-primary-600 text-white text-xs px-1.5 py-0.5 rounded font-medium mb-1">
-                                        -{discountPercent}%
-                                    </span>
-                                </>
-                            )}
-                        </div>
-
-                        {/* Variant Types — Selectable */}
-                        {variantTypes.length > 0 && (
-                            <div className="mb-2 sm:mb-4">
-                                {variantTypes.map((vt) => {
-                                    const values = Array.isArray(vt.values) ? vt.values : [];
-                                    if (values.length === 0) return null;
-                                    const isRequired = !selectedOptions[vt.name] && showError;
-                                    const hasImages = values.some(v => v.imageUrl);
-                                    return (
-                                        <div key={vt.id} className="mb-3">
-                                            <h3 className={`text-sm font-medium mb-2 ${isRequired ? 'text-red-500' : 'text-gray-700 dark:text-gray-300'}`}>
-                                                {vt.name}: {isRequired && <span className="text-xs font-normal">(Vui lòng chọn)</span>}
-                                            </h3>
-                                            <div className={`flex flex-wrap gap-2 ${hasImages ? 'gap-3' : ''}`}>
-                                                {values.map((val) => {
-                                                    const isSelected = selectedOptions[vt.name]?.value === val.value;
-                                                    const optionImage = val.imageUrl ? getImgSrc(val.imageUrl) : null;
-                                                    return (
-                                                        <button
-                                                            key={val.id}
-                                                            onClick={() => handleSelectOption(vt.name, val)}
-                                                            className={`flex items-center gap-2 py-1.5 px-3 cursor-pointer text-sm border rounded transition-all ${isSelected
-                                                                ? 'border-primary-500 text-primary-600 bg-primary-50 dark:bg-primary-900/30 font-medium ring-1 ring-primary-500/20'
-                                                                : isRequired
-                                                                    ? 'border-red-300 hover:border-primary-300 text-gray-600 dark:text-gray-400'
-                                                                    : 'border-gray-300 dark:border-gray-600 hover:border-primary-300 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400'
-                                                                }`}
-                                                        >
-                                                            {optionImage && (
-                                                                <img
-                                                                    src={optionImage}
-                                                                    alt={val.value}
-                                                                    className={`w-8 h-8 rounded object-cover border ${isSelected ? 'border-primary-400' : 'border-gray-200 dark:border-gray-600'}`}
-                                                                    onError={(e) => { e.target.style.display = 'none'; }}
-                                                                />
-                                                            )}
-                                                            <span>
-                                                                {val.value}
-                                                                {val.additionalPrice > 0 && (
-                                                                    <span className="ml-1 text-xs text-primary-600">+₫{formatPrice(val.additionalPrice)}</span>
-                                                                )}
-                                                            </span>
-                                                        </button>
-                                                    );
-                                                })}
+                                        {/* Dot Indicators */}
+                                        {allImageSrcs.length > 1 && (
+                                            <div className="absolute bottom-3 sm:bottom-4 left-0 right-0 flex items-center justify-center gap-1.5 z-10">
+                                                {allImageSrcs.map((src, idx) => (
+                                                    <button
+                                                        key={idx}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setDisplayImage(null);
+                                                            setCurrentImageIndex(idx);
+                                                        }}
+                                                        className={`relative flex items-center justify-center rounded-full transition-all cursor-pointer shadow-sm ${(!displayImage && currentImageIndex === idx)
+                                                            ? 'w-2.5 h-2.5 bg-primary-600 scale-110'
+                                                            : 'w-2 h-2 bg-gray-300 dark:bg-gray-500 hover:bg-gray-400 dark:hover:bg-gray-400'
+                                                            }`}
+                                                        aria-label={`View image ${idx + 1}`}
+                                                    >
+                                                        {isVideo(allImageSrcs[idx]) && (
+                                                            <i className={`bx bx-play absolute text-white ${(!displayImage && currentImageIndex === idx) ? 'text-[8px]' : 'text-[6px]'}`}></i>
+                                                        )}
+                                                    </button>
+                                                ))}
                                             </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Right: Details */}
+                                <div className="w-full md:w-1/2 p-4 sm:p-6 lg:p-8 flex flex-col bg-white dark:bg-gray-900">
+                                    <h2 className="text-base sm:text-xl font-medium text-gray-800 dark:text-gray-100 mb-1 sm:mb-2 leading-snug pr-6">
+                                        {product.name}
+                                    </h2>
+
+                                    {/* Price Area */}
+                                    <div className="flex items-end gap-3 mt-1 sm:mt-2 mb-3 sm:mb-5 bg-primary-50/50 dark:bg-primary-900/20 p-2.5 sm:p-4 rounded-md border border-primary-100/50 dark:border-primary-800/30">
+                                        <span className="text-xl sm:text-2xl font-bold text-primary-600">₫{formatPrice(price)}</span>
+                                        {hasDiscount && (
+                                            <>
+                                                <span className="text-sm line-through text-gray-400 dark:text-gray-500 mb-1">
+                                                    ₫{formatPrice(originalPrice)}
+                                                </span>
+                                                <span className="bg-primary-600 text-white text-xs px-1.5 py-0.5 rounded font-medium mb-1">
+                                                    -{discountPercent}%
+                                                </span>
+                                            </>
+                                        )}
+                                    </div>
+
+                                    {/* Variant Types — Selectable */}
+                                    {variantTypes.length > 0 && (
+                                        <div className="mb-2 sm:mb-4">
+                                            {variantTypes.map((vt) => {
+                                                const values = Array.isArray(vt.values) ? vt.values : [];
+                                                if (values.length === 0) return null;
+                                                const isRequired = !selectedOptions[vt.name] && showError;
+                                                const hasImages = values.some(v => v.imageUrl);
+                                                return (
+                                                    <div key={vt.id} className="mb-3">
+                                                        <h3 className={`text-sm font-medium mb-2 ${isRequired ? 'text-red-500' : 'text-gray-700 dark:text-gray-300'}`}>
+                                                            {vt.name}: {isRequired && <span className="text-xs font-normal">(Vui lòng chọn)</span>}
+                                                        </h3>
+                                                        <div className={`flex flex-wrap gap-2 ${hasImages ? 'gap-3' : ''}`}>
+                                                            {values.map((val) => {
+                                                                const isSelected = selectedOptions[vt.name]?.value === val.value;
+                                                                const optionImage = val.imageUrl ? getImgSrc(val.imageUrl) : null;
+                                                                return (
+                                                                    <button
+                                                                        key={val.id}
+                                                                        onClick={() => handleSelectOption(vt.name, val)}
+                                                                        className={`flex items-center gap-2 py-1.5 px-3 cursor-pointer text-sm border rounded transition-all ${isSelected
+                                                                            ? 'border-primary-500 text-primary-600 bg-primary-50 dark:bg-primary-900/30 font-medium ring-1 ring-primary-500/20'
+                                                                            : isRequired
+                                                                                ? 'border-red-300 hover:border-primary-300 text-gray-600 dark:text-gray-400'
+                                                                                : 'border-gray-300 dark:border-gray-600 hover:border-primary-300 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400'
+                                                                            }`}
+                                                                    >
+                                                                        {optionImage && (
+                                                                            <img
+                                                                                src={optionImage}
+                                                                                alt={val.value}
+                                                                                className={`w-8 h-8 rounded object-cover border ${isSelected ? 'border-primary-400' : 'border-gray-200 dark:border-gray-600'}`}
+                                                                                onError={(e) => { e.target.style.display = 'none'; }}
+                                                                            />
+                                                                        )}
+                                                                        <span>
+                                                                            {val.value}
+                                                                            {val.additionalPrice > 0 && (
+                                                                                <span className="ml-1 text-xs text-primary-600">+₫{formatPrice(val.additionalPrice)}</span>
+                                                                            )}
+                                                                        </span>
+                                                                    </button>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
-                                    );
-                                })}
-                            </div>
-                        )}
+                                    )}
 
-                        {/* Variant Info */}
-                        {variant && variant.materials && (
-                            <div className="mb-4 text-sm text-gray-500 dark:text-gray-400">
-                                <span>Chất liệu: {variant.materials}</span>
-                            </div>
-                        )}
+                                    {/* Variant Info */}
+                                    {variant && variant.materials && (
+                                        <div className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+                                            <span>Chất liệu: {variant.materials}</span>
+                                        </div>
+                                    )}
 
-                        {/* Quantity */}
-                        <div className="mb-3 sm:mb-6 flex items-center gap-3 sm:gap-6 flex-wrap">
-                            <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">Số lượng:</h3>
-                            <div className="flex items-center border border-gray-300 dark:border-gray-600 rounded overflow-hidden bg-white dark:bg-gray-800">
-                                <button onClick={handleDecrease} className="w-9 h-9 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary-600 transition font-medium text-lg">-</button>
-                                <span aria-label="Số lượng sản phẩm" className="w-12 h-9 flex items-center justify-center text-sm border-x border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 select-none">
-                                    {quantity}
-                                </span>
-                                <button onClick={handleIncrease} className="w-9 h-9 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary-600 transition font-medium text-lg">+</button>
-                            </div>
-                            <span className="text-sm text-gray-400 dark:text-gray-500">{stock} sản phẩm có sẵn</span>
-                        </div>
+                                    {/* Quantity */}
+                                    <div className="mb-3 sm:mb-6 flex items-center gap-3 sm:gap-6 flex-wrap">
+                                        <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">Số lượng:</h3>
+                                        <div className="flex items-center border border-gray-300 dark:border-gray-600 rounded overflow-hidden bg-white dark:bg-gray-800">
+                                            <button onClick={handleDecrease} className="w-9 h-9 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary-600 transition font-medium text-lg">-</button>
+                                            <span aria-label="Số lượng sản phẩm" className="w-12 h-9 flex items-center justify-center text-sm border-x border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 select-none">
+                                                {quantity}
+                                            </span>
+                                            <button onClick={handleIncrease} className="w-9 h-9 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary-600 transition font-medium text-lg">+</button>
+                                        </div>
+                                        <span className="text-sm text-gray-400 dark:text-gray-500">{stock} sản phẩm có sẵn</span>
+                                    </div>
 
-                        {/* Action Buttons */}
-                        <div className="mt-auto pt-3 sm:pt-4 border-t border-gray-100 dark:border-gray-800">
-                            <div className="flex gap-3 sm:gap-4">
-                                {(!mode || mode === 'add_to_cart') && (
-                                    <button
-                                        onClick={handleAddToCart}
-                                        className="flex-1 bg-primary-600 text-white py-2.5 sm:py-3 rounded-md font-medium hover:bg-primary-700 transition-colors flex justify-center items-center gap-2 cursor-pointer text-sm sm:text-base"
-                                    >
-                                        <i className="bx bx-cart-add text-xl"></i>
-                                        Thêm vào giỏ
-                                    </button>
-                                )}
-                                {(!mode || mode === 'buy_now') && (
-                                    <button
-                                        onClick={() => {
-                                            if (!allOptionsSelected) {
-                                                setShowError(true);
-                                                return;
-                                            }
-                                            // Tạo item checkout trực tiếp
-                                            const totalAdditionalBuy = Object.values(selectedOptions)
-                                                .reduce((sum, opt) => sum + (opt.additionalPrice || 0), 0);
-                                            const buyItem = {
-                                                key: `buynow_${product.id}_${Date.now()}`,
-                                                productId: product.id,
-                                                name: product.name,
-                                                image: mainImage,
-                                                basePrice: basePrice,
-                                                finalPrice: basePrice + totalAdditionalBuy,
-                                                quantity,
-                                                selectedOptions,
-                                                weight: variant?.weight || 0
-                                            };
-                                            onClose();
-                                            sessionStorage.setItem('buyNowItems', JSON.stringify([buyItem]));
-                                            navigate('/checkout');
-                                        }}
-                                        className="flex-1 bg-primary-600 text-white py-2.5 sm:py-3 rounded-md font-medium hover:bg-primary-700 transition-colors shadow-sm cursor-pointer text-sm sm:text-base flex justify-center items-center gap-2"
-                                    >
-                                        {mode === 'buy_now' ? <i className="bx bx-credit-card text-xl"></i> : null}
-                                        Mua ngay
-                                    </button>
-                                )}
+                                    {/* Action Buttons */}
+                                    <div className="mt-auto pt-3 sm:pt-4 border-t border-gray-100 dark:border-gray-800">
+                                        <div className="flex gap-3 sm:gap-4">
+                                            {(!mode || mode === 'add_to_cart') && (
+                                                <button
+                                                    onClick={handleAddToCart}
+                                                    className="flex-1 bg-primary-600 text-white py-2.5 sm:py-3 rounded-md font-medium hover:bg-primary-700 transition-colors flex justify-center items-center gap-2 cursor-pointer text-sm sm:text-base"
+                                                >
+                                                    <i className="bx bx-cart-add text-xl"></i>
+                                                    Thêm vào giỏ
+                                                </button>
+                                            )}
+                                            {(!mode || mode === 'buy_now') && (
+                                                <button
+                                                    onClick={() => {
+                                                        if (!allOptionsSelected) {
+                                                            setShowError(true);
+                                                            return;
+                                                        }
+                                                        // Tạo item checkout trực tiếp
+                                                        const totalAdditionalBuy = Object.values(selectedOptions)
+                                                            .reduce((sum, opt) => sum + (opt.additionalPrice || 0), 0);
+                                                        const buyItem = {
+                                                            key: `buynow_${product.id}_${Date.now()}`,
+                                                            productId: product.id,
+                                                            name: product.name,
+                                                            image: mainImage,
+                                                            basePrice: basePrice,
+                                                            finalPrice: basePrice + totalAdditionalBuy,
+                                                            quantity,
+                                                            selectedOptions,
+                                                            weight: variant?.weight || 0
+                                                        };
+                                                        onClose();
+                                                        sessionStorage.setItem('buyNowItems', JSON.stringify([buyItem]));
+                                                        navigate('/checkout');
+                                                    }}
+                                                    className="flex-1 bg-primary-600 text-white py-2.5 sm:py-3 rounded-md font-medium hover:bg-primary-700 transition-colors shadow-sm cursor-pointer text-sm sm:text-base flex justify-center items-center gap-2"
+                                                >
+                                                    {mode === 'buy_now' ? <i className="bx bx-credit-card text-xl"></i> : null}
+                                                    Mua ngay
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>,
+        </div>,
         document.body
     );
 };
