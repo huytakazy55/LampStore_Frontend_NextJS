@@ -4,6 +4,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { Card, Row, Col, Typography, Radio, Spin } from 'antd';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, PieChart, Pie, Cell } from 'recharts';
 import { ThemeContext } from '@/contexts/ThemeContext';
+import axiosInstance from '@/lib/axiosConfig';
 
 const { Title } = Typography;
 const COLORS = ['#f43f5e', '#f97316', '#eab308', '#22c55e', '#06b6d4', '#8b5cf6', '#ec4899', '#14b8a6', '#6366f1', '#84cc16', '#f59e0b', '#ef4444'];
@@ -59,16 +60,12 @@ const AnalyticChart = () => {
     const fetchSales = async () => {
       try {
         setLoading(true);
-        const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
-        const res = await fetch(`${API_ENDPOINT}/api/Analytics/sales-overview`);
-        if (res.ok) {
-          const data = await res.json();
-          setSalesData({
-            dailySales: data.dailySales?.$values || data.dailySales || [],
-            weeklySales: data.weeklySales?.$values || data.weeklySales || [],
-            monthlySales: data.monthlySales?.$values || data.monthlySales || [],
-          });
-        }
+        const { data } = await axiosInstance.get('/api/Analytics/sales-overview');
+        setSalesData({
+          dailySales: data.dailySales?.$values || data.dailySales || [],
+          weeklySales: data.weeklySales?.$values || data.weeklySales || [],
+          monthlySales: data.monthlySales?.$values || data.monthlySales || [],
+        });
       } catch (err) {
         console.error("Failed to fetch sales data", err);
       } finally {

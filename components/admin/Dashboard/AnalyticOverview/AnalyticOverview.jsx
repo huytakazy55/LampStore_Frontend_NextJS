@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { AreaChart, Area, BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import axiosInstance from '@/lib/axiosConfig';
 
 const icons = {
   user: (
@@ -79,20 +80,16 @@ export default function AnalyticOverview() {
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
-        const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
-        const res = await fetch(`${API_ENDPOINT}/api/Analytics/overview`);
-        if (res.ok) {
-          const data = await res.json();
-          setStats({
-            siteVisits: data.siteVisits || 0,
-            uniqueVisits30Days: data.uniqueVisits30Days || 0,
-            productCount: data.productCount || 0,
-            categoryCount: data.categoryCount || 0,
-            orderCount: data.orderCount || 0,
-            topProducts: data.topProducts?.$values || data.topProducts || [],
-            dailyVisits: data.dailyVisits?.$values || data.dailyVisits || []
-          });
-        }
+        const { data } = await axiosInstance.get('/api/Analytics/overview');
+        setStats({
+          siteVisits: data.siteVisits || 0,
+          uniqueVisits30Days: data.uniqueVisits30Days || 0,
+          productCount: data.productCount || 0,
+          categoryCount: data.categoryCount || 0,
+          orderCount: data.orderCount || 0,
+          topProducts: data.topProducts?.$values || data.topProducts || [],
+          dailyVisits: data.dailyVisits?.$values || data.dailyVisits || []
+        });
       } catch (err) {
         console.error("Failed to fetch analytics", err);
       }

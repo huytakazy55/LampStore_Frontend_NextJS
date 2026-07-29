@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import AdminPageHeader from '../shared/AdminPageHeader';
 import { Table, Card, Spin, Row, Col, Statistic, Space } from "antd";
 import { RiseOutlined, UserOutlined, ShopOutlined, EyeOutlined } from '@ant-design/icons';
+import axiosInstance from '@/lib/axiosConfig';
 
 export default function AnalyticsPage() {
     const [stats, setStats] = useState(null);
@@ -12,20 +13,16 @@ export default function AnalyticsPage() {
     useEffect(() => {
         const fetchAnalytics = async () => {
             try {
-                const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
-                const res = await fetch(`${API_ENDPOINT}/api/Analytics/overview`);
-                if (res.ok) {
-                    const data = await res.json();
-                    setStats({
-                        siteVisits: data.siteVisits || 0,
-                        uniqueVisits30Days: data.uniqueVisits30Days || 0,
-                        productCount: data.productCount || 0,
-                        categoryCount: data.categoryCount || 0,
-                        orderCount: data.orderCount || 0,
-                        topProducts: data.topProducts?.$values || data.topProducts || [],
-                        topPaths: data.topPaths?.$values || data.topPaths || []
-                    });
-                }
+                const { data } = await axiosInstance.get('/api/Analytics/overview');
+                setStats({
+                    siteVisits: data.siteVisits || 0,
+                    uniqueVisits30Days: data.uniqueVisits30Days || 0,
+                    productCount: data.productCount || 0,
+                    categoryCount: data.categoryCount || 0,
+                    orderCount: data.orderCount || 0,
+                    topProducts: data.topProducts?.$values || data.topProducts || [],
+                    topPaths: data.topPaths?.$values || data.topPaths || []
+                });
             } catch (err) {
                 console.error("Failed to fetch analytics", err);
             } finally {
