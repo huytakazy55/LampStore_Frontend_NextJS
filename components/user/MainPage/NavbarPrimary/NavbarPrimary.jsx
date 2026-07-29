@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useMemo } from 'react'
+import Image from 'next/image'
 import { useNavigate } from '@/lib/router-compat'
 import { useCategories } from '../../../../hooks/useCategories'
 import { useProducts } from '../../../../hooks/useProducts'
@@ -184,10 +185,13 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () => {
               <div className="flex h-[350px]">
                 {/* Left — Category Image + Info */}
                 <div className="hidden lg:flex w-[30%] flex-col bg-gray-50 p-5 relative overflow-hidden">
-                  <img
+                  <Image
                     src={getImageSrc(hoveredCategory)}
                     alt={hoveredCategory.name}
-                    className="absolute inset-0 w-full h-full object-cover opacity-90"
+                    fill
+                    className="object-cover opacity-90"
+                    sizes="30vw"
+                    quality={70}
                     onError={(e) => { e.target.src = Product1 }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/60 to-transparent" />
@@ -238,11 +242,14 @@ const Product1 = '/images/cameras-2.jpg'; const NavbarPrimary = () => {
                           }}
                           style={{ animationDelay: `${idx * 50}ms` }}
                         >
-                          <div className="w-14 h-14 flex-shrink-0 rounded-sm overflow-hidden bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-                            <img
+                          <div className="relative w-14 h-14 flex-shrink-0 rounded-sm overflow-hidden bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                            <Image
                               src={getProductImageSrc(product)}
                               alt={product.name}
-                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                              fill
+                              className="object-cover group-hover:scale-110 transition-transform duration-300"
+                              sizes="56px"
+                              quality={70}
                               onError={(e) => { e.target.src = Product1 }}
                             />
                           </div>

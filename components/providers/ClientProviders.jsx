@@ -30,13 +30,16 @@ export default function ClientProviders({ children }) {
     const pathname = usePathname();
     const isAdminPage = pathname?.startsWith('/admin');
 
-    // Auto-init guest profile on first visit (non-logged-in users)
+    // Auto-init guest profile on first visit (non-logged-in users).
+    // NOTE: the SignalR connection itself is intentionally NOT started here anymore —
+    // it used to connect unconditionally on every non-admin page mount, which meant every
+    // visitor paid the cost of a live socket even when the chat widget was never opened.
+    // ChatButton now establishes the connection lazily (on visibility/open) instead.
     useEffect(() =>
     {
         if (!isAdminPage)
         {
             GuestProfileService.getGuestToken();
-            NotificationService.setupSignalRNotifications();
             NotificationService.requestNotificationPermission();
         }
     }, [isAdminPage, pathname]);

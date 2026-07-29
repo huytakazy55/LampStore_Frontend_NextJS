@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react'
+import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
 import BannerService from '@/services/BannerService';
 import { resolveImagePath } from '@/lib/imageUtils';
@@ -40,13 +41,13 @@ const BannerImage = () => {
       <div className={`flex flex-col sm:flex-row justify-between items-center w-full gap-3 md:gap-4 ${containerMinHeight}`}>
         {banners.slice(0, 2).map((banner, index) => (
           <div key={banner.id} className='w-full sm:w-[49%] h-28 md:h-40 relative overflow-hidden rounded-lg'>
-            <img
-              className='w-full h-full object-cover'
+            <Image
+              fill
+              className='object-cover'
               src={resolveImagePath(banner.imageUrl)}
               alt={banner.title || 'Banner'}
-              loading="lazy"
-              width={700}
-              height={160}
+              sizes='(max-width: 640px) 100vw, 49vw'
+              quality={80}
             />
             {banner.linkUrl && (
               <a

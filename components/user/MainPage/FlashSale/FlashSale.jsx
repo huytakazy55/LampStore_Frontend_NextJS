@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import Image from 'next/image';
 import FlashSaleService from '@/services/FlashSaleService';
 import { Link } from '@/lib/router-compat';
 import './FlashSale.css';
@@ -129,10 +130,12 @@ const FlashSale = () =>
 
                                 {/* Image */}
                                 <div className="flash-sale-img-wrap">
-                                    <img
+                                    <Image
                                         src={item.productImageUrl ? `${item.productImageUrl}` : '/images/placeholder.png'}
                                         alt={item.productName}
-                                        loading="lazy"
+                                        fill
+                                        sizes="(max-width: 768px) 45vw, 20vw"
+                                        quality={75}
                                         className="flash-sale-img"
                                     />
                                 </div>

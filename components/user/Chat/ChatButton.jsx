@@ -11,6 +11,7 @@ import zaloLogo from '@/assets/images/zalo-logo-removebg.png';
 import zaloQrCode from '@/assets/images/zalo-add-friend.jpg';
 import { usePathname } from 'next/navigation';
 import { lockBodyScroll, unlockBodyScroll } from '@/lib/bodyScrollLock';
+import useLazyLoad from '@/hooks/useLazyLoad';
 
 const CONTACT_PHONE = '0969608810';
 const ZALO_URL = 'https://zalo.me/0969608810';
@@ -27,6 +28,16 @@ const ChatButton = () =>
   const initializedPollRef = useRef(false);
   const isChatOpenRef = useRef(false);
   const [viewportStyle, setViewportStyle] = useState({});
+
+  // Lazily establish the SignalR connection only once the chat widget is actually
+  // visible on screen (it used to connect unconditionally for every visitor from
+  // ClientProviders.jsx, regardless of whether they ever touched the chat button).
+  const { ref: chatToggleRef, hasBeenVisible: chatWidgetVisible } = useLazyLoad({ rootMargin: '0px', threshold: 0 });
+
+  useEffect(() => {
+    if (!chatWidgetVisible) return;
+    NotificationService.setupSignalRNotifications();
+  }, [chatWidgetVisible]);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.visualViewport) {
@@ -104,8 +115,16 @@ const ChatButton = () =>
       if (isChatOpenRef.current) return;
 
       const isLoggedIn = !!localStorage.getItem('token');
+
+      // Authenticated users already get real-time updates through the SignalR hub
+      // (see ChatService.jsx "ReceiveMessage"/"CustomerChatNotification" -> NotificationService),
+      // so polling the REST endpoint for them on top of that would be pure duplicate work.
+      // Guests can't hold a SignalR connection at all (ChatService.startConnection requires a
+      // JWT), so this REST poll remains their only realtime approximation.
+      if (isLoggedIn) return;
+
       const guestToken = GuestProfileService.getExistingGuestToken();
-      if (!isLoggedIn && !guestToken) return;
+      if (!guestToken) return;
 
       try
       {
@@ -174,6 +193,8 @@ const ChatButton = () =>
     setIsChatOpen(nextOpen);
     if (nextOpen)
     {
+      // Idempotent — safe to call even if the visibility-triggered connect above already ran.
+      NotificationService.setupSignalRNotifications();
       NotificationService.markChatNotificationsAsRead();
     }
   };
@@ -217,6 +238,7 @@ const ChatButton = () =>
       {/* Chat Button */}
       <div className={`fixed right-6 z-[1000] flex-col items-end ${visibilityClass}`} style={{ bottom: '152px' }}>
         <button
+          ref={chatToggleRef}
           onClick={toggleChat}
           className={`group relative flex h-12 w-12 items-center justify-center rounded-full border-none text-white shadow-[0_8px_20px_rgba(107,33,168,0.3)] transition-all duration-500 ease-out hover:-translate-y-1 hover:scale-110 hover:shadow-[0_12px_25px_rgba(107,33,168,0.5)] active:scale-95 cursor-pointer ${isChatOpen
             ? 'bg-cta-600 rotate-180'

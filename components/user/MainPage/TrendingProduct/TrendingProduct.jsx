@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from 'react';
+import Image from 'next/image';
 import Slider3 from "react-slick";
 import { useProducts } from '../../../../hooks/useProducts';
 import { useNavigate } from '@/lib/router-compat';
@@ -156,11 +157,13 @@ const TrendingProduct = () => {
                         -{discountPercent}%
                       </div>
                     )}
-                    <img
-                      className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-108'
+                    <Image
+                      fill
+                      className='object-cover transition-transform duration-500 group-hover:scale-108'
                       src={getImageSrc(product)}
                       alt={product.name}
-                      loading="lazy"
+                      sizes="(max-width: 768px) 40vw, 20vw"
+                      quality={75}
                       onError={(e) => { e.target.src = defaultImg; }}
                     />
                   </div>

@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import ProductManage from '@/services/ProductManage';
 import ProductVideo from '@/components/common/ProductVideo';
+import DOMPurify from 'isomorphic-dompurify';
 import { ShoppingCartOutlined, EyeOutlined, HeartOutlined, StarOutlined, AppstoreOutlined, TagsOutlined, InboxOutlined, CalendarOutlined, BarcodeOutlined, PictureOutlined, BarChartOutlined, VideoCameraOutlined } from '@ant-design/icons';
 
 const { Title, Text } = Typography;
@@ -231,9 +232,9 @@ const DetailModal = ({ open, onClose, product: initialProduct, categories }) => 
                 <div 
                   className="product-description-content"
                   style={{ overflow: 'hidden', color: '#444', lineHeight: 1.6 }}
-                  dangerouslySetInnerHTML={{ 
-                    __html: product.description || '<p style="color: #999; font-style: italic;">Chưa có bài viết mô tả cho sản phẩm này.</p>'
-                  }} 
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(product.description || '<p style="color: #999; font-style: italic;">Chưa có bài viết mô tả cho sản phẩm này.</p>')
+                  }}
                 />
               </Card>
             </Col>

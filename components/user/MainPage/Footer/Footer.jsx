@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react'
+import Image from 'next/image'
 
 
 const MAPS_EMBED_URL = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.6778758888713!2d105.81908607604745!3d21.005545788574118!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ad5fb9812307%3A0x63c20c5aa29db56b!2zS2h1IHThuq1wIHRo4buDIEEyIHBo4buRIFbEqW5oIEjhu5MsIFRo4buLbmggUXVhbmcsIMSQ4buRbmcgxJBhLCBIw6AgTuG7mWksIFZpZXRuYW0!5e0!3m2!1svi!2s!4v1726261210365!5m2!1svi!2s";
@@ -137,7 +138,9 @@ const Footer = () =>
                         {/* Logo & Text */}
                         <div className='flex items-center gap-3.5 mb-6 lg:justify-end'>
                             <div className='w-20 h-20 md:w-[88px] md:h-[88px] rounded-2xl overflow-hidden shadow-lg flex-shrink-0 bg-white p-1'>
-                                <img src='/images/Capylumine-sm.png' alt="CapyLumine" className='w-full h-full object-cover rounded-xl' />
+                                <div className='relative w-full h-full rounded-xl overflow-hidden'>
+                                    <Image src='/images/Capylumine-sm.png' alt="CapyLumine" fill className='object-cover' sizes='88px' quality={80} />
+                                </div>
                             </div>
                             <div className='flex flex-col mt-2 md:mt-4'>
                                 <div className={`text-[24px] md:text-[32px] font-extrabold tracking-tight font-sans leading-none mb-1 flex items-center ml-1`}>

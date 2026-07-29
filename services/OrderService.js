@@ -6,10 +6,16 @@ import axios from 'axios';
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT || (typeof window !== 'undefined' ? window.location.origin : '');
 
 const OrderService = {
-    // Get all orders (admin)
+    // Get all orders (admin).
+    // NOTE: the backend now paginates this endpoint (server-enforced max pageSize=100)
+    // to prevent unbounded table scans. This UI still does client-side pagination over
+    // the full result set (see OrdersManage.jsx), so we request the max page size as a
+    // stopgap. Once order volume exceeds 100, this list will silently show only the
+    // 100 most recent orders — switching OrdersManage.jsx to real server-side pagination
+    // (passing page/pageSize and reading a total count from the API) is the proper fix.
     getAllOrders: async () =>
     {
-        const response = await axiosInstance.get('/api/Orders');
+        const response = await axiosInstance.get('/api/Orders', { params: { page: 1, pageSize: 100 } });
         return response.data;
     },
 

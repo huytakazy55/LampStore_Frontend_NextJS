@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import Image from 'next/image';
 const defaultImg = '/images/cameras-2.jpg';
 import ProductManage from '@/services/ProductManage';
 import { useCart } from '@/contexts/CartContext';
@@ -283,11 +284,14 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
                                                 loop
                                             />
                                         ) : (
-                                            <img
+                                            <Image
                                                 id="modal-main-image"
+                                                fill
                                                 src={currentCarouselImage}
                                                 alt={product.name}
-                                                className="absolute inset-0 w-full h-full p-2 sm:p-4 object-contain transition-all duration-300"
+                                                className="p-2 sm:p-4 object-contain transition-all duration-300"
+                                                sizes="(max-width: 768px) 100vw, 50vw"
+                                                quality={85}
                                                 onError={(e) => { e.target.src = defaultImg; }}
                                             />
                                         )}

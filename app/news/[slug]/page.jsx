@@ -11,6 +11,7 @@ import NavbarPrimary from '@/components/user/MainPage/NavbarPrimary/NavbarPrimar
 import TopBar from '@/components/user/MainPage/TopBar/TopBar';
 import Footer from '@/components/user/MainPage/Footer/Footer';
 import NewsService from '@/services/NewsService';
+import DOMPurify from 'isomorphic-dompurify';
 import { resolveImagePath } from '@/lib/imageUtils';
 import PageLoader from '@/components/common/PageLoader';
 
@@ -116,7 +117,7 @@ export default function NewsDetailPage() {
                                 </span>
                             </div>
                             <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed overflow-hidden break-words [&_img]:max-w-full [&_img]:h-auto [&_table]:w-full [&_table]:table-fixed [&_pre]:overflow-x-auto [&_iframe]:max-w-full"
-                                dangerouslySetInnerHTML={{ __html: news.content }} />
+                                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(news.content) }} />
                         </div>
                     </article>
 

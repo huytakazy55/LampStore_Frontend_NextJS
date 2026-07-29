@@ -1,14 +1,13 @@
 "use client";
 
 
-import { Suspense, useEffect } from 'react';
+import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import Header from '@/components/user/MainPage/Header/Header';
 import NavbarPrimary from '@/components/user/MainPage/NavbarPrimary/NavbarPrimary';
 import { SiteContent } from '@/components/user/MainPage/SiteContent/SiteContent';
 import TopBar from '@/components/user/MainPage/TopBar/TopBar';
 import Footer from '@/components/user/MainPage/Footer/Footer';
-import NotificationService from '@/services/NotificationService';
 import LazySection from '@/components/common/LazySection';
 import ScrollTimeline from '@/components/common/ScrollTimeline';
 
@@ -30,20 +29,9 @@ const SectionSpinner = ({ height, minHeightClass = '' }) => (
 );
 
 export default function HomePage() {
-    useEffect(() => {
-        const initializeNotifications = async () => {
-            try {
-                await NotificationService.setupSignalRNotifications();
-                NotificationService.requestNotificationPermission();
-                NotificationService.cleanOldNotifications();
-                console.log('📢 HomePage: Notification system initialized for user');
-            } catch (error) {
-                console.error('❌ HomePage: Failed to initialize notifications:', error);
-            }
-        };
-
-        initializeNotifications();
-    }, []);
+    // NOTE: notification/SignalR initialization used to be duplicated here and in
+    // components/providers/ClientProviders.jsx. It's now handled once, app-wide,
+    // lazily by components/user/Chat/ChatButton.jsx.
 
     return (
         <>

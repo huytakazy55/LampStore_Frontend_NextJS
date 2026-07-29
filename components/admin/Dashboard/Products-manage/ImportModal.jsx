@@ -4,6 +4,12 @@ import React, { useContext, useState, useEffect } from 'react';
 import { Modal, Upload, Button, Typography, Table, Tabs } from 'antd';
 import { InboxOutlined, FileExcelOutlined, CloseOutlined, SaveOutlined, DownloadOutlined } from '@ant-design/icons';
 import { ThemeContext } from '@/contexts/ThemeContext';
+// SECURITY: package.json pins "xlsx" to SheetJS's official CDN-hosted build
+// (https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz) instead of the npm registry.
+// The npm registry's latest published version is still 0.18.5, which carries known
+// prototype-pollution (GHSA-4r6h-8v6p-xvw6) and ReDoS (GHSA-5pgg-2g8v-p4x9) advisories
+// with no fix available on npm — SheetJS moved patched releases off npm entirely.
+// See https://docs.sheetjs.com/docs/getting-started/installation/nodejs for their guidance.
 import * as XLSX from 'xlsx';
 import ProductManage from '@/services/ProductManage';
 import { toast } from 'react-toastify';

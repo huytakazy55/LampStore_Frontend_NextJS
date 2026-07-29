@@ -7,7 +7,6 @@ const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 // Tạo instance axios riêng cho upload
 const uploadAxios = axios.create({
     baseURL: API_ENDPOINT,
-    withCredentials: true,
     headers: {
         'Content-Type': 'multipart/form-data',
         'Accept': 'application/json'

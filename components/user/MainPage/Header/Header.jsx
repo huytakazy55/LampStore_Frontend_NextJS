@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { usePathname } from 'next/navigation'
+import Image from 'next/image'
 import FormLogin from './FormLogin'
 import FormCart from './FormCart';
 import FormActionLogin from './FormActionLogin';
@@ -273,8 +274,8 @@ const Header = () =>
         {/* Logo */}
         <div className='flex-shrink-0'>
           <a href="/" className='flex items-center gap-3 no-underline group'>
-            <div className='w-14 h-14 md:w-[72px] md:h-[72px] rounded-xl md:rounded-2xl overflow-hidden shadow-md group-hover:shadow-primary-300/50 transition-all duration-300 group-hover:scale-105 flex-shrink-0'>
-              <img src={Logo} alt="CapyLumine" className='w-full h-full object-cover' />
+            <div className='relative w-14 h-14 md:w-[72px] md:h-[72px] rounded-xl md:rounded-2xl overflow-hidden shadow-md group-hover:shadow-primary-300/50 transition-all duration-300 group-hover:scale-105 flex-shrink-0'>
+              <Image src={Logo} alt="CapyLumine" fill className='object-cover' sizes='72px' quality={90} priority />
             </div>
             <div className='hidden sm:flex flex-col mt-1 md:mt-2'>
               <div className={`text-[20px] md:text-[26px] font-extrabold tracking-tight font-sans leading-none mb-1 flex items-center ml-1`}>
@@ -484,8 +485,8 @@ const Header = () =>
               mounted && isAuthenticated ?
                 <>
                   <li onClick={toggleActionLoginForm} ref={buttonActionRef} className='relative cursor-pointer group'>
-                    <div className='w-10 h-10 rounded-xl overflow-hidden ring-2 ring-primary-400/60 dark:ring-primary-500/40 transition-all duration-300 hover:ring-primary-500 hover:scale-110 hover:shadow-lg hover:shadow-primary-300/30 active:scale-95'>
-                      <img className='h-full w-full object-cover' src={avatarURL ? avatarURL : (avatar.ProfileAvatar ? (avatar.ProfileAvatar.startsWith('http') ? avatar.ProfileAvatar : `${API_ENDPOINT}${avatar.ProfileAvatar}`) : avatarimg)} alt="Ảnh đại diện người dùng" />
+                    <div className='relative w-10 h-10 rounded-xl overflow-hidden ring-2 ring-primary-400/60 dark:ring-primary-500/40 transition-all duration-300 hover:ring-primary-500 hover:scale-110 hover:shadow-lg hover:shadow-primary-300/30 active:scale-95'>
+                      <Image fill className='object-cover' src={avatarURL ? avatarURL : (avatar.ProfileAvatar ? (avatar.ProfileAvatar.startsWith('http') ? avatar.ProfileAvatar : `${API_ENDPOINT}${avatar.ProfileAvatar}`) : avatarimg)} alt="Ảnh đại diện người dùng" sizes='40px' quality={75} />
                     </div>
                     <div className='absolute bottom-0 right-0 w-3 h-3 bg-primary-600 rounded-full border-2 border-white dark:border-gray-900'></div>
                     <FormActionLogin toggleProfile={toggleProfile} setToggleProfile={setToggleProfile} buttonProfileRef={buttonProfileRef} popupActionRef={popupActionRef} toggleActionLogin={toggleActionLogin} setToggleActionLogin={setToggleActionLogin} />
@@ -599,7 +600,7 @@ const Header = () =>
                   {mounted && isAuthenticated ? (
                     <>
                       <div className='flex items-center gap-3 p-2 rounded-lg bg-gray-50'>
-                        <img className='w-10 h-10 rounded-full border-2 border-primary-500 object-cover' src={avatarURL ? avatarURL : (avatar.ProfileAvatar ? (avatar.ProfileAvatar.startsWith('http') ? avatar.ProfileAvatar : `${API_ENDPOINT}${avatar.ProfileAvatar}`) : avatarimg)} alt="Ảnh đại diện" />
+                        <Image width={40} height={40} className='w-10 h-10 rounded-full border-2 border-primary-500 object-cover' src={avatarURL ? avatarURL : (avatar.ProfileAvatar ? (avatar.ProfileAvatar.startsWith('http') ? avatar.ProfileAvatar : `${API_ENDPOINT}${avatar.ProfileAvatar}`) : avatarimg)} alt="Ảnh đại diện" quality={75} />
                         <div className='flex flex-col'>
                            <span className='font-medium text-sm text-gray-800'>{profileApiData?.fullName || 'Tài khoản'}</span>
                            {profileApiData?.email && <span className='text-xs text-gray-500'>{profileApiData.email}</span>}

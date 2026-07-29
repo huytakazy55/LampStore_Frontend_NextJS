@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { toast } from 'react-toastify';
 import WishlistService from '@/services/WishlistService';
 
@@ -84,15 +84,17 @@ export function WishlistProvider({ children }) {
 
     const wishlistCount = wishlistIds.size;
 
+    const contextValue = useMemo(() => ({
+        wishlistIds,
+        wishlistCount,
+        toggleWishlist,
+        isInWishlist,
+        fetchWishlistIds,
+        loading
+    }), [wishlistIds, wishlistCount, toggleWishlist, isInWishlist, fetchWishlistIds, loading]);
+
     return (
-        <WishlistContext.Provider value={{
-            wishlistIds,
-            wishlistCount,
-            toggleWishlist,
-            isInWishlist,
-            fetchWishlistIds,
-            loading
-        }}>
+        <WishlistContext.Provider value={contextValue}>
             {children}
         </WishlistContext.Provider>
     );

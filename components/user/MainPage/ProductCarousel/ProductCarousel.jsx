@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from 'react';
+import Image from 'next/image';
 import { useProducts } from '../../../../hooks/useProducts';
 import { useNavigate } from '@/lib/router-compat';
 const defaultImg = '/images/cameras-2.jpg';
@@ -58,11 +59,13 @@ const ProductCard = ({ product, isLast, navigate, onAddToCartClick, isInWishlist
 
       {/* Image Container */}
       <div className="relative h-48 sm:h-56 md:h-60 overflow-hidden bg-gray-50 dark:bg-[#111]">
-        <img
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-108"
+        <Image
+          fill
+          className="object-cover transition-transform duration-500 group-hover:scale-108"
           src={getImageSrc(product)}
           alt={product.name}
-          loading="lazy"
+          sizes="(max-width: 768px) 50vw, 25vw"
+          quality={75}
           onError={(e) => { e.target.src = defaultImg; }}
         />
       </div>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, useRouter, notFound } from 'next/navigation';
+import Image from 'next/image';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import Header from '@/components/user/MainPage/Header/Header';
@@ -18,6 +19,7 @@ import ImageLightbox from '@/components/common/ImageLightbox';
 import PageLoader from '@/components/common/PageLoader';
 import AddToCartModal from '@/components/user/MainPage/AddToCartModal';
 import ProductVideo from '@/components/common/ProductVideo';
+import DOMPurify from 'isomorphic-dompurify';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
@@ -601,10 +603,14 @@ export default function ProductDetailPage()
                                 />
                             ) : (
                                 <>
-                                    <img
-                                        className='w-full h-full object-contain group-hover:scale-105 transition-transform duration-300'
+                                    <Image
+                                        fill
+                                        className='object-contain group-hover:scale-105 transition-transform duration-300'
                                         src={mainImage}
                                         alt={product.name}
+                                        sizes='(max-width: 768px) 100vw, 37vw'
+                                        quality={85}
+                                        priority
                                         onError={(e) => { e.target.src = '/images/cameras-2.jpg'; }}
                                     />
                                     <div className='absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center'>
@@ -639,17 +645,24 @@ export default function ProductDetailPage()
                                 </button>
                             )}
                             {images.map((img, i) => (
-                                <img
+                                <div
                                     key={img.id || i}
-                                    className={`w-14 h-14 md:w-16 md:h-16 border rounded cursor-pointer object-cover transition flex-shrink-0 ${selectedMedia === 'image' && selectedImage === i ? 'border-primary-500 border-2' : 'border-gray-200 dark:border-gray-700 hover:border-primary-300'} bg-white dark:bg-gray-800`}
-                                    src={getImgSrc(img.imagePath)}
-                                    alt={`${product.name} - Ảnh ${i + 1}`}
+                                    className={`relative w-14 h-14 md:w-16 md:h-16 border rounded cursor-pointer overflow-hidden transition flex-shrink-0 ${selectedMedia === 'image' && selectedImage === i ? 'border-primary-500 border-2' : 'border-gray-200 dark:border-gray-700 hover:border-primary-300'} bg-white dark:bg-gray-800`}
                                     onClick={() => {
                                         setSelectedImage(i);
                                         setSelectedMedia('image');
                                     }}
-                                    onError={(e) => { e.target.src = '/images/cameras-2.jpg'; }}
-                                />
+                                >
+                                    <Image
+                                        fill
+                                        className='object-cover'
+                                        src={getImgSrc(img.imagePath)}
+                                        alt={`${product.name} - Ảnh ${i + 1}`}
+                                        sizes='64px'
+                                        quality={70}
+                                        onError={(e) => { e.target.src = '/images/cameras-2.jpg'; }}
+                                    />
+                                </div>
                             ))}
                         </div>
                         <div
@@ -809,7 +822,9 @@ export default function ProductDetailPage()
                                                 <div key={addon.id} className='rounded-lg border-2 border-gray-200 dark:border-gray-700 overflow-hidden transition-all hover:border-primary-300'>
                                                     {/* Header */}
                                                     <div className='flex items-center gap-3 p-3 bg-gray-50/50 dark:bg-gray-800/30'>
-                                                        <img src={addonImg} alt={addon.name} className='w-12 h-12 rounded object-cover border border-gray-200 dark:border-gray-600 flex-shrink-0 cursor-pointer' onClick={() => setPreviewImg({ src: addonImg, name: addon.name, price: addonBasePrice })} onError={(e) => { e.target.src = '/images/cameras-2.jpg'; }} />
+                                                        <div className='relative w-12 h-12 rounded overflow-hidden border border-gray-200 dark:border-gray-600 flex-shrink-0 cursor-pointer' onClick={() => setPreviewImg({ src: addonImg, name: addon.name, price: addonBasePrice })}>
+                                                            <Image fill className='object-cover' src={addonImg} alt={addon.name} sizes='48px' quality={70} onError={(e) => { e.target.src = '/images/cameras-2.jpg'; }} />
+                                                        </div>
                                                         <div className='flex-1 min-w-0'>
                                                             {addon.slug ? <a href={`/product/${addon.slug}`} className='text-sm font-medium text-gray-800 dark:text-gray-200 hover:text-primary-600 transition-colors line-clamp-1'>{addon.name}</a> : <span className='text-sm font-medium text-gray-800 dark:text-gray-200 line-clamp-1'>{addon.name}</span>}
                                                             <div className='flex items-center gap-2 mt-0.5'>
@@ -850,10 +865,11 @@ export default function ProductDetailPage()
                                                                                         className={`relative flex items-center gap-1.5 py-1 px-2.5 text-xs border rounded transition-all cursor-pointer ${isSelected ? 'border-primary-500 text-primary-700 bg-primary-50 dark:bg-primary-900/30 font-medium ring-1 ring-primary-400/30' : isRequired ? 'border-red-300 text-gray-500' : 'border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:border-primary-300'}`}
                                                                                     >
                                                                                         {optImg && (
-                                                                                            <img src={optImg} alt={val.value} className={`w-7 h-7 rounded object-cover border cursor-pointer ${isSelected ? 'border-primary-400' : 'border-gray-200'}`}
+                                                                                            <div className={`relative w-7 h-7 rounded overflow-hidden border cursor-pointer ${isSelected ? 'border-primary-400' : 'border-gray-200'}`}
                                                                                                 onClick={(e) => { e.stopPropagation(); setPreviewImg({ src: optImg, name: `${addon.name} - ${val.value}`, price: addonBasePrice + (val.additionalPrice || 0) }); }}
-                                                                                                onError={(e) => { e.target.style.display = 'none'; }}
-                                                                                            />
+                                                                                            >
+                                                                                                <Image fill className='object-cover' src={optImg} alt={val.value} sizes='28px' quality={70} onError={(e) => { e.target.style.display = 'none'; }} />
+                                                                                            </div>
                                                                                         )}
                                                                                         <span>{val.value}</span>
                                                                                         {val.additionalPrice > 0 && <span className='text-primary-500'>+₫{formatPrice(val.additionalPrice)}</span>}
@@ -1013,7 +1029,7 @@ export default function ProductDetailPage()
                         <h2 className='text-base md:text-lg font-semibold text-gray-800 dark:text-gray-100 py-2.5 px-4 border-l-4 border-primary-500 bg-gradient-to-r from-primary-100 to-transparent dark:from-primary-900/20 dark:to-transparent rounded-r-md flex items-center gap-2'><i className='bx bx-detail text-primary-500'></i> Mô tả sản phẩm</h2>
                         <div
                             className='py-4 text-xs md:text-sm leading-relaxed text-gray-700 dark:text-gray-300 overflow-x-auto'
-                            dangerouslySetInnerHTML={{ __html: product.description || 'Chưa có mô tả' }}
+                            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.description || 'Chưa có mô tả') }}
                         />
                     </div>
 
