@@ -436,6 +436,10 @@
   color: #22c55e !important;
 }
 
+.custom-table .admin-copy-action-btn.ant-btn {
+  border: 1px solid currentColor !important;
+}
+
 .custom-table .admin-action-group .ant-btn:hover,
 .custom-table .admin-action-btn.ant-btn:hover {
   background: #dcfce7 !important;

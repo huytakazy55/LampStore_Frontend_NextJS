@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import Image from 'next/image'
 
 
-const MAPS_EMBED_URL = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.6778758888713!2d105.81908607604745!3d21.005545788574118!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ad5fb9812307%3A0x63c20c5aa29db56b!2zS2h1IHThuq1wIHRo4buDIEEyIHBo4buRIFbEqW5oIEjhu5MsIFRo4buLbmggUXVhbmcsIMSQ4buRbmcgxJBhLCBIw6AgTuG7mWksIFZpZXRuYW0!5e0!3m2!1svi!2s!4v1726261210365!5m2!1svi!2s";
+const MAPS_EMBED_URL = 'https://www.google.com/maps?q=A2%20V%C4%A9nh%20H%E1%BB%93%2C%20Th%E1%BB%8Bnh%20Quang%2C%20%C4%90%E1%BB%91ng%20%C4%90a%2C%20H%C3%A0%20N%E1%BB%99i&output=embed';
 
 const LazyMap = () =>
 {

@@ -3,15 +3,12 @@
 import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import AdminPageHeader from '../shared/AdminPageHeader';
 import { Table, Input, Button, Modal, message, Space, Row, Col, Card, Checkbox, Tag, Tooltip } from 'antd';
-import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import UserManage from '@/services/UserManage';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from '@/lib/router-compat';
-import axios from 'axios';
 import CreateUser from './CreateUser';
 import EditUser from './EditUser';
-
-const API_URL = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
 const Users = () => {
   const { t } = useTranslation();
@@ -26,9 +23,6 @@ const Users = () => {
   const [openCreate, setOpenCreate] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [openBulkDelete, setOpenBulkDelete] = useState(false);
-  const [bulkDeleteLoading, setBulkDeleteLoading] = useState(false);
   const [hasInitialized, setHasInitialized] = useState(false);
   const [availableRoles, setAvailableRoles] = useState([]);
   const [roleModalVisible, setRoleModalVisible] = useState(false);
@@ -89,7 +83,6 @@ const Users = () => {
       if (hasInitialized) {
         setSearchTerm('');
         setPage(1);
-        setSelectedRowKeys([]);
         setRoleData({});
       }
 
@@ -282,42 +275,6 @@ const Users = () => {
     },
   ];
 
-  const onSelectChange = (newSelectedRowKeys) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-    columnWidth: 40,
-    columnTitle: '',
-  };
-
-  const handleBulkDelete = async () => {
-    try {
-      setBulkDeleteLoading(true);
-      if (!selectedRowKeys || selectedRowKeys.length === 0) {
-        message.error('Vui lòng chọn bản ghi để xóa!');
-        return;
-      }
-      const response = await axios.delete(`${API_URL}/users/bulk`, {
-        data: { ids: selectedRowKeys }
-      });
-      if (response.data.success) {
-        message.success(t('DeleteSuccess'));
-        setSelectedRowKeys([]);
-        fetchUsers();
-      } else {
-        message.error(t('DeleteFailed'));
-      }
-    } catch (error) {
-      message.error(t('DeleteFailed'));
-    } finally {
-      setBulkDeleteLoading(false);
-      setOpenBulkDelete(false);
-    }
-  };
-
   const openRoleModal = (user) => {
     setRoleModalUser(user);
     const roles = roleData[user.id];
@@ -382,17 +339,6 @@ const Users = () => {
               onChange={e => setSearchTerm(e.target.value)}
               style={{ width: 300 }}
             />
-            {selectedRowKeys.length > 0 && (
-              <Button
-                type="primary"
-                danger
-                icon={<DeleteOutlined />}
-                onClick={() => setOpenBulkDelete(true)}
-                loading={bulkDeleteLoading}
-              >
-                {t('DeleteSelected')} ({selectedRowKeys.length})
-              </Button>
-            )}
           </Space>
           <Button type="primary" className="admin-theme-primary-btn" icon={<PlusOutlined />} onClick={() => setOpenCreate(true)}>
             {t('Create')}
@@ -402,7 +348,6 @@ const Users = () => {
         {/* Table */}
         <div className="admin-table-wrapper">
           <Table
-            rowSelection={rowSelection}
             columns={columns}
             dataSource={filteredUsers}
             rowKey="id"
@@ -451,17 +396,6 @@ const Users = () => {
           user={currentUser}
         />
       )}
-
-      {/* Bulk Delete Modal */}
-      <Modal
-        title={t('ConfirmDelete')}
-        open={openBulkDelete}
-        onOk={handleBulkDelete}
-        onCancel={() => setOpenBulkDelete(false)}
-        confirmLoading={bulkDeleteLoading}
-      >
-        <p>{t('ConfirmDeleteSelected', { count: selectedRowKeys.length })}</p>
-      </Modal>
 
       {/* Assign Roles Modal */}
       <Modal

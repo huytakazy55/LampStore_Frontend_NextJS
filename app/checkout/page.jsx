@@ -13,9 +13,10 @@ import OrderService from '@/services/OrderService';
 import GuestProfileService from '@/services/GuestProfileService';
 import ProfileService from '@/services/ProfileService';
 import DiscountModal from '@/components/user/MainPage/DiscountModal/DiscountModal';
+import axiosInstance from '@/lib/axiosConfig';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
-const PROVINCE_API = 'https://provinces.open-api.vn/api';
+const PROVINCE_API = 'https://provinces.open-api.vn/api/v1';
 
 const formatPrice = (price) => {
     if (!price) return '0';
@@ -137,29 +138,19 @@ export default function CheckoutPage() {
                     const token = localStorage.getItem('token');
                     if (!token) return;
 
-                    const res = await fetch(`${API_ENDPOINT}/api/DiscountCode/apply`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        },
-                        body: JSON.stringify({
+                    const { data } = await axiosInstance.post('/api/DiscountCode/apply', {
                             code: storedVoucher,
                             Code: storedVoucher,
                             orderTotalAmount: totalWithoutDiscount,
                             OrderTotalAmount: totalWithoutDiscount
-                        })
                     });
 
-                    if (res.ok) {
-                        const data = await res.json();
-                        setAppliedDiscount({
-                            code: data.code || data.Code,
-                            amount: data.discountAmount !== undefined ? data.discountAmount : data.DiscountAmount,
-                            percentage: data.discountPercentage !== undefined ? data.discountPercentage : data.DiscountPercentage
-                        });
-                        sessionStorage.removeItem('selectedVoucher');
-                    }
+                    setAppliedDiscount({
+                        code: data.code || data.Code,
+                        amount: data.discountAmount !== undefined ? data.discountAmount : data.DiscountAmount,
+                        percentage: data.discountPercentage !== undefined ? data.discountPercentage : data.DiscountPercentage
+                    });
+                    sessionStorage.removeItem('selectedVoucher');
                 } catch (error) {
                     console.error('Error applying stored voucher:', error);
                 } finally {
@@ -371,38 +362,24 @@ export default function CheckoutPage() {
                 return;
             }
 
-            const res = await fetch(`${API_ENDPOINT}/api/DiscountCode/apply`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
+            const { data } = await axiosInstance.post('/api/DiscountCode/apply', {
                     code: discountCode,
                     Code: discountCode,
                     orderTotalAmount: totalWithoutDiscount,
                     OrderTotalAmount: totalWithoutDiscount
-                })
             });
 
-            if (res.ok) {
-                const data = await res.json();
-                console.log('Apply discount response:', data); // DEBUG
-                setAppliedDiscount({
-                    code: data.code || data.Code,
-                    amount: data.discountAmount !== undefined ? data.discountAmount : data.DiscountAmount,
-                    percentage: data.discountPercentage !== undefined ? data.discountPercentage : data.DiscountPercentage
-                });
-                toast.success('Áp dụng mã giảm giá thành công!');
-                setShowDiscountModal(false);
-            } else {
-                const errorData = await res.json();
-                toast.error(errorData.message || 'Mã giảm giá không hợp lệ hoặc không đủ điều kiện');
-                setAppliedDiscount(null);
-            }
+            setAppliedDiscount({
+                code: data.code || data.Code,
+                amount: data.discountAmount !== undefined ? data.discountAmount : data.DiscountAmount,
+                percentage: data.discountPercentage !== undefined ? data.discountPercentage : data.DiscountPercentage
+            });
+            toast.success('Áp dụng mã giảm giá thành công!');
+            setShowDiscountModal(false);
         } catch (error) {
             console.error('Lỗi khi áp dụng mã giảm giá:', error);
-            toast.error('Có lỗi xảy ra khi áp dụng mã giảm giá');
+            toast.error(error.response?.data?.message || 'Mã giảm giá không hợp lệ hoặc không đủ điều kiện');
+            setAppliedDiscount(null);
         } finally {
             setIsApplyingDiscount(false);
         }
@@ -1033,38 +1010,24 @@ export default function CheckoutPage() {
                     setDiscountCode(code.code);
                     setIsApplyingDiscount(true);
                     try {
-                        const token = localStorage.getItem('token');
-                        const res = await fetch(`${API_ENDPOINT}/api/DiscountCode/apply`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${token}`
-                            },
-                            body: JSON.stringify({
+                        const { data } = await axiosInstance.post('/api/DiscountCode/apply', {
                                 code: code.code,
                                 Code: code.code,
                                 orderTotalAmount: totalWithoutDiscount,
                                 OrderTotalAmount: totalWithoutDiscount
-                            })
                         });
 
-                        if (res.ok) {
-                            const data = await res.json();
-                            setAppliedDiscount({
-                                code: data.code || data.Code,
-                                amount: data.discountAmount !== undefined ? data.discountAmount : data.DiscountAmount,
-                                percentage: data.discountPercentage !== undefined ? data.discountPercentage : data.DiscountPercentage
-                            });
-                            toast.success('Áp dụng mã giảm giá thành công!');
-                            setShowDiscountModal(false);
-                        } else {
-                            const errorData = await res.json();
-                            toast.error(errorData.message || 'Mã giảm giá không hợp lệ hoặc không đủ điều kiện');
-                            setAppliedDiscount(null);
-                        }
+                        setAppliedDiscount({
+                            code: data.code || data.Code,
+                            amount: data.discountAmount !== undefined ? data.discountAmount : data.DiscountAmount,
+                            percentage: data.discountPercentage !== undefined ? data.discountPercentage : data.DiscountPercentage
+                        });
+                        toast.success('Áp dụng mã giảm giá thành công!');
+                        setShowDiscountModal(false);
                     } catch (error) {
                         console.error('Lỗi khi áp dụng mã giảm giá:', error);
-                        toast.error('Có lỗi xảy ra khi áp dụng mã giảm giá');
+                        toast.error(error.response?.data?.message || 'Mã giảm giá không hợp lệ hoặc không đủ điều kiện');
+                        setAppliedDiscount(null);
                     } finally {
                         setIsApplyingDiscount(false);
                     }

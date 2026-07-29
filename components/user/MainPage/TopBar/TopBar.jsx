@@ -2,6 +2,9 @@
 
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux';
+
+const MAPS_EMBED_URL = 'https://www.google.com/maps?q=A2%20V%C4%A9nh%20H%E1%BB%93%2C%20Th%E1%BB%8Bnh%20Quang%2C%20%C4%90%E1%BB%91ng%20%C4%90a%2C%20H%C3%A0%20N%E1%BB%99i&output=embed';
+
 const TopBar = () => {
     const [showMap, setShowMap] = useState(false);
     const [showFbConfirm, setShowFbConfirm] = useState(false);
@@ -76,7 +79,7 @@ const TopBar = () => {
                         </h3>
                         <div className='w-full h-[calc(100%-3.5rem)] rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700'>
                             <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1862.3516020899583!2d105.8194656114243!3d21.004531067309728!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ad3745ecd1cd%3A0x7d736e82eec7e4ea!2sPaimon%20Shop!5e0!3m2!1svi!2s!4v1783758217361!5m2!1svi!2s"
+                                src={MAPS_EMBED_URL}
                                 width="100%"
                                 height="100%"
                                 style={{ border: 0 }}

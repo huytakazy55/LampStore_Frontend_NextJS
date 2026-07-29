@@ -9,8 +9,9 @@ import ProfileService from '@/services/ProfileService'
 import { jwtDecode } from 'jwt-decode'
 import { toast } from 'react-toastify'
 import Compressor from 'compressorjs';
+import axiosInstance from '@/lib/axiosConfig';
 
-const PROVINCE_API = 'https://provinces.open-api.vn/api';
+const PROVINCE_API = 'https://provinces.open-api.vn/api/v1';
 
 const formatFullAddress = (data) =>
   [data.Address, data.WardName, data.DistrictName, data.CityName].filter(Boolean).join(' - ');
@@ -186,13 +187,8 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
       setLoadingDiscounts(true);
       const token = localStorage.getItem('token');
       if (token) {
-        fetch(`${API_ENDPOINT}/api/DiscountCode/my-codes`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        })
-          .then(res => res.json())
-          .then(data => {
+        axiosInstance.get('/api/DiscountCode/my-codes')
+          .then(({ data }) => {
             const codes = data?.$values || data || [];
             setDiscountCodes(codes);
           })

@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
+import axiosInstance from '@/lib/axiosConfig';
 
 const { Title } = Typography;
 
@@ -50,13 +51,10 @@ const UpdateModal = ({ openUpdate, handleUpdateClose, fetchProducts, style, cate
     const formData = new FormData();
     formData.append('file', file);
     try {
-      const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
-      const res = await fetch(`${API_ENDPOINT}/api/Products/UploadVariantImage`, {
-        method: 'POST',
-        body: formData
+      const res = await axiosInstance.post('/api/Products/UploadVariantImage', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
-      const data = await res.json();
-      const imgPath = data?.imageUrl;
+      const imgPath = res.data?.imageUrl;
       if (imgPath) {
         const updatedTypes = [...productTypes];
         updatedTypes[typeIndex].options[optionIndex].imageUrl = imgPath;

@@ -49,6 +49,7 @@ const devConnectSrc = [
 const prodConnectSrc = [
   'https://capylumine.com',
   'wss://capylumine.com',
+  'https://provinces.open-api.vn',
 ];
 
 const cspDirectives = [
@@ -62,7 +63,7 @@ const cspDirectives = [
   `img-src 'self' data: https:${isProd ? '' : ' http:'}`,
   `connect-src 'self' ${prodConnectSrc.join(' ')}${isProd ? '' : ` ${devConnectSrc.join(' ')}`}`,
   // Google Identity Services and Facebook Login render their UI in iframes.
-  "frame-src https://accounts.google.com https://www.facebook.com https://staticxx.facebook.com",
+  "frame-src https://accounts.google.com https://www.facebook.com https://staticxx.facebook.com https://www.google.com",
   "font-src 'self' data:",
   "object-src 'none'",
   "base-uri 'self'",

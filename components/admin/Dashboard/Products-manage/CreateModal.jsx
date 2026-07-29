@@ -10,10 +10,17 @@ import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
+import axiosInstance from '@/lib/axiosConfig';
 
 const { Title } = Typography;
 
-const CreateModal = ({ openCreate, handleCreateClose, fetchProducts, style, categories }) => {
+const createEmptyProductTypes = () => [
+  { typeName: '', options: [{ value: '', additionalPrice: 0, imageUrl: '' }] },
+];
+
+const getValues = (value) => value?.$values || value || [];
+
+const CreateModal = ({ openCreate, handleCreateClose, fetchProducts, style, categories, initialProduct = null }) => {
   const { themeColors } = useContext(ThemeContext);
   const { t } = useTranslation();
   const [form] = Form.useForm();
@@ -21,7 +28,7 @@ const CreateModal = ({ openCreate, handleCreateClose, fetchProducts, style, cate
   const [allProducts, setAllProducts] = useState([]);
 
   //Thêm phân loại
-  const [productTypes, setProductTypes] = useState([{ typeName: '', options: [{ value: '', additionalPrice: 0, imageUrl: '' }] }]);
+  const [productTypes, setProductTypes] = useState(createEmptyProductTypes);
 
   const handleAddProductType = () => {
     setProductTypes([...productTypes, { typeName: '', options: [{ value: '', additionalPrice: 0, imageUrl: '' }] }]);
@@ -50,13 +57,10 @@ const CreateModal = ({ openCreate, handleCreateClose, fetchProducts, style, cate
     const formData = new FormData();
     formData.append('file', file);
     try {
-      const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
-      const res = await fetch(`${API_ENDPOINT}/api/Products/UploadVariantImage`, {
-        method: 'POST',
-        body: formData
+      const res = await axiosInstance.post('/api/Products/UploadVariantImage', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
-      const data = await res.json();
-      const imgPath = data?.imageUrl;
+      const imgPath = res.data?.imageUrl;
       if (imgPath) {
         const updatedTypes = [...productTypes];
         updatedTypes[typeIndex].options[optionIndex].imageUrl = imgPath;
@@ -96,6 +100,62 @@ const CreateModal = ({ openCreate, handleCreateClose, fetchProducts, style, cate
         console.log(err);
       });
   }, []);
+
+  useEffect(() => {
+    if (!openCreate) return;
+
+    const initializeTimer = setTimeout(() => {
+      if (!initialProduct) {
+        form.resetFields();
+        form.setFieldsValue({ status: true });
+        setProductTypes(createEmptyProductTypes());
+        return;
+      }
+
+      const variant = initialProduct.variant || initialProduct.productVariant || {};
+      const copiedTypes = getValues(initialProduct.variantTypes).map(type => ({
+        typeName: type.name || type.typeName || '',
+        options: [
+          ...getValues(type.values).map(option => ({
+            value: option.value || '',
+            additionalPrice: Number(option.additionalPrice) || 0,
+            imageUrl: option.imageUrl || '',
+          })),
+          { value: '', additionalPrice: 0, imageUrl: '' },
+        ],
+      }));
+
+      const tagNames = String(initialProduct.tags || '')
+        .split(',')
+        .map(name => name.trim().toLowerCase())
+        .filter(Boolean);
+      const copiedTagIds = tags
+        .filter(tag => tagNames.includes(String(tag.name || '').trim().toLowerCase()))
+        .map(tag => tag.id);
+      const copiedAddOnIds = getValues(initialProduct.addOnProducts)
+        .map(product => product.id)
+        .filter(Boolean);
+
+      form.setFieldsValue({
+        name: `${initialProduct.name || ''} (Bản sao)`,
+        description: initialProduct.description || '',
+        categoryId: initialProduct.categoryId || undefined,
+        price: Number(variant.price) || 0,
+        discountPrice: Number(variant.discountPrice) || 0,
+        stock: Number(variant.stock) || 0,
+        materials: variant.materials || '',
+        weight: Number(variant.weight) || 0,
+        // SKU is intentionally changed so the new product does not reuse an identifier.
+        sku: variant.sku ? `${variant.sku}-COPY` : '',
+        tags: copiedTagIds,
+        addOnProductIds: copiedAddOnIds,
+        status: Boolean(initialProduct.status),
+      });
+      setProductTypes(copiedTypes.length > 0 ? copiedTypes : createEmptyProductTypes());
+    }, 0);
+
+    return () => clearTimeout(initializeTimer);
+  }, [openCreate, initialProduct, tags, form]);
 
   //Submit form
   const handleSubmitCreate = async (values) => {
@@ -139,7 +199,7 @@ const CreateModal = ({ openCreate, handleCreateClose, fetchProducts, style, cate
       await ProductManage.CreateProduct(newProduct)
         .then((res) => {
           form.resetFields();
-          setProductTypes([{ typeName: '', options: [{ value: '', additionalPrice: 0, imageUrl: '' }] }]);
+          setProductTypes(createEmptyProductTypes());
           fetchProducts();
           handleCreateClose();
           toast.success("Thêm mới sản phẩm thành công!");
@@ -281,7 +341,7 @@ const CreateModal = ({ openCreate, handleCreateClose, fetchProducts, style, cate
         <div className="flex items-center gap-2">
           <PlusOutlined style={{ color: themeColors.StartColorLinear, fontSize: '20px' }} />
           <Title level={4} style={{ margin: 0, color: themeColors.StartColorLinear }}>
-            Thêm sản phẩm mới
+            {initialProduct ? 'Sao chép sản phẩm' : 'Thêm sản phẩm mới'}
           </Title>
         </div>
       }

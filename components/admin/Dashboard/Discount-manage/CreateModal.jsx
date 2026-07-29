@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
-import { Modal, Form, Input, InputNumber, Select, DatePicker, Switch, Button } from 'antd';
+import { Modal, Form, Input, InputNumber, Select, DatePicker, Switch } from 'antd';
 import { toast } from 'react-toastify';
-
-import dayjs from 'dayjs';
+import axiosInstance from '@/lib/axiosConfig';
 
 const { Option } = Select;
-const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
-
 const CreateModal = ({ visible, onCancel, onSuccess }) => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
@@ -30,23 +27,10 @@ const CreateModal = ({ visible, onCancel, onSuccess }) => {
                 userId: values.userId || null // Empty means global
             };
 
-            const token = localStorage.getItem('token');
-            const res = await fetch(`${API_ENDPOINT}/api/DiscountCode`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(payload)
-            });
-
-            if (res.ok) {
-                toast.success('Tạo mã giảm giá thành công');
-                form.resetFields();
-                onSuccess();
-            } else {
-                toast.error('Lỗi khi tạo mã giảm giá');
-            }
+            await axiosInstance.post('/api/DiscountCode', payload);
+            toast.success('Tạo mã giảm giá thành công');
+            form.resetFields();
+            onSuccess();
         } catch (error) {
             console.error('Validate failed:', error);
         } finally {

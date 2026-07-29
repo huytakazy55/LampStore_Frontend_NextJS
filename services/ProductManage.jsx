@@ -1,19 +1,6 @@
 "use client";
 
 import axiosInstance from "./axiosConfig";
-import axios from "axios";
-const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
-
-// Tạo instance axios riêng cho upload
-const uploadAxios = axios.create({
-    baseURL: API_ENDPOINT,
-    headers: {
-        'Content-Type': 'multipart/form-data',
-        'Accept': 'application/json'
-    },
-    maxContentLength: Infinity,
-    maxBodyLength: Infinity
-});
 
 class ProductManage {
     GetProduct() {
@@ -79,7 +66,8 @@ class ProductManage {
     }
 
     UploadImageProduct(productId, formData) {
-        return axios.post(`${API_ENDPOINT}/api/Products/${productId}/images`, formData, {
+        return axiosInstance.post(`/api/Products/${productId}/images`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
             onUploadProgress: (progressEvent) => {
                 const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
                 console.log('Upload progress:', percentCompleted);
@@ -102,19 +90,19 @@ class ProductManage {
     }
 
     DeleteProductImage(imageId) {
-        return axios.delete(`${API_ENDPOINT}/api/Products/image/${imageId}`);
+        return axiosInstance.delete(`/api/Products/image/${imageId}`);
     }
 
     DeleteProduct(id) {
-        return axios.delete(`${API_ENDPOINT}/api/Products/${id}`);
+        return axiosInstance.delete(`/api/Products/${id}`);
     }
 
     ImportProducts(products) {
-        return axios.post(`${API_ENDPOINT}/api/Products/import`, products);
+        return axiosInstance.post('/api/Products/import', products);
     }
 
     BulkDeleteProducts(ids) {
-        return axios.delete(`${API_ENDPOINT}/api/products/bulk`, {
+        return axiosInstance.delete('/api/Products/bulk', {
             data: ids
         });
     }

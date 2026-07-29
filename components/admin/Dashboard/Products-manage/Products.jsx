@@ -38,8 +38,16 @@ const Products = () => {
   const { t } = useTranslation();
   //modal create
   const [openCreate, setOpenCreate] = React.useState(false);
-  const handleCreateOpen = () => setOpenCreate(true);
-  const handleCreateClose = () => setOpenCreate(false);
+  const [copySourceProduct, setCopySourceProduct] = useState(null);
+  const [copyLoadingId, setCopyLoadingId] = useState(null);
+  const handleCreateOpen = () => {
+    setCopySourceProduct(null);
+    setOpenCreate(true);
+  };
+  const handleCreateClose = () => {
+    setOpenCreate(false);
+    setCopySourceProduct(null);
+  };
   //modal update
   const [updateId, setUpdateId] = useState(0);
   const [openUpdate, setOpenUpdate] = React.useState(false);
@@ -222,14 +230,29 @@ const Products = () => {
   };
 
   const DeleteProduct = (id, name) => {
-    ProductManage.DeleteProduct(id, name)
-      .then((res) => {
-        toast.success(`Đã xóa bản ghi: ${name}`);
-        fetchProducts();
-      })
-      .catch((err) => {
-        toast.error("Có lỗi xảy ra");
-      });
+    Modal.confirm({
+      title: 'Xác nhận xóa sản phẩm',
+      content: (
+        <span>
+          Bạn có chắc chắn muốn xóa sản phẩm <strong>{name}</strong>? Hành động này không thể hoàn tác.
+        </span>
+      ),
+      okText: 'Xóa sản phẩm',
+      okType: 'danger',
+      cancelText: 'Hủy',
+      centered: true,
+      onOk: async () => {
+        try {
+          await ProductManage.DeleteProduct(id);
+          toast.success(`Đã xóa sản phẩm: ${name}`);
+          fetchProducts();
+        } catch (error) {
+          const errorMessage = error?.response?.data?.message || 'Không thể xóa sản phẩm.';
+          toast.error(errorMessage);
+          throw error;
+        }
+      },
+    });
   };
 
   const handleUpdateClick = (id) => {
@@ -249,6 +272,20 @@ const Products = () => {
     setSelectedProduct(product);
     handleDetailOpen();
   }
+
+  const handleCopyClick = async (id) => {
+    try {
+      setCopyLoadingId(id);
+      const response = await ProductManage.GetProductById(id);
+      setCopySourceProduct(response.data);
+      setOpenCreate(true);
+    } catch (error) {
+      console.error('Copy product error:', error);
+      toast.error('Không thể tải dữ liệu sản phẩm để sao chép.');
+    } finally {
+      setCopyLoadingId(null);
+    }
+  };
 
   const columns = [
     {
@@ -418,7 +455,7 @@ const Products = () => {
     {
       title: 'Thao tác',
       key: 'action',
-      width: '10%',
+      width: '13%',
       align: 'center',
       render: (_, record) => (
         <Space size={6} className="admin-action-group">
@@ -446,6 +483,16 @@ const Products = () => {
               className="admin-action-btn"
               icon={<i className='bx bx-edit'></i>}
               onClick={() => handleUpdateClick(record.id)}
+              style={{ color: themeColors.EndColorLinear }}
+            />
+          </Tooltip>
+          <Tooltip title="Sao chép thành sản phẩm mới">
+            <Button
+              type="text"
+              className="admin-action-btn admin-copy-action-btn"
+              icon={<i className='bx bx-copy'></i>}
+              onClick={() => handleCopyClick(record.id)}
+              loading={copyLoadingId === record.id}
               style={{ color: themeColors.EndColorLinear }}
             />
           </Tooltip>
@@ -619,6 +666,7 @@ const Products = () => {
         fetchProducts={fetchProducts}
         style={style}
         categories={categories}
+        initialProduct={copySourceProduct}
       />
 
       <UpdateModal

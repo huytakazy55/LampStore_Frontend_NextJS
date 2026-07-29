@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
-const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
+import axiosInstance from '@/lib/axiosConfig';
 
 const formatPrice = (price) => {
     if (!price) return '0';
@@ -16,11 +15,8 @@ export default function DiscountModal({ isOpen, onClose, totalAmount, onApply })
             setLoadingDiscounts(true);
             const token = localStorage.getItem('token');
             if (token) {
-                fetch(`${API_ENDPOINT}/api/DiscountCode/my-codes`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                })
-                    .then(res => res.json())
-                    .then(data => {
+                axiosInstance.get('/api/DiscountCode/my-codes')
+                    .then(({ data }) => {
                         const codes = data?.$values || data || [];
                         setDiscountCodes(codes);
                     })

@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Input, InputNumber, Select, DatePicker, Switch, Button } from 'antd';
+import { Modal, Form, Input, InputNumber, Select, DatePicker, Switch } from 'antd';
 import { toast } from 'react-toastify';
+import axiosInstance from '@/lib/axiosConfig';
 
 import dayjs from 'dayjs';
 
 const { Option } = Select;
-const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
-
 const UpdateModal = ({ visible, data, onCancel, onSuccess }) => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
@@ -49,22 +48,9 @@ const UpdateModal = ({ visible, data, onCancel, onSuccess }) => {
                 userId: values.userId || null
             };
 
-            const token = localStorage.getItem('token');
-            const res = await fetch(`${API_ENDPOINT}/api/DiscountCode/${data.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(payload)
-            });
-
-            if (res.ok) {
-                toast.success('Cập nhật mã giảm giá thành công');
-                onSuccess();
-            } else {
-                toast.error('Lỗi khi cập nhật mã giảm giá');
-            }
+            await axiosInstance.put(`/api/DiscountCode/${data.id}`, payload);
+            toast.success('Cập nhật mã giảm giá thành công');
+            onSuccess();
         } catch (error) {
             console.error('Validate failed:', error);
         } finally {

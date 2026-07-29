@@ -4,14 +4,13 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { Table, Button, Space, Typography, Tag, Popconfirm, Tooltip, Input } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
+import axiosInstance from '@/lib/axiosConfig';
 
 import CreateModal from './CreateModal';
 import UpdateModal from './UpdateModal';
 
 const { Title } = Typography;
 const { Search } = Input;
-const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
-
 const DiscountManage = () => {
     const [discounts, setDiscounts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -25,16 +24,8 @@ const DiscountManage = () => {
     const fetchDiscounts = async () => {
         setLoading(true);
         try {
-            const token = localStorage.getItem('token');
-            const res = await fetch(`${API_ENDPOINT}/api/DiscountCode`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (res.ok) {
-                const data = await res.json();
-                setDiscounts(data.$values || data || []);
-            } else {
-                toast.error('Lỗi khi tải mã giảm giá');
-            }
+            const { data } = await axiosInstance.get('/api/DiscountCode');
+            setDiscounts(data.$values || data || []);
         } catch (error) {
             console.error(error);
             toast.error('Lỗi kết nối máy chủ');
@@ -49,17 +40,9 @@ const DiscountManage = () => {
 
     const handleDelete = async (id) => {
         try {
-            const token = localStorage.getItem('token');
-            const res = await fetch(`${API_ENDPOINT}/api/DiscountCode/${id}`, {
-                method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (res.ok) {
-                toast.success('Đã xóa mã giảm giá');
-                fetchDiscounts();
-            } else {
-                toast.error('Lỗi khi xóa mã giảm giá');
-            }
+            await axiosInstance.delete(`/api/DiscountCode/${id}`);
+            toast.success('Đã xóa mã giảm giá');
+            fetchDiscounts();
         } catch (error) {
             toast.error('Lỗi kết nối máy chủ');
         }
