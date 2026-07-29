@@ -7,6 +7,22 @@ class NewsService {
         return await axiosInstance.get(`/api/news?activeOnly=${activeOnly}`);
     }
 
+    // Server-driven paginated fetch for the admin News screen (public pages keep using
+    // getAllNews() above, which still returns the full list — only the admin screen
+    // needs pagination). `activeOnly` is preserved per the existing contract; `search`
+    // is forwarded defensively — the backend doesn't yet accept a search/keyword param
+    // on GET /api/news, only page/pageSize (+ X-Total-Count header) are being added.
+    async getAllNewsPaged(page = 1, pageSize = 10, activeOnly = false, search = '') {
+        const response = await axiosInstance.get('/api/news', {
+            params: { activeOnly, page, pageSize, search: search || undefined }
+        });
+        const items = response.data?.$values || response.data || [];
+        const totalHeader = response.headers['x-total-count'];
+        // TODO: remove this fallback once backend confirms X-Total-Count is present on /api/news
+        const total = totalHeader !== undefined ? Number(totalHeader) : items.length;
+        return { items, total };
+    }
+
     async getNewsById(id) {
         return await axiosInstance.get(`/api/news/${id}`);
     }

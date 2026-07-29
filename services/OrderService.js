@@ -6,16 +6,24 @@ import axios from 'axios';
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT || (typeof window !== 'undefined' ? window.location.origin : '');
 
 const OrderService = {
-    // Get all orders (admin).
-    // NOTE: the backend now paginates this endpoint (server-enforced max pageSize=100)
-    // to prevent unbounded table scans. This UI still does client-side pagination over
-    // the full result set (see OrdersManage.jsx), so we request the max page size as a
-    // stopgap. Once order volume exceeds 100, this list will silently show only the
-    // 100 most recent orders — switching OrdersManage.jsx to real server-side pagination
-    // (passing page/pageSize and reading a total count from the API) is the proper fix.
-    getAllOrders: async () =>
+    // Get all orders (admin) — real server-side pagination.
+    // The backend enforces a max pageSize=100 (see OrdersController.GetOrders) and now
+    // also returns an X-Total-Count header with the total matching record count.
+    // Filtering the main Orders table remains client-side; delivery filtering is
+    // handled by the dedicated /api/Deliveries endpoint.
+    getAllOrders: async (page = 1, pageSize = 20) =>
     {
-        const response = await axiosInstance.get('/api/Orders', { params: { page: 1, pageSize: 100 } });
+        const response = await axiosInstance.get('/api/Orders', { params: { page, pageSize } });
+        const items = response.data?.$values || response.data || [];
+        const totalHeader = response.headers['x-total-count'];
+        // TODO: remove this fallback once backend confirms X-Total-Count is present on /api/Orders
+        const total = totalHeader !== undefined ? Number(totalHeader) : items.length;
+        return { items, total };
+    },
+
+    getOrderStats: async () =>
+    {
+        const response = await axiosInstance.get('/api/Orders/stats');
         return response.data;
     },
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext, useState, useEffect, useMemo } from 'react'
+import React, { useContext, useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import AdminPageHeader from '../shared/AdminPageHeader';
 import { Input, Button, Table, Space, DatePicker, Tag, Tooltip } from 'antd';
 import { useTranslation } from 'react-i18next';
@@ -45,7 +45,8 @@ const Tags = () => {
   const handleUpdateClose = () => setOpenUpdate(false);
   //Pagination
   const [page, setPage] = useState(1);
-  const itemsPerPage = 10;
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [loading, setLoading] = useState(false);
   //Data
   const [tagData, setTagData] = useState([]);
   const [tagCreate, setTagCreate] = useState({
@@ -68,15 +69,39 @@ const Tags = () => {
   const [bulkDeleteLoading, setBulkDeleteLoading] = useState(false);
   const [bulkDeleteIds, setBulkDeleteIds] = useState([]);
 
+  // Debounce the search box so we don't hit the server on every keystroke.
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const searchDebounceRef = useRef(null);
   useEffect(() => {
-    TagManage.GetTag()
-      .then((res) => {
-        setTagData(res.data.$values);
-      })
-      .catch((err) => {
+    if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+    searchDebounceRef.current = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+      // Reset to page 1 here (inside the debounce timeout) rather than in a separate
+      // effect, so it's an event-driven update instead of a synchronous setState
+      // inside an effect body.
+      setPage(1);
+    }, 350);
+    return () => clearTimeout(searchDebounceRef.current);
+  }, [searchTerm]);
 
+  // Server-driven paginated fetch. NOTE: /api/Tags does not currently support a search
+  // query param on the backend (see TagManage.GetTagsPaged) — `search` is still sent
+  // so this becomes true server-side search the moment the backend adds support. Until
+  // then, `filteredTags` below narrows the already-loaded page client-side.
+  const fetchTags = useCallback(() => {
+    setLoading(true);
+    TagManage.GetTagsPaged(page, itemsPerPage, debouncedSearchTerm)
+      .then(({ items, total }) => {
+        setTagData(items);
+        setTotal(total);
       })
-  }, [])
+      .catch(() => { })
+      .finally(() => setLoading(false));
+  }, [page, itemsPerPage, debouncedSearchTerm]);
+
+  useEffect(() => {
+    fetchTags();
+  }, [fetchTags])
 
   //Search Service
   const highlightedText = (text, highlight) => {
@@ -89,6 +114,10 @@ const Tags = () => {
     );
   };
 
+  // tagData is already the current server-paginated page. `dateRange` has no backend
+  // equivalent, and `search` isn't honored server-side yet either (see fetchTags
+  // above), so both are applied here as a client-side narrowing of just the loaded
+  // page — a documented, temporary limitation until the backend adds real filtering.
   const filteredTags = useMemo(() => {
     return tagData.filter(tag => {
       const matchesSearch = tag.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -113,20 +142,11 @@ const Tags = () => {
     return text;
   };
 
-  const handleChangePage = (page) => {
-    setPage(page);
-  };
-
-  //Pagination
-  const currentItems = useMemo(() => {
-    return filteredTags.slice((page - 1) * itemsPerPage, page * itemsPerPage);
-  }, [filteredTags, page, itemsPerPage]);
-
   const DeleteTag = (id, name) => {
     TagManage.DeleteTag(id, name)
       .then((res) => {
-        setTagData(prevData => prevData.filter(tag => tag.id !== id));
         toast.success(`Đã xóa bản ghi có id = ${id}: ${name}`);
+        fetchTags();
       })
       .catch((err) => {
         toast.error("Có lỗi xảy ra");
@@ -140,16 +160,6 @@ const Tags = () => {
     setUpdateId(id);
   }
 
-  const fetchTags = () => {
-    TagManage.GetTag()
-      .then((res) => {
-        setTagData(res.data.$values);
-      })
-      .catch((err) => {
-
-      });
-  };
-
   const columns = [
     {
       title: 'STT',
@@ -157,7 +167,7 @@ const Tags = () => {
       key: 'index',
       width: '5%',
       align: 'center',
-      render: (_, __, index) => index + 1
+      render: (_, __, index) => (page - 1) * itemsPerPage + index + 1
     },
     {
       title: 'Tên tag',
@@ -335,13 +345,17 @@ const Tags = () => {
           <Table
             rowSelection={rowSelection}
             columns={columns}
-            dataSource={currentItems}
+            dataSource={filteredTags}
             rowKey="id"
+            loading={loading}
             pagination={{
               current: page,
               pageSize: itemsPerPage,
-              total: filteredTags.length,
-              onChange: handleChangePage,
+              total,
+              onChange: (newPage, newPageSize) => {
+                setPage(newPage);
+                setItemsPerPage(newPageSize);
+              },
               showSizeChanger: true,
               showTotal: (total) => `Tổng số ${total} tag`
             }}

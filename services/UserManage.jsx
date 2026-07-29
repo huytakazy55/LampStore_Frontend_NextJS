@@ -7,10 +7,32 @@ class UserManage {
     async GetUserAccount() {
         try {
             const response = await axiosInstance.get("/api/Account/GetAllUserLogin");
-            return response.data;            
+            return response.data;
         } catch (error) {
             console.error("Error fetching user accounts:", error);
-            throw error;   
+            throw error;
+        }
+    }
+
+    // Server-driven paginated fetch for the admin Users screen (Roles-manage keeps using
+    // GetUserAccount() above, which still returns the full list). NOTE:
+    // /api/Account/GetAllUserLogin does not currently accept a search/keyword query
+    // param — only page/pageSize (+ X-Total-Count header) are being added by the
+    // backend. `search` is still forwarded defensively so this becomes true
+    // server-side search the moment the backend adds support.
+    async GetUserAccountPaged(page = 1, pageSize = 20, search = '') {
+        try {
+            const response = await axiosInstance.get("/api/Account/GetAllUserLogin", {
+                params: { page, pageSize, search: search || undefined }
+            });
+            const items = response.data?.$values || response.data || [];
+            const totalHeader = response.headers['x-total-count'];
+            // TODO: remove this fallback once backend confirms X-Total-Count is present on /api/Account/GetAllUserLogin
+            const total = totalHeader !== undefined ? Number(totalHeader) : items.length;
+            return { items, total };
+        } catch (error) {
+            console.error("Error fetching user accounts:", error);
+            throw error;
         }
     }
 

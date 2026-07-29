@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, useContext, useMemo } from 'react';
+import React, { useState, useEffect, useContext, useMemo, useCallback, useRef } from 'react';
 import AdminPageHeader from '../shared/AdminPageHeader';
-import { Table, Input, Button, Pagination, Modal, message, Space, Row, Col, Card, Tag, Tooltip } from 'antd';
+import { Table, Input, Button, Modal, message, Space, Row, Col, Card, Tag, Tooltip } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import BannerService from '@/services/BannerService';
@@ -19,7 +19,8 @@ const Banners = () => {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(1);
-    const itemsPerPage = 10;
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [total, setTotal] = useState(0);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [showUpdateModal, setShowUpdateModal] = useState(false);
     const [selectedBanner, setSelectedBanner] = useState(null);
@@ -27,21 +28,42 @@ const Banners = () => {
     const [openBulkDelete, setOpenBulkDelete] = useState(false);
     const [bulkDeleteLoading, setBulkDeleteLoading] = useState(false);
 
+    // Debounce the search box so we don't hit the server on every keystroke.
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+    const searchDebounceRef = useRef(null);
     useEffect(() => {
-        fetchBanners();
-    }, []);
+        if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+        searchDebounceRef.current = setTimeout(() => {
+            setDebouncedSearchTerm(searchTerm);
+            // Reset to page 1 here (inside the debounce timeout) rather than in a
+            // separate effect, so it's an event-driven update instead of a
+            // synchronous setState inside an effect body.
+            setPage(1);
+        }, 350);
+        return () => clearTimeout(searchDebounceRef.current);
+    }, [searchTerm]);
 
-    const fetchBanners = async () => {
+    // Server-driven paginated fetch. NOTE: /api/Banners does not currently support a
+    // search query param on the backend (see BannerService.getAllBanners) — `search`
+    // is still sent so this becomes true server-side search the moment the backend
+    // adds support. Until then, `filteredBanners` below narrows the already-loaded
+    // page client-side.
+    const fetchBanners = useCallback(async () => {
         try {
             setLoading(true);
-            const data = await BannerService.getAllBanners();
-            setBanners(data);
+            const { items, total } = await BannerService.getAllBanners(page, itemsPerPage, debouncedSearchTerm);
+            setBanners(items);
+            setTotal(total);
         } catch (error) {
             message.error('Lỗi khi tải danh sách banner');
         } finally {
             setLoading(false);
         }
-    };
+    }, [page, itemsPerPage, debouncedSearchTerm]);
+
+    useEffect(() => {
+        fetchBanners();
+    }, [fetchBanners]);
 
     const handleDelete = (id, title) => {
         Modal.confirm({
@@ -294,21 +316,22 @@ const Banners = () => {
                         columns={columns}
                         dataSource={filteredBanners}
                         rowKey="id"
-                        pagination={false}
+                        pagination={{
+                            current: page,
+                            pageSize: itemsPerPage,
+                            total,
+                            showSizeChanger: true,
+                            showTotal: (total) => `Tổng số ${total} banner`,
+                            onChange: (newPage, newPageSize) => {
+                                setPage(newPage);
+                                setItemsPerPage(newPageSize);
+                            }
+                        }}
                         loading={loading}
                         size="middle"
                         scroll={{ x: 1200 }}
                         className="custom-table"
                     />
-                    <div className="flex justify-end mt-4">
-                        <Pagination
-                            current={page}
-                            pageSize={itemsPerPage}
-                            total={filteredBanners.length}
-                            onChange={setPage}
-                            showSizeChanger={false}
-                        />
-                    </div>
                 </div>
             </div>
 

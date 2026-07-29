@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import AdminPageHeader from '../shared/AdminPageHeader';
-import { Table, Input, Button, Modal, Pagination, message, Space, Row, Col, Card, Checkbox, Tag, Tooltip } from 'antd';
+import { Table, Input, Button, Modal, message, Space, Row, Col, Card, Checkbox, Tag, Tooltip } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import UserManage from '@/services/UserManage';
 import { useTranslation } from 'react-i18next';
@@ -20,7 +20,8 @@ const Users = () => {
   const [roleData, setRoleData] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
-  const itemsPerPage = 20;
+  const [itemsPerPage, setItemsPerPage] = useState(20);
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [openCreate, setOpenCreate] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -35,11 +36,32 @@ const Users = () => {
   const [roleModalUser, setRoleModalUser] = useState(null);
   const [selectedRoles, setSelectedRoles] = useState([]);
 
-  const fetchUsers = async () => {
+  // Debounce the search box so we don't hit the server on every keystroke.
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const searchDebounceRef = useRef(null);
+  useEffect(() => {
+    if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+    searchDebounceRef.current = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+      // Reset to page 1 here (inside the debounce timeout) rather than in a separate
+      // effect, so it's an event-driven update instead of a synchronous setState
+      // inside an effect body.
+      setPage(1);
+    }, 350);
+    return () => clearTimeout(searchDebounceRef.current);
+  }, [searchTerm]);
+
+  // Server-driven paginated fetch. NOTE: /api/Account/GetAllUserLogin does not
+  // currently support a search query param on the backend (see
+  // UserManage.GetUserAccountPaged) — `search` is still sent so this becomes true
+  // server-side search the moment the backend adds support. Until then,
+  // `filteredUsers` below narrows the already-loaded page client-side.
+  const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await UserManage.GetUserAccount();
-      setUserData(res.$values || []);
+      const { items, total } = await UserManage.GetUserAccountPaged(page, itemsPerPage, debouncedSearchTerm);
+      setUserData(items);
+      setTotal(total);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -54,7 +76,11 @@ const Users = () => {
       }
       setLoading(false);
     }
-  };
+  }, [page, itemsPerPage, debouncedSearchTerm]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
 
   // Load users khi component mount hoặc khi navigate đến trang users
   useEffect(() => {
@@ -70,6 +96,7 @@ const Users = () => {
       fetchUsers();
       setHasInitialized(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
   useEffect(() => {
@@ -383,16 +410,18 @@ const Users = () => {
             size="middle"
             scroll={{ x: 900 }}
             className="custom-table"
+            pagination={{
+              current: page,
+              pageSize: itemsPerPage,
+              total,
+              showSizeChanger: true,
+              showTotal: (total) => `Tổng số ${total} người dùng`,
+              onChange: (newPage, newPageSize) => {
+                setPage(newPage);
+                setItemsPerPage(newPageSize);
+              }
+            }}
           />
-          <div className="flex justify-end mt-4">
-            <Pagination
-              current={page}
-              pageSize={itemsPerPage}
-              total={filteredUsers.length}
-              onChange={setPage}
-              showSizeChanger={false}
-            />
-          </div>
         </div>
       </div>
 

@@ -80,6 +80,7 @@ const nextConfig = {
 
   // Cho phép load ảnh từ API backend (dev/staging hosts excluded from production builds)
   images: {
+    qualities: [50, 60, 65, 70, 75, 80, 85, 90],
     remotePatterns: isProd
       ? prodImageRemotePatterns
       : [...devImageRemotePatterns, ...prodImageRemotePatterns],

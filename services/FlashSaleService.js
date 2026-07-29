@@ -4,13 +4,23 @@ import axiosInstance from '@/lib/axiosConfig';
 
 class FlashSaleService
 {
-    // Lấy tất cả flash sales (admin)
-    async getAllFlashSales()
+    // Lấy tất cả flash sales (admin) — server-driven pagination.
+    // NOTE: /api/FlashSales does not currently accept a search/keyword query param —
+    // only page/pageSize (+ X-Total-Count header) are being added by the backend.
+    // `search` is still forwarded defensively so this becomes true server-side search
+    // the moment the backend adds support.
+    async getAllFlashSales(page = 1, pageSize = 10, search = '')
     {
         try
         {
-            const response = await axiosInstance.get("/api/FlashSales");
-            return response.data.$values || response.data || [];
+            const response = await axiosInstance.get("/api/FlashSales", {
+                params: { page, pageSize, search: search || undefined }
+            });
+            const items = response.data.$values || response.data || [];
+            const totalHeader = response.headers['x-total-count'];
+            // TODO: remove this fallback once backend confirms X-Total-Count is present on /api/FlashSales
+            const total = totalHeader !== undefined ? Number(totalHeader) : items.length;
+            return { items, total };
         } catch (error)
         {
             console.error('Error fetching flash sales:', error);

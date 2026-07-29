@@ -20,8 +20,7 @@ import PageLoader from '@/components/common/PageLoader';
 import AddToCartModal from '@/components/user/MainPage/AddToCartModal';
 import ProductVideo from '@/components/common/ProductVideo';
 import DOMPurify from 'isomorphic-dompurify';
-
-const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
+import { resolveImagePath } from '@/lib/imageUtils';
 
 const formatPrice = (price) =>
 {
@@ -31,8 +30,7 @@ const formatPrice = (price) =>
 
 const getImgSrc = (path) =>
 {
-    if (!path) return '/images/cameras-2.jpg';
-    return path.startsWith('http') ? path : `${API_ENDPOINT}${path}`;
+    return resolveImagePath(path);
 };
 
 const stripHtml = (html) =>
@@ -506,7 +504,7 @@ export default function ProductDetailPage()
     const stock = currentVariant?.stock || 0;
     const mainImage = images.length > 0 ? getImgSrc(images[selectedImage]?.imagePath) : '/images/cameras-2.jpg';
     const productVideo = product?.videoPath
-        ? (product.videoPath.startsWith('http') ? product.videoPath : `${API_ENDPOINT || ''}${product.videoPath}`)
+        ? resolveImagePath(product.videoPath, '')
         : '';
     const reviewStats = useMemo(() =>
     {

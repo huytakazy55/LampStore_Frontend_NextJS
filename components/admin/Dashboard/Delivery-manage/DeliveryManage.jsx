@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import AdminPageHeader from '../shared/AdminPageHeader';
-import { Table, Input, Pagination, Modal, message, Space, Tag, Button, Tooltip } from 'antd';
+import { Table, Input, Modal, message, Space, Tag, Button, Tooltip } from 'antd';
 import OrderService from '@/services/OrderService';
+import DeliveryService from '@/services/DeliveryService';
 import OrderDetailModal from '../Orders-manage/OrderDetailModal';
 
 const formatPrice = (price) =>
@@ -17,24 +18,26 @@ const DeliveryManage = () =>
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
     const [page, setPage] = useState(1);
     const itemsPerPage = 10;
+    const [total, setTotal] = useState(0);
     const [selectedOrder, setSelectedOrder] = useState(null);
 
-    useEffect(() =>
-    {
-        fetchOrders();
-    }, []);
-
-    const fetchOrders = async () =>
+    const fetchOrders = useCallback(async () =>
     {
         try
         {
             setLoading(true);
-            const response = await OrderService.getAllOrders();
-            const data = response?.$values || response || [];
-            const allOrders = Array.isArray(data) ? data : [];
-            setOrders(allOrders.filter(o => o.status === 'Shipping'));
+            const { items, total } = await DeliveryService.getDeliveries(page, itemsPerPage, debouncedSearchTerm);
+            const deliveries = Array.isArray(items) ? items : [];
+            setOrders(deliveries.map(delivery => ({
+                ...delivery,
+                deliveryId: delivery.id,
+                id: delivery.orderId,
+                status: 'Shipping',
+            })));
+            setTotal(total);
         } catch (error)
         {
             console.error('Error fetching orders:', error);
@@ -43,7 +46,22 @@ const DeliveryManage = () =>
         {
             setLoading(false);
         }
-    };
+    }, [page, debouncedSearchTerm]);
+
+    useEffect(() =>
+    {
+        fetchOrders();
+    }, [fetchOrders]);
+
+    useEffect(() =>
+    {
+        const timeout = setTimeout(() =>
+        {
+            setDebouncedSearchTerm(searchTerm.trim());
+            setPage(1);
+        }, 350);
+        return () => clearTimeout(timeout);
+    }, [searchTerm]);
 
     const handleStatusChange = async (orderId, newStatus) =>
     {
@@ -81,22 +99,6 @@ const DeliveryManage = () =>
             onOk: () => handleStatusChange(orderId, 'FailedDelivery'),
         });
     };
-
-    const filteredOrders = useMemo(() =>
-    {
-        if (!searchTerm) return orders;
-        return orders.filter(order =>
-            order.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            order.phone?.includes(searchTerm) ||
-            order.id?.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-    }, [orders, searchTerm]);
-
-    const paginatedOrders = useMemo(() =>
-    {
-        const start = (page - 1) * itemsPerPage;
-        return filteredOrders.slice(start, start + itemsPerPage);
-    }, [filteredOrders, page]);
 
     const columns = [
         {
@@ -190,7 +192,7 @@ const DeliveryManage = () =>
                             <i className='bx bx-package'></i>
                         </div>
                         <div className="ml-4">
-                            <div className="text-2xl font-bold text-gray-800">{orders.length}</div>
+                            <div className="text-2xl font-bold text-gray-800">{total}</div>
                             <div className="text-gray-500 text-sm">Đơn đang giao hàng</div>
                         </div>
                     </div>
@@ -218,22 +220,22 @@ const DeliveryManage = () =>
                 </div>
 
                 <div className="admin-table-wrapper" style={{ padding: '24px' }}>
-                    {filteredOrders.length === 0 && !loading ? (
+                    {orders.length === 0 && !loading ? (
                         <div style={{ textAlign: 'center', padding: '60px 20px', color: '#9ca3af' }}>
                             <i className='bx bx-package' style={{ fontSize: 48, color: '#d1d5db', marginBottom: 12, display: 'block' }}></i>
                             <div style={{ fontSize: 16, fontWeight: 500, marginBottom: 4 }}>Không có đơn hàng đang giao</div>
-                            <div style={{ fontSize: 13 }}>Các đơn hàng được chuyển sang trạng thái "Đang giao" sẽ hiển thị tại đây</div>
+                            <div style={{ fontSize: 13 }}>Các đơn hàng được chuyển sang trạng thái &quot;Đang giao&quot; sẽ hiển thị tại đây</div>
                         </div>
                     ) : (
-                        <>
-                            <Table columns={columns} dataSource={paginatedOrders} rowKey="id"
-                                pagination={false} loading={loading} size="middle" tableLayout="fixed" className="custom-table" />
-                            <div className="flex justify-end mt-4">
-                                <Pagination current={page} pageSize={itemsPerPage} total={filteredOrders.length}
-                                    onChange={setPage} showSizeChanger={false}
-                                    showTotal={(total) => `Tổng ${total} đơn hàng đang giao`} />
-                            </div>
-                        </>
+                        <Table columns={columns} dataSource={orders} rowKey="id"
+                            pagination={{
+                                current: page,
+                                pageSize: itemsPerPage,
+                                total,
+                                showTotal: (total) => `Tổng ${total} đơn hàng đang giao`,
+                                onChange: (newPage) => setPage(newPage),
+                            }}
+                            loading={loading} size="middle" tableLayout="fixed" className="custom-table" />
                     )}
                 </div>
             </div>

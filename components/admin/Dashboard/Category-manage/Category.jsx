@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import AdminPageHeader from '../shared/AdminPageHeader';
-import { Table, Input, Button, Pagination, Modal, message, Space, Row, Col, Card, Image, Switch, Tooltip } from 'antd';
+import { Table, Input, Button, Modal, message, Space, Row, Col, Card, Image, Switch, Tooltip } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import CategoryManage from '@/services/CategoryManage';
 import { useTranslation } from 'react-i18next';
@@ -17,7 +17,8 @@ const Category = () => {
   const [categoryData, setCategoryData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
-  const itemsPerPage = 20;
+  const [itemsPerPage, setItemsPerPage] = useState(20);
+  const [total, setTotal] = useState(0);
   const [openCreate, setOpenCreate] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
   const [updateId, setUpdateId] = useState(0);
@@ -28,22 +29,42 @@ const Category = () => {
   const [openBulkDelete, setOpenBulkDelete] = useState(false);
   const [bulkDeleteLoading, setBulkDeleteLoading] = useState(false);
 
-  const fetchCategories = () => {
+  // Debounce the search box so we don't hit the server on every keystroke.
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const searchDebounceRef = useRef(null);
+  useEffect(() => {
+    if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+    searchDebounceRef.current = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+      // Reset to page 1 here (inside the debounce timeout) rather than in a separate
+      // effect, so it's an event-driven update instead of a synchronous setState
+      // inside an effect body.
+      setPage(1);
+    }, 350);
+    return () => clearTimeout(searchDebounceRef.current);
+  }, [searchTerm]);
+
+  // Server-driven paginated fetch. NOTE: /api/Categories does not currently support a
+  // search query param on the backend (see CategoryManage.GetCategoriesPaged) — the
+  // `search` value is still sent so this becomes true server-side search the moment
+  // the backend adds support. Until then, `filteredCategories` below narrows the
+  // already-loaded page client-side, so the search box isn't completely inert.
+  const fetchCategories = useCallback(() => {
     setLoading(true);
-    CategoryManage.GetCategory()
-      .then((res) => {
-        setCategoryData(res.data.$values);
-        setLoading(false);
+    CategoryManage.GetCategoriesPaged(page, itemsPerPage, debouncedSearchTerm)
+      .then(({ items, total }) => {
+        setCategoryData(items);
+        setTotal(total);
       })
       .catch(() => {
         message.error('Có lỗi xảy ra!');
-        setLoading(false);
-      });
-  };
+      })
+      .finally(() => setLoading(false));
+  }, [page, itemsPerPage, debouncedSearchTerm]);
 
   useEffect(() => {
     fetchCategories();
-  }, []);
+  }, [fetchCategories]);
 
   const handleDelete = (id, name) => {
     Modal.confirm({
@@ -55,8 +76,8 @@ const Category = () => {
       onOk: () => {
         CategoryManage.DeleteCategory(id, name)
           .then(() => {
-            setCategoryData(prev => prev.filter(category => category.id !== id));
             message.success(`Đã xóa bản ghi có id = ${id}: ${name}`);
+            fetchCategories();
           })
           .catch(() => {
             message.error('Có lỗi xảy ra');
@@ -101,6 +122,9 @@ const Category = () => {
     }
   };
 
+  // categoryData is already the current server-paginated page. This narrows it further
+  // by the raw (non-debounced) searchTerm client-side, since the backend doesn't
+  // support a search query param yet — see the TODO on fetchCategories above.
   const filteredCategories = useMemo(() => {
     return categoryData.filter(category =>
       category.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -349,21 +373,22 @@ const Category = () => {
             columns={columns}
             dataSource={filteredCategories}
             rowKey="id"
-            pagination={false}
+            pagination={{
+              current: page,
+              pageSize: itemsPerPage,
+              total,
+              showSizeChanger: true,
+              showTotal: (total) => `Tổng số ${total} danh mục`,
+              onChange: (newPage, newPageSize) => {
+                setPage(newPage);
+                setItemsPerPage(newPageSize);
+              }
+            }}
             loading={loading}
             size="middle"
             scroll={{ x: 900 }}
             className="custom-table"
           />
-          <div className="flex justify-end mt-4">
-            <Pagination
-              current={page}
-              pageSize={itemsPerPage}
-              total={filteredCategories.length}
-              onChange={setPage}
-              showSizeChanger={false}
-            />
-          </div>
         </div>
       </div>
       {/* Modal Create */}
@@ -373,6 +398,7 @@ const Category = () => {
         categoryCreate={categoryCreate}
         setCategoryData={setCategoryData}
         setCategoryCreate={setCategoryCreate}
+        fetchCategories={fetchCategories}
       />
       {/* Modal Update */}
       <UpdateModal

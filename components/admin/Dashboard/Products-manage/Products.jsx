@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useContext, useState, useEffect, useMemo } from 'react'
+import React, { useContext, useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import AdminPageHeader from '../shared/AdminPageHeader';
-import { Input, Button, Table, Pagination, Space, Select, DatePicker, Tag, Tooltip } from 'antd';
+import { Input, Button, Table, Space, Select, DatePicker, Tag, Tooltip } from 'antd';
 import { Link as RouterLink } from '@/lib/router-compat';
 import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '@/contexts/ThemeContext';
@@ -110,16 +110,52 @@ const Products = () => {
   const handleImportOpen = () => setOpenImport(true);
   const handleImportClose = () => setOpenImport(false);
   const [hiddenColumns, setHiddenColumns] = useState([]);
+  const [loading, setLoading] = useState(false);
+  //Debounced search — the raw input updates immediately for a responsive UI, but the
+  //actual server fetch only fires ~350ms after the user stops typing.
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const searchDebounceRef = useRef(null);
 
   useEffect(() => {
-    ProductManage.GetProduct()
-      .then((res) => {
-        setProductData(res.data.$values);
-      })
-      .catch((err) => {
+    if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+    searchDebounceRef.current = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+      // Reset to page 1 whenever the search term settles on a new value — done here
+      // (inside the debounce timeout, not a separate effect) so it's an event-driven
+      // state update rather than a synchronous setState inside an effect body.
+      setPage(1);
+    }, 350);
+    return () => clearTimeout(searchDebounceRef.current);
+  }, [searchTerm]);
 
+  // Server-driven paginated + filtered product fetch. Uses the AdvancedSearch endpoint
+  // (see ProductManage.SearchProducts) which supports keyword/categoryId/status
+  // server-side. `dateRange` has no equivalent search-criteria field on the backend
+  // yet, so it's applied as an additional client-side filter over just the current
+  // page below (see `visibleProducts`) — a known, documented limitation.
+  const fetchProducts = useCallback(() => {
+    setLoading(true);
+    const statusValue = statusFilter === null || statusFilter === undefined ? undefined : Boolean(statusFilter);
+    ProductManage.SearchProducts({
+      page,
+      pageSize: itemsPerPage,
+      keyword: debouncedSearchTerm || undefined,
+      categoryId: selectedCategory || undefined,
+      status: statusValue,
+    })
+      .then(({ items, total }) => {
+        setProductData(items);
+        setTotal(total);
       })
-  }, [])
+      .catch(() => {
+        toast.error('Có lỗi xảy ra khi tải danh sách sản phẩm.');
+      })
+      .finally(() => setLoading(false));
+  }, [page, itemsPerPage, debouncedSearchTerm, selectedCategory, statusFilter]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
   const GetCategoryById = (id) => {
     const category = categories.find(category => category.id === id);
@@ -147,21 +183,19 @@ const Products = () => {
     );
   };
 
-  const filteredProducts = useMemo(() => {
-    return productData.filter(product => {
-      const categoryName = GetCategoryById(product.categoryId || '').toLowerCase();
-      const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        categoryName.includes(searchTerm.toLowerCase());
-      const matchesCategory = !selectedCategory || product.categoryId === selectedCategory;
-      const matchesStatus = statusFilter === null || statusFilter === undefined || Boolean(product.status) === Boolean(statusFilter);
-      const matchesDate = !dateRange || (
-        new Date(product.dateAdded) >= dateRange[0].startOf('day').toDate() &&
-        new Date(product.dateAdded) <= dateRange[1].endOf('day').toDate()
-      );
-
-      return matchesSearch && matchesCategory && matchesStatus && matchesDate;
-    });
-  }, [productData, searchTerm, selectedCategory, dateRange, statusFilter]);
+  // productData is already the current server-paginated + filtered (keyword/category/
+  // status) page. `dateRange` has no equivalent on the backend's AdvancedSearch
+  // criteria yet, so it's applied here as an extra client-side filter over just the
+  // current page — meaning it can only narrow down what's already loaded, not search
+  // the full dataset. TODO: promote this to a server-side filter once the backend
+  // AdvancedSearch endpoint supports a date-range criterion.
+  const visibleProducts = useMemo(() => {
+    if (!dateRange) return productData;
+    return productData.filter(product => (
+      new Date(product.dateAdded) >= dateRange[0].startOf('day').toDate() &&
+      new Date(product.dateAdded) <= dateRange[1].endOf('day').toDate()
+    ));
+  }, [productData, dateRange]);
 
   const stripHtml = (html) => {
     if (!html) return '';
@@ -187,20 +221,11 @@ const Products = () => {
     return new Intl.NumberFormat(language).format(number);
   };
 
-  const handleChangePage = (page) => {
-    setPage(page);
-  };
-
-  //Pagination
-  const currentItems = useMemo(() => {
-    return filteredProducts.slice((page - 1) * itemsPerPage, page * itemsPerPage);
-  }, [filteredProducts, page, itemsPerPage]);
-
   const DeleteProduct = (id, name) => {
     ProductManage.DeleteProduct(id, name)
       .then((res) => {
-        setProductData(prevData => prevData.filter(product => product.id !== id));
         toast.success(`Đã xóa bản ghi: ${name}`);
+        fetchProducts();
       })
       .catch((err) => {
         toast.error("Có lỗi xảy ra");
@@ -225,16 +250,6 @@ const Products = () => {
     handleDetailOpen();
   }
 
-  const fetchProducts = () => {
-    ProductManage.GetProduct()
-      .then((res) => {
-        setProductData(res.data.$values);
-      })
-      .catch((err) => {
-
-      });
-  };
-
   const columns = [
     {
       title: 'STT',
@@ -242,7 +257,7 @@ const Products = () => {
       key: 'index',
       width: '3%',
       align: 'center',
-      render: (_, __, index) => index + 1
+      render: (_, __, index) => (page - 1) * itemsPerPage + index + 1
     },
     {
       title: 'Hình ảnh',
@@ -535,7 +550,7 @@ const Products = () => {
           <Select
             placeholder="Lọc theo danh mục"
             allowClear
-            onChange={setSelectedCategory}
+            onChange={(value) => { setSelectedCategory(value); setPage(1); }}
           >
             {categories.map((category) => (
               <Select.Option key={category.id} value={category.id}>
@@ -550,7 +565,7 @@ const Products = () => {
           <Select
             placeholder="Lọc theo trạng thái"
             allowClear
-            onChange={setStatusFilter}
+            onChange={(value) => { setStatusFilter(value); setPage(1); }}
           >
             <Select.Option value={1}>Hoạt động</Select.Option>
             <Select.Option value={0}>Ẩn</Select.Option>
@@ -572,17 +587,18 @@ const Products = () => {
           <Table
             rowSelection={rowSelection}
             columns={columns.filter(col => !hiddenColumns.includes(col.key))}
-            dataSource={currentItems}
+            dataSource={visibleProducts}
             rowKey="id"
+            loading={loading}
             pagination={{
               current: page,
               pageSize: itemsPerPage,
-              total: filteredProducts.length,
+              total,
               showSizeChanger: true,
               showTotal: (total) => `Tổng số ${total} sản phẩm`,
-              onChange: (page, pageSize) => {
-                setPage(page);
-                setItemsPerPage(pageSize);
+              onChange: (newPage, newPageSize) => {
+                setPage(newPage);
+                setItemsPerPage(newPageSize);
               }
             }}
             style={{

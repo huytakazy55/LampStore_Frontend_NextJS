@@ -6,7 +6,19 @@ const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 class TagManage {
     GetTag() {
         return axiosInstance.get("/api/Tags");
-        
+
+    }
+
+    // Server-driven pagination and search for the admin Tags screen.
+    async GetTagsPaged(page = 1, pageSize = 20, search = '') {
+        const response = await axiosInstance.get('/api/Tags', {
+            params: { page, pageSize, search: search || undefined }
+        });
+        const items = response.data?.$values || response.data || [];
+        const totalHeader = response.headers['x-total-count'];
+        // TODO: remove this fallback once backend confirms X-Total-Count is present on /api/Tags
+        const total = totalHeader !== undefined ? Number(totalHeader) : items.length;
+        return { items, total };
     }
 
     GetTagById(id) {

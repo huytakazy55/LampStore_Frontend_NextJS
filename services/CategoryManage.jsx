@@ -9,6 +9,18 @@ class CategoryManage {
 
     }
 
+    // Server-driven pagination and search for the admin Category screen.
+    async GetCategoriesPaged(page = 1, pageSize = 20, search = '') {
+        const response = await axiosInstance.get('/api/Categories', {
+            params: { page, pageSize, search: search || undefined }
+        });
+        const items = response.data?.$values || response.data || [];
+        const totalHeader = response.headers['x-total-count'];
+        // TODO: remove this fallback once backend confirms X-Total-Count is present on /api/Categories
+        const total = totalHeader !== undefined ? Number(totalHeader) : items.length;
+        return { items, total };
+    }
+
     GetCategoryById(id) {
         return axiosInstance.get(`/api/Categories/${id}`);
     }

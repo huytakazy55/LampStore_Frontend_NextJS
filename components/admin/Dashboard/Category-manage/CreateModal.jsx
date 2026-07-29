@@ -11,7 +11,7 @@ import ReactQuill from 'react-quill-new';
 import Compressor from 'compressorjs';
 import 'react-quill-new/dist/quill.snow.css';
 
-const CreateModal = ({ openCreate, handleCreateClose, setCategoryData }) =>
+const CreateModal = ({ openCreate, handleCreateClose, setCategoryData, fetchCategories }) =>
 {
   const { themeColors } = useContext(ThemeContext);
   const { t } = useTranslation();
@@ -45,6 +45,9 @@ const CreateModal = ({ openCreate, handleCreateClose, setCategoryData }) =>
       {
         message.success('Thêm mới danh mục thành công!');
         setCategoryData(prevData => [...prevData, res.data]);
+        // Re-fetch the current server-paginated page so the total count (and, if we
+        // were on a now-overflowing page, the row set) stays accurate.
+        if (typeof fetchCategories === 'function') fetchCategories();
         form.resetFields();
         setImageUrl('');
         handleCreateClose();

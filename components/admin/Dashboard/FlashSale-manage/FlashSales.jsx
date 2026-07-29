@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useCallback, useContext, useRef } from 'react';
 import AdminPageHeader from '../shared/AdminPageHeader';
-import { Table, Input, Button, Pagination, Modal, Space, Tag, Tooltip } from 'antd';
+import { Table, Input, Button, Modal, Space, Tag, Tooltip } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import FlashSaleService from '@/services/FlashSaleService';
@@ -17,19 +17,41 @@ const FlashSales = () => {
     const [editingFlashSale, setEditingFlashSale] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(1);
-    const itemsPerPage = 10;
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [total, setTotal] = useState(0);
 
+    // Debounce the search box so we don't hit the server on every keystroke.
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+    const searchDebounceRef = useRef(null);
+    useEffect(() => {
+        if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+        searchDebounceRef.current = setTimeout(() => {
+            setDebouncedSearchTerm(searchTerm);
+            // Reset to page 1 here (inside the debounce timeout) rather than in a
+            // separate effect, so it's an event-driven update instead of a
+            // synchronous setState inside an effect body.
+            setPage(1);
+        }, 350);
+        return () => clearTimeout(searchDebounceRef.current);
+    }, [searchTerm]);
+
+    // Server-driven paginated fetch. NOTE: /api/FlashSales does not currently support a
+    // search query param on the backend (see FlashSaleService.getAllFlashSales) —
+    // `search` is still sent so this becomes true server-side search the moment the
+    // backend adds support. Until then, `filteredFlashSales` below narrows the
+    // already-loaded page client-side.
     const fetchFlashSales = useCallback(async () => {
         try {
             setLoading(true);
-            const data = await FlashSaleService.getAllFlashSales();
-            setFlashSales(Array.isArray(data) ? data : []);
+            const { items, total } = await FlashSaleService.getAllFlashSales(page, itemsPerPage, debouncedSearchTerm);
+            setFlashSales(Array.isArray(items) ? items : []);
+            setTotal(total);
         } catch (error) {
             toast.error('Lỗi khi tải danh sách Flash Sale');
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [page, itemsPerPage, debouncedSearchTerm]);
 
     useEffect(() => { fetchFlashSales(); }, [fetchFlashSales]);
 
@@ -249,21 +271,22 @@ const FlashSales = () => {
                         columns={columns}
                         dataSource={filteredFlashSales}
                         rowKey="id"
-                        pagination={false}
+                        pagination={{
+                            current: page,
+                            pageSize: itemsPerPage,
+                            total,
+                            showSizeChanger: true,
+                            showTotal: (total) => `Tổng số ${total} Flash Sale`,
+                            onChange: (newPage, newPageSize) => {
+                                setPage(newPage);
+                                setItemsPerPage(newPageSize);
+                            }
+                        }}
                         loading={loading}
                         size="middle"
                         scroll={{ x: 1000 }}
                         className="custom-table"
                     />
-                    <div className="flex justify-end mt-4">
-                        <Pagination
-                            current={page}
-                            pageSize={itemsPerPage}
-                            total={filteredFlashSales.length}
-                            onChange={setPage}
-                            showSizeChanger={false}
-                        />
-                    </div>
                 </div>
             </div>
 

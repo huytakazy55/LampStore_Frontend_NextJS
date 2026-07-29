@@ -21,6 +21,23 @@ class ProductManage {
 
     }
 
+    // Server-driven paginated + filtered fetch for the admin Products screen.
+    // Uses the AdvancedSearch endpoint (/api/Products/search) which already accepts
+    // page/pageSize plus keyword/categoryId/status filters, and already returns
+    // totalCount in the response body (no need to rely solely on X-Total-Count here).
+    async SearchProducts({ page = 1, pageSize = 20, keyword, categoryId, status, sortBy = 'name', sortOrder = 'asc' } = {}) {
+        const response = await axiosInstance.get('/api/Products/search', {
+            params: { keyword, categoryId, status, page, pageSize, sortBy, sortOrder }
+        });
+        const result = response.data || {};
+        const items = result.$values || result.products?.$values || result.products || [];
+        const totalHeader = response.headers['x-total-count'];
+        // TODO: remove this fallback once backend confirms X-Total-Count / totalCount is
+        // reliably present on /api/Products/search for every response.
+        const total = result.totalCount ?? (totalHeader !== undefined ? Number(totalHeader) : items.length);
+        return { items, total };
+    }
+
     GetProductById(id) {
         return axiosInstance.get(`/api/Products/${id}`);
     }

@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import AdminPageHeader from '../shared/AdminPageHeader';
-import { Table, Input, Pagination, Modal, message, Space, Tag, Select, Button, Tooltip } from 'antd';
+import { Table, Input, Modal, message, Space, Tag, Select, Button, Tooltip } from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined, CarOutlined, FileDoneOutlined } from '@ant-design/icons';
 import OrderService from '@/services/OrderService';
 import OrderDetailModal from './OrderDetailModal';
@@ -65,23 +65,38 @@ const OrdersManage = () =>
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
     const [page, setPage] = useState(1);
-    const itemsPerPage = 10;
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [total, setTotal] = useState(0);
+    const [stats, setStats] = useState({
+        total: 0, pending: 0, unpaid: 0, shipping: 0, completed: 0,
+        failedDelivery: 0, returnRequested: 0, revenue: 0,
+    });
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [hiddenColumns, setHiddenColumns] = useState([]);
 
-    useEffect(() =>
-    {
-        fetchOrders();
-    }, []);
+    // searchTerm/statusFilter only narrow the currently-loaded page (see filteredOrders
+    // below) since /api/Orders has no server-side filter param — so unlike the other
+    // screens there's no debounced network call to trigger here, just an immediate
+    // page-1 reset whenever either changes (wired directly into their onChange
+    // handlers below, not via a separate effect).
 
-    const fetchOrders = async () =>
+    // Server-driven paginated fetch (see OrderService.getAllOrders). NOTE: GET
+    // /api/Orders does not currently accept a status/keyword filter query param, so
+    // `filteredOrders` below can only filter within the currently-loaded page, not the
+    // full order history — a known backend limitation (documented in OrderService),
+    // not something fixable from the frontend alone.
+    const fetchOrders = useCallback(async () =>
     {
         try
         {
             setLoading(true);
-            const response = await OrderService.getAllOrders();
-            const data = response?.$values || response || [];
-            setOrders(Array.isArray(data) ? data : []);
+            const [{ items, total }, orderStats] = await Promise.all([
+                OrderService.getAllOrders(page, itemsPerPage),
+                OrderService.getOrderStats(),
+            ]);
+            setOrders(Array.isArray(items) ? items : []);
+            setTotal(total);
+            setStats(orderStats);
         } catch (error)
         {
             console.error('Error fetching orders:', error);
@@ -90,7 +105,12 @@ const OrdersManage = () =>
         {
             setLoading(false);
         }
-    };
+    }, [page, itemsPerPage]);
+
+    useEffect(() =>
+    {
+        fetchOrders();
+    }, [fetchOrders]);
 
     const handleDelete = (id) =>
     {
@@ -179,6 +199,10 @@ const OrdersManage = () =>
         });
     };
 
+    // orders is already the current server-paginated page (see fetchOrders above).
+    // Since /api/Orders has no search/status query param yet, this only narrows what's
+    // already loaded rather than searching the full order history — a known,
+    // documented backend limitation.
     const filteredOrders = useMemo(() =>
     {
         return orders.filter(order =>
@@ -191,12 +215,6 @@ const OrdersManage = () =>
             return matchSearch && matchStatus;
         });
     }, [orders, searchTerm, statusFilter]);
-
-    const paginatedOrders = useMemo(() =>
-    {
-        const start = (page - 1) * itemsPerPage;
-        return filteredOrders.slice(start, start + itemsPerPage);
-    }, [filteredOrders, page]);
 
     const columns = [
         {
@@ -395,18 +413,6 @@ const OrdersManage = () =>
         },
     ];
 
-    // Stats summary
-    const stats = useMemo(() => ({
-        total: orders.length,
-        pending: orders.filter(o => o.status === 'Pending').length,
-        unpaid: orders.filter(o => o.paymentStatus === 'Unpaid').length,
-        shipping: orders.filter(o => o.status === 'Shipping').length,
-        completed: orders.filter(o => o.status === 'Completed').length,
-        failedDelivery: orders.filter(o => o.status === 'FailedDelivery').length,
-        returnRequested: orders.filter(o => o.status === 'ReturnRequested').length,
-        revenue: orders.filter(o => o.status === 'Completed').reduce((s, o) => s + (o.totalAmount || 0), 0),
-    }), [orders]);
-
     return (
         <div style={{ padding: '16px' }}>
             <AdminPageHeader
@@ -538,13 +544,13 @@ const OrdersManage = () =>
                         <Input.Search
                             placeholder="Tìm theo tên, SĐT, mã đơn..."
                             value={searchTerm}
-                            onChange={e => setSearchTerm(e.target.value)}
+                            onChange={e => { setSearchTerm(e.target.value); setPage(1); }}
                             style={{ width: 300 }}
                         />
                         <Select
                             value={statusFilter}
                             style={{ width: 160 }}
-                            onChange={setStatusFilter}
+                            onChange={(value) => { setStatusFilter(value); setPage(1); }}
                             options={[
                                 { value: 'all', label: 'Tất cả trạng thái' },
                                 ...Object.entries(statusConfig).map(([key, val]) => ({
@@ -570,24 +576,24 @@ const OrdersManage = () =>
                 <div className="admin-table-wrapper" style={{ padding: '24px' }}>
                     <Table
                         columns={columns.filter(col => !hiddenColumns.includes(col.key))}
-                        dataSource={paginatedOrders}
+                        dataSource={filteredOrders}
                         rowKey="id"
-                        pagination={false}
+                        pagination={{
+                            current: page,
+                            pageSize: itemsPerPage,
+                            total,
+                            showSizeChanger: true,
+                            showTotal: (total) => `Tổng ${total} đơn hàng`,
+                            onChange: (newPage, newPageSize) => {
+                                setPage(newPage);
+                                setItemsPerPage(newPageSize);
+                            }
+                        }}
                         loading={loading}
                         size="middle"
                         tableLayout="fixed"
                         className="custom-table"
                     />
-                    <div className="flex justify-end mt-4">
-                        <Pagination
-                            current={page}
-                            pageSize={itemsPerPage}
-                            total={filteredOrders.length}
-                            onChange={setPage}
-                            showSizeChanger={false}
-                            showTotal={(total) => `Tổng ${total} đơn hàng`}
-                        />
-                    </div>
                 </div>
             </div>
 

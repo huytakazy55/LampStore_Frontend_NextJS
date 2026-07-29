@@ -5,11 +5,17 @@ import axiosInstance from '@/lib/axiosConfig';
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
 class BannerService {
-    // Lấy tất cả banner
-    async getAllBanners() {
+    // Lấy banner bằng phân trang và tìm kiếm phía server.
+    async getAllBanners(page = 1, pageSize = 10, search = '') {
         try {
-            const response = await axiosInstance.get("/api/Banners");
-            return response.data.$values || response.data || [];
+            const response = await axiosInstance.get("/api/Banners", {
+                params: { page, pageSize, search: search || undefined }
+            });
+            const items = response.data.$values || response.data || [];
+            const totalHeader = response.headers['x-total-count'];
+            // TODO: remove this fallback once backend confirms X-Total-Count is present on /api/Banners
+            const total = totalHeader !== undefined ? Number(totalHeader) : items.length;
+            return { items, total };
         } catch (error) {
             console.error('Error fetching banners:', error);
             throw error;
@@ -90,4 +96,4 @@ class BannerService {
     }
 }
 
-export default new BannerService(); 
+export default new BannerService();
