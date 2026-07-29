@@ -11,6 +11,8 @@ import { useSelector } from 'react-redux';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import { Modal } from 'antd';
 import AdminChatWindow from '../Chat-manage/AdminChatWindow';
+import AdminAccountProfile from '../Account-manage/AdminAccountProfile';
+import { usePathname, useRouter } from 'next/navigation';
 
 const AdminDashboard = () => {
   const leftBar = useSelector((state) => state.leftbar.leftbar);
@@ -18,7 +20,10 @@ const AdminDashboard = () => {
   const [realtimeNotifications, setRealtimeNotifications] = useState([]);
   const [quickChat, setQuickChat] = useState(null);
   const [isQuickChatOpen, setIsQuickChatOpen] = useState(false);
+  const [isAccountProfileOpen, setIsAccountProfileOpen] = useState(false);
   const shownNotifKeysRef = useRef(new Set());
+  const pathname = usePathname();
+  const router = useRouter();
 
   const getInitial = (name) => (name || 'K').trim().charAt(0).toUpperCase();
 
@@ -26,6 +31,13 @@ const AdminDashboard = () => {
     document.body.classList.add('admin-dashboard-active');
     return () => document.body.classList.remove('admin-dashboard-active');
   }, []);
+
+  useEffect(() => {
+    if (pathname === '/admin/account') {
+      setIsAccountProfileOpen(true);
+      router.replace('/admin');
+    }
+  }, [pathname, router]);
 
   useEffect(() => {
     // Khởi tạo thông báo real-time cho admin
@@ -315,7 +327,7 @@ const AdminDashboard = () => {
           }
         }
       `}</style>
-      <AppBar />
+      <AppBar onOpenAccount={() => setIsAccountProfileOpen(true)} />
       {realtimeNotifications.length > 0 && (
         <div className="admin-chat-toast-stack">
           {realtimeNotifications.map((notification) => (
@@ -390,6 +402,18 @@ const AdminDashboard = () => {
         <LeftBar />
         <RightBody />
       </div>
+      <Modal
+        title="Thông tin tài khoản"
+        open={isAccountProfileOpen}
+        onCancel={() => setIsAccountProfileOpen(false)}
+        footer={null}
+        width={760}
+        centered
+        destroyOnHidden
+        styles={{ body: { padding: 0, maxHeight: '75vh', overflowY: 'auto' } }}
+      >
+        <AdminAccountProfile compact />
+      </Modal>
       <Modal
         title={`💬 Chat với ${quickChat?.user?.userName || quickChat?.user?.UserName || quickChat?.guestName || 'Khách hàng'}`}
         open={isQuickChatOpen}

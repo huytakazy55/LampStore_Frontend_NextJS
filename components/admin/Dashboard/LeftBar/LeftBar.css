@@ -10,9 +10,6 @@
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
-    overflow-y: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
 }
 
 /* ---- Dark overlay for readability ---- */
@@ -50,19 +47,23 @@
     }
 }
 
-/* ---- Scrollbar ---- */
-.sidebar-container::-webkit-scrollbar {
-    width: 0;
-    height: 0;
-    display: none;
-}
-
 /* ---- Navigation ---- */
 .sidebar-nav {
     flex: 1;
+    min-height: 0;
     padding: 8px 10px;
     position: relative;
     z-index: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.sidebar-nav::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
 }
 
 /* ---- Section label ---- */
@@ -195,6 +196,7 @@
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     position: relative;
     z-index: 1;
+    flex-shrink: 0;
 }
 
 .sidebar-footer-card {

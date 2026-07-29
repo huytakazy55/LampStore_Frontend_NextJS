@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import AuthService from '@/services/AuthService';
 import NotificationDropdown from './NotificationDropdown';
-import { useNavigate } from '@/lib/router-compat';
 import './AppBar.css';
 
 const Logo = '/images/Capylumine.png';
@@ -23,7 +22,7 @@ const themePresets = [
     { name: 'Noir Classic', start: 'rgba(150,150,150,1)', end: 'rgba(0,0,0,1)' },
 ];
 
-const AppBar = () => {
+const AppBar = ({ onOpenAccount }) => {
     const dispatch = useDispatch();
     const leftbar = useSelector(state => state.leftbar.leftbar);
 
@@ -40,13 +39,11 @@ const AppBar = () => {
     const buttonLanguageRef = useRef(null);
     const buttonServiceRef = useRef(null);
     const { i18n } = useTranslation();
-    const navigate = useNavigate();
-
     const changeLanguage = (lng) => i18n.changeLanguage(lng);
     const openAccountProfile = (event) => {
         event.stopPropagation();
         setShowUserService(false);
-        navigate('/admin/account');
+        onOpenAccount?.();
     };
 
     useEffect(() => {

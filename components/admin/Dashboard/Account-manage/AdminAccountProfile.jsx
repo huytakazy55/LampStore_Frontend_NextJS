@@ -41,7 +41,7 @@ const getCurrentUserInfo = () => {
   }
 };
 
-const AdminAccountProfile = () => {
+const AdminAccountProfile = ({ compact = false }) => {
   const [form] = Form.useForm();
   const { themeColors } = useContext(ThemeContext);
   const [profile, setProfile] = useState(null);
@@ -126,23 +126,25 @@ const AdminAccountProfile = () => {
   };
 
   return (
-    <div style={{ padding: '16px' }}>
-      <AdminPageHeader
-        title="Thông tin tài khoản"
-        description="Quản lý thông tin cá nhân của tài khoản admin hiện tại."
-        breadcrumbItems={[
-          { title: 'Trang chủ' },
-          { title: 'Thông tin tài khoản' },
-        ]}
-      />
+    <div style={{ padding: compact ? '8px 4px 4px' : '16px' }}>
+      {!compact && (
+        <AdminPageHeader
+          title="Thông tin tài khoản"
+          description="Quản lý thông tin cá nhân của tài khoản admin hiện tại."
+          breadcrumbItems={[
+            { title: 'Trang chủ' },
+            { title: 'Thông tin tài khoản' },
+          ]}
+        />
+      )}
 
-      <div className="admin-table-card" style={{ padding: 24 }}>
+      <div className={compact ? '' : 'admin-table-card'} style={{ padding: compact ? 16 : 24 }}>
         {loading ? (
           <div style={{ minHeight: 220, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Spin />
           </div>
         ) : (
-          <div style={{ maxWidth: 760 }}>
+          <div style={{ maxWidth: compact ? 'none' : 760 }}>
             <div style={{
               display: 'flex',
               alignItems: 'center',
