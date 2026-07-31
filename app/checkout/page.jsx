@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { jwtDecode } from 'jwt-decode';
@@ -97,6 +97,18 @@ export default function CheckoutPage() {
 
     const [errors, setErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // Reused across retries of the same checkout attempt (double-click, network
+    // retry) so the backend can recognize the resubmit and return the original
+    // order/payment link instead of creating a duplicate. A fresh key is issued
+    // only after an order attempt actually succeeds.
+    const idempotencyKeyRef = useRef(null);
+    const getIdempotencyKey = () => {
+        if (!idempotencyKeyRef.current) {
+            idempotencyKeyRef.current = crypto.randomUUID();
+        }
+        return idempotencyKeyRef.current;
+    };
     const [orderSuccess, setOrderSuccess] = useState(false);
     const [orderId, setOrderId] = useState(null);
     const [savedTotal, setSavedTotal] = useState(0);
@@ -489,15 +501,21 @@ export default function CheckoutPage() {
                 })),
             };
 
+            const idempotencyKey = getIdempotencyKey();
+
             let created;
             if (isLoggedIn) {
                 orderData.userId = localStorage.getItem('userId') || null;
-                created = await OrderService.createOrder(orderData);
+                created = await OrderService.createOrder(orderData, idempotencyKey);
             } else {
                 // Guest checkout: attach guestToken
                 orderData.guestToken = GuestProfileService.getGuestToken();
-                created = await OrderService.createGuestOrder(orderData);
+                created = await OrderService.createGuestOrder(orderData, idempotencyKey);
             }
+
+            // Order attempt succeeded — any further submit from this page is a new,
+            // unrelated order and should get its own key.
+            idempotencyKeyRef.current = null;
 
             if (isLoggedIn) {
                 await saveCheckoutInfoToProfile();

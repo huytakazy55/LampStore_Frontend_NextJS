@@ -34,17 +34,24 @@ const OrderService = {
         return response.data;
     },
 
-    // Create a new order (checkout — logged in user)
-    createOrder: async (orderData) =>
+    // Create a new order (checkout — logged in user).
+    // idempotencyKey: pass the same value across retries of the same checkout attempt
+    // (double-click, network retry) so the backend returns the original order/payment
+    // link instead of creating a duplicate one.
+    createOrder: async (orderData, idempotencyKey) =>
     {
-        const response = await axiosInstance.post('/api/Orders', orderData);
+        const response = await axiosInstance.post('/api/Orders', orderData, {
+            headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
+        });
         return response.data;
     },
 
     // Create a guest order (checkout — no auth required)
-    createGuestOrder: async (orderData) =>
+    createGuestOrder: async (orderData, idempotencyKey) =>
     {
-        const response = await axiosInstance.post('/api/Orders/guest', orderData);
+        const response = await axiosInstance.post('/api/Orders/guest', orderData, {
+            headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
+        });
         return response.data;
     },
 
