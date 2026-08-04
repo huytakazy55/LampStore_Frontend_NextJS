@@ -869,19 +869,25 @@
   height: 500px;
   overflow: hidden;
   border: 1px solid var(--admin-control-border-hover);
-  border-radius: 8px;
+  border-radius: 12px;
   background: #dbe7f0;
   cursor: grab;
   touch-action: none;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
 }
 
 .admin-visitor-map:active {
   cursor: grabbing;
 }
 
+.admin-visitor-map:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
 .admin-visitor-map-expanded {
   height: 100%;
+  border-radius: 8px;
 }
 
 .admin-visitor-map-state {
@@ -894,8 +900,7 @@
   background: rgba(255, 255, 255, 0.86);
 }
 
-.admin-visitor-zoom-control,
-.admin-visitor-map-button,
+.admin-visitor-toolbar,
 .admin-visitor-legend,
 .admin-visitor-map-hint,
 .admin-visitor-map-credit {
@@ -907,56 +912,57 @@
   backdrop-filter: blur(8px);
 }
 
-.admin-visitor-zoom-control {
+.admin-visitor-toolbar {
   left: 14px;
   top: 14px;
   display: flex;
   flex-direction: column;
+  align-items: stretch;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
-.admin-visitor-map-icon-btn {
+.admin-visitor-toolbar-btn {
   width: 38px;
   height: 38px;
   border: 0;
   background: transparent;
   color: #374151;
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 16px;
   line-height: 1;
+  transition: color 0.15s ease, background 0.15s ease;
 }
 
-.admin-visitor-map-icon-btn + .admin-visitor-map-icon-btn {
+.admin-visitor-toolbar-btn + .admin-visitor-toolbar-btn {
   border-top: 1px solid var(--admin-control-border);
 }
 
-.admin-visitor-map-icon-btn:hover,
-.admin-visitor-map-button:hover {
+.admin-visitor-toolbar-btn:hover:not(:disabled) {
   color: #4f46e5;
   background: #f5f3ff;
 }
 
-.admin-visitor-map-button {
-  left: 14px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  height: 36px;
-  border-radius: 8px;
-  padding: 0 12px;
-  color: #374151;
-  font-size: 12px;
-  font-weight: 700;
+.admin-visitor-toolbar-btn:disabled {
+  color: #cbd5e1;
+  cursor: not-allowed;
 }
 
-.admin-visitor-map-reset {
-  top: 98px;
+.admin-visitor-toolbar-zoom {
+  width: 38px;
+  padding: 3px 0;
+  border-top: 1px solid var(--admin-control-border);
+  border-bottom: 1px solid var(--admin-control-border);
+  color: #6366f1;
+  font-size: 11px;
+  font-weight: 800;
+  text-align: center;
+  background: #f8fafc;
 }
 
-.admin-visitor-map-fullscreen-btn {
-  top: 142px;
+.admin-visitor-toolbar-divider {
+  height: 1px;
+  margin: 0;
+  background: var(--admin-control-border);
 }
 
 .admin-visitor-map-hint {
@@ -981,7 +987,7 @@
   top: 14px;
   right: 14px;
   min-width: 168px;
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 12px;
   color: #374151;
   font-size: 12px;

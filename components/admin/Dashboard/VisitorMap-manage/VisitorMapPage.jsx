@@ -2,7 +2,15 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Alert, Button, Empty, Select, Spin, Table, Tag, Tooltip } from "antd";
-import { CompressOutlined, EnvironmentOutlined, ExpandOutlined, ReloadOutlined } from "@ant-design/icons";
+import {
+    AimOutlined,
+    CompressOutlined,
+    EnvironmentOutlined,
+    ExpandOutlined,
+    ReloadOutlined,
+    ZoomInOutlined,
+    ZoomOutOutlined,
+} from "@ant-design/icons";
 import axiosInstance from "@/services/axiosConfig";
 import AdminPageHeader from "../shared/AdminPageHeader";
 
@@ -111,6 +119,8 @@ export default function VisitorMapPage() {
     const [mapSize, setMapSize] = useState({ width: 0, height: 0 });
     const [mapView, setMapView] = useState(null);
     const [isMapFullscreen, setIsMapFullscreen] = useState(false);
+    const [failedTiles, setFailedTiles] = useState(() => new Set());
+    const [isDragging, setIsDragging] = useState(false);
 
     const fetchLocations = async () => {
         setLoading(true);
@@ -252,6 +262,7 @@ export default function VisitorMapPage() {
 
     const handleWheel = (event) => {
         if (!mapRef.current || !mapView) return;
+        if (event.target.closest?.(".admin-visitor-toolbar")) return;
 
         event.preventDefault();
         const rect = mapRef.current.getBoundingClientRect();
@@ -260,6 +271,18 @@ export default function VisitorMapPage() {
             y: event.clientY - rect.top,
         });
     };
+
+    // React registers onWheel as a passive listener, so event.preventDefault() inside
+    // it is silently ignored by the browser and the page scrolls anyway underneath the
+    // map. Attaching a native, non-passive listener is the only reliable way to block
+    // page scroll while the user scrolls to zoom the map.
+    useEffect(() => {
+        const node = mapRef.current;
+        if (!node) return undefined;
+
+        node.addEventListener("wheel", handleWheel, { passive: false });
+        return () => node.removeEventListener("wheel", handleWheel);
+    });
 
     const handlePointerDown = (event) => {
         if (!mapState || !mapView) return;
@@ -272,6 +295,7 @@ export default function VisitorMapPage() {
             startTopLeft: mapState.topLeft,
             zoom: mapView.zoom,
         };
+        setIsDragging(true);
     };
 
     const handlePointerMove = (event) => {
@@ -289,6 +313,65 @@ export default function VisitorMapPage() {
     const handlePointerUp = (event) => {
         if (dragRef.current?.pointerId === event.pointerId) {
             dragRef.current = null;
+        }
+        setIsDragging(false);
+    };
+
+    const handleDoubleClick = (event) => {
+        if (!mapRef.current || !mapView) return;
+
+        const rect = mapRef.current.getBoundingClientRect();
+        updateZoom(mapView.zoom + 1, {
+            x: event.clientX - rect.left,
+            y: event.clientY - rect.top,
+        });
+    };
+
+    const panBy = (dx, dy) => {
+        if (!mapState || !mapView) return;
+
+        const centerPixel = {
+            x: mapState.topLeft.x + mapSize.width / 2 + dx,
+            y: mapState.topLeft.y + mapSize.height / 2 + dy,
+        };
+        const center = pixelToLatLng(centerPixel.x, centerPixel.y, mapView.zoom);
+        setMapView({ ...center, zoom: mapView.zoom });
+    };
+
+    const PAN_STEP = 80;
+
+    const handleMapKeyDown = (event) => {
+        if (!mapView) return;
+
+        switch (event.key) {
+            case "ArrowUp":
+                event.preventDefault();
+                panBy(0, -PAN_STEP);
+                break;
+            case "ArrowDown":
+                event.preventDefault();
+                panBy(0, PAN_STEP);
+                break;
+            case "ArrowLeft":
+                event.preventDefault();
+                panBy(-PAN_STEP, 0);
+                break;
+            case "ArrowRight":
+                event.preventDefault();
+                panBy(PAN_STEP, 0);
+                break;
+            case "+":
+            case "=":
+                event.preventDefault();
+                updateZoom(mapView.zoom + 1);
+                break;
+            case "-":
+            case "_":
+                event.preventDefault();
+                updateZoom(mapView.zoom - 1);
+                break;
+            default:
+                break;
         }
     };
 
@@ -401,11 +484,13 @@ export default function VisitorMapPage() {
                     <div
                         ref={mapRef}
                         className={`admin-visitor-map ${isMapFullscreen ? "admin-visitor-map-expanded" : ""}`}
-                        onWheel={handleWheel}
+                        tabIndex={0}
                         onPointerDown={handlePointerDown}
                         onPointerMove={handlePointerMove}
                         onPointerUp={handlePointerUp}
                         onPointerCancel={handlePointerUp}
+                        onDoubleClick={handleDoubleClick}
+                        onKeyDown={handleMapKeyDown}
                     >
                         {loading ? (
                             <div className="admin-visitor-map-state">
@@ -413,25 +498,42 @@ export default function VisitorMapPage() {
                             </div>
                         ) : locations.length === 0 ? (
                             <div className="admin-visitor-map-state">
-                                <Empty description="Chưa có IP public nào định vị được" />
+                                <Empty
+                                    description={
+                                        data?.totalIpCount > 0
+                                            ? "Không định vị được IP nào — dịch vụ IP geolocation (ip-api.com) có thể đang gián đoạn, thử Làm mới sau ít phút"
+                                            : "Chưa có IP public nào định vị được"
+                                    }
+                                />
                             </div>
                         ) : (
                             <>
-                                {mapState?.tiles.map((tile) => (
-                                    <img
-                                        key={tile.key}
-                                        src={tile.url}
-                                        alt=""
-                                        draggable={false}
-                                        className="absolute select-none"
-                                        style={{
-                                            left: tile.left,
-                                            top: tile.top,
-                                            width: TILE_SIZE,
-                                            height: TILE_SIZE,
-                                        }}
-                                    />
-                                ))}
+                                {mapState?.tiles
+                                    .filter((tile) => !failedTiles.has(tile.key))
+                                    .map((tile) => (
+                                        <img
+                                            key={tile.key}
+                                            src={tile.url}
+                                            alt=""
+                                            draggable={false}
+                                            className="absolute select-none"
+                                            style={{
+                                                left: tile.left,
+                                                top: tile.top,
+                                                width: TILE_SIZE,
+                                                height: TILE_SIZE,
+                                                transition: isDragging ? "none" : "left 180ms ease, top 180ms ease",
+                                            }}
+                                            onError={() =>
+                                                setFailedTiles((current) => {
+                                                    if (current.has(tile.key)) return current;
+                                                    const next = new Set(current);
+                                                    next.add(tile.key);
+                                                    return next;
+                                                })
+                                            }
+                                        />
+                                    ))}
 
                                 {locations.map((item, index) => {
                                     if (!mapState) return null;
@@ -445,14 +547,26 @@ export default function VisitorMapPage() {
                                     const density = getDensityLevel(visitCount, maxVisits);
                                     const title = [item.city, item.region, item.country].filter(Boolean).join(", ");
 
+                                    const markerLabel = `${title || "Không rõ khu vực"} - ${density.label}: ${item.visitCount} lượt / ${item.uniqueVisitors} khách`;
+
                                     return (
                                         <Tooltip
                                             key={`${item.latitude}-${item.longitude}-${index}`}
-                                            title={`${title || "Không rõ khu vực"} - ${density.label}: ${item.visitCount} lượt / ${item.uniqueVisitors} khách`}
+                                            title={markerLabel}
+                                            trigger={["hover", "focus"]}
                                         >
                                             <div
-                                                className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full border-2 ${density.border} ${density.color} ${density.glow} cursor-pointer z-10`}
-                                                style={{ left, top, width: size, height: size }}
+                                                role="button"
+                                                tabIndex={0}
+                                                aria-label={markerLabel}
+                                                className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full border-2 ${density.border} ${density.color} ${density.glow} cursor-pointer z-10 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-white`}
+                                                style={{
+                                                    left,
+                                                    top,
+                                                    width: size,
+                                                    height: size,
+                                                    transition: isDragging ? "none" : "left 180ms ease, top 180ms ease",
+                                                }}
                                             >
                                                 <div className={`absolute inset-0 rounded-full animate-ping ${density.ping}`} />
                                                 <span className="absolute inset-0 flex items-center justify-center text-[11px] font-bold text-white">
@@ -464,51 +578,65 @@ export default function VisitorMapPage() {
                                 })}
 
                                 <div
-                                    className="admin-visitor-zoom-control"
+                                    className="admin-visitor-toolbar"
                                     onPointerDown={(event) => event.stopPropagation()}
-                                    onWheel={(event) => event.stopPropagation()}
                                 >
-                                    <button
-                                        type="button"
-                                        className="admin-visitor-map-icon-btn"
-                                        onClick={() => updateZoom((mapView?.zoom || 5) + 1)}
-                                        aria-label="Phóng to bản đồ"
-                                    >
-                                        +
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="admin-visitor-map-icon-btn"
-                                        onClick={() => updateZoom((mapView?.zoom || 5) - 1)}
-                                        aria-label="Thu nhỏ bản đồ"
-                                    >
-                                        -
-                                    </button>
+                                    <Tooltip title="Phóng to (phím +)" placement="right">
+                                        <button
+                                            type="button"
+                                            className="admin-visitor-toolbar-btn"
+                                            onClick={() => updateZoom((mapView?.zoom || 5) + 1)}
+                                            disabled={!mapView || mapView.zoom >= 18}
+                                            aria-label="Phóng to bản đồ"
+                                        >
+                                            <ZoomInOutlined />
+                                        </button>
+                                    </Tooltip>
+
+                                    <div className="admin-visitor-toolbar-zoom" title="Mức thu phóng hiện tại">
+                                        {mapView?.zoom ?? "-"}
+                                    </div>
+
+                                    <Tooltip title="Thu nhỏ (phím -)" placement="right">
+                                        <button
+                                            type="button"
+                                            className="admin-visitor-toolbar-btn"
+                                            onClick={() => updateZoom((mapView?.zoom || 5) - 1)}
+                                            disabled={!mapView || mapView.zoom <= 2}
+                                            aria-label="Thu nhỏ bản đồ"
+                                        >
+                                            <ZoomOutOutlined />
+                                        </button>
+                                    </Tooltip>
+
+                                    <div className="admin-visitor-toolbar-divider" />
+
+                                    <Tooltip title="Về vị trí mặc định" placement="right">
+                                        <button
+                                            type="button"
+                                            className="admin-visitor-toolbar-btn"
+                                            onClick={() => defaultMapView && setMapView(defaultMapView)}
+                                            aria-label="Đặt lại vị trí bản đồ"
+                                        >
+                                            <AimOutlined />
+                                        </button>
+                                    </Tooltip>
+
+                                    <Tooltip title={isMapFullscreen ? "Thu nhỏ" : "Toàn màn hình"} placement="right">
+                                        <button
+                                            type="button"
+                                            className="admin-visitor-toolbar-btn"
+                                            onClick={() => setIsMapFullscreen((value) => !value)}
+                                            aria-label={isMapFullscreen ? "Thoát toàn màn hình" : "Xem toàn màn hình"}
+                                        >
+                                            {isMapFullscreen ? <CompressOutlined /> : <ExpandOutlined />}
+                                        </button>
+                                    </Tooltip>
                                 </div>
 
-                                <button
-                                    type="button"
-                                    className="admin-visitor-map-button admin-visitor-map-reset"
-                                    onClick={() => defaultMapView && setMapView(defaultMapView)}
-                                    onPointerDown={(event) => event.stopPropagation()}
-                                    onWheel={(event) => event.stopPropagation()}
-                                >
-                                    Reset
-                                </button>
-
-                                <button
-                                    type="button"
-                                    className="admin-visitor-map-button admin-visitor-map-fullscreen-btn"
-                                    onClick={() => setIsMapFullscreen((value) => !value)}
-                                    onPointerDown={(event) => event.stopPropagation()}
-                                    onWheel={(event) => event.stopPropagation()}
-                                >
-                                    {isMapFullscreen ? <CompressOutlined /> : <ExpandOutlined />}
-                                    {isMapFullscreen ? "Thu nhỏ" : "Toàn màn hình"}
-                                </button>
-
                                 <div className="admin-visitor-map-hint">
-                                    Kéo để di chuyển, cuộn để thu phóng{isMapFullscreen ? ", Esc để thoát" : ""}
+                                    Kéo hoặc phím mũi tên để di chuyển · Cuộn, double-click hoặc +/- để thu phóng
+                                    {isMapFullscreen ? " · Esc để thoát" : ""}
                                 </div>
 
                                 <div className="admin-visitor-legend">
@@ -541,7 +669,7 @@ export default function VisitorMapPage() {
                 <div className="admin-visitor-table">
                     <Table
                         columns={ipColumns}
-                        dataSource={(data?.ipVisits || []).map((item, index) => ({ ...item, key: item.rawIpAddress || index }))}
+                        dataSource={(data?.ipVisits || []).map((item, index) => ({ ...item, key: `${item.ipAddress}-${index}` }))}
                         loading={loading}
                         pagination={{ pageSize: 10, showSizeChanger: true }}
                         scroll={{ x: 900 }}
