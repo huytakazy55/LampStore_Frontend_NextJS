@@ -1,6 +1,7 @@
 "use client";
 
 import axiosInstance from "./axiosConfig";
+import { getTotalCount } from "@/lib/pagination";
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
 class TagManage {
@@ -15,9 +16,7 @@ class TagManage {
             params: { page, pageSize, search: search || undefined }
         });
         const items = response.data?.$values || response.data || [];
-        const totalHeader = response.headers['x-total-count'];
-        // TODO: remove this fallback once backend confirms X-Total-Count is present on /api/Tags
-        const total = totalHeader !== undefined ? Number(totalHeader) : items.length;
+        const total = getTotalCount(response, items);
         return { items, total };
     }
 

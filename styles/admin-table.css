@@ -436,10 +436,6 @@
   color: #22c55e !important;
 }
 
-.custom-table .admin-copy-action-btn.ant-btn {
-  border: 1px solid currentColor !important;
-}
-
 .custom-table .admin-action-group .ant-btn:hover,
 .custom-table .admin-action-btn.ant-btn:hover {
   background: #dcfce7 !important;
@@ -595,12 +591,7 @@
 .admin-product-filter-row {
   display: grid;
   grid-template-columns:
-    minmax(260px, 340px)
-    minmax(92px, 116px)
-    minmax(240px, 300px)
-    minmax(300px, 340px)
-    minmax(240px, 300px)
-    max-content;
+    minmax(260px, 340px) minmax(92px, 116px) minmax(240px, 300px) minmax(300px, 340px) minmax(240px, 300px) max-content;
   gap: 12px;
   align-items: center;
   justify-content: space-between;
@@ -610,12 +601,7 @@
 .admin-tag-filter-row {
   display: grid;
   grid-template-columns:
-    minmax(240px, 320px)
-    minmax(92px, 116px)
-    minmax(280px, 340px)
-    minmax(0, 1fr)
-    max-content
-    max-content;
+    minmax(240px, 320px) minmax(92px, 116px) minmax(280px, 340px) minmax(0, 1fr) max-content max-content;
   gap: 12px;
   align-items: center;
   justify-content: start;
@@ -690,6 +676,7 @@
 }
 
 @media (max-width: 768px) {
+
   .admin-product-filter-row,
   .admin-tag-filter-row {
     grid-template-columns: 1fr;
@@ -933,7 +920,7 @@
   transition: color 0.15s ease, background 0.15s ease;
 }
 
-.admin-visitor-toolbar-btn + .admin-visitor-toolbar-btn {
+.admin-visitor-toolbar-btn+.admin-visitor-toolbar-btn {
   border-top: 1px solid var(--admin-control-border);
 }
 
@@ -1449,6 +1436,7 @@ body.admin-dashboard-active .product-modal .custom-form,
 }
 
 @media (max-width: 768px) {
+
   body.admin-dashboard-active .product-modal,
   .product-modal {
     top: 16px !important;
@@ -1948,4 +1936,27 @@ body.admin-dashboard-active .ant-modal .ant-picker-focused,
 /* ---- Empty state ---- */
 .dark .custom-table .ant-empty-description {
   color: #6b7280;
+}
+
+/* ---- Chat dashboard table row states (targets Ant Design-generated <tr>/<td>) ---- */
+.chat-theme-table .ant-table-tbody>tr.chat-clickable-row>td {
+  cursor: pointer;
+}
+
+.chat-theme-table .ant-table-tbody>tr.chat-row-unread>td {
+  background: color-mix(in srgb, var(--chat-theme-start) 10%, #fff) !important;
+}
+
+.chat-theme-table .ant-table-tbody>tr.chat-row-unread:hover>td {
+  background: color-mix(in srgb, var(--chat-theme-start) 10%, #fff) !important;
+}
+
+.chat-theme-table .ant-table-tbody>tr.chat-row-unread>td:first-child {
+  box-shadow: inset 4px 0 0 var(--chat-theme-start);
+}
+
+.chat-theme-table .ant-table-tbody>tr.chat-row-unread .chat-user-name,
+.chat-theme-table .ant-table-tbody>tr.chat-row-unread .chat-message-text {
+  color: #0f172a;
+  font-weight: 700;
 }

@@ -8,7 +8,6 @@ import { ThemeContext } from '@/contexts/ThemeContext';
 import { setCurrentBar, setLeftBar } from '@/redux/slices/leftBarAdminSlice';
 import { jwtDecode } from 'jwt-decode';
 import UserManage from '@/services/UserManage';
-import './LeftBar.css';
 
 const LeftBar = () =>
 {
@@ -22,6 +21,7 @@ const LeftBar = () =>
 
     const userRoles = useMemo(() =>
     {
+        if (typeof window === 'undefined') return [];
         const token = localStorage.getItem('token');
         if (!token) return [];
         try
@@ -108,43 +108,45 @@ const LeftBar = () =>
 
     return (
         <div
-            className={`sidebar-container
+            className={`relative flex h-full flex-col overflow-hidden transition-all duration-300
                 ${isCollapsed
-                    ? 'sidebar-collapsed absolute md:relative -left-full md:left-0'
-                    : 'sidebar-expanded fixed md:relative left-0 top-16 md:top-0 bottom-0 z-40 md:z-auto'
+                    ? 'absolute w-0 md:relative md:w-[72px] -left-full md:left-0'
+                    : 'fixed w-[70%] sm:w-1/2 md:relative md:w-60 left-0 top-16 md:top-0 bottom-0 z-40 md:z-auto'
                 }`}
             style={{
                 background: `linear-gradient(160deg, ${themeColors.EndColorLinear} 0%, ${themeColors.StartColorLinear} 100%)`,
             }}
         >
             {/* Dark overlay for depth & readability */}
-            <div className="sidebar-overlay" />
+            <div className="absolute inset-0 z-0 bg-black/15 pointer-events-none" />
 
             {/* Navigation */}
-            <nav className="sidebar-nav">
-                <div className="sidebar-section-label">
-                    {!isCollapsed && <span>MENU</span>}
+            <nav className="relative z-10 min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-2.5 py-2 scrollbar-hide">
+                <div className="min-h-9 px-3.5 pb-2 pt-3">
+                    {!isCollapsed && <span className="text-[10px] font-semibold uppercase tracking-[1.5px] text-white/45">MENU</span>}
                 </div>
 
-                <ul className="sidebar-menu">
+                <ul className="m-0 flex list-none flex-col gap-0.5 p-0">
                     {visibleMenuItems.map((item, index) =>
                     {
                         const isActive = currentBar === item.name;
                         return (
-                            <li key={item.name} className="sidebar-menu-item" style={{ animationDelay: `${index * 0.03}s` }}>
+                            <li key={item.name} className="animate-menuFadeIn" style={{ animationDelay: `${index * 0.03}s` }}>
                                 <Link
                                     onClick={() => handleMenuClick(item.name)}
-                                    className={`sidebar-link ${isActive ? 'active' : ''} ${isCollapsed ? 'collapsed' : ''}`}
+                                    className={`relative flex items-center gap-3 overflow-hidden rounded-[10px] px-3 py-[9px] text-[13.5px] font-medium no-underline transition-all duration-200
+                                        ${isActive ? 'bg-white/[0.18] text-white font-semibold' : 'text-white/70 hover:bg-white/[0.12] hover:text-white'}
+                                        ${isCollapsed ? 'justify-center p-2.5' : ''}`}
                                     to={item.path}
                                 >
-                                    {isActive && <div className="sidebar-active-bar" />}
+                                    {isActive && <div className="absolute left-0 top-[15%] bottom-[15%] w-[3px] rounded-r-[4px] bg-white shadow-[0_0_8px_rgba(255,255,255,0.5)] animate-barSlideIn" />}
 
-                                    <div className={`sidebar-icon-wrapper ${isActive ? 'active' : ''}`}>
+                                    <div className={`flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-lg text-[17px] text-inherit transition-all duration-200 ${isActive ? 'scale-105 bg-white/15' : ''}`}>
                                         <i className={`bx ${item.icon}`} />
                                     </div>
 
                                     {!isCollapsed && (
-                                        <span className="sidebar-label">{t(item.name)}</span>
+                                        <span className="overflow-hidden whitespace-nowrap text-ellipsis">{t(item.name)}</span>
                                     )}
                                 </Link>
                             </li>
@@ -155,14 +157,14 @@ const LeftBar = () =>
 
             {/* Bottom section */}
             {!isCollapsed && (
-                <div className="sidebar-footer">
-                    <div className="sidebar-footer-card">
-                        <div className="sidebar-footer-icon">
+                <div className="relative z-10 shrink-0 border-t border-white/10 p-3">
+                    <div className="flex items-center gap-2.5 rounded-xl border border-white/[0.12] bg-white/10 p-3">
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/15 text-base text-white">
                             <i className='bx bxs-zap' />
                         </div>
-                        <div className="sidebar-footer-text">
-                            <span className="sidebar-footer-title">CapyLumine</span>
-                            <span className="sidebar-footer-subtitle">Admin Panel v2.0</span>
+                        <div className="flex flex-col gap-px overflow-hidden">
+                            <span className="whitespace-nowrap text-xs font-semibold text-white/85">CapyLumine</span>
+                            <span className="whitespace-nowrap text-[10px] text-white/45">Admin Panel v2.0</span>
                         </div>
                     </div>
                 </div>

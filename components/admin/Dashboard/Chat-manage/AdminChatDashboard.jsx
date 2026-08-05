@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useContext, useCallback, useMemo } from 'react';
 import AdminPageHeader from '../shared/AdminPageHeader';
+import StatCard from '../shared/StatCard';
 import { Button, Table, Modal, Input, Tooltip } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 import ChatService from '@/services/ChatService';
@@ -11,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setChats } from '@/redux/slices/chatSlice';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import { useSearchParams } from '@/lib/router-compat';
-import './AdminChatDashboard.css';
+import { unwrapValues } from '@/lib/odata';
 
 const AVATAR_GRADIENTS = [
   'linear-gradient(135deg, #6366f1, #818cf8)',
@@ -65,10 +66,8 @@ const AdminChatDashboard = () => {
     }
   }, []);
 
-  const normalizeList = (data) => data?.$values || data || [];
-
   const getLastMessage = (chat) => {
-    const messages = normalizeList(chat.messages || chat.Messages);
+    const messages = unwrapValues(chat.messages || chat.Messages);
     return chat.lastMessage || chat.LastMessage || messages[0] || messages[messages.length - 1] || null;
   };
 
@@ -118,7 +117,7 @@ const AdminChatDashboard = () => {
     try {
       setLoading(true);
       const allChats = await ChatService.getAllChats();
-      const chatList = allChats?.$values || allChats || [];
+      const chatList = unwrapValues(allChats);
       dispatch(setChats(chatList));
     } catch (error) {
       console.error('Error loading chats:', error);
@@ -167,15 +166,15 @@ const AdminChatDashboard = () => {
         const name = userName || record.guestName || record.GuestName || 'Khách';
         const isActive = record.status === 1 || record.status === 2;
         return (
-          <div className="chat-user-cell">
+          <div className="flex items-center gap-2.5">
             <div
-              className="chat-user-avatar"
+              className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] text-sm font-semibold text-white"
               style={{ background: getAvatarGradient(name) }}
             >
               {name.charAt(0).toUpperCase()}
-              {isActive && <span className="online-dot" />}
+              {isActive && <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-green-500" />}
             </div>
-            <span className="chat-user-name">{name}</span>
+            <span className="chat-user-name max-w-[180px] overflow-hidden text-ellipsis whitespace-nowrap text-[13.5px] font-medium text-slate-800">{name}</span>
           </div>
         );
       }
@@ -188,8 +187,8 @@ const AdminChatDashboard = () => {
         const content = getMessageContent(lastMsg);
         const isEmpty = !content;
         return (
-          <div className="chat-message-preview">
-            <span className={`chat-message-text ${isEmpty ? 'empty' : ''}`}>
+          <div className="flex flex-col gap-0.5">
+            <span className={`chat-message-text line-clamp-1 text-[13px] leading-[1.4] ${isEmpty ? 'italic text-slate-300' : 'text-slate-500'}`}>
               {isEmpty ? 'Chưa có tin nhắn' : (content.length > 70 ? content.substring(0, 70) + '…' : content)}
             </span>
           </div>
@@ -208,7 +207,7 @@ const AdminChatDashboard = () => {
         const time = formatRelativeTime(date);
         if (!time) return <span style={{ color: '#cbd5e1' }}>—</span>;
         return (
-          <span className={`chat-time-badge ${time.isRecent ? 'recent' : 'normal'}`}>
+          <span className={`inline-block rounded-full px-2.5 py-[3px] text-[12.5px] font-medium ${time.isRecent ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-50 text-slate-400'}`}>
             {time.isRecent && '● '}{time.text}
           </span>
         );
@@ -222,7 +221,7 @@ const AdminChatDashboard = () => {
       render: (_, record) => (
         <Tooltip title="Trả lời khách hàng">
           <button
-            className="chat-reply-btn"
+            className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg border-none px-4 py-1.5 text-[13px] font-medium text-white transition-all duration-200 cursor-pointer hover:-translate-y-px hover:shadow-[0_3px_10px_rgba(99,102,241,0.3)] hover:brightness-[1.08] active:translate-y-0"
             onClick={(event) => {
               event.stopPropagation();
               openChat(record);
@@ -266,85 +265,13 @@ const AdminChatDashboard = () => {
         {/* Stats Cards */}
         <div className="flex flex-wrap gap-6 py-4 mb-2">
           {[
-            {
-              icon: (
-                <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 text-2xl">
-                  <i className="bx bx-message-rounded-dots"></i>
-                </div>
-              ),
-              value: totalChats,
-              label: "Tổng cuộc trò chuyện",
-              percent: "Tất cả",
-              percentType: "blue"
-            },
-            {
-              icon: (
-                <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-500 text-2xl">
-                  <i className="bx bx-user-circle"></i>
-                </div>
-              ),
-              value: activeChats,
-              label: "Đang hoạt động",
-              percent: "Active",
-              percentType: "green"
-            },
-            {
-              icon: (
-                <div className="w-12 h-12 rounded-full bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center text-primary-500 text-2xl">
-                  <i className="bx bx-time-five"></i>
-                </div>
-              ),
-              value: pendingChats,
-              label: "Chờ phản hồi",
-              percent: "Wait",
-              percentType: "yellow"
-            },
-            {
-              icon: (
-                <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center text-red-500 text-2xl">
-                  <i className="bx bx-check-circle"></i>
-                </div>
-              ),
-              value: resolvedChats,
-              label: "Đã giải quyết",
-              percent: "Done",
-              percentType: "red"
-            }
-          ].map((item, idx) => {
-            const percentColor = {
-              green: "bg-green-100 text-green-500",
-              blue: "bg-blue-100 text-blue-500",
-              yellow: "bg-primary-50 dark:bg-primary-900/20 text-primary-500",
-              red: "bg-red-100 text-red-500",
-            };
-            return (
-              <div
-                key={idx}
-                className={`
-                          bg-white rounded-xl shadow-lg 
-                          p-5 flex items-center min-w-[200px] flex-1
-                          border-l-8 border-[1px] cursor-pointer
-                          ${item.percentType === "green" ? "border-green-400" : ""}
-                          ${item.percentType === "blue" ? "border-blue-400" : ""}
-                          ${item.percentType === "yellow" ? "border-primary-500" : ""}
-                          ${item.percentType === "red" ? "border-red-400" : ""}
-                          hover:scale-[1.03] hover:shadow-2xl transition-all duration-200
-                        `}
-                style={{ background: "linear-gradient(135deg, #f8fafc 60%, #f1f5f9 100%)" }}
-              >
-                {item.icon}
-                <div className="ml-4">
-                  <div className="text-xl font-bold text-gray-800">{item.value}</div>
-                  <div className="text-gray-500 text-sm">{item.label}</div>
-                </div>
-                <div className="ml-auto flex flex-col items-end">
-                  <div className={`text-xs px-2 py-1 rounded-full flex items-center gap-1 font-semibold ${percentColor[item.percentType]}`}>
-                    {item.percent}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+            { icon: <i className="bx bx-message-rounded-dots"></i>, color: 'blue', value: totalChats, label: "Tổng cuộc trò chuyện", percent: "Tất cả" },
+            { icon: <i className="bx bx-user-circle"></i>, color: 'green', value: activeChats, label: "Đang hoạt động", percent: "Active" },
+            { icon: <i className="bx bx-time-five"></i>, color: 'yellow', value: pendingChats, label: "Chờ phản hồi", percent: "Wait" },
+            { icon: <i className="bx bx-check-circle"></i>, color: 'red', value: resolvedChats, label: "Đã giải quyết", percent: "Done" },
+          ].map((item, idx) => (
+            <StatCard key={idx} valueClassName="text-xl" {...item} />
+          ))}
         </div>
 
         {/* Filter Bar */}

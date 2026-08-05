@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import AdminPageHeader from '../shared/AdminPageHeader';
+import StatCard from '../shared/StatCard';
 import { Table, Input, Modal, message, Space, Tag, Button, Tooltip } from 'antd';
 import OrderService from '@/services/OrderService';
 import DeliveryService from '@/services/DeliveryService';
@@ -186,28 +187,19 @@ const DeliveryManage = () =>
             />
             <div className="admin-table-card">
                 <div className="flex flex-wrap gap-6 py-4 mb-2">
-                    <div className="bg-white rounded-xl shadow-lg p-5 flex items-center min-w-[200px] flex-1 border-l-8 border-indigo-400 hover:scale-[1.03] hover:shadow-2xl transition-all duration-200"
-                        style={{ background: "linear-gradient(135deg, #f8fafc 60%, #f1f5f9 100%)" }}>
-                        <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-500 text-2xl">
-                            <i className='bx bx-package'></i>
-                        </div>
-                        <div className="ml-4">
-                            <div className="text-2xl font-bold text-gray-800">{total}</div>
-                            <div className="text-gray-500 text-sm">Đơn đang giao hàng</div>
-                        </div>
-                    </div>
-                    <div className="bg-white rounded-xl shadow-lg p-5 flex items-center min-w-[200px] flex-1 border-l-8 border-primary-400 hover:scale-[1.03] hover:shadow-2xl transition-all duration-200"
-                        style={{ background: "linear-gradient(135deg, #f8fafc 60%, #f1f5f9 100%)" }}>
-                        <div className="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center text-primary-500 text-2xl">
-                            <i className='bx bx-money'></i>
-                        </div>
-                        <div className="ml-4">
-                            <div className="text-xl font-bold text-gray-800">
-                                {formatPrice(orders.filter(o => o.paymentMethod === 'cod').reduce((s, o) => s + (o.totalAmount || 0), 0))}₫
-                            </div>
-                            <div className="text-gray-500 text-sm">Tiền COD cần thu</div>
-                        </div>
-                    </div>
+                    <StatCard
+                        color="indigo"
+                        icon={<i className="bx bx-package"></i>}
+                        value={total}
+                        label="Đơn đang giao hàng"
+                    />
+                    <StatCard
+                        color="yellow"
+                        icon={<i className="bx bx-money"></i>}
+                        valueClassName="text-xl"
+                        value={`${formatPrice(orders.filter(o => o.paymentMethod === 'cod').reduce((s, o) => s + (o.totalAmount || 0), 0))}₫`}
+                        label="Tiền COD cần thu"
+                    />
                 </div>
 
                 <div className="admin-filter-bar"

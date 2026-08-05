@@ -1,6 +1,7 @@
 "use client";
 
 import axiosInstance from '@/lib/axiosConfig';
+import { getTotalCount } from '@/lib/pagination';
 
 class FlashSaleService
 {
@@ -17,9 +18,7 @@ class FlashSaleService
                 params: { page, pageSize, search: search || undefined }
             });
             const items = response.data.$values || response.data || [];
-            const totalHeader = response.headers['x-total-count'];
-            // TODO: remove this fallback once backend confirms X-Total-Count is present on /api/FlashSales
-            const total = totalHeader !== undefined ? Number(totalHeader) : items.length;
+            const total = getTotalCount(response, items);
             return { items, total };
         } catch (error)
         {

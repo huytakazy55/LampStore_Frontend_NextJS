@@ -13,8 +13,8 @@ import {
 } from "@ant-design/icons";
 import axiosInstance from "@/services/axiosConfig";
 import AdminPageHeader from "../shared/AdminPageHeader";
+import { unwrapValues as normalizeList } from "@/lib/odata";
 
-const normalizeList = (value) => value?.$values || value || [];
 const TILE_SIZE = 256;
 
 const clampLatitude = (lat) => Math.max(-85.05112878, Math.min(85.05112878, Number(lat)));

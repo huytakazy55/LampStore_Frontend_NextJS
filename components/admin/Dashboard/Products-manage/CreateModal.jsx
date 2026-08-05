@@ -97,7 +97,7 @@ const CreateModal = ({ openCreate, handleCreateClose, fetchProducts, style, cate
         setAllProducts(res.data.$values || []);
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   }, []);
 

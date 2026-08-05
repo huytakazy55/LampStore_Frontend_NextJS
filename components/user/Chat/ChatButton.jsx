@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from 'react';
-import ChatWindow from './ChatWindow';
+import dynamic from 'next/dynamic';
 import NotificationBadge from './NotificationBadge';
 import ChatService from '@/services/ChatService';
 import GuestProfileService from '@/services/GuestProfileService';
@@ -12,6 +12,12 @@ import zaloQrCode from '@/assets/images/zalo-add-friend.jpg';
 import { usePathname } from 'next/navigation';
 import { lockBodyScroll, unlockBodyScroll } from '@/lib/bodyScrollLock';
 import useLazyLoad from '@/hooks/useLazyLoad';
+import { unwrapValues } from '@/lib/odata';
+
+// Loaded on demand only when the chat window actually opens — ChatWindow pulls in
+// emoji-picker-react (100KB+ gzipped), which every visitor was otherwise downloading
+// up front even if they never opened chat.
+const ChatWindow = dynamic(() => import('./ChatWindow'), { ssr: false });
 
 const CONTACT_PHONE = '0969608810';
 const ZALO_URL = 'https://zalo.me/0969608810';
@@ -100,11 +106,9 @@ const ChatButton = () =>
     }
   };
 
-  const normalizeList = (data) => data?.$values || data || [];
-
   const getLastMessage = (chat) =>
   {
-    const messages = normalizeList(chat.messages || chat.Messages);
+    const messages = unwrapValues(chat.messages || chat.Messages);
     return chat.lastMessage || chat.LastMessage || messages[0] || messages[messages.length - 1] || null;
   };
 
@@ -131,7 +135,7 @@ const ChatButton = () =>
         const chatsData = isLoggedIn
           ? await ChatService.getUserChats()
           : await ChatService.getGuestChats();
-        const chats = normalizeList(chatsData);
+        const chats = unwrapValues(chatsData);
         const currentUserId = getCurrentUserId();
         const guestSenderId = guestToken ? `guest_${guestToken.substring(0, 8)}` : null;
 

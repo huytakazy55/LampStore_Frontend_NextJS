@@ -318,7 +318,8 @@ html {
   }
 
   table .bx-edit,
-  table .bx-lock-open {
+  table .bx-lock-open,
+  table .bx-copy {
     font-size: 1rem;
     color: #22c55e;
     cursor: pointer;
@@ -635,6 +636,74 @@ html {
 
 .animate-fadeIn {
   animation: fadeIn 0.2s ease-out;
+}
+
+/* Dropdown enter animation (AppBar) */
+@keyframes dropdownEnter {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-dropdownEnter {
+  animation: dropdownEnter 0.2s ease-out;
+}
+
+/* Sidebar menu item fade-in (LeftBar) */
+@keyframes menuFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-menuFadeIn {
+  animation: menuFadeIn 0.3s ease-out both;
+}
+
+/* Sidebar active indicator bar (LeftBar) */
+@keyframes barSlideIn {
+  from {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+
+  to {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.animate-barSlideIn {
+  animation: barSlideIn 0.25s ease-out;
+}
+
+/* Flash sale bolt icon pulse (FlashSale) */
+@keyframes flashPulse {
+  from {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  to {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+.animate-flashPulse {
+  animation: flashPulse 1s ease-in-out infinite alternate;
 }
 
 /* Hide scrollbar */

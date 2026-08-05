@@ -148,10 +148,8 @@ const NotificationDropdown = ({ themeColors }) => {
       <div
         ref={buttonRef}
         onClick={toggleDropdown}
-        className="appbar-icon-btn"
+        className="relative flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-white/15 bg-white/[0.08] text-lg text-white/75 no-underline transition-all duration-200 hover:border-white/25 hover:bg-white/[0.18] hover:text-white"
         style={{
-          cursor: 'pointer',
-          position: 'relative',
           filter: isDropdownOpen ? 'drop-shadow(0 0 8px rgba(59,130,246,0.4))' : 'none'
         }}
       >

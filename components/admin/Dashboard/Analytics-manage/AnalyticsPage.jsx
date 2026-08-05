@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import AdminPageHeader from '../shared/AdminPageHeader';
+import StatCard from '../shared/StatCard';
 import { Table, Card, Spin, Row, Col, Statistic, Space } from "antd";
 import { RiseOutlined, UserOutlined, ShopOutlined, EyeOutlined } from '@ant-design/icons';
 import axiosInstance from '@/lib/axiosConfig';
@@ -80,79 +81,32 @@ export default function AnalyticsPage() {
             <div className="flex flex-wrap gap-6 mb-8">
                 {[
                     {
-                        icon: (
-                            <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-500 text-2xl">
-                                <i className="bx bxs-group"></i>
-                            </div>
-                        ),
-                        value: stats.siteVisits,
+                        icon: <i className="bx bxs-group"></i>,
+                        color: "green",
+                        value: stats.siteVisits.toLocaleString(),
                         label: "Tổng Lượt Truy Cập",
-                        percent: 100,
-                        percentType: "green",
+                        percent: <>100 <span>U</span></>,
                         time: "Tất cả",
                     },
                     {
-                        icon: (
-                            <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 text-2xl">
-                                <i className="bx bx-user-circle"></i>
-                            </div>
-                        ),
-                        value: stats.uniqueVisits30Days,
+                        icon: <i className="bx bx-user-circle"></i>,
+                        color: "blue",
+                        value: stats.uniqueVisits30Days.toLocaleString(),
                         label: "Khách Truy Cập (30 Ngày)",
-                        percent: stats.uniqueVisits30Days,
-                        percentType: "blue",
+                        percent: <>{stats.uniqueVisits30Days} <span>U</span></>,
                         time: "30 Ngày Qua",
                     },
                     {
-                        icon: (
-                            <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-500 text-2xl">
-                                <i className="bx bx-package"></i>
-                            </div>
-                        ),
-                        value: stats.productCount,
+                        icon: <i className="bx bx-package"></i>,
+                        color: "purple",
+                        value: stats.productCount.toLocaleString(),
                         label: "Sản Phẩm Đang Bán",
                         percent: "Tất cả",
-                        percentType: "red",
                         time: "Tất cả",
                     }
-                ].map((item, idx) => {
-                    const percentColor = {
-                        green: "bg-green-100 text-green-500",
-                        blue: "bg-blue-100 text-blue-500",
-                        yellow: "bg-primary-50 dark:bg-primary-900/20 text-primary-500",
-                        red: "bg-red-100 text-red-500",
-                        purple: "bg-purple-100 text-purple-500",
-                    };
-                    return (
-                        <div
-                            key={idx}
-                            className={`
-                              bg-white rounded-xl shadow-lg 
-                              p-5 flex items-center min-w-[220px] flex-1
-                              border-l-8 border-[1px] cursor-pointer
-                              ${item.percentType === "green" ? "border-green-400" : ""}
-                              ${item.percentType === "blue" ? "border-blue-400" : ""}
-                              ${item.percentType === "yellow" ? "border-primary-500" : ""}
-                              ${item.percentType === "red" ? "border-red-400" : ""}
-                              ${item.percentType === "purple" ? "border-purple-400" : ""}
-                              hover:scale-[1.03] hover:shadow-2xl transition-all duration-200
-                            `}
-                            style={{ background: "linear-gradient(135deg, #f8fafc 60%, #f1f5f9 100%)" }}
-                        >
-                            {item.icon}
-                            <div className="ml-4">
-                                <div className="text-2xl font-bold text-gray-800">{item.value.toLocaleString()}</div>
-                                <div className="text-gray-500 text-sm">{item.label}</div>
-                            </div>
-                            <div className="ml-auto flex flex-col items-end">
-                                <div className={`text-xs px-2 py-1 rounded-full flex items-center gap-1 font-semibold ${percentColor[item.percentType]}`}>
-                                    {item.percent} <span>U</span>
-                                </div>
-                                <div className="text-xs text-gray-400 mt-1">{item.time}</div>
-                            </div>
-                        </div>
-                    );
-                })}
+                ].map((item, idx) => (
+                    <StatCard key={idx} minWidth="220px" {...item} />
+                ))}
             </div>
 
             <Row gutter={[24, 24]}>

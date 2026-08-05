@@ -1,3 +1,5 @@
+import { stringifyJsonLd } from '@/lib/jsonLd';
+
 const API_ENDPOINT = process.env.INTERNAL_API_ENDPOINT || process.env.NEXT_PUBLIC_API_ENDPOINT;
 const SITE_URL = 'https://capylumine.com';
 const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`;
@@ -346,12 +348,12 @@ export default async function ProductLayout({ children, params })
             {productJsonLd && (
                 <script
                     type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+                    dangerouslySetInnerHTML={{ __html: stringifyJsonLd(productJsonLd) }}
                 />
             )}
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(getBreadcrumbJsonLd(productName, slug)) }}
+                dangerouslySetInnerHTML={{ __html: stringifyJsonLd(getBreadcrumbJsonLd(productName, slug)) }}
             />
 
             {/* SSR Product Content — visible to Googlebot, hidden after client hydration */}

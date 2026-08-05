@@ -1,3 +1,5 @@
+import { stringifyJsonLd } from '@/lib/jsonLd';
+
 const SITE_URL = 'https://capylumine.com';
 
 const organizationJsonLd = {
@@ -150,19 +152,19 @@ export default function MainLayout({ children })
         <>
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+                dangerouslySetInnerHTML={{ __html: stringifyJsonLd(organizationJsonLd) }}
             />
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+                dangerouslySetInnerHTML={{ __html: stringifyJsonLd(websiteJsonLd) }}
             />
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(storeJsonLd) }}
+                dangerouslySetInnerHTML={{ __html: stringifyJsonLd(storeJsonLd) }}
             />
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(siteNavigationJsonLd) }}
+                dangerouslySetInnerHTML={{ __html: stringifyJsonLd(siteNavigationJsonLd) }}
             />
             {children}
         </>

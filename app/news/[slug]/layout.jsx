@@ -1,3 +1,5 @@
+import { stringifyJsonLd } from '@/lib/jsonLd';
+
 const API_ENDPOINT = process.env.INTERNAL_API_ENDPOINT || process.env.NEXT_PUBLIC_API_ENDPOINT;
 const SITE_URL = 'https://capylumine.com';
 
@@ -125,12 +127,12 @@ export default async function NewsDetailLayout({ children, params })
             {articleJsonLd && (
                 <script
                     type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+                    dangerouslySetInnerHTML={{ __html: stringifyJsonLd(articleJsonLd) }}
                 />
             )}
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(getBreadcrumbJsonLd(newsTitle, slug)) }}
+                dangerouslySetInnerHTML={{ __html: stringifyJsonLd(getBreadcrumbJsonLd(newsTitle, slug)) }}
             />
             {children}
         </>

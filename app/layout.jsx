@@ -13,6 +13,7 @@ const geistFont = localFont({
 
 import ClientProviders from '@/components/providers/ClientProviders';
 import AnalyticsTracker from '@/components/common/AnalyticsTracker';
+import ErrorBoundary from '@/components/common/ErrorBoundary';
 
 export const metadata = {
     title: {
@@ -83,9 +84,11 @@ export default function RootLayout({ children })
                     <React.Suspense fallback={null}>
                         <AnalyticsTracker />
                     </React.Suspense>
-                    <ClientProviders>
-                        {children}
-                    </ClientProviders>
+                    <ErrorBoundary>
+                        <ClientProviders>
+                            {children}
+                        </ClientProviders>
+                    </ErrorBoundary>
                 </div>
             </body>
         </html>

@@ -1,6 +1,7 @@
 "use client";
 
 import axiosInstance from "./axiosConfig";
+import { getTotalCount } from "@/lib/pagination";
 
 class ProductManage {
     GetProduct() {
@@ -18,10 +19,7 @@ class ProductManage {
         });
         const result = response.data || {};
         const items = result.$values || result.products?.$values || result.products || [];
-        const totalHeader = response.headers['x-total-count'];
-        // TODO: remove this fallback once backend confirms X-Total-Count / totalCount is
-        // reliably present on /api/Products/search for every response.
-        const total = result.totalCount ?? (totalHeader !== undefined ? Number(totalHeader) : items.length);
+        const total = getTotalCount(response, items, result.totalCount);
         return { items, total };
     }
 

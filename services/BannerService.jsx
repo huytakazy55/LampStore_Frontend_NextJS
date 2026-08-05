@@ -1,6 +1,7 @@
 "use client";
 
 import axiosInstance from '@/lib/axiosConfig';
+import { getTotalCount } from '@/lib/pagination';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
@@ -12,9 +13,7 @@ class BannerService {
                 params: { page, pageSize, search: search || undefined }
             });
             const items = response.data.$values || response.data || [];
-            const totalHeader = response.headers['x-total-count'];
-            // TODO: remove this fallback once backend confirms X-Total-Count is present on /api/Banners
-            const total = totalHeader !== undefined ? Number(totalHeader) : items.length;
+            const total = getTotalCount(response, items);
             return { items, total };
         } catch (error) {
             console.error('Error fetching banners:', error);

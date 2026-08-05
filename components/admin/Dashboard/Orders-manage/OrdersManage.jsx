@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import AdminPageHeader from '../shared/AdminPageHeader';
+import StatCard from '../shared/StatCard';
 import { Table, Input, Modal, message, Space, Tag, Select, Button, Tooltip } from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined, CarOutlined, FileDoneOutlined } from '@ant-design/icons';
 import OrderService from '@/services/OrderService';
@@ -427,112 +428,15 @@ const OrdersManage = () =>
                 {/* Stats Cards */}
                 <div className="flex flex-wrap gap-6 py-4 mb-2">
                     {[
-                        {
-                            icon: (
-                                <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 text-2xl">
-                                    <i className="bx bx-receipt"></i>
-                                </div>
-                            ),
-                            value: stats.total,
-                            label: "Tổng đơn",
-                            percent: "Tất cả",
-                            percentType: "blue"
-                        },
-                        {
-                            icon: (
-                                <div className="w-12 h-12 rounded-full bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center text-primary-500 text-2xl">
-                                    <i className="bx bx-time-five"></i>
-                                </div>
-                            ),
-                            value: stats.pending,
-                            label: "Chờ xử lý",
-                            percent: "Mới",
-                            percentType: "yellow"
-                        },
-                        {
-                            icon: (
-                                <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center text-red-500 text-2xl">
-                                    <i className="bx bx-x-circle"></i>
-                                </div>
-                            ),
-                            value: stats.unpaid,
-                            label: "Chờ thanh toán",
-                            percent: "Bank",
-                            percentType: "orange"
-                        },
-                        {
-                            icon: (
-                                <div className="w-12 h-12 rounded-full bg-cyan-100 flex items-center justify-center text-cyan-500 text-2xl">
-                                    <i className="bx bx-package"></i>
-                                </div>
-                            ),
-                            value: stats.shipping,
-                            label: "Đang giao",
-                            percent: "Ship",
-                            percentType: "cyan"
-                        },
-                        {
-                            icon: (
-                                <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-500 text-2xl">
-                                    <i className="bx bx-check-double"></i>
-                                </div>
-                            ),
-                            value: stats.completed,
-                            label: "Hoàn thành",
-                            percent: "Xong",
-                            percentType: "green"
-                        },
-                        {
-                            icon: (
-                                <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center text-red-500 text-2xl">
-                                    <i className="bx bx-wallet"></i>
-                                </div>
-                            ),
-                            value: formatPrice(stats.revenue) + "₫",
-                            label: "Doanh thu",
-                            percent: "Tổng",
-                            percentType: "red"
-                        }
-                    ].map((item, idx) =>
-                    {
-                        const percentColor = {
-                            green: "bg-green-100 text-green-500",
-                            blue: "bg-blue-100 text-blue-500",
-                            yellow: "bg-primary-50 dark:bg-primary-900/20 text-primary-500",
-                            orange: "bg-orange-100 text-orange-500",
-                            cyan: "bg-cyan-100 text-cyan-500",
-                            red: "bg-red-100 text-red-500",
-                        };
-                        return (
-                            <div
-                                key={idx}
-                                className={`
-                                  bg-white rounded-xl shadow-lg 
-                                  p-5 flex items-center min-w-[200px] flex-1
-                                  border-l-8 border-[1px] cursor-pointer
-                                  ${item.percentType === "green" ? "border-green-400" : ""}
-                                  ${item.percentType === "blue" ? "border-blue-400" : ""}
-                                  ${item.percentType === "yellow" ? "border-primary-500" : ""}
-                                  ${item.percentType === "orange" ? "border-orange-400" : ""}
-                                  ${item.percentType === "cyan" ? "border-cyan-400" : ""}
-                                  ${item.percentType === "red" ? "border-red-400" : ""}
-                                  hover:scale-[1.03] hover:shadow-2xl transition-all duration-200
-                                `}
-                                style={{ background: "linear-gradient(135deg, #f8fafc 60%, #f1f5f9 100%)" }}
-                            >
-                                {item.icon}
-                                <div className="ml-4">
-                                    <div className="text-xl font-bold text-gray-800">{item.value}</div>
-                                    <div className="text-gray-500 text-sm">{item.label}</div>
-                                </div>
-                                <div className="ml-auto flex flex-col items-end">
-                                    <div className={`text-xs px-2 py-1 rounded-full flex items-center gap-1 font-semibold ${percentColor[item.percentType]}`}>
-                                        {item.percent}
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    })}
+                        { icon: <i className="bx bx-receipt"></i>, color: "blue", value: stats.total, label: "Tổng đơn", percent: "Tất cả" },
+                        { icon: <i className="bx bx-time-five"></i>, color: "yellow", value: stats.pending, label: "Chờ xử lý", percent: "Mới" },
+                        { icon: <i className="bx bx-x-circle"></i>, color: "orange", value: stats.unpaid, label: "Chờ thanh toán", percent: "Bank" },
+                        { icon: <i className="bx bx-package"></i>, color: "cyan", value: stats.shipping, label: "Đang giao", percent: "Ship" },
+                        { icon: <i className="bx bx-check-double"></i>, color: "green", value: stats.completed, label: "Hoàn thành", percent: "Xong" },
+                        { icon: <i className="bx bx-wallet"></i>, color: "red", value: formatPrice(stats.revenue) + "₫", label: "Doanh thu", percent: "Tổng" },
+                    ].map((item, idx) => (
+                        <StatCard key={idx} valueClassName="text-xl" {...item} />
+                    ))}
                 </div>
 
                 {/* Filter bar */}

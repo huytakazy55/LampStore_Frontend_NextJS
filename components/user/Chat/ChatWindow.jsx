@@ -52,10 +52,11 @@ const ChatWindow = ({ onClose }) =>
     setNewMessage(prev => prev + emojiObject.emoji);
   };
 
-  const isGuestMode = () => !localStorage.getItem('token') && !!GuestProfileService.getExistingGuestToken();
+  const isGuestMode = () => typeof window !== 'undefined' && !localStorage.getItem('token') && !!GuestProfileService.getExistingGuestToken();
 
   const getCurrentUserId = () =>
   {
+    if (typeof window === 'undefined') return null;
     try
     {
       const token = localStorage.getItem('token');
