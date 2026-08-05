@@ -55,8 +55,19 @@ const AppBar = ({ onOpenAccount }) => {
                 setShowUserService(false);
         };
 
+        const handleEscape = (event) => {
+            if (event.key !== 'Escape') return;
+            setShowColor(false);
+            setShowLanguage(false);
+            setShowUserService(false);
+        };
+
         document.addEventListener('click', handleClickOutside, true);
-        return () => document.removeEventListener('click', handleClickOutside, true);
+        document.addEventListener('keydown', handleEscape);
+        return () => {
+            document.removeEventListener('click', handleClickOutside, true);
+            document.removeEventListener('keydown', handleEscape);
+        };
     }, []);
 
     const Logout = () => AuthService.logout();
@@ -99,8 +110,15 @@ const AppBar = ({ onOpenAccount }) => {
                 {/* Right: Actions */}
                 <div className="flex items-center gap-2.5 md:gap-3">
                     {/* Theme Color Picker */}
-                    <div className="relative cursor-pointer" ref={buttonColorRef} onClick={() => setShowColor(!showColor)}>
-                        <div className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 bg-white/[0.08] text-lg text-white/75 no-underline transition-all duration-200 hover:border-white/25 hover:bg-white/[0.18] hover:text-white">
+                    <div className="relative" ref={buttonColorRef}>
+                        <button
+                            type="button"
+                            className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 bg-white/[0.08] text-lg text-white/75 no-underline transition-all duration-200 hover:border-white/25 hover:bg-white/[0.18] hover:text-white"
+                            onClick={() => setShowColor(!showColor)}
+                            aria-haspopup="menu"
+                            aria-expanded={showColor}
+                            aria-label="Chọn màu giao diện"
+                        >
                             <div
                                 style={{
                                     width: 18,
@@ -110,14 +128,15 @@ const AppBar = ({ onOpenAccount }) => {
                                     boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
                                 }}
                             />
-                        </div>
+                        </button>
                         {showColor && (
-                            <div ref={colorRef} className="absolute right-0 top-[calc(100%+8px)] z-[1000] min-w-[200px] rounded-xl border border-white/[0.08] bg-[#1a1b23] p-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.04)] animate-dropdownEnter">
+                            <div ref={colorRef} role="menu" className="absolute right-0 top-[calc(100%+8px)] z-[1000] min-w-[200px] rounded-xl border border-white/[0.08] bg-[#1a1b23] p-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.04)] animate-dropdownEnter">
                                 <div className="px-2.5 pb-1.5 pt-2 text-[10px] font-semibold uppercase tracking-[1px] text-white/25">Theme Color</div>
                                 <div className="flex flex-col gap-0.5">
                                     {themePresets.map((preset) => (
                                         <button
                                             key={preset.name}
+                                            role="menuitem"
                                             className="group flex w-full items-center gap-2.5 rounded-lg border-none bg-transparent px-2.5 py-[7px] transition-all duration-150 hover:bg-white/[0.06]"
                                             onClick={() => changeTheme({ StartColorLinear: preset.start, EndColorLinear: preset.end })}
                                             title={preset.name}
@@ -135,30 +154,39 @@ const AppBar = ({ onOpenAccount }) => {
                     </div>
 
                     {/* Language Picker */}
-                    <div className="relative cursor-pointer" ref={buttonLanguageRef} onClick={() => setShowLanguage(!showLanguage)}>
-                        <div className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 bg-white/[0.08] text-lg text-white/75 no-underline transition-all duration-200 hover:border-white/25 hover:bg-white/[0.18] hover:text-white">
+                    <div className="relative" ref={buttonLanguageRef}>
+                        <button
+                            type="button"
+                            className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 bg-white/[0.08] text-lg text-white/75 no-underline transition-all duration-200 hover:border-white/25 hover:bg-white/[0.18] hover:text-white"
+                            onClick={() => setShowLanguage(!showLanguage)}
+                            aria-haspopup="menu"
+                            aria-expanded={showLanguage}
+                            aria-label="Chọn ngôn ngữ"
+                        >
                             <img
                                 className="h-3.5 w-5 rounded-sm object-cover"
                                 src={i18n.language === 'vi' ? VietNam : England}
-                                alt="Language"
+                                alt=""
                             />
-                        </div>
+                        </button>
                         {showLanguage && (
-                            <div ref={languageRef} className="absolute right-0 top-[calc(100%+8px)] z-[1000] min-w-[180px] rounded-xl border border-white/[0.08] bg-[#1a1b23] p-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.04)] animate-dropdownEnter">
+                            <div ref={languageRef} role="menu" className="absolute right-0 top-[calc(100%+8px)] z-[1000] min-w-[180px] rounded-xl border border-white/[0.08] bg-[#1a1b23] p-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.04)] animate-dropdownEnter">
                                 <div className="px-2.5 pb-1.5 pt-2 text-[10px] font-semibold uppercase tracking-[1px] text-white/25">Language</div>
                                 <button
+                                    role="menuitem"
                                     className={`flex w-full items-center gap-2.5 rounded-lg border-none bg-transparent px-2.5 py-2 text-left text-[13px] font-medium transition-all duration-150 hover:bg-white/[0.06] hover:text-white ${i18n.language === 'vi' ? 'text-white' : 'text-white/60'}`}
                                     onClick={() => changeLanguage('vi')}
                                 >
-                                    <img className="h-4 w-6 shrink-0 rounded-[3px] object-cover" src={VietNam} alt="VN" />
+                                    <img className="h-4 w-6 shrink-0 rounded-[3px] object-cover" src={VietNam} alt="" />
                                     <span>Tiếng Việt</span>
                                     {i18n.language === 'vi' && <i className="bx bx-check ml-auto text-lg text-green-500" />}
                                 </button>
                                 <button
+                                    role="menuitem"
                                     className={`flex w-full items-center gap-2.5 rounded-lg border-none bg-transparent px-2.5 py-2 text-left text-[13px] font-medium transition-all duration-150 hover:bg-white/[0.06] hover:text-white ${i18n.language === 'en' ? 'text-white' : 'text-white/60'}`}
                                     onClick={() => changeLanguage('en')}
                                 >
-                                    <img className="h-4 w-6 shrink-0 rounded-[3px] object-cover" src={England} alt="EN" />
+                                    <img className="h-4 w-6 shrink-0 rounded-[3px] object-cover" src={England} alt="" />
                                     <span>English</span>
                                     {i18n.language === 'en' && <i className="bx bx-check ml-auto text-lg text-green-500" />}
                                 </button>
@@ -170,17 +198,26 @@ const AppBar = ({ onOpenAccount }) => {
                     <NotificationDropdown themeColors={themeColors} />
 
                     {/* User Menu */}
-                    <div className="relative cursor-pointer" ref={buttonServiceRef} onClick={() => setShowUserService(!showUserService)}>
-                        <div className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 bg-white/[0.08] text-lg text-white/75 no-underline transition-all duration-200 hover:border-white/25 hover:bg-white/[0.18] hover:text-white">
+                    <div className="relative" ref={buttonServiceRef}>
+                        <button
+                            type="button"
+                            className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 bg-white/[0.08] text-lg text-white/75 no-underline transition-all duration-200 hover:border-white/25 hover:bg-white/[0.18] hover:text-white"
+                            onClick={() => setShowUserService(!showUserService)}
+                            aria-haspopup="menu"
+                            aria-expanded={showUserService}
+                            aria-label="Menu tài khoản"
+                        >
                             <i className="bx bx-user text-xl" />
-                        </div>
+                        </button>
                         {showUserService && (
                             <div
                                 ref={serviceRef}
+                                role="menu"
                                 className="absolute right-0 top-[calc(100%+8px)] z-[1000] min-w-[230px] rounded-[14px] bg-gradient-to-b from-[rgba(26,27,35,0.98)] to-[rgba(22,23,31,0.98)] p-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.04)] animate-dropdownEnter"
                             >
                                 <div className="px-3 pb-2.5 pt-2 text-[11px] font-semibold uppercase tracking-[2.4px] text-white/[0.36]">Account</div>
                                 <button
+                                    role="menuitem"
                                     className="flex min-h-[42px] w-full items-center gap-3 rounded-[10px] border-none bg-transparent px-3 py-2.5 text-left text-sm font-bold text-white/[0.72] transition-all duration-150 hover:bg-white/[0.06] hover:text-white"
                                     onClick={openAccountProfile}
                                 >
@@ -188,6 +225,7 @@ const AppBar = ({ onOpenAccount }) => {
                                     <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">Thông tin tài khoản</span>
                                 </button>
                                 <button
+                                    role="menuitem"
                                     className="group flex min-h-[42px] w-full items-center gap-3 rounded-[10px] border-none bg-transparent px-3 py-2.5 text-left text-sm font-bold text-white/[0.72] transition-all duration-150 hover:bg-white/[0.06] hover:text-red-500"
                                     onClick={Logout}
                                 >

@@ -66,7 +66,7 @@ const WishlistPage = () => {
             id: item.productId,
             name: item.productName,
             images: item.productImage ? [{ imagePath: item.productImage }] : [],
-            minPrice: item.discountPrice || item.price,
+            minPrice: item.discountPrice && item.discountPrice < item.price ? item.discountPrice : item.price,
             maxPrice: item.price,
         });
     };

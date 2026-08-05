@@ -380,26 +380,26 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                                         <div className="mb-3 sm:mb-4">
                                             <div className="relative">
                                                 <i className={`bx bx-user ${iconCls}`}></i>
-                                                <input className={formErrors.username ? inputErrCls : inputCls} type="text" autoFocus name="username" value={stateSignin.username} onChange={HandleOnChangeStateSignin} placeholder="Tên đăng nhập" autoComplete="one-time-code" autoCorrect="off" autoCapitalize="off" spellCheck="false" />
+                                                <input aria-label="Tên đăng nhập" aria-invalid={!!formErrors.username} aria-describedby={formErrors.username ? 'signin-username-error' : undefined} className={formErrors.username ? inputErrCls : inputCls} type="text" autoFocus name="username" value={stateSignin.username} onChange={HandleOnChangeStateSignin} placeholder="Tên đăng nhập" autoComplete="one-time-code" autoCorrect="off" autoCapitalize="off" spellCheck="false" />
                                                 {stateSignin.username && (
                                                     <button type="button" onClick={() => { setStateSignin({ ...stateSignin, username: '', password: '' }); setIsRememberedAccount(false); }} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer flex items-center justify-center">
                                                         <i className='bx bx-x-circle text-lg leading-none'></i>
                                                     </button>
                                                 )}
                                             </div>
-                                            {formErrors.username && <p className="mt-1 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.username}</p>}
+                                            {formErrors.username && <p id="signin-username-error" className="mt-1 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.username}</p>}
                                         </div>
                                         <div className="mb-3 sm:mb-4">
                                             <div className="relative">
                                                 <i className={`bx bx-lock-alt ${iconCls}`}></i>
-                                                <input className={formErrors.password ? inputErrCls : inputCls} type={showPasswordLogin ? "text" : "password"} name="password" value={stateSignin.password} onChange={HandleOnChangeStateSignin} onFocus={() => setFocusPasswordLogin(true)} onBlur={() => setFocusPasswordLogin(false)} placeholder="Mật khẩu" autoComplete="new-password" />
+                                                <input aria-label="Mật khẩu" aria-invalid={!!formErrors.password} aria-describedby={formErrors.password ? 'signin-password-error' : undefined} className={formErrors.password ? inputErrCls : inputCls} type={showPasswordLogin ? "text" : "password"} name="password" value={stateSignin.password} onChange={HandleOnChangeStateSignin} onFocus={() => setFocusPasswordLogin(true)} onBlur={() => setFocusPasswordLogin(false)} placeholder="Mật khẩu" autoComplete="new-password" />
                                                 {(focusPasswordLogin || stateSignin.password.length > 0) && (
                                                     <button type="button" onClick={() => setShowPasswordLogin(!showPasswordLogin)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary-600 transition-colors cursor-pointer">
                                                         <i className={`bx ${showPasswordLogin ? 'bx-hide' : 'bx-show'} text-lg`}></i>
                                                     </button>
                                                 )}
                                             </div>
-                                            {formErrors.password && <p className="mt-1 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.password}</p>}
+                                            {formErrors.password && <p id="signin-password-error" className="mt-1 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.password}</p>}
                                         </div>
                                         <div className="flex justify-between items-center mb-4 sm:mb-6">
                                             <label className="flex items-center gap-2 cursor-pointer select-none">
@@ -452,20 +452,23 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                                             <div className="mb-6">
                                                 <div className="relative">
                                                     <i className={`bx bx-dialpad-alt ${iconCls}`}></i>
-                                                    <input 
-                                                        className={formErrors.otp ? inputErrCls : inputCls} 
-                                                        type="text" 
+                                                    <input
+                                                        aria-label="Mã xác nhận OTP"
+                                                        aria-invalid={!!formErrors.otp}
+                                                        aria-describedby={formErrors.otp ? 'otp-error' : undefined}
+                                                        className={formErrors.otp ? inputErrCls : inputCls}
+                                                        type="text"
                                                         maxLength="6"
-                                                        value={otpCode} 
+                                                        value={otpCode}
                                                         onChange={(e) => {
                                                             setOtpCode(e.target.value.replace(/\D/g, ''));
                                                             setFormErrors(prev => ({...prev, otp: ''}));
-                                                        }} 
-                                                        placeholder="Nhập 6 chữ số" 
+                                                        }}
+                                                        placeholder="Nhập 6 chữ số"
                                                         autoFocus
                                                     />
                                                 </div>
-                                                {formErrors.otp && <p className="mt-1 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.otp}</p>}
+                                                {formErrors.otp && <p id="otp-error" className="mt-1 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.otp}</p>}
                                             </div>
 
                                             <button type="submit" disabled={isLoading || otpCode.length < 6} className={`w-full py-3 rounded-full bg-cta-700 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 dark:shadow-primary-900/30 transition-all duration-300 ${isLoading || otpCode.length < 6 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-cta-800 cursor-pointer active:scale-[0.97] hover:-translate-y-0.5'}`}>
@@ -494,28 +497,28 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                                             <div className="mb-3 sm:mb-4">
                                                 <div className="relative">
                                                     <i className={`bx bx-user ${iconCls}`}></i>
-                                                    <input className={formErrors.username ? inputErrCls : inputCls} type="text" name="username" value={stateSignup.username} onChange={HandleOnChangeStateSignup} placeholder="Tên đăng nhập" autoComplete="one-time-code" />
+                                                    <input aria-label="Tên đăng nhập" aria-invalid={!!formErrors.username} aria-describedby={formErrors.username ? 'signup-username-error' : undefined} className={formErrors.username ? inputErrCls : inputCls} type="text" name="username" value={stateSignup.username} onChange={HandleOnChangeStateSignup} placeholder="Tên đăng nhập" autoComplete="one-time-code" />
                                                 </div>
-                                                {formErrors.username && <p className="mt-1 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.username}</p>}
+                                                {formErrors.username && <p id="signup-username-error" className="mt-1 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.username}</p>}
                                             </div>
                                             <div className="mb-3 sm:mb-4">
                                                 <div className="relative">
                                                     <i className={`bx bx-envelope ${iconCls}`}></i>
-                                                    <input className={formErrors.email ? inputErrCls : inputCls} type="email" name="email" value={stateSignup.email} onChange={HandleOnChangeStateSignup} placeholder="email@example.com" autoComplete="one-time-code" />
+                                                    <input aria-label="Email" aria-invalid={!!formErrors.email} aria-describedby={formErrors.email ? 'signup-email-error' : undefined} className={formErrors.email ? inputErrCls : inputCls} type="email" name="email" value={stateSignup.email} onChange={HandleOnChangeStateSignup} placeholder="email@example.com" autoComplete="one-time-code" />
                                                 </div>
-                                                {formErrors.email && <p className="mt-1 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.email}</p>}
+                                                {formErrors.email && <p id="signup-email-error" className="mt-1 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.email}</p>}
                                             </div>
                                             <div className="mb-3 sm:mb-4">
                                                 <div className="relative">
                                                     <i className={`bx bx-lock-alt ${iconCls}`}></i>
-                                                    <input className={formErrors.password ? inputErrCls : inputCls} type={showPasswordSignup ? "text" : "password"} name="password" value={stateSignup.password} onChange={HandleOnChangeStateSignup} onFocus={() => setFocusPasswordSignup(true)} onBlur={() => setFocusPasswordSignup(false)} placeholder="Tối thiểu 6 ký tự" autoComplete="new-password" />
+                                                    <input aria-label="Mật khẩu" aria-invalid={!!formErrors.password} aria-describedby={formErrors.password ? 'signup-password-error' : undefined} className={formErrors.password ? inputErrCls : inputCls} type={showPasswordSignup ? "text" : "password"} name="password" value={stateSignup.password} onChange={HandleOnChangeStateSignup} onFocus={() => setFocusPasswordSignup(true)} onBlur={() => setFocusPasswordSignup(false)} placeholder="Tối thiểu 6 ký tự" autoComplete="new-password" />
                                                     {(focusPasswordSignup || stateSignup.password.length > 0) && (
                                                         <button type="button" onClick={() => setShowPasswordSignup(!showPasswordSignup)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary-600 transition-colors cursor-pointer">
                                                             <i className={`bx ${showPasswordSignup ? 'bx-hide' : 'bx-show'} text-lg`}></i>
                                                         </button>
                                                     )}
                                                 </div>
-                                                {formErrors.password && <p className="mt-1 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.password}</p>}
+                                                {formErrors.password && <p id="signup-password-error" className="mt-1 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.password}</p>}
                                             </div>
                                             <div className="mb-4 sm:mb-6">
                                                 <label className="flex items-start gap-2 cursor-pointer select-none">

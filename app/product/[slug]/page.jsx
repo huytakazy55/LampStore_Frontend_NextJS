@@ -344,7 +344,8 @@ export default function ProductDetailPage()
             image: mainImg,
             price: basePrice,
             quantity,
-            selectedOptions
+            selectedOptions,
+            stock: variant?.stock || 0
         });
 
         // Add all addon cart items
@@ -363,7 +364,8 @@ export default function ProductDetailPage()
                     image: addonImg,
                     price: addonBasePrice,
                     quantity: item.qty,
-                    selectedOptions: item.selectedOptions
+                    selectedOptions: item.selectedOptions,
+                    stock: addon.variant?.stock || 0
                 });
             });
         });

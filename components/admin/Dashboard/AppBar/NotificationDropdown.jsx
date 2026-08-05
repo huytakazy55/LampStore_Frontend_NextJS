@@ -32,8 +32,16 @@ const NotificationDropdown = ({ themeColors }) => {
       }
     };
 
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') dispatch(setDropdownOpen(false));
+    };
+
     document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
   }, [dispatch]);
 
   const toggleDropdown = () => {
@@ -145,10 +153,14 @@ const NotificationDropdown = ({ themeColors }) => {
   return (
     <div className="relative">
       {/* Bell Icon với Badge */}
-      <div
+      <button
+        type="button"
         ref={buttonRef}
         onClick={toggleDropdown}
-        className="relative flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-white/15 bg-white/[0.08] text-lg text-white/75 no-underline transition-all duration-200 hover:border-white/25 hover:bg-white/[0.18] hover:text-white"
+        aria-haspopup="menu"
+        aria-expanded={isDropdownOpen}
+        aria-label="Thông báo"
+        className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 bg-white/[0.08] text-lg text-white/75 no-underline transition-all duration-200 hover:border-white/25 hover:bg-white/[0.18] hover:text-white"
         style={{
           filter: isDropdownOpen ? 'drop-shadow(0 0 8px rgba(59,130,246,0.4))' : 'none'
         }}
@@ -169,7 +181,7 @@ const NotificationDropdown = ({ themeColors }) => {
             {unreadCount > 99 ? '99+' : unreadCount}
           </div>
         )}
-      </div>
+      </button>
 
       {/* Dropdown */}
       {isDropdownOpen && (

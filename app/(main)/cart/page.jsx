@@ -261,8 +261,9 @@ export default function CartPage() {
                                                     readOnly
                                                 />
                                                 <button
-                                                    className="w-7 h-7 flex items-center justify-center text-gray-500 hover:bg-gray-100"
-                                                    onClick={() => updateQuantity(item.key, item.quantity + 1)}
+                                                    className="w-7 h-7 flex items-center justify-center text-gray-500 hover:bg-gray-100 disabled:opacity-50"
+                                                    onClick={() => updateQuantity(item.key, Math.min(item.quantity + 1, item.stock || 999))}
+                                                    disabled={item.stock > 0 && item.quantity >= item.stock}
                                                 >+</button>
                                             </div>
                                         </div>

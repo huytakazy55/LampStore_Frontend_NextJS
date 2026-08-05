@@ -84,6 +84,16 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
 
     useEffect(() => { setMounted(true); }, []);
 
+    // Close on Escape
+    useEffect(() => {
+        if (!isOpen) return;
+        const handleEscape = (event) => {
+            if (event.key === 'Escape') onClose?.();
+        };
+        document.addEventListener('keydown', handleEscape);
+        return () => document.removeEventListener('keydown', handleEscape);
+    }, [isOpen, onClose]);
+
     if (!mounted || !isOpen || !product) return null;
 
     // Tính tổng additionalPrice từ các option đã chọn
@@ -218,7 +228,8 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
             price: basePrice,
             quantity,
             selectedOptions,
-            weight: variant?.weight || 0
+            weight: variant?.weight || 0,
+            stock: variant?.stock || 0
         });
 
         setAddedSuccess(true);

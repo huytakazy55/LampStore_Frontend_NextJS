@@ -105,7 +105,8 @@ const mergeCartItem = (items, item) =>
         finalPrice: item.price + totalAdditional,
         quantity: item.quantity,
         selectedOptions: item.selectedOptions || {},
-        weight: item.weight || 0
+        weight: item.weight || 0,
+        stock: item.stock || 0
     }];
 };
 

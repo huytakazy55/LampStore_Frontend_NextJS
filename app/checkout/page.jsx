@@ -128,6 +128,25 @@ export default function CheckoutPage() {
     const [loadingDistricts, setLoadingDistricts] = useState(false);
     const [loadingWards, setLoadingWards] = useState(false);
 
+    const subtotal = checkoutItems.reduce((sum, item) => sum + (item.finalPrice * item.quantity), 0);
+
+    // Tính tổng cân nặng (gram)
+    const totalWeight = checkoutItems.reduce((sum, item) => sum + ((item.weight || 0) * item.quantity), 0);
+
+    // Tính phí ship theo cân nặng (gram) — miễn phí nếu đơn >= 500.000đ
+    const calculateShippingFee = (weightInGrams) => {
+        if (subtotal >= 500000) return 0;
+        if (weightInGrams <= 0) return 15000; // default nếu chưa có weight
+        if (weightInGrams <= 500) return 15000;
+        if (weightInGrams <= 1000) return 25000;
+        if (weightInGrams <= 2000) return 35000;
+        if (weightInGrams <= 5000) return 50000;
+        return 70000;
+    };
+
+    const shippingFee = calculateShippingFee(totalWeight);
+    const totalWithoutDiscount = subtotal + shippingFee;
+
     // Auto apply selected voucher from cart
     useEffect(() => {
         const storedVoucher = sessionStorage.getItem('selectedVoucher');
@@ -138,29 +157,30 @@ export default function CheckoutPage() {
 
     useEffect(() => {
         const storedVoucher = sessionStorage.getItem('selectedVoucher');
-        const subtotal = checkoutItems.reduce((sum, item) => sum + (item.finalPrice * item.quantity), 0);
-        const totalWeight = checkoutItems.reduce((sum, item) => sum + ((item.weight || 0) * item.quantity), 0);
-        const shippingFee = totalWeight > 0 ? (totalWeight <= 1000 ? 30000 : totalWeight <= 3000 ? 50000 : 70000) : 0;
-        const totalWithoutDiscount = subtotal + shippingFee;
 
-        if (storedVoucher && totalWithoutDiscount > 0 && !appliedDiscount && !isApplyingDiscount) {
+        if (storedVoucher && subtotal > 0 && !appliedDiscount && !isApplyingDiscount) {
             const applyStored = async () => {
                 setIsApplyingDiscount(true);
                 try {
                     const token = localStorage.getItem('token');
                     if (!token) return;
 
+                    // Discount amount/eligibility must be computed against the same base
+                    // the backend uses when the order is actually created (product subtotal,
+                    // not subtotal+shipping) — otherwise the preview and the real applied
+                    // amount can disagree and the order gets rejected as a price mismatch.
                     const { data } = await axiosInstance.post('/api/DiscountCode/apply', {
                             code: storedVoucher,
                             Code: storedVoucher,
-                            orderTotalAmount: totalWithoutDiscount,
-                            OrderTotalAmount: totalWithoutDiscount
+                            orderTotalAmount: subtotal,
+                            OrderTotalAmount: subtotal
                     });
 
                     setAppliedDiscount({
                         code: data.code || data.Code,
                         amount: data.discountAmount !== undefined ? data.discountAmount : data.DiscountAmount,
-                        percentage: data.discountPercentage !== undefined ? data.discountPercentage : data.DiscountPercentage
+                        percentage: data.discountPercentage !== undefined ? data.discountPercentage : data.DiscountPercentage,
+                        baseTotal: subtotal
                     });
                     sessionStorage.removeItem('selectedVoucher');
                 } catch (error) {
@@ -172,8 +192,17 @@ export default function CheckoutPage() {
             };
             applyStored();
         }
-    }, [checkoutItems, appliedDiscount, isApplyingDiscount]);
+    }, [checkoutItems, appliedDiscount, isApplyingDiscount, subtotal]);
 
+    // A discount's amount is a fixed absolute value returned by the backend for the subtotal
+    // at apply-time. If the cart changes afterward (item added/removed/qty changed), that
+    // amount is now stale — clear it so the user has to re-apply against the new subtotal.
+    useEffect(() => {
+        if (appliedDiscount && appliedDiscount.baseTotal !== subtotal) {
+            setAppliedDiscount(null);
+            toast.info('Đơn hàng đã thay đổi, vui lòng áp dụng lại mã giảm giá.');
+        }
+    }, [subtotal, appliedDiscount]);
 
     // Fetch provinces on mount
     useEffect(() => {
@@ -343,24 +372,6 @@ export default function CheckoutPage() {
         }
     };
 
-    const subtotal = checkoutItems.reduce((sum, item) => sum + (item.finalPrice * item.quantity), 0);
-
-    // Tính tổng cân nặng (gram)
-    const totalWeight = checkoutItems.reduce((sum, item) => sum + ((item.weight || 0) * item.quantity), 0);
-
-    // Tính phí ship theo cân nặng (gram) — miễn phí nếu đơn >= 500.000đ
-    const calculateShippingFee = (weightInGrams) => {
-        if (subtotal >= 500000) return 0;
-        if (weightInGrams <= 0) return 15000; // default nếu chưa có weight
-        if (weightInGrams <= 500) return 15000;
-        if (weightInGrams <= 1000) return 25000;
-        if (weightInGrams <= 2000) return 35000;
-        if (weightInGrams <= 5000) return 50000;
-        return 70000;
-    };
-
-    const shippingFee = calculateShippingFee(totalWeight);
-    const totalWithoutDiscount = subtotal + shippingFee;
     const total = totalWithoutDiscount - (appliedDiscount ? appliedDiscount.amount : 0);
 
     const handleApplyDiscount = async () => {
@@ -377,14 +388,15 @@ export default function CheckoutPage() {
             const { data } = await axiosInstance.post('/api/DiscountCode/apply', {
                     code: discountCode,
                     Code: discountCode,
-                    orderTotalAmount: totalWithoutDiscount,
-                    OrderTotalAmount: totalWithoutDiscount
+                    orderTotalAmount: subtotal,
+                    OrderTotalAmount: subtotal
             });
 
             setAppliedDiscount({
                 code: data.code || data.Code,
                 amount: data.discountAmount !== undefined ? data.discountAmount : data.DiscountAmount,
-                percentage: data.discountPercentage !== undefined ? data.discountPercentage : data.DiscountPercentage
+                percentage: data.discountPercentage !== undefined ? data.discountPercentage : data.DiscountPercentage,
+                baseTotal: subtotal
             });
             toast.success('Áp dụng mã giảm giá thành công!');
             setShowDiscountModal(false);
@@ -672,38 +684,45 @@ export default function CheckoutPage() {
                                     </h2>
                                     <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                                         <div>
-                                            <label className='block text-sm font-medium text-gray-700 mb-1.5'>
+                                            <label htmlFor='checkout-fullName' className='block text-sm font-medium text-gray-700 mb-1.5'>
                                                 Họ và tên <span className='text-red-500'>*</span>
                                             </label>
                                             <input
+                                                id='checkout-fullName'
                                                 type='text'
                                                 name='fullName'
                                                 value={formData.fullName}
                                                 onChange={handleChange}
                                                 placeholder='Nguyễn Văn A'
+                                                aria-invalid={!!errors.fullName}
+                                                aria-describedby={errors.fullName ? 'checkout-fullName-error' : undefined}
                                                 className={`w-full px-4 py-2.5 border rounded-lg text-sm outline-none transition-colors ${errors.fullName ? 'border-red-400 bg-red-50' : 'border-gray-300 focus:border-primary-400'}`}
                                             />
-                                            {errors.fullName && <p className='text-xs text-red-500 mt-1'>{errors.fullName}</p>}
+                                            {errors.fullName && <p id='checkout-fullName-error' className='text-xs text-red-500 mt-1'>{errors.fullName}</p>}
                                         </div>
                                         <div>
-                                            <label className='block text-sm font-medium text-gray-700 mb-1.5'>
+                                            <label htmlFor='checkout-phone' className='block text-sm font-medium text-gray-700 mb-1.5'>
                                                 Số điện thoại <span className='text-red-500'>*</span>
                                             </label>
                                             <input
+                                                id='checkout-phone'
                                                 type='tel'
                                                 name='phone'
                                                 value={formData.phone}
                                                 onChange={handleChange}
                                                 placeholder='0912 345 678'
+                                                aria-invalid={!!errors.phone}
+                                                aria-describedby={errors.phone ? 'checkout-phone-error' : undefined}
                                                 className={`w-full px-4 py-2.5 border rounded-lg text-sm outline-none transition-colors ${errors.phone ? 'border-red-400 bg-red-50' : 'border-gray-300 focus:border-primary-400'}`}
                                             />
-                                            {errors.phone && <p className='text-xs text-red-500 mt-1'>{errors.phone}</p>}
+                                            {errors.phone && <p id='checkout-phone-error' className='text-xs text-red-500 mt-1'>{errors.phone}</p>}
                                         </div>
                                         <div className='md:col-span-2'>
-                                            <label className='block text-sm font-medium text-gray-700 mb-1.5'>
+                                            <label htmlFor='checkout-email' className='block text-sm font-medium text-gray-700 mb-1.5'>
                                                 Email
                                             </label>
                                             <input
+                                                id='checkout-email'
                                                 type='email'
                                                 name='email'
                                                 value={formData.email}
@@ -724,11 +743,12 @@ export default function CheckoutPage() {
                                     <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                                         {/* Tỉnh / Thành phố */}
                                         <div>
-                                            <label className='block text-sm font-medium text-gray-700 mb-1.5'>
+                                            <label htmlFor='checkout-city' className='block text-sm font-medium text-gray-700 mb-1.5'>
                                                 Tỉnh / Thành phố <span className='text-red-500'>*</span>
                                             </label>
                                             <div className='relative'>
                                                 <select
+                                                    id='checkout-city'
                                                     value={formData.city}
                                                     onChange={handleProvinceChange}
                                                     className={selectClassName(errors.city)}
@@ -748,11 +768,12 @@ export default function CheckoutPage() {
 
                                         {/* Quận / Huyện */}
                                         <div>
-                                            <label className='block text-sm font-medium text-gray-700 mb-1.5'>
+                                            <label htmlFor='checkout-district' className='block text-sm font-medium text-gray-700 mb-1.5'>
                                                 Quận / Huyện <span className='text-red-500'>*</span>
                                             </label>
                                             <div className='relative'>
                                                 <select
+                                                    id='checkout-district'
                                                     value={formData.district}
                                                     onChange={handleDistrictChange}
                                                     className={selectClassName(errors.district)}
@@ -772,11 +793,12 @@ export default function CheckoutPage() {
 
                                         {/* Phường / Xã */}
                                         <div>
-                                            <label className='block text-sm font-medium text-gray-700 mb-1.5'>
+                                            <label htmlFor='checkout-ward' className='block text-sm font-medium text-gray-700 mb-1.5'>
                                                 Phường / Xã
                                             </label>
                                             <div className='relative'>
                                                 <select
+                                                    id='checkout-ward'
                                                     value={formData.ward}
                                                     onChange={handleWardChange}
                                                     className={selectClassName(false)}
@@ -795,18 +817,21 @@ export default function CheckoutPage() {
 
                                         {/* Địa chỉ cụ thể */}
                                         <div className='md:col-span-2'>
-                                            <label className='block text-sm font-medium text-gray-700 mb-1.5'>
+                                            <label htmlFor='checkout-address' className='block text-sm font-medium text-gray-700 mb-1.5'>
                                                 Địa chỉ cụ thể <span className='text-red-500'>*</span>
                                             </label>
                                             <input
+                                                id='checkout-address'
                                                 type='text'
                                                 name='address'
                                                 value={formData.address}
                                                 onChange={handleChange}
                                                 placeholder='Số nhà, tên đường...'
+                                                aria-invalid={!!errors.address}
+                                                aria-describedby={errors.address ? 'checkout-address-error' : undefined}
                                                 className={`w-full px-4 py-2.5 border rounded-lg text-sm outline-none transition-colors ${errors.address ? 'border-red-400 bg-red-50' : 'border-gray-300 focus:border-primary-400'}`}
                                             />
-                                            {errors.address && <p className='text-xs text-red-500 mt-1'>{errors.address}</p>}
+                                            {errors.address && <p id='checkout-address-error' className='text-xs text-red-500 mt-1'>{errors.address}</p>}
                                         </div>
                                     </div>
                                 </div>
@@ -858,6 +883,7 @@ export default function CheckoutPage() {
                                         Ghi chú đơn hàng
                                     </h2>
                                     <textarea
+                                        aria-label='Ghi chú đơn hàng'
                                         name='note'
                                         value={formData.note}
                                         onChange={handleChange}
@@ -945,10 +971,11 @@ export default function CheckoutPage() {
 
                                     {/* Discount Code Input */}
                                     <div className='border-t border-gray-100 pt-4 mt-4'>
-                                        <label className='block text-sm font-medium text-gray-700 mb-2'>Mã giảm giá</label>
+                                        <label htmlFor='checkout-discount-code' className='block text-sm font-medium text-gray-700 mb-2'>Mã giảm giá</label>
                                         <div className='flex gap-2'>
                                             <div className='relative flex-1'>
                                                 <input
+                                                    id='checkout-discount-code'
                                                     type='text'
                                                     value={discountCode}
                                                     onChange={(e) => setDiscountCode(e.target.value.toUpperCase())}
@@ -1023,7 +1050,7 @@ export default function CheckoutPage() {
             <DiscountModal
                 isOpen={showDiscountModal}
                 onClose={() => setShowDiscountModal(false)}
-                totalAmount={totalWithoutDiscount}
+                totalAmount={subtotal}
                 onApply={async (code) => {
                     setDiscountCode(code.code);
                     setIsApplyingDiscount(true);
@@ -1031,14 +1058,15 @@ export default function CheckoutPage() {
                         const { data } = await axiosInstance.post('/api/DiscountCode/apply', {
                                 code: code.code,
                                 Code: code.code,
-                                orderTotalAmount: totalWithoutDiscount,
-                                OrderTotalAmount: totalWithoutDiscount
+                                orderTotalAmount: subtotal,
+                                OrderTotalAmount: subtotal
                         });
 
                         setAppliedDiscount({
                             code: data.code || data.Code,
                             amount: data.discountAmount !== undefined ? data.discountAmount : data.DiscountAmount,
-                            percentage: data.discountPercentage !== undefined ? data.discountPercentage : data.DiscountPercentage
+                            percentage: data.discountPercentage !== undefined ? data.discountPercentage : data.DiscountPercentage,
+                            baseTotal: subtotal
                         });
                         toast.success('Áp dụng mã giảm giá thành công!');
                         setShowDiscountModal(false);
