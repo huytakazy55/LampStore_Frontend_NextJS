@@ -39,7 +39,7 @@ const SmallProductCard = ({ product, navigate, onAddToCartClick }) => {
     >
       {/* Discount Badge */}
       {hasDiscount && (
-        <div className="absolute top-2.5 left-2.5 z-10 bg-cta-700 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)]">
+        <div className="absolute top-2.5 left-2.5 z-10 bg-cta-600 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)]">
           -{discountPercent}%
         </div>
       )}
@@ -156,7 +156,7 @@ const AllProducts = () => {
     return (
       <div className='w-full py-8 md:py-16 bg-gray-100 flex justify-center items-center'>
         <div className="text-center">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-500 mx-auto"></div>
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-cta-600 mx-auto"></div>
           <p className="mt-3 text-gray-500 text-sm">Đang tải sản phẩm bán chạy...</p>
         </div>
       </div>
@@ -167,9 +167,9 @@ const AllProducts = () => {
     <div className='w-full bg-transparent'>
       <div className='xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0'>
         {/* Section Header — matching style */}
-        <div className='flex flex-col sm:flex-row justify-between gap-2 sm:gap-0 mb-6 md:mb-8 pb-3 pt-4 md:pt-6 border-b border-gray-300 dark:border-[#333] relative after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-24 after:h-0.5 after:bg-primary-600 after:rounded-sm'>
+        <div className='flex flex-col sm:flex-row justify-between gap-2 sm:gap-0 mb-6 md:mb-8 pb-3 pt-4 md:pt-6 border-b border-gray-300 dark:border-[#333] relative after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-24 after:h-0.5 after:bg-cta-600 after:rounded-sm'>
           <div className='flex items-center gap-3'>
-            <div className='w-9 h-9 md:w-[42px] md:h-[42px] flex items-center justify-center bg-primary-600 dark:bg-primary-900 rounded-md flex-shrink-0'>
+            <div className='w-9 h-9 md:w-[42px] md:h-[42px] flex items-center justify-center bg-cta-600 dark:bg-primary-900 rounded-md flex-shrink-0'>
               <i className='bx bx-grid-alt text-xl md:text-[1.4rem] text-white'></i>
             </div>
             <h3 className='text-sm md:text-h3 font-bold text-gray-800 dark:text-gray-200 m-0'>Tất cả sản phẩm</h3>
@@ -225,7 +225,7 @@ const AllProducts = () => {
             <div className="mt-6 flex justify-center">
               <button
                 onClick={() => setVisibleRows(prev => prev + 2)}
-                className="px-8 py-2 border-2 border-primary-500 dark:border-primary-600 text-primary-600 dark:text-primary-400 bg-transparent hover:bg-primary-50 dark:hover:bg-primary-900/40 font-medium rounded-sm transition-colors cursor-pointer"
+                className="px-8 py-2 border-2 border-cta-600 dark:border-primary-600 text-primary-700 dark:text-primary-400 bg-transparent hover:bg-primary-50 dark:hover:bg-primary-900/40 font-medium rounded-sm transition-colors cursor-pointer"
               >
                 Xem thêm
               </button>

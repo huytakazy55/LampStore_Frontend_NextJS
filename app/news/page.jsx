@@ -78,8 +78,8 @@ export default function NewsListPage() {
                             <button key={cat} onClick={() => setSelectedCategory(cat)}
                                 className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 border
                                 ${selectedCategory === cat
-                                        ? 'bg-cta-600 text-white border-primary-500 shadow-md shadow-secondary-400/25'
-                                        : 'bg-white text-gray-600 border-gray-200 hover:border-primary-500 hover:text-secondary-600'
+                                        ? 'bg-cta-600 text-white border-cta-600 shadow-md shadow-secondary-400/25'
+                                        : 'bg-white text-gray-600 border-gray-200 hover:border-cta-600 hover:text-secondary-600'
                                     }`}>
                                 {cat === 'all' ? 'Tất cả' : cat}
                             </button>

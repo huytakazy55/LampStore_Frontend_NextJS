@@ -363,7 +363,7 @@ const Header = () =>
           {/* Nút tìm kiếm */}
           <button
             aria-label="Tìm kiếm"
-            className='flex items-center justify-center w-9 h-9 mr-[2px] bg-cta-700 hover:bg-cta-800 text-white rounded-full transition-all duration-200 active:scale-90 cursor-pointer shrink-0'
+            className='flex items-center justify-center w-9 h-9 mr-[2px] bg-cta-600 hover:bg-cta-800 text-white rounded-full transition-all duration-200 active:scale-90 cursor-pointer shrink-0'
             onClick={handleSearch}
           >
             <i className='bx bx-search text-lg'></i>
@@ -452,10 +452,10 @@ const Header = () =>
               navigate('/wishlist');
             }}>
               <div className='w-10 h-10 flex items-center justify-center rounded-xl bg-primary-50/80 dark:bg-primary-950/30 backdrop-blur-sm transition-all duration-300 hover:bg-primary-100 dark:hover:bg-primary-900/40 hover:scale-110 hover:shadow-md hover:shadow-primary-200/40 active:scale-95'>
-                <i className='bx bx-heart text-xl text-primary-500 dark:text-primary-400 transition-all duration-300 group-hover:text-primary-600'></i>
+                <i className='bx bx-heart text-xl text-primary-600 dark:text-primary-400 transition-all duration-300 group-hover:text-primary-700'></i>
               </div>
               {wishlistCount > 0 && (
-                <div className='absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-cta-700 rounded-full text-center text-[10px] leading-[18px] text-white font-bold shadow-lg shadow-primary-500/30 animate-pulse'>{wishlistCount}</div>
+                <div className='absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-cta-600 rounded-full text-center text-[10px] leading-[18px] text-white font-bold shadow-lg shadow-primary-500/30 animate-pulse'>{wishlistCount}</div>
               )}
               <span className="pointer-events-none absolute top-[calc(100%+10px)] left-1/2 -translate-x-1/2 translate-y-2 whitespace-nowrap rounded-lg bg-white/90 backdrop-blur-sm px-3 py-1.5 text-[12px] font-bold text-gray-700 opacity-0 shadow-lg transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 dark:bg-gray-800 dark:text-gray-200 border border-gray-100 dark:border-gray-700 z-[100]">
                 Danh sách yêu thích
@@ -469,7 +469,7 @@ const Header = () =>
                   <i id='header-cart-icon' className='bx bx-shopping-bag text-xl bg-primary-600 dark:bg-primary-400 text-transparent bg-clip-text inline-block transition-all duration-300 group-hover:text-primary-700'></i>
                 </div>
                 <FormCart popupRef={popupRef} toggleCart={toggleCart} setToggleCart={setToggleCart} />
-                <div className='absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-cta-700 rounded-full text-center text-[10px] leading-[18px] text-white font-bold shadow-lg shadow-primary-400/30'>{cartCount}</div>
+                <div className='absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-cta-600 rounded-full text-center text-[10px] leading-[18px] text-white font-bold shadow-lg shadow-primary-400/30'>{cartCount}</div>
                 <span className="pointer-events-none absolute top-[calc(100%+10px)] left-1/2 -translate-x-1/2 translate-y-2 whitespace-nowrap rounded-lg bg-white/90 backdrop-blur-sm px-3 py-1.5 text-[12px] font-bold text-gray-700 opacity-0 shadow-lg transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 dark:bg-gray-800 dark:text-gray-200 border border-gray-100 dark:border-gray-700 z-[100]">
                   Giỏ hàng
                 </span>
@@ -488,7 +488,7 @@ const Header = () =>
                     <div className='relative w-10 h-10 rounded-xl overflow-hidden ring-2 ring-primary-400/60 dark:ring-primary-500/40 transition-all duration-300 hover:ring-primary-500 hover:scale-110 hover:shadow-lg hover:shadow-primary-300/30 active:scale-95'>
                       <Image fill className='object-cover' src={avatarURL ? avatarURL : (avatar.ProfileAvatar ? (avatar.ProfileAvatar.startsWith('http') ? avatar.ProfileAvatar : `${API_ENDPOINT}${avatar.ProfileAvatar}`) : avatarimg)} alt="Ảnh đại diện người dùng" sizes='40px' quality={75} />
                     </div>
-                    <div className='absolute bottom-0 right-0 w-3 h-3 bg-primary-600 rounded-full border-2 border-white dark:border-gray-900'></div>
+                    <div className='absolute bottom-0 right-0 w-3 h-3 bg-cta-600 rounded-full border-2 border-white dark:border-gray-900'></div>
                     <FormActionLogin toggleProfile={toggleProfile} setToggleProfile={setToggleProfile} buttonProfileRef={buttonProfileRef} popupActionRef={popupActionRef} toggleActionLogin={toggleActionLogin} setToggleActionLogin={setToggleActionLogin} />
                     <span className="pointer-events-none absolute top-[calc(100%+10px)] left-1/2 -translate-x-1/2 translate-y-2 whitespace-nowrap rounded-lg bg-white/90 backdrop-blur-sm px-3 py-1.5 text-[12px] font-bold text-gray-700 opacity-0 shadow-lg transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 dark:bg-gray-800 dark:text-gray-200 border border-gray-100 dark:border-gray-700 z-[100]">
                       Tài khoản của tôi
@@ -544,7 +544,7 @@ const Header = () =>
           {/* Nút tìm kiếm mobile */}
           <button
             aria-label="Tìm kiếm"
-            className='flex items-center justify-center w-8 h-8 mr-1 bg-cta-700 hover:bg-cta-800 text-white rounded-full transition-all duration-200 active:scale-90 cursor-pointer shrink-0'
+            className='flex items-center justify-center w-8 h-8 mr-1 bg-cta-600 hover:bg-cta-800 text-white rounded-full transition-all duration-200 active:scale-90 cursor-pointer shrink-0'
             onClick={handleSearch}
           >
             <i className='bx bx-search text-base'></i>
@@ -600,7 +600,7 @@ const Header = () =>
                   {mounted && isAuthenticated ? (
                     <>
                       <div className='flex items-center gap-3 p-2 rounded-lg bg-gray-50'>
-                        <Image width={40} height={40} className='w-10 h-10 rounded-full border-2 border-primary-500 object-cover' src={avatarURL ? avatarURL : (avatar.ProfileAvatar ? (avatar.ProfileAvatar.startsWith('http') ? avatar.ProfileAvatar : `${API_ENDPOINT}${avatar.ProfileAvatar}`) : avatarimg)} alt="Ảnh đại diện" quality={75} />
+                        <Image width={40} height={40} className='w-10 h-10 rounded-full border-2 border-cta-600 object-cover' src={avatarURL ? avatarURL : (avatar.ProfileAvatar ? (avatar.ProfileAvatar.startsWith('http') ? avatar.ProfileAvatar : `${API_ENDPOINT}${avatar.ProfileAvatar}`) : avatarimg)} alt="Ảnh đại diện" quality={75} />
                         <div className='flex flex-col'>
                            <span className='font-medium text-sm text-gray-800'>{profileApiData?.fullName || 'Tài khoản'}</span>
                            {profileApiData?.email && <span className='text-xs text-gray-500'>{profileApiData.email}</span>}
@@ -646,7 +646,7 @@ const Header = () =>
                     <i className='bx bx-heart text-xl text-red-500'></i>
                     <span className='text-sm'>Yêu thích</span>
                     {wishlistCount > 0 && (
-                      <span className='ml-auto bg-primary-100 text-primary-600 text-xs px-2 py-0.5 rounded-full font-medium'>{wishlistCount}</span>
+                      <span className='ml-auto bg-primary-100 text-primary-700 text-xs px-2 py-0.5 rounded-full font-medium'>{wishlistCount}</span>
                     )}
                   </div>
                 </div>

@@ -24,7 +24,7 @@ const Newsletter = () =>
                         <input className='h-full border-none outline-none w-9/12 text-sm bg-transparent placeholder-gray-400 text-white'
                             type="email"
                             placeholder='Nhập email của bạn...' />
-                        <button className='w-1/4 h-full font-bold bg-cta-700 hover:bg-cta-600 text-white text-xs md:text-sm transition-colors duration-300'>
+                        <button className='w-1/4 h-full font-bold bg-cta-600 hover:bg-cta-700 text-white text-xs md:text-sm transition-colors duration-300'>
                             Đăng ký
                         </button>
                     </div>

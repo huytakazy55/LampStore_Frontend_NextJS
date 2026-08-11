@@ -11,7 +11,7 @@ import { resolveImagePath } from '@/lib/imageUtils';
 
 const CustomPrevArrow = ({ onClick }) => (
   <button
-    className='absolute -top-[52px] md:-top-[56px] right-[44px] md:right-[50px] z-10 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-sm bg-cta-700 text-white cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(139,92,246,0.25)] hover:bg-cta-800 hover:shadow-[0_4px_14px_rgba(139,92,246,0.4)] hover:scale-105 active:scale-95'
+    className='absolute -top-[52px] md:-top-[56px] right-[44px] md:right-[50px] z-10 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-sm bg-cta-600 text-white cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(139,92,246,0.25)] hover:bg-cta-800 hover:shadow-[0_4px_14px_rgba(139,92,246,0.4)] hover:scale-105 active:scale-95'
     onClick={onClick}
     aria-label="Sản phẩm trước"
   >
@@ -21,7 +21,7 @@ const CustomPrevArrow = ({ onClick }) => (
 
 const CustomNextArrow = ({ onClick }) => (
   <button
-    className='absolute -top-[52px] md:-top-[56px] right-1 z-10 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-sm bg-cta-700 text-white cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(139,92,246,0.25)] hover:bg-cta-800 hover:shadow-[0_4px_14px_rgba(139,92,246,0.4)] hover:scale-105 active:scale-95'
+    className='absolute -top-[52px] md:-top-[56px] right-1 z-10 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-sm bg-cta-600 text-white cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(139,92,246,0.25)] hover:bg-cta-800 hover:shadow-[0_4px_14px_rgba(139,92,246,0.4)] hover:scale-105 active:scale-95'
     onClick={onClick}
     aria-label="Sản phẩm tiếp theo"
   >
@@ -57,7 +57,7 @@ const ProductCardItem = ({ product, onClick, isInWishlist, onToggleWishlist, onA
         <div className='relative w-[42%] md:w-[45%] flex-shrink-0 bg-gray-50 dark:bg-[#111] aspect-square overflow-hidden'>
           {/* Discount Badge */}
           {hasDiscount && (
-            <div className="absolute top-2 left-2 z-10 bg-cta-700 text-white text-[0.6rem] md:text-[0.65rem] font-bold px-1.5 md:px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)] tracking-wide">
+            <div className="absolute top-2 left-2 z-10 bg-cta-600 text-white text-[0.6rem] md:text-[0.65rem] font-bold px-1.5 md:px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)] tracking-wide">
               -{discountPercent}%
             </div>
           )}
@@ -210,9 +210,9 @@ const SectionProductCardCarousel = () =>
   return (
     <div className='w-full overflow-hidden xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0 mb-0'>
       {/* Section Header */}
-      <div className='flex items-center justify-between mb-6 pb-3 border-b border-gray-300 dark:border-[#333] relative after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-40 after:h-0.5 after:bg-primary-600 after:rounded-sm'>
+      <div className='flex items-center justify-between mb-6 pb-3 border-b border-gray-300 dark:border-[#333] relative after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-40 after:h-0.5 after:bg-cta-600 after:rounded-sm'>
         <div className='flex items-center gap-3'>
-          <div className='w-9 h-9 md:w-[42px] md:h-[42px] flex items-center justify-center bg-primary-600 dark:bg-primary-900 rounded-md flex-shrink-0'>
+          <div className='w-9 h-9 md:w-[42px] md:h-[42px] flex items-center justify-center bg-cta-600 dark:bg-primary-900 rounded-md flex-shrink-0'>
             <i className='bx bx-trending-up text-xl md:text-[1.4rem] text-white'></i>
           </div>
           <div>

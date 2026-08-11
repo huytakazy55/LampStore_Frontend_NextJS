@@ -71,7 +71,7 @@ export default function DiscountModal({ isOpen, onClose, totalAmount, onApply })
                                                 disabled={!isEligible}
                                                 onClick={() => onApply(code)}
                                                 className={`px-4 py-2 text-xs font-semibold rounded transition-colors ${isEligible
-                                                    ? 'bg-primary-50 text-primary-600 border border-primary-500 hover:bg-primary-600 hover:text-white cursor-pointer'
+                                                    ? 'bg-primary-50 text-primary-700 border border-cta-600 hover:bg-cta-600 hover:text-white cursor-pointer'
                                                     : 'bg-gray-100 text-gray-600 cursor-not-allowed'
                                                     }`}
                                             >

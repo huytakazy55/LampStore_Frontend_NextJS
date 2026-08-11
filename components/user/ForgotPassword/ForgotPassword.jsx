@@ -94,7 +94,7 @@ const ForgotPassword = ({ visible, onCancel }) => {
                 <div className="relative">
                   <i className="bx bx-user absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
                   <input
-                    className={`w-full pl-11 pr-4 py-3 rounded-xl text-sm outline-none transition-all duration-300 ${error ? 'bg-red-50/50 border border-red-300' : 'bg-primary-50/60 dark:bg-primary-950/20 border border-primary-100 dark:border-primary-800/30 focus:border-primary-500 focus:bg-primary-50 dark:focus:bg-primary-950/40 focus:shadow-[0_0_0_3px_rgba(245,158,11,0.12)]'} text-gray-800 dark:text-gray-200 placeholder-gray-400`}
+                    className={`w-full pl-11 pr-4 py-3 rounded-xl text-sm outline-none transition-all duration-300 ${error ? 'bg-red-50/50 border border-red-300' : 'bg-primary-50/60 dark:bg-primary-950/20 border border-primary-100 dark:border-primary-800/30 focus:border-cta-600 focus:bg-primary-50 dark:focus:bg-primary-950/40 focus:shadow-[0_0_0_3px_rgba(245,158,11,0.12)]'} text-gray-800 dark:text-gray-200 placeholder-gray-400`}
                     type="text" value={emailOrUsername}
                     onChange={(e) => { setEmailOrUsername(e.target.value); setError(''); }}
                     placeholder="Email hoặc tên đăng nhập"

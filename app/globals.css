@@ -121,7 +121,7 @@ html {
   /* CTA: vivid saturated orange for button backgrounds needing white text at AA contrast.
      primary-700/800 read as muddy brown at this luminance and are also reused as text
      colors elsewhere, so buttons get their own scale instead. */
-  --color-cta-600: #C43610;
+  --color-cta-600: #EA580C;
   --color-cta-700: #A82C0A;
   --color-cta-800: #8A2408;
 

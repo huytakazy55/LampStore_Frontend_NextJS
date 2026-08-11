@@ -23,14 +23,14 @@ const FormCart = ({ toggleCart, popupRef, setToggleCart }) => {
         <div
             ref={popupRef}
             onClick={(e) => e.stopPropagation()}
-            className={`cart-modal w-[28rem] max-h-[32rem] absolute shadow-2xl -right-[4rem] top-14 z-[1000] border-t-4 bg-white dark:bg-gray-900 border-primary-500 rounded-b-lg flex flex-col transition-all duration-300 ease-out origin-top-right ${toggleCart ? 'visible opacity-100 scale-100 translate-y-0' : 'invisible opacity-0 scale-95 translate-y-2'
+            className={`cart-modal w-[28rem] max-h-[32rem] absolute shadow-2xl -right-[4rem] top-14 z-[1000] border-t-4 bg-white dark:bg-gray-900 border-cta-600 rounded-b-lg flex flex-col transition-all duration-300 ease-out origin-top-right ${toggleCart ? 'visible opacity-100 scale-100 translate-y-0' : 'invisible opacity-0 scale-95 translate-y-2'
                 }`}
             id='FormCart'
         >
             <div className='p-4 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center'>
                 <h3 className='text-lg font-semibold text-gray-800 dark:text-gray-100'>Giỏ hàng của bạn ({cartItems.length})</h3>
                 {cartItems.length > 0 && (
-                    <span className='text-sm text-primary-600 cursor-pointer hover:underline' onClick={() => navigate('/cart')}>Xem tất cả</span>
+                    <span className='text-sm text-primary-700 cursor-pointer hover:underline' onClick={() => navigate('/cart')}>Xem tất cả</span>
                 )}
             </div>
 
@@ -114,13 +114,13 @@ const FormCart = ({ toggleCart, popupRef, setToggleCart }) => {
                     <div className='flex justify-between gap-3'>
                         <button
                             onClick={() => { setToggleCart(false); navigate('/cart'); }}
-                            className='flex-1 py-2.5 px-4 rounded-md text-sm font-medium border border-primary-500 text-primary-600 bg-white dark:bg-transparent hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-colors cursor-pointer'
+                            className='flex-1 py-2.5 px-4 rounded-md text-sm font-medium border border-cta-600 text-primary-700 bg-white dark:bg-transparent hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-colors cursor-pointer'
                         >
                             Xem giỏ hàng
                         </button>
                         <button
                             onClick={() => { setToggleCart(false); navigate('/checkout'); }}
-                            className='flex-1 py-2.5 px-4 rounded-md text-sm font-medium bg-cta-700 text-white hover:bg-cta-800 transition-colors shadow-sm cursor-pointer'
+                            className='flex-1 py-2.5 px-4 rounded-md text-sm font-medium bg-cta-600 text-white hover:bg-cta-800 transition-colors shadow-sm cursor-pointer'
                         >
                             Thanh toán
                         </button>

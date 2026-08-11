@@ -90,7 +90,7 @@ export default function VanChuyenThanhToanPage() {
                     <div><span className="text-gray-500 dark:text-gray-400">Số tài khoản:</span> <span className="font-medium text-gray-800 dark:text-gray-100">104873037731</span></div>
                     <div><span className="text-gray-500 dark:text-gray-400">Chi nhánh:</span> <span className="font-medium text-gray-800 dark:text-gray-100">Đống Đa</span></div>
                     <div><span className="text-gray-500 dark:text-gray-400">Chủ TK:</span> <span className="font-medium text-gray-800 dark:text-gray-100">Lê Quang Huy</span></div>
-                    <div><span className="text-gray-500 dark:text-gray-400">Nội dung CK:</span> <span className="font-medium text-primary-600 dark:text-primary-400">[Mã đơn hàng] + [SĐT]</span></div>
+                    <div><span className="text-gray-500 dark:text-gray-400">Nội dung CK:</span> <span className="font-medium text-primary-700 dark:text-primary-400">[Mã đơn hàng] + [SĐT]</span></div>
                 </div>
             </div>
             <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-5 not-prose border border-gray-100 dark:border-gray-700">
@@ -99,7 +99,7 @@ export default function VanChuyenThanhToanPage() {
                     <div><span className="text-gray-500 dark:text-gray-400">Số tài khoản:</span> <span className="font-medium text-gray-800 dark:text-gray-100">0969608810</span></div>
                     <div><span className="text-gray-500 dark:text-gray-400">Chi nhánh:</span> <span className="font-medium text-gray-800 dark:text-gray-100">Đống Đa</span></div>
                     <div><span className="text-gray-500 dark:text-gray-400">Chủ TK:</span> <span className="font-medium text-gray-800 dark:text-gray-100">Lê Quang Huy</span></div>
-                    <div><span className="text-gray-500 dark:text-gray-400">Nội dung CK:</span> <span className="font-medium text-primary-600 dark:text-primary-400">[Mã đơn hàng] + [SĐT]</span></div>
+                    <div><span className="text-gray-500 dark:text-gray-400">Nội dung CK:</span> <span className="font-medium text-primary-700 dark:text-primary-400">[Mã đơn hàng] + [SĐT]</span></div>
                 </div>
             </div>
         </article>

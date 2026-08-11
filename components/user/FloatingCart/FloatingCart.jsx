@@ -173,7 +173,7 @@ const FloatingCart = () => {
                                         </p>
                                     )}
                                     <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-                                        x{item.quantity} · <span className="text-primary-600 font-medium">{formatPrice(item.finalPrice)}₫</span>
+                                        x{item.quantity} · <span className="text-primary-700 font-medium">{formatPrice(item.finalPrice)}₫</span>
                                     </p>
                                 </div>
                                 <button
@@ -201,13 +201,13 @@ const FloatingCart = () => {
                         <div className='flex justify-between gap-3'>
                             <button
                                 onClick={() => { setIsExpanded(false); navigate('/cart'); }}
-                                className='flex-1 py-2 rounded-sm text-sm font-semibold border border-primary-500 text-primary-600 bg-white dark:bg-transparent hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-all cursor-pointer'
+                                className='flex-1 py-2 rounded-sm text-sm font-semibold border border-cta-600 text-primary-600 bg-white dark:bg-transparent hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-all cursor-pointer'
                             >
                                 Xem giỏ hàng
                             </button>
                             <button
                                 onClick={handleCheckout}
-                                className="flex-1 py-2 rounded-sm bg-cta-700 text-white text-sm font-semibold hover:bg-cta-800 transition-all shadow-lg shadow-primary-500/20 active:scale-[0.98] cursor-pointer"
+                                className="flex-1 py-2 rounded-sm bg-cta-600 text-white text-sm font-semibold hover:bg-cta-800 transition-all shadow-lg shadow-primary-500/20 active:scale-[0.98] cursor-pointer"
                             >
                                 Thanh toán
                             </button>
@@ -219,7 +219,7 @@ const FloatingCart = () => {
                 <button
                     ref={cartBtnRef}
                     onClick={handleCartClick}
-                    className={`relative flex h-12 w-12 items-center justify-center rounded-full bg-cta-700 text-white shadow-[0_8px_20px_rgba(107,33,168,0.3)] transition-all duration-500 ease-out hover:-translate-y-1 hover:scale-110 hover:shadow-[0_12px_25px_rgba(107,33,168,0.5)] active:scale-95 cursor-pointer group ${bounce ? 'animate-bounce' : ''}`}
+                    className={`relative flex h-12 w-12 items-center justify-center rounded-full bg-cta-600 text-white shadow-[0_8px_20px_rgba(107,33,168,0.3)] transition-all duration-500 ease-out hover:-translate-y-1 hover:scale-110 hover:shadow-[0_12px_25px_rgba(107,33,168,0.5)] active:scale-95 cursor-pointer group ${bounce ? 'animate-bounce' : ''}`}
                     aria-label="Giỏ hàng"
                     id="floating-cart-btn"
                 >

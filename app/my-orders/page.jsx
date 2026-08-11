@@ -299,7 +299,7 @@ export default function OrderHistoryPage()
                                                     )}
                                                 </div>
                                             </div>
-                                            <div className='px-3 py-3 text-center text-sm text-primary-600 font-medium'>
+                                            <div className='px-3 py-3 text-center text-sm text-primary-700 font-medium'>
                                                 {formatPrice(item.price)}đ
                                             </div>
                                             <div className='px-3 py-3 text-center text-sm text-gray-700 dark:text-gray-300'>
@@ -391,7 +391,7 @@ export default function OrderHistoryPage()
                 </nav>
 
                 {/* Page Header */}
-                <div className='bg-cta-700 dark:bg-primary-400 rounded-xl p-5 md:p-6 mb-6 text-white relative overflow-hidden shadow-lg shadow-primary-500/30'>
+                <div className='bg-cta-600 dark:bg-primary-400 rounded-xl p-5 md:p-6 mb-6 text-white relative overflow-hidden shadow-lg shadow-primary-500/30'>
                     <div className='absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2'></div>
                     <div className='absolute bottom-0 left-20 w-24 h-24 bg-white/5 rounded-full translate-y-1/2'></div>
                     <div className='relative z-10'>
@@ -415,7 +415,7 @@ export default function OrderHistoryPage()
                                 key={tab.key}
                                 onClick={() => setFilterStatus(tab.key)}
                                 className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs md:text-sm font-medium whitespace-nowrap transition-all duration-200 cursor-pointer border ${filterStatus === tab.key
-                                    ? 'bg-cta-700 text-white border-primary-600 shadow-md shadow-primary-200 dark:shadow-primary-900/30'
+                                    ? 'bg-cta-600 text-white border-cta-600 shadow-md shadow-primary-200 dark:shadow-primary-900/30'
                                     : 'bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-primary-300 hover:text-primary-600'
                                     }`}
                             >
@@ -446,7 +446,7 @@ export default function OrderHistoryPage()
                         <p className='text-gray-400 dark:text-gray-500 text-sm mb-5'>Hãy khám phá các sản phẩm tuyệt vời của chúng tôi</p>
                         <button
                             onClick={() => router.push('/')}
-                            className='px-6 py-2.5 bg-cta-700 text-white rounded-lg hover:bg-cta-800 transition text-sm font-medium cursor-pointer flex items-center gap-2'
+                            className='px-6 py-2.5 bg-cta-600 text-white rounded-lg hover:bg-cta-800 transition text-sm font-medium cursor-pointer flex items-center gap-2'
                         >
                             <i className='bx bx-shopping-bag'></i> Mua sắm ngay
                         </button>
@@ -507,7 +507,7 @@ export default function OrderHistoryPage()
                                                         {optionText && <p className='text-[11px] text-gray-400 mt-0.5'>Phân loại: {optionText}</p>}
                                                     </div>
                                                     <div className='text-right flex-shrink-0'>
-                                                        <p className='text-sm font-medium text-primary-600'>{formatPrice(item.price)}đ</p>
+                                                        <p className='text-sm font-medium text-primary-700'>{formatPrice(item.price)}đ</p>
                                                         <p className='text-[11px] text-gray-400'>x{item.quantity}</p>
                                                     </div>
                                                 </div>

@@ -35,10 +35,10 @@ export default function BaoHanhPage() {
                         </tr>
                     </thead>
                     <tbody className="text-gray-600 dark:text-gray-400">
-                        <tr className="border-b border-gray-100 dark:border-gray-800"><td className="p-3">Đèn ngủ thú, đèn 3D</td><td className="p-3 font-medium text-primary-600 dark:text-primary-400">6 tháng</td><td className="p-3">Bảo hành bóng LED và mạch điện</td></tr>
-                        <tr className="border-b border-gray-100 dark:border-gray-800"><td className="p-3">Đèn khung gỗ, đèn thủy tinh</td><td className="p-3 font-medium text-primary-600 dark:text-primary-400">12 tháng</td><td className="p-3">Bảo hành mạch điện, không bảo hành vỡ</td></tr>
-                        <tr className="border-b border-gray-100 dark:border-gray-800"><td className="p-3">Đèn LED dây, đèn neon</td><td className="p-3 font-medium text-primary-600 dark:text-primary-400">3 tháng</td><td className="p-3">Bảo hành lỗi LED, adapter</td></tr>
-                        <tr><td className="p-3">Phụ kiện (adapter, remote)</td><td className="p-3 font-medium text-primary-600 dark:text-primary-400">1 tháng</td><td className="p-3">Đổi mới nếu lỗi từ NSX</td></tr>
+                        <tr className="border-b border-gray-100 dark:border-gray-800"><td className="p-3">Đèn ngủ thú, đèn 3D</td><td className="p-3 font-medium text-primary-700 dark:text-primary-400">6 tháng</td><td className="p-3">Bảo hành bóng LED và mạch điện</td></tr>
+                        <tr className="border-b border-gray-100 dark:border-gray-800"><td className="p-3">Đèn khung gỗ, đèn thủy tinh</td><td className="p-3 font-medium text-primary-700 dark:text-primary-400">12 tháng</td><td className="p-3">Bảo hành mạch điện, không bảo hành vỡ</td></tr>
+                        <tr className="border-b border-gray-100 dark:border-gray-800"><td className="p-3">Đèn LED dây, đèn neon</td><td className="p-3 font-medium text-primary-700 dark:text-primary-400">3 tháng</td><td className="p-3">Bảo hành lỗi LED, adapter</td></tr>
+                        <tr><td className="p-3">Phụ kiện (adapter, remote)</td><td className="p-3 font-medium text-primary-700 dark:text-primary-400">1 tháng</td><td className="p-3">Đổi mới nếu lỗi từ NSX</td></tr>
                     </tbody>
                 </table>
             </div>

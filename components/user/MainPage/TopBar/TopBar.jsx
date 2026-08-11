@@ -25,7 +25,7 @@ const TopBar = () => {
         <div className='flex flex-col'>
             {/* Promotional Banner */}
             {!isAuthenticated && (
-                <div className="bg-cta-700 text-white py-1.5 px-4 text-center text-[10px] md:text-xs font-medium shadow-sm flex items-center justify-center gap-2 animate-[pulse_3s_ease-in-out_infinite]">
+                <div className="bg-cta-600 text-white py-1.5 px-4 text-center text-[10px] md:text-xs font-medium shadow-sm flex items-center justify-center gap-2 animate-[pulse_3s_ease-in-out_infinite]">
                     <i className='bx bxs-gift text-sm animate-bounce'></i>
                     <span><strong>Ưu đãi đặc biệt:</strong> Đăng ký tài khoản mới nhận ngay <strong className="text-yellow-300 text-[11px] md:text-sm">mã giảm giá 50K</strong> cho đơn hàng đầu tiên!</span>
                 </div>

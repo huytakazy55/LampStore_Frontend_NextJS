@@ -78,7 +78,7 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
         {/* ===== MOBILE: Minimal compact hero ===== */}
         <div className="md:hidden">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-2.5 h-2.5 bg-primary-600 rounded-sm" />
+            <div className="w-2.5 h-2.5 bg-cta-600 rounded-sm" />
             <span className="text-white text-[10px] font-semibold tracking-[0.15em] uppercase">
               CapyLumine
             </span>
@@ -86,7 +86,7 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
           <h1 className="text-gray-900 dark:text-white text-lg font-bold leading-snug mb-2 min-h-[5rem]">
             Đèn Ngủ Cao Cấp — <span className="text-primary-700" ref={mobileTextRef}></span>
             <span
-              className="inline-block w-[2px] h-[0.9em] bg-primary-600 ml-0.5 align-baseline"
+              className="inline-block w-[2px] h-[0.9em] bg-cta-600 ml-0.5 align-baseline"
               style={{ animation: 'blink 0.7s step-end infinite' }}
             />
           </h1>
@@ -160,7 +160,7 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
           <div className="w-full lg:w-[55%]">
             {/* Tagline */}
             <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-3 h-3 bg-primary-600 rounded-sm" />
+              <div className="w-3 h-3 bg-cta-600 rounded-sm" />
               <span className="text-gray-500 dark:text-gray-400 text-xs md:text-sm font-semibold tracking-[0.15em] uppercase">
                 Về CapyLumine
               </span>
@@ -170,7 +170,7 @@ const Banner1 = '/images/banner_new_01.webp'; const Banner2 = '/images/banner_ne
             <h1 className="text-gray-900 text-2xl md:text-3xl lg:text-[2rem] font-bold leading-tight mb-4 md:mb-5 min-h-[4.5rem] md:min-h-[5.5rem] lg:min-h-[6rem]">
               Đèn Ngủ Cao Cấp — <span className="text-primary-700" ref={desktopTextRef}></span>
               <span
-                className="inline-block w-[2px] md:w-[3px] h-[1em] bg-primary-600 ml-0.5 align-baseline"
+                className="inline-block w-[2px] md:w-[3px] h-[1em] bg-cta-600 ml-0.5 align-baseline"
                 style={{ animation: 'blink 0.7s step-end infinite' }}
               />
             </h1>

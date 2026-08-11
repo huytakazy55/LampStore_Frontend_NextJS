@@ -296,7 +296,7 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
 
     if (!toggleLogin) return null;
 
-    const inputCls = "w-full pl-11 pr-4 py-3 rounded-xl text-sm outline-none transition-all duration-300 bg-primary-50/60 dark:bg-primary-950/20 border border-primary-100 dark:border-primary-800/30 text-gray-800 dark:text-gray-200 placeholder-gray-400 focus:border-primary-500 focus:bg-primary-50 dark:focus:bg-primary-950/40 focus:shadow-[0_0_0_3px_rgba(245,158,11,0.12)]";
+    const inputCls = "w-full pl-11 pr-4 py-3 rounded-xl text-sm outline-none transition-all duration-300 bg-primary-50/60 dark:bg-primary-950/20 border border-primary-100 dark:border-primary-800/30 text-gray-800 dark:text-gray-200 placeholder-gray-400 focus:border-cta-600 focus:bg-primary-50 dark:focus:bg-primary-950/40 focus:shadow-[0_0_0_3px_rgba(245,158,11,0.12)]";
     const inputErrCls = "w-full pl-11 pr-4 py-3 rounded-xl text-sm outline-none bg-red-50/50 border border-red-300 text-gray-800 placeholder-gray-400";
     const iconCls = "absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-lg";
 
@@ -404,14 +404,14 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                                         <div className="flex justify-between items-center mb-4 sm:mb-6">
                                             <label className="flex items-center gap-2 cursor-pointer select-none">
                                                 <input type="checkbox" name="rememberMe" checked={stateSignin.rememberMe} onChange={HandleOnChangeStateSignin} className="sr-only peer" />
-                                                <div className="w-4 h-4 border-2 border-gray-300 rounded peer-checked:bg-primary-600 peer-checked:border-primary-500 transition-all flex items-center justify-center">
+                                                <div className="w-4 h-4 border-2 border-gray-300 rounded peer-checked:bg-cta-600 peer-checked:border-cta-600 transition-all flex items-center justify-center">
                                                     {stateSignin.rememberMe && <i className='bx bx-check text-white text-xs'></i>}
                                                 </div>
                                                 <span className="text-xs text-gray-500">Ghi nhớ đăng nhập</span>
                                             </label>
-                                            <button type="button" onClick={e => { e.preventDefault(); setShowForgotPassword(true); }} className="text-xs text-primary-600 hover:text-primary-700 font-medium cursor-pointer">Quên mật khẩu?</button>
+                                            <button type="button" onClick={e => { e.preventDefault(); setShowForgotPassword(true); }} className="text-xs text-primary-700 hover:text-primary-800 font-medium cursor-pointer">Quên mật khẩu?</button>
                                         </div>
-                                        <button type="submit" disabled={isLoading} className="w-full py-3 rounded-full bg-cta-700 hover:bg-cta-800 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 dark:shadow-primary-900/30 transition-all duration-300 disabled:opacity-70 cursor-pointer active:scale-[0.97] hover:-translate-y-0.5">
+                                        <button type="submit" disabled={isLoading} className="w-full py-3 rounded-full bg-cta-600 hover:bg-cta-800 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 dark:shadow-primary-900/30 transition-all duration-300 disabled:opacity-70 cursor-pointer active:scale-[0.97] hover:-translate-y-0.5">
                                             {isLoading ? <span className="flex items-center justify-center gap-2"><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>Đang xử lý...</span> : 'ĐĂNG NHẬP'}
                                         </button>
                                         <div className="flex items-center gap-3 my-4 sm:my-5">
@@ -471,7 +471,7 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                                                 {formErrors.otp && <p id="otp-error" className="mt-1 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.otp}</p>}
                                             </div>
 
-                                            <button type="submit" disabled={isLoading || otpCode.length < 6} className={`w-full py-3 rounded-full bg-cta-700 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 dark:shadow-primary-900/30 transition-all duration-300 ${isLoading || otpCode.length < 6 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-cta-800 cursor-pointer active:scale-[0.97] hover:-translate-y-0.5'}`}>
+                                            <button type="submit" disabled={isLoading || otpCode.length < 6} className={`w-full py-3 rounded-full bg-cta-600 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 dark:shadow-primary-900/30 transition-all duration-300 ${isLoading || otpCode.length < 6 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-cta-800 cursor-pointer active:scale-[0.97] hover:-translate-y-0.5'}`}>
                                                 {isLoading ? <span className="flex items-center justify-center gap-2"><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>Đang xử lý...</span> : 'XÁC NHẬN'}
                                             </button>
 
@@ -524,15 +524,15 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                                                 <label className="flex items-start gap-2 cursor-pointer select-none">
                                                     <div className="relative mt-0.5">
                                                         <input type="checkbox" name="acceptTerms" checked={acceptTerms} onChange={(e) => { setAcceptTerms(e.target.checked); setFormErrors(prev => ({ ...prev, acceptTerms: '' })); }} className="sr-only peer" />
-                                                        <div className={`w-4 h-4 border-2 rounded transition-all flex items-center justify-center ${formErrors.acceptTerms ? 'border-red-400 bg-red-50' : 'border-gray-300 peer-checked:bg-primary-600 peer-checked:border-primary-500'}`}>
+                                                        <div className={`w-4 h-4 border-2 rounded transition-all flex items-center justify-center ${formErrors.acceptTerms ? 'border-red-400 bg-red-50' : 'border-gray-300 peer-checked:bg-cta-600 peer-checked:border-cta-600'}`}>
                                                             {acceptTerms && <i className='bx bx-check text-white text-xs'></i>}
                                                         </div>
                                                     </div>
-                                                    <span className="text-xs text-gray-500 leading-relaxed">Tôi đồng ý với <a href="/ho-tro/dieu-khoan-su-dung" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline font-medium" onClick={e => e.stopPropagation()}>Điều khoản sử dụng</a> và <a href="/ho-tro/chinh-sach-bao-mat" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline font-medium" onClick={e => e.stopPropagation()}>Chính sách bảo mật</a></span>
+                                                    <span className="text-xs text-gray-500 leading-relaxed">Tôi đồng ý với <a href="/ho-tro/dieu-khoan-su-dung" target="_blank" rel="noopener noreferrer" className="text-primary-700 hover:underline font-medium" onClick={e => e.stopPropagation()}>Điều khoản sử dụng</a> và <a href="/ho-tro/chinh-sach-bao-mat" target="_blank" rel="noopener noreferrer" className="text-primary-700 hover:underline font-medium" onClick={e => e.stopPropagation()}>Chính sách bảo mật</a></span>
                                                 </label>
                                                 {formErrors.acceptTerms && <p className="mt-1 ml-6 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.acceptTerms}</p>}
                                             </div>
-                                            <button type="submit" disabled={isLoading || !acceptTerms} className={`w-full py-3 rounded-full bg-cta-700 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 dark:shadow-primary-900/30 transition-all duration-300 ${isLoading || !acceptTerms ? 'opacity-50 cursor-not-allowed' : 'hover:bg-cta-800 cursor-pointer active:scale-[0.97] hover:-translate-y-0.5'}`}>
+                                            <button type="submit" disabled={isLoading || !acceptTerms} className={`w-full py-3 rounded-full bg-cta-600 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 dark:shadow-primary-900/30 transition-all duration-300 ${isLoading || !acceptTerms ? 'opacity-50 cursor-not-allowed' : 'hover:bg-cta-800 cursor-pointer active:scale-[0.97] hover:-translate-y-0.5'}`}>
                                                 {isLoading ? <span className="flex items-center justify-center gap-2"><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>Đang xử lý...</span> : 'ĐĂNG KÝ TÀI KHOẢN'}
                                             </button>
                                             <p className="text-center text-sm text-gray-500 mt-4 sm:mt-5 sm:hidden">Đã có tài khoản?{' '}<button type="button" onClick={ChangeFormLogin} className="text-primary-600 font-semibold cursor-pointer">Đăng nhập</button></p>

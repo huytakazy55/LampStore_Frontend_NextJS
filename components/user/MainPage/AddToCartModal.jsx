@@ -328,7 +328,7 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
                                                             setCurrentImageIndex(idx);
                                                         }}
                                                         className={`relative flex items-center justify-center rounded-full transition-all cursor-pointer shadow-sm ${(!displayImage && currentImageIndex === idx)
-                                                            ? 'w-2.5 h-2.5 bg-primary-600 scale-110'
+                                                            ? 'w-2.5 h-2.5 bg-cta-600 scale-110'
                                                             : 'w-2 h-2 bg-gray-300 dark:bg-gray-500 hover:bg-gray-400 dark:hover:bg-gray-400'
                                                             }`}
                                                         aria-label={`View image ${idx + 1}`}
@@ -357,7 +357,7 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
                                                 <span className="text-sm line-through text-gray-400 dark:text-gray-500 mb-1">
                                                     ₫{formatPrice(originalPrice)}
                                                 </span>
-                                                <span className="bg-cta-700 text-white text-xs px-1.5 py-0.5 rounded font-medium mb-1">
+                                                <span className="bg-cta-600 text-white text-xs px-1.5 py-0.5 rounded font-medium mb-1">
                                                     -{discountPercent}%
                                                 </span>
                                             </>
@@ -386,7 +386,7 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
                                                                         key={val.id}
                                                                         onClick={() => handleSelectOption(vt.name, val)}
                                                                         className={`flex items-center gap-2 py-1.5 px-3 cursor-pointer text-sm border rounded transition-all ${isSelected
-                                                                            ? 'border-primary-500 text-primary-600 bg-primary-50 dark:bg-primary-900/30 font-medium ring-1 ring-primary-500/20'
+                                                                            ? 'border-cta-600 text-primary-700 bg-primary-50 dark:bg-primary-900/30 font-medium ring-1 ring-primary-500/20'
                                                                             : isRequired
                                                                                 ? 'border-red-300 hover:border-primary-300 text-gray-600 dark:text-gray-400'
                                                                                 : 'border-gray-300 dark:border-gray-600 hover:border-primary-300 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400'
@@ -403,7 +403,7 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
                                                                         <span>
                                                                             {val.value}
                                                                             {val.additionalPrice > 0 && (
-                                                                                <span className="ml-1 text-xs text-primary-600">+₫{formatPrice(val.additionalPrice)}</span>
+                                                                                <span className="ml-1 text-xs text-primary-700">+₫{formatPrice(val.additionalPrice)}</span>
                                                                             )}
                                                                         </span>
                                                                     </button>
@@ -442,7 +442,7 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
                                             {(!mode || mode === 'add_to_cart') && (
                                                 <button
                                                     onClick={handleAddToCart}
-                                                    className="flex-1 bg-cta-700 text-white py-2.5 sm:py-3 rounded-md font-medium hover:bg-cta-800 transition-colors flex justify-center items-center gap-2 cursor-pointer text-sm sm:text-base"
+                                                    className="flex-1 bg-cta-600 text-white py-2.5 sm:py-3 rounded-md font-medium hover:bg-cta-800 transition-colors flex justify-center items-center gap-2 cursor-pointer text-sm sm:text-base"
                                                 >
                                                     <i className="bx bx-cart-add text-xl"></i>
                                                     Thêm vào giỏ
@@ -473,7 +473,7 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
                                                         sessionStorage.setItem('buyNowItems', JSON.stringify([buyItem]));
                                                         navigate('/checkout');
                                                     }}
-                                                    className="flex-1 bg-cta-700 text-white py-2.5 sm:py-3 rounded-md font-medium hover:bg-cta-800 transition-colors shadow-sm cursor-pointer text-sm sm:text-base flex justify-center items-center gap-2"
+                                                    className="flex-1 bg-cta-600 text-white py-2.5 sm:py-3 rounded-md font-medium hover:bg-cta-800 transition-colors shadow-sm cursor-pointer text-sm sm:text-base flex justify-center items-center gap-2"
                                                 >
                                                     {mode === 'buy_now' ? <i className="bx bx-credit-card text-xl"></i> : null}
                                                     Mua ngay

@@ -172,9 +172,9 @@ export default function CustomerReviews() {
             `}</style>
 
             <div className="xl:max-w-[1440px] mx-auto px-4 sm:px-6 xl:px-0">
-                <div className='flex flex-col sm:flex-row justify-between gap-2 sm:gap-0 mb-6 md:mb-8 pb-3 border-b border-gray-300 dark:border-[#333] relative after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-24 after:h-0.5 after:bg-primary-600 after:rounded-sm'>
+                <div className='flex flex-col sm:flex-row justify-between gap-2 sm:gap-0 mb-6 md:mb-8 pb-3 border-b border-gray-300 dark:border-[#333] relative after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-24 after:h-0.5 after:bg-cta-600 after:rounded-sm'>
                     <div className='flex items-center gap-3'>
-                        <div className='w-9 h-9 md:w-[42px] md:h-[42px] flex items-center justify-center bg-primary-600 dark:bg-primary-900 rounded-md flex-shrink-0'>
+                        <div className='w-9 h-9 md:w-[42px] md:h-[42px] flex items-center justify-center bg-cta-600 dark:bg-primary-900 rounded-md flex-shrink-0'>
                             <i className='bx bxs-star text-xl md:text-[1.4rem] text-white'></i>
                         </div>
                         <h3 className='text-sm md:text-h3 font-bold text-gray-800 dark:text-gray-200 m-0'>Đánh giá của khách hàng</h3>

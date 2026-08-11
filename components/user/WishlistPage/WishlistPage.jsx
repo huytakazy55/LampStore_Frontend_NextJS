@@ -83,7 +83,7 @@ const WishlistPage = () => {
                     <p className='text-sm text-gray-400 mb-6'>Bạn cần đăng nhập để xem danh sách yêu thích</p>
                     <button
                         onClick={() => navigate('/')}
-                        className='bg-cta-700 text-white px-6 py-2.5 rounded-sm hover:bg-cta-800 transition font-medium cursor-pointer'
+                        className='bg-cta-600 text-white px-6 py-2.5 rounded-sm hover:bg-cta-800 transition font-medium cursor-pointer'
                     >
                         <i className='bx bx-home mr-1'></i> Về trang chủ
                     </button>
@@ -101,7 +101,7 @@ const WishlistPage = () => {
                 <Header />
                 <div className='w-full h-[60vh] flex justify-center items-center'>
                     <div className="text-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto"></div>
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cta-600 mx-auto"></div>
                         <p className="mt-4 text-gray-500">Đang tải danh sách yêu thích...</p>
                     </div>
                 </div>
@@ -145,7 +145,7 @@ const WishlistPage = () => {
                         <p className='text-sm text-gray-400 mb-6'>Hãy khám phá và thêm sản phẩm bạn yêu thích!</p>
                         <button
                             onClick={() => navigate('/')}
-                            className='bg-cta-700 text-white px-6 py-2.5 rounded-sm hover:bg-cta-800 transition font-medium cursor-pointer'
+                            className='bg-cta-600 text-white px-6 py-2.5 rounded-sm hover:bg-cta-800 transition font-medium cursor-pointer'
                         >
                             <i className='bx bx-store mr-1'></i> Khám phá sản phẩm
                         </button>
@@ -176,7 +176,7 @@ const WishlistPage = () => {
                                             onError={(e) => { e.target.src = defaultImg; }}
                                         />
                                         {hasDiscount && (
-                                            <div className='absolute top-2 left-2 bg-cta-700 text-white text-xs px-2 py-0.5 rounded font-medium'>
+                                            <div className='absolute top-2 left-2 bg-cta-600 text-white text-xs px-2 py-0.5 rounded font-medium'>
                                                 -{discountPercent}%
                                             </div>
                                         )}

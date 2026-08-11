@@ -29,7 +29,7 @@ const getImageSrc = (product) => {
 
 const CustomPrevArrow = ({ onClick }) => (
   <button
-    className='absolute -top-[52px] md:-top-[56px] right-[44px] md:right-[50px] z-10 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-sm bg-cta-700 text-white cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(139,92,246,0.25)] hover:bg-cta-800 hover:shadow-[0_4px_14px_rgba(139,92,246,0.4)] hover:scale-105 active:scale-95'
+    className='absolute -top-[52px] md:-top-[56px] right-[44px] md:right-[50px] z-10 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-sm bg-cta-600 text-white cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(139,92,246,0.25)] hover:bg-cta-800 hover:shadow-[0_4px_14px_rgba(139,92,246,0.4)] hover:scale-105 active:scale-95'
     onClick={onClick}
     aria-label="Sản phẩm trước"
   >
@@ -39,7 +39,7 @@ const CustomPrevArrow = ({ onClick }) => (
 
 const CustomNextArrow = ({ onClick }) => (
   <button
-    className='absolute -top-[52px] md:-top-[56px] right-1 z-10 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-sm bg-cta-700 text-white cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(139,92,246,0.25)] hover:bg-cta-800 hover:shadow-[0_4px_14px_rgba(139,92,246,0.4)] hover:scale-105 active:scale-95'
+    className='absolute -top-[52px] md:-top-[56px] right-1 z-10 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-sm bg-cta-600 text-white cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(139,92,246,0.25)] hover:bg-cta-800 hover:shadow-[0_4px_14px_rgba(139,92,246,0.4)] hover:scale-105 active:scale-95'
     onClick={onClick}
     aria-label="Sản phẩm tiếp theo"
   >
@@ -112,7 +112,7 @@ const TrendingProduct = () => {
     return (
       <div className='w-full py-8 md:py-16 xl:mx-auto xl:max-w-[1440px] flex justify-center items-center px-4 xl:px-0'>
         <div className="text-center">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-500 mx-auto"></div>
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-cta-600 mx-auto"></div>
           <p className="mt-3 text-gray-500 text-sm">Đang tải sản phẩm thịnh hành...</p>
         </div>
       </div>
@@ -122,9 +122,9 @@ const TrendingProduct = () => {
   return (
     <div className='w-full xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0 mb-8'>
       {/* Section Header — matching best-seller style */}
-      <div className='flex items-center justify-between mb-6 md:mb-8 pb-3 border-b border-gray-300 dark:border-[#333] relative after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-40 after:h-0.5 after:bg-primary-600 after:rounded-sm'>
+      <div className='flex items-center justify-between mb-6 md:mb-8 pb-3 border-b border-gray-300 dark:border-[#333] relative after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-40 after:h-0.5 after:bg-cta-600 after:rounded-sm'>
         <div className='flex items-center gap-3'>
-          <div className='w-9 h-9 md:w-[42px] md:h-[42px] flex items-center justify-center bg-primary-600 dark:bg-primary-900 rounded-md flex-shrink-0'>
+          <div className='w-9 h-9 md:w-[42px] md:h-[42px] flex items-center justify-center bg-cta-600 dark:bg-primary-900 rounded-md flex-shrink-0'>
             <i className='bx bx-line-chart text-xl md:text-[1.4rem] text-white'></i>
           </div>
           <div>
@@ -153,7 +153,7 @@ const TrendingProduct = () => {
                   {/* Image */}
                   <div className='relative w-[40%] md:w-[42%] flex-shrink-0 bg-gray-50 dark:bg-[#111] overflow-hidden'>
                     {hasDiscount && (
-                      <div className="absolute top-2 left-2 z-10 bg-cta-700 text-white text-[0.6rem] font-bold px-1.5 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)]">
+                      <div className="absolute top-2 left-2 z-10 bg-cta-600 text-white text-[0.6rem] font-bold px-1.5 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)]">
                         -{discountPercent}%
                       </div>
                     )}
@@ -205,7 +205,7 @@ const TrendingProduct = () => {
                           <i className='bx bx-shopping-bag text-sm md:text-base'></i>
                         </button>
                         <button
-                          className='w-7 h-7 md:w-8 md:h-8 rounded-sm bg-cta-700 dark:bg-cta-800 text-white dark:text-primary-300 flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-cta-800 hover:text-white hover:shadow-[0_2px_8px_rgba(139,92,246,0.3)] active:scale-95'
+                          className='w-7 h-7 md:w-8 md:h-8 rounded-sm bg-cta-600 dark:bg-cta-800 text-white dark:text-primary-300 flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-cta-800 hover:text-white hover:shadow-[0_2px_8px_rgba(139,92,246,0.3)] active:scale-95'
                           onClick={(e) => {
                             e.stopPropagation();
                             setCartModalMode('add_to_cart');

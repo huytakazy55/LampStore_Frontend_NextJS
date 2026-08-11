@@ -8,7 +8,7 @@ import React from 'react';
 const COLOR_STYLES = {
     green: { border: 'border-green-400', iconBg: 'bg-green-100', iconText: 'text-green-500', badge: 'bg-green-100 text-green-500' },
     blue: { border: 'border-blue-400', iconBg: 'bg-blue-100', iconText: 'text-blue-500', badge: 'bg-blue-100 text-blue-500' },
-    yellow: { border: 'border-primary-500', iconBg: 'bg-primary-50 dark:bg-primary-900/20', iconText: 'text-primary-500', badge: 'bg-primary-50 dark:bg-primary-900/20 text-primary-500' },
+    yellow: { border: 'border-cta-600', iconBg: 'bg-primary-50 dark:bg-primary-900/20', iconText: 'text-primary-700', badge: 'bg-primary-50 dark:bg-primary-900/20 text-primary-700' },
     red: { border: 'border-red-400', iconBg: 'bg-red-100', iconText: 'text-red-500', badge: 'bg-red-100 text-red-500' },
     purple: { border: 'border-purple-400', iconBg: 'bg-purple-100', iconText: 'text-purple-500', badge: 'bg-purple-100 text-purple-500' },
     orange: { border: 'border-orange-400', iconBg: 'bg-orange-100', iconText: 'text-orange-500', badge: 'bg-orange-100 text-orange-500' },

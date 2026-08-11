@@ -28,7 +28,7 @@ export default function HuongDanChonMuaPage() {
                         </div>
                         <h4 className="font-bold text-gray-800 dark:text-gray-100 text-sm mb-1">{item.title}</h4>
                         <p className="text-gray-500 dark:text-gray-400 text-xs leading-relaxed mb-2">{item.desc}</p>
-                        <span className="text-xs text-primary-600 dark:text-primary-400 font-medium">→ {item.recommend}</span>
+                        <span className="text-xs text-primary-700 dark:text-primary-400 font-medium">→ {item.recommend}</span>
                     </div>
                 ))}
             </div>

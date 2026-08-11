@@ -23,9 +23,9 @@ const NewsSection = () => {
 
     return (
         <div className='w-full xl:mx-auto xl:max-w-[1440px] px-4 xl:px-0'>
-            <div className='flex justify-between items-center relative pb-3 border-b border-gray-300 dark:border-[#333] mb-6 md:mb-8 after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-40 after:h-0.5 after:bg-primary-600 after:rounded-sm'>
+            <div className='flex justify-between items-center relative pb-3 border-b border-gray-300 dark:border-[#333] mb-6 md:mb-8 after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-40 after:h-0.5 after:bg-cta-600 after:rounded-sm'>
                 <div className='flex items-center gap-3'>
-                    <div className='w-9 h-9 md:w-[42px] md:h-[42px] flex items-center justify-center bg-primary-600 dark:bg-primary-900 rounded-md flex-shrink-0'>
+                    <div className='w-9 h-9 md:w-[42px] md:h-[42px] flex items-center justify-center bg-cta-600 dark:bg-primary-900 rounded-md flex-shrink-0'>
                         <i className='bx bx-news text-xl md:text-[1.4rem] text-white'></i>
                     </div>
                     <h3 className='text-sm md:text-h3 font-bold text-gray-800 dark:text-gray-200 m-0'>Tin tức & Góc nội thất</h3>
@@ -70,7 +70,7 @@ const NewsSection = () => {
                                         sizes="(max-width: 768px) 100vw, 33vw"
                                         quality={50}
                                     />
-                                    <div className="absolute top-3 left-3 bg-cta-700 text-white text-xs font-bold px-2 py-1 rounded shadow-sm">
+                                    <div className="absolute top-3 left-3 bg-cta-600 text-white text-xs font-bold px-2 py-1 rounded shadow-sm">
                                         {news.category}
                                     </div>
                                 </div>

@@ -133,7 +133,7 @@ export default function GuestOrdersPage()
                         <i className='bx bx-info-circle text-xl text-primary-500 mt-0.5'></i>
                         <div>
                             <p className='text-sm text-primary-800 font-medium'>Bạn đang xem với tư cách khách vãng lai</p>
-                            <p className='text-xs text-primary-600 mt-1'>
+                            <p className='text-xs text-primary-700 mt-1'>
                                 Đăng ký tài khoản để quản lý đơn hàng tốt hơn. Đơn hàng sẽ được tự động chuyển vào tài khoản mới.
                             </p>
                         </div>
@@ -240,7 +240,7 @@ export default function GuestOrdersPage()
                                                                     <p className='text-sm font-medium text-gray-800 line-clamp-1'>{item.productName}</p>
                                                                     {options && <p className='text-xs text-gray-400'>Phân loại: {options}</p>}
                                                                     <div className='flex justify-between items-center mt-1'>
-                                                                        <span className='text-sm text-primary-600 font-medium'>{formatPrice(item.price)}₫</span>
+                                                                        <span className='text-sm text-primary-700 font-medium'>{formatPrice(item.price)}₫</span>
                                                                         <span className='text-xs text-gray-400'>x{item.quantity}</span>
                                                                     </div>
                                                                 </div>
@@ -285,7 +285,7 @@ export default function GuestOrdersPage()
                                                     )}
                                                     <div className='flex justify-between text-sm font-bold pt-1 border-t border-dashed border-gray-200'>
                                                         <span>Tổng cộng:</span>
-                                                        <span className='text-primary-600'>{formatPrice(orderTotal)}₫</span>
+                                                        <span className='text-primary-700'>{formatPrice(orderTotal)}₫</span>
                                                     </div>
                                                     <div className='flex justify-between text-xs text-gray-400'>
                                                         <span>Thanh toán:</span>

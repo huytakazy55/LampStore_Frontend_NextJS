@@ -269,7 +269,7 @@ export default function CartPage() {
                                         </div>
 
                                         {/* Total */}
-                                        <div className="w-[30%] md:w-[27%] text-center text-sm text-primary-600 font-medium">
+                                        <div className="w-[30%] md:w-[27%] text-center text-sm text-primary-700 font-medium">
                                             {formatPrice(item.finalPrice * item.quantity)}₫
                                         </div>
 
@@ -277,7 +277,7 @@ export default function CartPage() {
                                             <button onClick={() => handleSingleDeleteClick(item.key)} className="text-sm text-gray-800 hover:text-primary-600 transition-colors">
                                                 Xóa
                                             </button>
-                                            <button onClick={() => toggleWishlist(item.productId)} className="text-[11px] text-primary-600 hover:underline">
+                                            <button onClick={() => toggleWishlist(item.productId)} className="text-[11px] text-primary-700 hover:underline">
                                                 {isLiked ? 'Bỏ thích' : 'Lưu yêu thích'}
                                             </button>
                                         </div>
@@ -337,7 +337,7 @@ export default function CartPage() {
                                 </div>
                                 <button
                                     onClick={handleCheckout}
-                                    className={`px-6 md:px-8 py-2 md:py-3 text-white rounded cursor-pointer transition-colors whitespace-nowrap ${selectedItems.size > 0 ? 'bg-cta-700 hover:bg-cta-800' : 'bg-gray-400 cursor-not-allowed'}`}
+                                    className={`px-6 md:px-8 py-2 md:py-3 text-white rounded cursor-pointer transition-colors whitespace-nowrap ${selectedItems.size > 0 ? 'bg-cta-600 hover:bg-cta-800' : 'bg-gray-400 cursor-not-allowed'}`}
                                 >
                                     Mua Hàng
                                 </button>
@@ -364,7 +364,7 @@ export default function CartPage() {
                             </button>
                             <button
                                 onClick={executeDelete}
-                                className="px-5 py-2 text-sm font-medium text-white bg-cta-700 hover:bg-cta-800 rounded transition-colors shadow-sm"
+                                className="px-5 py-2 text-sm font-medium text-white bg-cta-600 hover:bg-cta-800 rounded transition-colors shadow-sm"
                             >
                                 Đồng ý
                             </button>

@@ -451,7 +451,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
               
               {/* Camera Upload button */}
               <button type="button" onClick={() => document.getElementById('fileInput').click()}
-                className='absolute bottom-0 right-0 md:bottom-1 md:right-1 w-7 h-7 md:w-8 md:h-8 bg-cta-700 border-2 border-white dark:border-gray-800 rounded-full flex items-center justify-center shadow-md hover:bg-cta-800 transition-colors cursor-pointer text-white'
+                className='absolute bottom-0 right-0 md:bottom-1 md:right-1 w-7 h-7 md:w-8 md:h-8 bg-cta-600 border-2 border-white dark:border-gray-800 rounded-full flex items-center justify-center shadow-md hover:bg-cta-800 transition-colors cursor-pointer text-white'
                 title="Tải ảnh mới"
               >
                 <i className='bx bx-camera text-[12px] md:text-[14px]'></i>
@@ -488,7 +488,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
             <div className='flex w-full border-b border-gray-100 dark:border-gray-800 px-2 md:px-6 pt-1'>
               <button onClick={() => setInfoSideActive('info')}
                 className={`relative flex-1 md:flex-none flex flex-row items-center justify-center py-2.5 md:py-3 md:mr-6 text-[11px] sm:text-sm font-medium transition-colors cursor-pointer gap-1.5 ${infoSideActive === 'info'
-                  ? 'text-primary-600 after:absolute after:bottom-0 after:left-2 after:right-2 md:after:left-0 md:after:right-0 after:h-[2px] after:bg-primary-600 after:rounded-full'
+                  ? 'text-primary-700 after:absolute after:bottom-0 after:left-2 after:right-2 md:after:left-0 md:after:right-0 after:h-[2px] after:bg-cta-600 after:rounded-full'
                   : 'text-gray-400 hover:text-gray-600'}`}>
                 <i className='bx bx-user text-base align-middle'></i>
                 <span className='hidden sm:inline'>Thông tin người dùng</span>
@@ -496,7 +496,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
               </button>
               <button onClick={() => setInfoSideActive('bill')}
                 className={`relative flex-1 md:flex-none flex flex-row items-center justify-center py-2.5 md:py-3 md:mr-6 text-[11px] sm:text-sm font-medium transition-colors cursor-pointer gap-1.5 ${infoSideActive === 'bill'
-                  ? 'text-primary-600 after:absolute after:bottom-0 after:left-2 after:right-2 md:after:left-0 md:after:right-0 after:h-[2px] after:bg-primary-600 after:rounded-full'
+                  ? 'text-primary-700 after:absolute after:bottom-0 after:left-2 after:right-2 md:after:left-0 md:after:right-0 after:h-[2px] after:bg-cta-600 after:rounded-full'
                   : 'text-gray-400 hover:text-gray-600'}`}>
                 <i className='bx bx-receipt text-base align-middle'></i>
                 <span className='hidden sm:inline'>Thông tin hóa đơn</span>
@@ -504,7 +504,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
               </button>
               <button onClick={() => setInfoSideActive('discount')}
                 className={`relative flex-1 md:flex-none flex flex-row items-center justify-center py-2.5 md:py-3 text-[11px] sm:text-sm font-medium transition-colors cursor-pointer gap-1.5 ${infoSideActive === 'discount'
-                  ? 'text-primary-600 after:absolute after:bottom-0 after:left-2 after:right-2 md:after:left-0 md:after:right-0 after:h-[2px] after:bg-primary-600 after:rounded-full'
+                  ? 'text-primary-700 after:absolute after:bottom-0 after:left-2 after:right-2 md:after:left-0 md:after:right-0 after:h-[2px] after:bg-cta-600 after:rounded-full'
                   : 'text-gray-400 hover:text-gray-600'}`}>
                 <i className='bx bx-purchase-tag-alt text-base align-middle'></i>
                 <span className='hidden sm:inline'>Mã giảm giá</span>
@@ -567,7 +567,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
                   {/* Submit */}
                   <div className='flex justify-end'>
                     <button
-                      className='flex items-center gap-2 px-6 py-2.5 bg-cta-700 hover:bg-cta-800 text-white text-sm font-semibold rounded-lg shadow-md shadow-primary-200 dark:shadow-primary-900/30 transition-all cursor-pointer'
+                      className='flex items-center gap-2 px-6 py-2.5 bg-cta-600 hover:bg-cta-800 text-white text-sm font-semibold rounded-lg shadow-md shadow-primary-200 dark:shadow-primary-900/30 transition-all cursor-pointer'
                       type='submit'>
                       <i className='bx bx-check-circle text-base'></i>
                       Lưu thay đổi
@@ -666,7 +666,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
             <div className='grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-5'>
               <div>
                 <label className='block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5' htmlFor='ProfileCity'>
-                  Tỉnh / Thành phố <span className='text-primary-500'>*</span>
+                  Tỉnh / Thành phố <span className='text-primary-700'>*</span>
                 </label>
                 <select
                   id='ProfileCity'
@@ -686,7 +686,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
 
               <div>
                 <label className='block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5' htmlFor='ProfileDistrict'>
-                  Quận / Huyện <span className='text-primary-500'>*</span>
+                  Quận / Huyện <span className='text-primary-700'>*</span>
                 </label>
                 <select
                   id='ProfileDistrict'
@@ -730,7 +730,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
 
               <div className='md:col-span-2'>
                 <label className='block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5' htmlFor='ProfileAddressDetail'>
-                  Địa chỉ cụ thể <span className='text-primary-500'>*</span>
+                  Địa chỉ cụ thể <span className='text-primary-700'>*</span>
                 </label>
                 <input
                   id='ProfileAddressDetail'
@@ -754,7 +754,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
               <button
                 type='button'
                 onClick={saveAddressDraft}
-                className='px-6 py-2.5 rounded-lg bg-cta-700 text-sm font-semibold text-white hover:bg-cta-800 shadow-md shadow-primary-200 dark:shadow-primary-900/30 transition-all flex items-center justify-center gap-2'
+                className='px-6 py-2.5 rounded-lg bg-cta-600 text-sm font-semibold text-white hover:bg-cta-800 shadow-md shadow-primary-200 dark:shadow-primary-900/30 transition-all flex items-center justify-center gap-2'
               >
                 <i className='bx bx-check-circle text-base'></i>
                 Lưu địa chỉ
