@@ -154,7 +154,7 @@ export default function GuestOrdersPage()
                             <p className='text-sm text-gray-500 mb-6'>Hãy khám phá và đặt hàng tại CapyLumine!</p>
                             <button
                                 onClick={() => router.push('/')}
-                                className='px-6 py-2.5 bg-cta-600 text-white rounded-lg font-medium hover:bg-cta-800 transition-colors cursor-pointer'
+                                className='px-6 py-2.5 bg-cta-600 text-white rounded-lg font-medium transition-colors cursor-pointer hover:shadow-[0_8px_20px_rgba(234,88,12,0.45)]'
                             >
                                 Bắt đầu mua sắm
                             </button>

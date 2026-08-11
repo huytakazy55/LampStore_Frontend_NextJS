@@ -451,7 +451,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
               
               {/* Camera Upload button */}
               <button type="button" onClick={() => document.getElementById('fileInput').click()}
-                className='absolute bottom-0 right-0 md:bottom-1 md:right-1 w-7 h-7 md:w-8 md:h-8 bg-cta-600 border-2 border-white dark:border-gray-800 rounded-full flex items-center justify-center shadow-md hover:bg-cta-800 transition-colors cursor-pointer text-white'
+                className='absolute bottom-0 right-0 md:bottom-1 md:right-1 w-7 h-7 md:w-8 md:h-8 bg-cta-600 border-2 border-white dark:border-gray-800 rounded-full flex items-center justify-center shadow-md transition-colors cursor-pointer text-white hover:shadow-[0_8px_20px_rgba(234,88,12,0.45)]'
                 title="Tải ảnh mới"
               >
                 <i className='bx bx-camera text-[12px] md:text-[14px]'></i>
@@ -567,7 +567,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
                   {/* Submit */}
                   <div className='flex justify-end'>
                     <button
-                      className='flex items-center gap-2 px-6 py-2.5 bg-cta-600 hover:bg-cta-800 text-white text-sm font-semibold rounded-lg shadow-md shadow-primary-200 dark:shadow-primary-900/30 transition-all cursor-pointer'
+                      className='flex items-center gap-2 px-6 py-2.5 bg-cta-600 text-white text-sm font-semibold rounded-lg shadow-md shadow-primary-200 dark:shadow-primary-900/30 transition-all cursor-pointer hover:shadow-[0_8px_20px_rgba(234,88,12,0.45)]'
                       type='submit'>
                       <i className='bx bx-check-circle text-base'></i>
                       Lưu thay đổi
@@ -754,7 +754,7 @@ const FormProfile = ({ popupProfileRef, toggleProfile, setToggleProfile, profile
               <button
                 type='button'
                 onClick={saveAddressDraft}
-                className='px-6 py-2.5 rounded-lg bg-cta-600 text-sm font-semibold text-white hover:bg-cta-800 shadow-md shadow-primary-200 dark:shadow-primary-900/30 transition-all flex items-center justify-center gap-2'
+                className='px-6 py-2.5 rounded-lg bg-cta-600 text-sm font-semibold text-white shadow-md shadow-primary-200 dark:shadow-primary-900/30 transition-all flex items-center justify-center gap-2 hover:shadow-[0_8px_20px_rgba(234,88,12,0.45)]'
               >
                 <i className='bx bx-check-circle text-base'></i>
                 Lưu địa chỉ

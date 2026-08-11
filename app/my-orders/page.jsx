@@ -446,7 +446,7 @@ export default function OrderHistoryPage()
                         <p className='text-gray-400 dark:text-gray-500 text-sm mb-5'>Hãy khám phá các sản phẩm tuyệt vời của chúng tôi</p>
                         <button
                             onClick={() => router.push('/')}
-                            className='px-6 py-2.5 bg-cta-600 text-white rounded-lg hover:bg-cta-800 transition text-sm font-medium cursor-pointer flex items-center gap-2'
+                            className='px-6 py-2.5 bg-cta-600 text-white rounded-lg transition text-sm font-medium cursor-pointer flex items-center gap-2 hover:shadow-[0_8px_20px_rgba(234,88,12,0.45)]'
                         >
                             <i className='bx bx-shopping-bag'></i> Mua sắm ngay
                         </button>

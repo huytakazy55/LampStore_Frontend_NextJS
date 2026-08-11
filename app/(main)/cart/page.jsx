@@ -161,7 +161,7 @@ export default function CartPage() {
                 <div className="min-h-[60vh] bg-gray-50 flex flex-col items-center justify-center gap-4 py-10">
                     <i className='bx bx-cart text-6xl text-gray-300'></i>
                     <p className="text-gray-500 text-lg">Giỏ hàng của bạn còn trống</p>
-                    <button onClick={() => router.push('/')} className="px-6 py-2 bg-cta-600 text-white rounded-lg cursor-pointer hover:bg-cta-800 transition-colors">
+                    <button onClick={() => router.push('/')} className="px-6 py-2 bg-cta-600 text-white rounded-lg cursor-pointer transition-colors hover:shadow-[0_8px_20px_rgba(234,88,12,0.45)]">
                         MUA NGAY
                     </button>
                 </div>
@@ -337,7 +337,7 @@ export default function CartPage() {
                                 </div>
                                 <button
                                     onClick={handleCheckout}
-                                    className={`px-6 md:px-8 py-2 md:py-3 text-white rounded cursor-pointer transition-colors whitespace-nowrap ${selectedItems.size > 0 ? 'bg-cta-600 hover:bg-cta-800' : 'bg-gray-400 cursor-not-allowed'}`}
+                                    className={`px-6 md:px-8 py-2 md:py-3 text-white rounded cursor-pointer transition-colors whitespace-nowrap ${selectedItems.size > 0 ? 'bg-cta-600 hover:shadow-[0_8px_20px_rgba(234,88,12,0.45)]' : 'bg-gray-400 cursor-not-allowed'}`}
                                 >
                                     Mua Hàng
                                 </button>
@@ -364,7 +364,7 @@ export default function CartPage() {
                             </button>
                             <button
                                 onClick={executeDelete}
-                                className="px-5 py-2 text-sm font-medium text-white bg-cta-600 hover:bg-cta-800 rounded transition-colors shadow-sm"
+                                className="px-5 py-2 text-sm font-medium text-white bg-cta-600 rounded transition-colors shadow-sm hover:shadow-[0_8px_20px_rgba(234,88,12,0.45)]"
                             >
                                 Đồng ý
                             </button>

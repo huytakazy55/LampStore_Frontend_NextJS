@@ -83,7 +83,7 @@ const WishlistPage = () => {
                     <p className='text-sm text-gray-400 mb-6'>Bạn cần đăng nhập để xem danh sách yêu thích</p>
                     <button
                         onClick={() => navigate('/')}
-                        className='bg-cta-600 text-white px-6 py-2.5 rounded-sm hover:bg-cta-800 transition font-medium cursor-pointer'
+                        className='bg-cta-600 text-white px-6 py-2.5 rounded-sm transition font-medium cursor-pointer hover:shadow-[0_8px_20px_rgba(234,88,12,0.45)]'
                     >
                         <i className='bx bx-home mr-1'></i> Về trang chủ
                     </button>
@@ -145,7 +145,7 @@ const WishlistPage = () => {
                         <p className='text-sm text-gray-400 mb-6'>Hãy khám phá và thêm sản phẩm bạn yêu thích!</p>
                         <button
                             onClick={() => navigate('/')}
-                            className='bg-cta-600 text-white px-6 py-2.5 rounded-sm hover:bg-cta-800 transition font-medium cursor-pointer'
+                            className='bg-cta-600 text-white px-6 py-2.5 rounded-sm transition font-medium cursor-pointer hover:shadow-[0_8px_20px_rgba(234,88,12,0.45)]'
                         >
                             <i className='bx bx-store mr-1'></i> Khám phá sản phẩm
                         </button>
@@ -232,7 +232,7 @@ const WishlistPage = () => {
                                                 <i className='bx bxs-cart-add text-sm md:text-base'></i> Thêm vào giỏ
                                             </button>
                                             <button
-                                                className='flex-1 flex items-center justify-center gap-1.5 py-1.5 md:py-2 text-[10px] md:text-xs font-semibold rounded-sm border border-transparent bg-cta-600 text-white hover:bg-cta-700 transition-colors cursor-pointer'
+                                                className='flex-1 flex items-center justify-center gap-1.5 py-1.5 md:py-2 text-[10px] md:text-xs font-semibold rounded-sm border border-transparent bg-cta-600 text-white transition-colors cursor-pointer hover:shadow-[0_8px_20px_rgba(234,88,12,0.45)]'
                                                 onClick={(e) => { e.stopPropagation(); setCartModalMode('buy_now'); handleAddToCart(item); }}
                                             >
                                                 <i className='bx bx-shopping-bag text-sm md:text-base'></i> Mua ngay

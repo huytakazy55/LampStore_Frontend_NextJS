@@ -15,7 +15,7 @@ const LazyMap = () =>
             {!loaded && (
                 <button
                     onClick={() => setLoaded(true)}
-                    className='absolute inset-0 w-full h-full bg-cta-600/80 dark:bg-gray-800 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-cta-800 dark:hover:bg-gray-700 transition-colors group z-10'
+                    className='absolute inset-0 w-full h-full bg-cta-600/80 dark:bg-gray-800 flex flex-col items-center justify-center gap-2 cursor-pointer dark:hover:bg-gray-700 transition-colors group z-10'
                     aria-label="Nhấn để xem bản đồ Google Maps"
                 >
                     <i className='bx bx-map text-3xl text-white dark:text-primary-500 group-hover:scale-110 transition-transform' />

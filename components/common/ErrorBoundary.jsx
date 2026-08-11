@@ -35,7 +35,7 @@ class ErrorBoundary extends React.Component {
                     <div className="flex flex-col sm:flex-row gap-3 justify-center">
                         <button
                             onClick={this.handleReload}
-                            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-cta-600 text-white font-semibold rounded-lg hover:bg-cta-800 transition-all shadow-lg shadow-primary-200"
+                            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-cta-600 text-white font-semibold rounded-lg transition-all shadow-lg shadow-primary-200 hover:shadow-[0_8px_20px_rgba(234,88,12,0.45)]"
                         >
                             <i className="bx bx-refresh"></i>
                             Tải lại trang

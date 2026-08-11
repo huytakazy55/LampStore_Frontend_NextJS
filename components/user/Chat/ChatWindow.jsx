@@ -647,7 +647,7 @@ const ChatWindow = ({ onClose }) =>
             onClick={sendMessage}
             disabled={!newMessage.trim() || loading || !currentChat}
             aria-label="Gửi"
-            className="flex items-center justify-center rounded-xl bg-cta-600 px-3 py-1.5 text-[0.95rem] font-semibold text-white shadow-md shadow-primary-500/10 transition-all hover:scale-105 hover:bg-cta-800 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex items-center justify-center rounded-xl bg-cta-600 px-3 py-1.5 text-[0.95rem] font-semibold text-white shadow-md shadow-primary-500/10 transition-all hover:scale-105 disabled:cursor-not-allowed disabled:opacity-50 hover:shadow-[0_8px_20px_rgba(234,88,12,0.45)]"
           >
             <Send size={18} />
           </button>

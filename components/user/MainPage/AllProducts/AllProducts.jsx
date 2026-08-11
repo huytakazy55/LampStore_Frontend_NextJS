@@ -39,7 +39,7 @@ const SmallProductCard = ({ product, navigate, onAddToCartClick }) => {
     >
       {/* Discount Badge */}
       {hasDiscount && (
-        <div className="absolute top-2.5 left-2.5 z-10 bg-cta-600 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)]">
+        <div className="absolute top-2.5 left-2.5 z-10 bg-cta-600 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(234,88,12,0.25)]">
           -{discountPercent}%
         </div>
       )}
@@ -94,7 +94,7 @@ const SmallProductCard = ({ product, navigate, onAddToCartClick }) => {
                 <span className="text-[8.5px] sm:text-[9px] md:text-xs font-semibold">Thêm vào giỏ</span>
             </button>
             <button
-                className="flex-1 flex items-center justify-center py-1.5 rounded-sm border border-transparent bg-cta-600 text-white hover:bg-cta-700 transition-colors cursor-pointer"
+                className="flex-1 flex items-center justify-center py-1.5 rounded-sm border border-transparent bg-cta-600 text-white transition-colors cursor-pointer hover:shadow-[0_8px_20px_rgba(234,88,12,0.45)]"
                 onClick={(e) => {
                     e.stopPropagation();
                     onAddToCartClick(product, 'buy_now');

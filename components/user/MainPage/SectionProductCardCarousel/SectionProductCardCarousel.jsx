@@ -11,7 +11,7 @@ import { resolveImagePath } from '@/lib/imageUtils';
 
 const CustomPrevArrow = ({ onClick }) => (
   <button
-    className='absolute -top-[52px] md:-top-[56px] right-[44px] md:right-[50px] z-10 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-sm bg-cta-600 text-white cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(139,92,246,0.25)] hover:bg-cta-800 hover:shadow-[0_4px_14px_rgba(139,92,246,0.4)] hover:scale-105 active:scale-95'
+    className='absolute -top-[52px] md:-top-[56px] right-[44px] md:right-[50px] z-10 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-sm bg-cta-600 text-white cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(234,88,12,0.25)] hover:shadow-[0_4px_14px_rgba(234,88,12,0.4)] hover:scale-105 active:scale-95'
     onClick={onClick}
     aria-label="Sản phẩm trước"
   >
@@ -21,7 +21,7 @@ const CustomPrevArrow = ({ onClick }) => (
 
 const CustomNextArrow = ({ onClick }) => (
   <button
-    className='absolute -top-[52px] md:-top-[56px] right-1 z-10 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-sm bg-cta-600 text-white cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(139,92,246,0.25)] hover:bg-cta-800 hover:shadow-[0_4px_14px_rgba(139,92,246,0.4)] hover:scale-105 active:scale-95'
+    className='absolute -top-[52px] md:-top-[56px] right-1 z-10 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-sm bg-cta-600 text-white cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(234,88,12,0.25)] hover:shadow-[0_4px_14px_rgba(234,88,12,0.4)] hover:scale-105 active:scale-95'
     onClick={onClick}
     aria-label="Sản phẩm tiếp theo"
   >
@@ -57,7 +57,7 @@ const ProductCardItem = ({ product, onClick, isInWishlist, onToggleWishlist, onA
         <div className='relative w-[42%] md:w-[45%] flex-shrink-0 bg-gray-50 dark:bg-[#111] aspect-square overflow-hidden'>
           {/* Discount Badge */}
           {hasDiscount && (
-            <div className="absolute top-2 left-2 z-10 bg-cta-600 text-white text-[0.6rem] md:text-[0.65rem] font-bold px-1.5 md:px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)] tracking-wide">
+            <div className="absolute top-2 left-2 z-10 bg-cta-600 text-white text-[0.6rem] md:text-[0.65rem] font-bold px-1.5 md:px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(234,88,12,0.25)] tracking-wide">
               -{discountPercent}%
             </div>
           )}
@@ -119,7 +119,7 @@ const ProductCardItem = ({ product, onClick, isInWishlist, onToggleWishlist, onA
               <span className="inline sm:hidden">Thêm</span>
             </button>
             <button
-              className='flex-1 flex items-center justify-center gap-1 md:gap-1.5 h-7 md:h-8 border border-transparent rounded-sm bg-cta-600 dark:bg-cta-700 text-white text-[0.68rem] md:text-[0.72rem] font-semibold cursor-pointer transition-all duration-200 hover:bg-cta-700 hover:shadow-[0_2px_8px_rgba(249,115,22,0.3)] active:scale-[0.97]'
+              className='flex-1 flex items-center justify-center gap-1 md:gap-1.5 h-7 md:h-8 border border-transparent rounded-sm bg-cta-600 dark:bg-cta-700 text-white text-[0.68rem] md:text-[0.72rem] font-semibold cursor-pointer transition-all duration-200 hover:shadow-[0_2px_8px_rgba(249,115,22,0.3)] active:scale-[0.97]'
               onClick={(e) => { e.stopPropagation(); onAddToCartClick && onAddToCartClick(product, 'buy_now'); }}
               tabIndex={-1}
               aria-label="Mua ngay"

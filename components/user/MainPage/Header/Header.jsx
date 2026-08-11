@@ -363,7 +363,7 @@ const Header = () =>
           {/* Nút tìm kiếm */}
           <button
             aria-label="Tìm kiếm"
-            className='flex items-center justify-center w-9 h-9 mr-[2px] bg-cta-600 hover:bg-cta-800 text-white rounded-full transition-all duration-200 active:scale-90 cursor-pointer shrink-0'
+            className='flex items-center justify-center w-9 h-9 mr-[2px] bg-cta-600 text-white rounded-full transition-all duration-200 active:scale-90 cursor-pointer shrink-0 hover:shadow-[0_8px_20px_rgba(234,88,12,0.45)]'
             onClick={handleSearch}
           >
             <i className='bx bx-search text-lg'></i>
@@ -544,7 +544,7 @@ const Header = () =>
           {/* Nút tìm kiếm mobile */}
           <button
             aria-label="Tìm kiếm"
-            className='flex items-center justify-center w-8 h-8 mr-1 bg-cta-600 hover:bg-cta-800 text-white rounded-full transition-all duration-200 active:scale-90 cursor-pointer shrink-0'
+            className='flex items-center justify-center w-8 h-8 mr-1 bg-cta-600 text-white rounded-full transition-all duration-200 active:scale-90 cursor-pointer shrink-0 hover:shadow-[0_8px_20px_rgba(234,88,12,0.45)]'
             onClick={handleSearch}
           >
             <i className='bx bx-search text-base'></i>

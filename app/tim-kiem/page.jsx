@@ -245,7 +245,7 @@ function SearchResults() {
                                         Không có sản phẩm nào phù hợp với từ khóa <strong>"{keyword}"</strong>. Hãy thử tìm kiếm với từ khóa khác.
                                     </p>
                                     <button
-                                        className="px-6 py-2.5 bg-cta-600 hover:bg-cta-800 text-white rounded-full font-medium transition-colors duration-200 cursor-pointer"
+                                        className="px-6 py-2.5 bg-cta-600 text-white rounded-full font-medium transition-colors duration-200 cursor-pointer hover:shadow-[0_8px_20px_rgba(234,88,12,0.45)]"
                                         onClick={() => navigate('/')}
                                     >
                                         Về trang chủ

@@ -942,7 +942,7 @@ export default function ProductDetailPage()
                             <button onClick={handleAddToCart} className='flex items-center justify-center gap-2 border border-cta-600 bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 py-2.5 px-4 md:px-6 rounded hover:bg-primary-100 dark:hover:bg-primary-900/50 transition text-sm md:text-base w-full sm:w-auto cursor-pointer'>
                                 <i className='bx bxs-cart-add text-lg md:text-xl'></i> Thêm vào giỏ hàng
                             </button>
-                            <button onClick={handleBuyNow} className='bg-cta-600 text-white py-2.5 px-6 md:px-8 rounded hover:bg-cta-800 transition font-medium text-sm md:text-base w-full sm:w-auto cursor-pointer'>
+                            <button onClick={handleBuyNow} className='bg-cta-600 text-white py-2.5 px-6 md:px-8 rounded transition font-medium text-sm md:text-base w-full sm:w-auto cursor-pointer hover:shadow-[0_8px_20px_rgba(234,88,12,0.45)]'>
                                 Mua ngay
                             </button>
                         </div>
@@ -1099,7 +1099,7 @@ export default function ProductDetailPage()
                                     <button
                                         onClick={handleSubmitReview}
                                         disabled={submittingReview}
-                                        className='bg-cta-600 hover:bg-cta-800 text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 cursor-pointer flex items-center gap-1.5'
+                                        className='bg-cta-600 text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 cursor-pointer flex items-center gap-1.5 hover:shadow-[0_8px_20px_rgba(234,88,12,0.45)]'
                                     >
                                         {submittingReview ? <><i className='bx bx-loader-alt animate-spin'></i> Đang gửi...</> : <><i className='bx bx-send'></i> Gửi đánh giá</>}
                                     </button>
@@ -1177,7 +1177,7 @@ export default function ProductDetailPage()
                                         onClick={() => { if (rp.slug || rp.id) router.push(`/product/${rp.slug || rp.id}`); }}>
                                         {/* Discount Badge */}
                                         {rpHasDiscount && (
-                                            <div className="absolute top-2.5 left-2.5 z-10 bg-cta-600 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(139,92,246,0.25)]">
+                                            <div className="absolute top-2.5 left-2.5 z-10 bg-cta-600 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-sm shadow-[0_2px_6px_rgba(234,88,12,0.25)]">
                                                 -{rpDiscountPercent}%
                                             </div>
                                         )}
@@ -1240,7 +1240,7 @@ export default function ProductDetailPage()
                                                     <span className="text-[8.5px] sm:text-[9px] md:text-xs font-semibold">Thêm vào giỏ</span>
                                                 </button>
                                                 <button
-                                                    className="flex-1 flex items-center justify-center py-1.5 rounded-sm border border-transparent bg-cta-600 text-white hover:bg-cta-700 transition-colors cursor-pointer"
+                                                    className="flex-1 flex items-center justify-center py-1.5 rounded-sm border border-transparent bg-cta-600 text-white transition-colors cursor-pointer hover:shadow-[0_8px_20px_rgba(234,88,12,0.45)]"
                                                     onClick={(e) =>
                                                     {
                                                         e.stopPropagation();

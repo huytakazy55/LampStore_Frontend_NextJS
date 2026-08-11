@@ -411,7 +411,7 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                                             </label>
                                             <button type="button" onClick={e => { e.preventDefault(); setShowForgotPassword(true); }} className="text-xs text-primary-700 hover:text-primary-800 font-medium cursor-pointer">Quên mật khẩu?</button>
                                         </div>
-                                        <button type="submit" disabled={isLoading} className="w-full py-3 rounded-full bg-cta-600 hover:bg-cta-800 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 dark:shadow-primary-900/30 transition-all duration-300 disabled:opacity-70 cursor-pointer active:scale-[0.97] hover:-translate-y-0.5">
+                                        <button type="submit" disabled={isLoading} className="w-full py-3 rounded-full bg-cta-600 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 dark:shadow-primary-900/30 transition-all duration-300 disabled:opacity-70 cursor-pointer active:scale-[0.97] hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(234,88,12,0.45)]">
                                             {isLoading ? <span className="flex items-center justify-center gap-2"><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>Đang xử lý...</span> : 'ĐĂNG NHẬP'}
                                         </button>
                                         <div className="flex items-center gap-3 my-4 sm:my-5">
@@ -471,7 +471,7 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                                                 {formErrors.otp && <p id="otp-error" className="mt-1 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.otp}</p>}
                                             </div>
 
-                                            <button type="submit" disabled={isLoading || otpCode.length < 6} className={`w-full py-3 rounded-full bg-cta-600 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 dark:shadow-primary-900/30 transition-all duration-300 ${isLoading || otpCode.length < 6 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-cta-800 cursor-pointer active:scale-[0.97] hover:-translate-y-0.5'}`}>
+                                            <button type="submit" disabled={isLoading || otpCode.length < 6} className={`w-full py-3 rounded-full bg-cta-600 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 dark:shadow-primary-900/30 transition-all duration-300 ${isLoading || otpCode.length < 6 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer active:scale-[0.97] hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(234,88,12,0.45)]'}`}>
                                                 {isLoading ? <span className="flex items-center justify-center gap-2"><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>Đang xử lý...</span> : 'XÁC NHẬN'}
                                             </button>
 
@@ -532,7 +532,7 @@ const FormLogin = ({ toggleLogin, setToggleLogin }) => {
                                                 </label>
                                                 {formErrors.acceptTerms && <p className="mt-1 ml-6 text-xs text-red-500 flex items-center gap-1"><i className='bx bx-error-circle'></i>{formErrors.acceptTerms}</p>}
                                             </div>
-                                            <button type="submit" disabled={isLoading || !acceptTerms} className={`w-full py-3 rounded-full bg-cta-600 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 dark:shadow-primary-900/30 transition-all duration-300 ${isLoading || !acceptTerms ? 'opacity-50 cursor-not-allowed' : 'hover:bg-cta-800 cursor-pointer active:scale-[0.97] hover:-translate-y-0.5'}`}>
+                                            <button type="submit" disabled={isLoading || !acceptTerms} className={`w-full py-3 rounded-full bg-cta-600 text-white font-semibold text-sm shadow-lg shadow-primary-200/50 dark:shadow-primary-900/30 transition-all duration-300 ${isLoading || !acceptTerms ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer active:scale-[0.97] hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(234,88,12,0.45)]'}`}>
                                                 {isLoading ? <span className="flex items-center justify-center gap-2"><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>Đang xử lý...</span> : 'ĐĂNG KÝ TÀI KHOẢN'}
                                             </button>
                                             <p className="text-center text-sm text-gray-500 mt-4 sm:mt-5 sm:hidden">Đã có tài khoản?{' '}<button type="button" onClick={ChangeFormLogin} className="text-primary-600 font-semibold cursor-pointer">Đăng nhập</button></p>

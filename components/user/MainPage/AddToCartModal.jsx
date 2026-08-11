@@ -442,7 +442,7 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
                                             {(!mode || mode === 'add_to_cart') && (
                                                 <button
                                                     onClick={handleAddToCart}
-                                                    className="flex-1 bg-cta-600 text-white py-2.5 sm:py-3 rounded-md font-medium hover:bg-cta-800 transition-colors flex justify-center items-center gap-2 cursor-pointer text-sm sm:text-base"
+                                                    className="flex-1 bg-cta-600 text-white py-2.5 sm:py-3 rounded-md font-medium transition-colors flex justify-center items-center gap-2 cursor-pointer text-sm sm:text-base hover:shadow-[0_8px_20px_rgba(234,88,12,0.45)]"
                                                 >
                                                     <i className="bx bx-cart-add text-xl"></i>
                                                     Thêm vào giỏ
@@ -473,7 +473,7 @@ const AddToCartModal = ({ isOpen, onClose, product, mode }) => {
                                                         sessionStorage.setItem('buyNowItems', JSON.stringify([buyItem]));
                                                         navigate('/checkout');
                                                     }}
-                                                    className="flex-1 bg-cta-600 text-white py-2.5 sm:py-3 rounded-md font-medium hover:bg-cta-800 transition-colors shadow-sm cursor-pointer text-sm sm:text-base flex justify-center items-center gap-2"
+                                                    className="flex-1 bg-cta-600 text-white py-2.5 sm:py-3 rounded-md font-medium transition-colors shadow-sm cursor-pointer text-sm sm:text-base flex justify-center items-center gap-2 hover:shadow-[0_8px_20px_rgba(234,88,12,0.45)]"
                                                 >
                                                     {mode === 'buy_now' ? <i className="bx bx-credit-card text-xl"></i> : null}
                                                     Mua ngay

@@ -244,7 +244,7 @@ const ChatButton = () =>
         <button
           ref={chatToggleRef}
           onClick={toggleChat}
-          className={`group relative flex h-12 w-12 items-center justify-center rounded-full border-none text-white shadow-[0_8px_20px_rgba(107,33,168,0.3)] transition-all duration-500 ease-out hover:-translate-y-1 hover:scale-110 hover:shadow-[0_12px_25px_rgba(107,33,168,0.5)] active:scale-95 cursor-pointer ${isChatOpen
+          className={`group relative flex h-12 w-12 items-center justify-center rounded-full border-none text-white shadow-[0_8px_20px_rgba(234,88,12,0.3)] transition-all duration-500 ease-out hover:-translate-y-1 hover:scale-110 hover:shadow-[0_12px_25px_rgba(234,88,12,0.5)] active:scale-95 cursor-pointer ${isChatOpen
             ? 'bg-cta-600 rotate-180'
             : 'bg-cta-600'
             }`}

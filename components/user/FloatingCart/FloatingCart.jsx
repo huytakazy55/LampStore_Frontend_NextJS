@@ -207,7 +207,7 @@ const FloatingCart = () => {
                             </button>
                             <button
                                 onClick={handleCheckout}
-                                className="flex-1 py-2 rounded-sm bg-cta-600 text-white text-sm font-semibold hover:bg-cta-800 transition-all shadow-lg shadow-primary-500/20 active:scale-[0.98] cursor-pointer"
+                                className="flex-1 py-2 rounded-sm bg-cta-600 text-white text-sm font-semibold transition-all shadow-lg shadow-primary-500/20 active:scale-[0.98] cursor-pointer hover:shadow-[0_8px_20px_rgba(234,88,12,0.45)]"
                             >
                                 Thanh toán
                             </button>
@@ -219,7 +219,7 @@ const FloatingCart = () => {
                 <button
                     ref={cartBtnRef}
                     onClick={handleCartClick}
-                    className={`relative flex h-12 w-12 items-center justify-center rounded-full bg-cta-600 text-white shadow-[0_8px_20px_rgba(107,33,168,0.3)] transition-all duration-500 ease-out hover:-translate-y-1 hover:scale-110 hover:shadow-[0_12px_25px_rgba(107,33,168,0.5)] active:scale-95 cursor-pointer group ${bounce ? 'animate-bounce' : ''}`}
+                    className={`relative flex h-12 w-12 items-center justify-center rounded-full bg-cta-600 text-white shadow-[0_8px_20px_rgba(234,88,12,0.3)] transition-all duration-500 ease-out hover:-translate-y-1 hover:scale-110 hover:shadow-[0_12px_25px_rgba(234,88,12,0.5)] active:scale-95 cursor-pointer group ${bounce ? 'animate-bounce' : ''}`}
                     aria-label="Giỏ hàng"
                     id="floating-cart-btn"
                 >
