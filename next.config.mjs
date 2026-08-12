@@ -60,7 +60,7 @@ const cspDirectives = [
   `script-src 'self' 'unsafe-inline'${isProd ? '' : " 'unsafe-eval'"} https://accounts.google.com https://connect.facebook.net`,
   // antd + inline style props used throughout the app require 'unsafe-inline'.
   "style-src 'self' 'unsafe-inline'",
-  `img-src 'self' data: https:${isProd ? '' : ' http:'}`,
+  `img-src 'self' data: blob: https:${isProd ? '' : ' http:'}`,
   `connect-src 'self' ${prodConnectSrc.join(' ')}${isProd ? '' : ` ${devConnectSrc.join(' ')}`}`,
   // Google Identity Services and Facebook Login render their UI in iframes.
   "frame-src https://accounts.google.com https://www.facebook.com https://staticxx.facebook.com https://www.google.com",
